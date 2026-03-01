@@ -17,10 +17,7 @@ export default function ContactPage() {
       message: formData.get("message"),
     };
     try {
-      const webhookUrl =
-        process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ||
-        "https://houseofsingh.app.n8n.cloud/webhook/lead-capture";
-      await fetch(webhookUrl, {
+      await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
