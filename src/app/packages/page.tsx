@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getAllPackages } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Packages",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
     "Explore our design service packages. Brand identity, visual media, digital design, and creative strategy — structured for clarity and results.",
 };
 
-const packages = [
+const hardcodedPackages = [
   {
     name: "Foundation",
     description:
@@ -18,7 +19,8 @@ const packages = [
       "Color and typography system",
       "Basic brand guidelines (digital PDF)",
     ],
-    note: "Ideal for startups and small businesses.",
+    idealFor: "Ideal for startups and small businesses.",
+    featured: false,
   },
   {
     name: "Growth",
@@ -31,7 +33,7 @@ const packages = [
       "Website design direction",
       "Brand photography art direction",
     ],
-    note: "Ideal for growing businesses and funded startups.",
+    idealFor: "Ideal for growing businesses and funded startups.",
     featured: true,
   },
   {
@@ -46,11 +48,34 @@ const packages = [
       "AI workflow integration",
       "Ongoing design support",
     ],
-    note: "Ideal for established businesses and organizations.",
+    idealFor: "Ideal for established businesses and organizations.",
+    featured: false,
   },
 ];
 
-export default function PackagesPage() {
+export default async function PackagesPage() {
+  const sanityPackages = await getAllPackages();
+
+  const packages =
+    sanityPackages?.length > 0
+      ? sanityPackages.map(
+          (p: {
+            _id: string;
+            name: string;
+            description?: string;
+            includes?: string[];
+            idealFor?: string;
+            featured?: boolean;
+          }) => ({
+            name: p.name,
+            description: p.description || "",
+            includes: p.includes || [],
+            idealFor: p.idealFor || "",
+            featured: p.featured || false,
+          })
+        )
+      : hardcodedPackages;
+
   return (
     <section className="py-24 px-6 lg:px-10">
       <div className="max-w-7xl mx-auto">
@@ -68,57 +93,63 @@ export default function PackagesPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {packages.map((pkg) => (
-            <div
-              key={pkg.name}
-              className={`p-8 rounded-2xl border ${
-                pkg.featured
-                  ? "border-black bg-black text-white"
-                  : "border-neutral-100 bg-white text-black"
-              }`}
-            >
-              <h2 className="text-xl font-semibold">{pkg.name}</h2>
-              <p
-                className={`mt-2 text-sm leading-relaxed ${
-                  pkg.featured ? "text-neutral-300" : "text-neutral-500"
-                }`}
-              >
-                {pkg.description}
-              </p>
-
-              <div className="mt-6 flex flex-col gap-2">
-                {pkg.includes.map((item) => (
-                  <p
-                    key={item}
-                    className={`text-sm ${
-                      pkg.featured ? "text-neutral-200" : "text-neutral-600"
-                    }`}
-                  >
-                    {item}
-                  </p>
-                ))}
-              </div>
-
-              <p
-                className={`mt-6 text-xs ${
-                  pkg.featured ? "text-neutral-400" : "text-neutral-400"
-                }`}
-              >
-                {pkg.note}
-              </p>
-
-              <Link
-                href="/contact"
-                className={`mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+          {packages.map(
+            (pkg: {
+              name: string;
+              description: string;
+              includes: string[];
+              idealFor: string;
+              featured: boolean;
+            }) => (
+              <div
+                key={pkg.name}
+                className={`p-8 rounded-2xl border ${
                   pkg.featured
-                    ? "bg-white text-black hover:bg-neutral-100"
-                    : "bg-black text-white hover:bg-neutral-800"
+                    ? "border-black bg-black text-white"
+                    : "border-neutral-100 bg-white text-black"
                 }`}
               >
-                Book a Discovery Call
-              </Link>
-            </div>
-          ))}
+                <h2 className="text-xl font-semibold">{pkg.name}</h2>
+                <p
+                  className={`mt-2 text-sm leading-relaxed ${
+                    pkg.featured ? "text-neutral-300" : "text-neutral-500"
+                  }`}
+                >
+                  {pkg.description}
+                </p>
+
+                <div className="mt-6 flex flex-col gap-2">
+                  {pkg.includes.map((item: string) => (
+                    <p
+                      key={item}
+                      className={`text-sm ${
+                        pkg.featured ? "text-neutral-200" : "text-neutral-600"
+                      }`}
+                    >
+                      {item}
+                    </p>
+                  ))}
+                </div>
+
+                {pkg.idealFor && (
+                  <p className="mt-6 text-xs text-neutral-400">
+                    {pkg.idealFor}
+                  </p>
+                )}
+
+                <Link
+                  href="/contact"
+                  className={`mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+                    pkg.featured
+                      ? "bg-white text-black hover:bg-neutral-100"
+                      : "bg-black text-white hover:bg-neutral-800"
+                  }`}
+                >
+                  Book a Discovery Call
+                </Link>
+              </div>
+            )
+          )}
         </div>
 
         <p className="mt-12 text-center text-sm text-neutral-400">

@@ -1,5 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
+import { getTeamMembers, getSiteSettings } from "@/lib/sanity/queries";
+import { urlFor } from "@/lib/sanity/image";
 
 export const metadata: Metadata = {
   title: "About",
@@ -7,7 +10,12 @@ export const metadata: Metadata = {
     "House of Singh Studios is an AI powered design studio based in Toronto, delivering brand identity, visual media, digital design, and creative strategy across North America.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const [teamMembers, siteSettings] = await Promise.all([
+    getTeamMembers(),
+    getSiteSettings(),
+  ]);
+
   return (
     <section className="py-24 px-6 lg:px-10">
       <div className="max-w-7xl mx-auto">
@@ -19,9 +27,8 @@ export default function AboutPage() {
             Built different. By design.
           </h1>
           <p className="mt-5 text-lg text-neutral-500 leading-relaxed">
-            House of Singh Studios is a multidisciplinary design studio based in
-            Toronto. We combine human creativity with AI intelligence to deliver
-            work that is intentional, scalable, and built for growth.
+            {siteSettings?.description ||
+              "House of Singh Studios is a multidisciplinary design studio based in Toronto. We combine human creativity with AI intelligence to deliver work that is intentional, scalable, and built for growth."}
           </p>
         </div>
 
@@ -51,6 +58,70 @@ export default function AboutPage() {
             </p>
           </div>
         </div>
+
+        {/* Team Members */}
+        {teamMembers?.length > 0 && (
+          <div className="mb-20">
+            <h2 className="text-2xl font-semibold text-black mb-8">
+              The team
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              {teamMembers.map(
+                (member: {
+                  _id: string;
+                  name: string;
+                  role?: string;
+                  bio?: string;
+                  photo?: object;
+                  linkedin?: string;
+                }) => (
+                  <div key={member._id}>
+                    {member.photo ? (
+                      <div className="aspect-[3/4] bg-neutral-100 rounded-xl overflow-hidden relative mb-4">
+                        <Image
+                          src={urlFor(member.photo)
+                            .width(400)
+                            .height(533)
+                            .url()}
+                          alt={member.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="aspect-[3/4] bg-neutral-100 rounded-xl flex items-center justify-center mb-4">
+                        <p className="text-sm text-neutral-400">
+                          {member.name}
+                        </p>
+                      </div>
+                    )}
+                    <h3 className="text-lg font-semibold text-black">
+                      {member.name}
+                    </h3>
+                    {member.role && (
+                      <p className="text-sm text-neutral-500">{member.role}</p>
+                    )}
+                    {member.bio && (
+                      <p className="mt-2 text-sm text-neutral-500 leading-relaxed">
+                        {member.bio}
+                      </p>
+                    )}
+                    {member.linkedin && (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-block text-xs text-neutral-400 hover:text-neutral-600 transition-colors"
+                      >
+                        LinkedIn &rarr;
+                      </a>
+                    )}
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )}
 
         {/* CTA */}
         <div className="p-8 lg:p-10 bg-neutral-50 rounded-2xl text-center">
