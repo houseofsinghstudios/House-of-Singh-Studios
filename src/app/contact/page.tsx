@@ -24,7 +24,6 @@ export default function ContactPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-        mode: "no-cors",
       });
       setSubmitted(true);
     } catch (err) {
