@@ -1,15 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import type { Metadata } from "next";
+
+const WEBHOOK_URL =
+  process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL ||
+  "https://houseofsingh.app.n8n.cloud/webhook/lead-capture";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // TODO: Connect to n8n webhook
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(false);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          service: formData.get("service"),
+          budget: formData.get("budget"),
+          message: formData.get("message"),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -150,11 +180,26 @@ export default function ContactPage() {
                     placeholder="What are you looking to build? Any timelines or details you can share."
                   />
                 </div>
+                {error && (
+                  <div className="p-4 bg-red-50 border border-red-100 rounded-lg">
+                    <p className="text-sm text-red-700">
+                      Something went wrong. Please try again or email us
+                      directly at{" "}
+                      <a
+                        href="mailto:studio@houseofsingh.com"
+                        className="underline font-medium"
+                      >
+                        studio@houseofsingh.com
+                      </a>
+                    </p>
+                  </div>
+                )}
                 <button
                   type="submit"
-                  className="mt-2 inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+                  disabled={submitting}
+                  className="mt-2 inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Inquiry
+                  {submitting ? "Sending..." : "Send Inquiry"}
                 </button>
               </form>
             )}
