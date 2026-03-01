@@ -17,11 +17,12 @@ export default function ContactPage() {
       message: formData.get("message"),
     };
     try {
-      await fetch("/api/lead", {
+      const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (!res.ok) throw new Error("Failed");
       setSubmitted(true);
     } catch (err) {
       setError(true);
