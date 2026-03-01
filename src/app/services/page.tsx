@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { getAllServices } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
     "Brand identity, visual media, digital design, and creative strategy. AI powered design services for businesses across North America.",
 };
 
-const services = [
+const hardcodedServices = [
   {
     title: "Brand Identity & Visual Design",
     description:
@@ -63,7 +64,27 @@ const services = [
   },
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const sanityServices = await getAllServices();
+
+  const services =
+    sanityServices?.length > 0
+      ? sanityServices.map(
+          (s: {
+            _id: string;
+            title: string;
+            slug: { current: string };
+            description?: string;
+            deliverables?: string[];
+          }) => ({
+            title: s.title,
+            description: s.description || "",
+            deliverables: s.deliverables || [],
+            href: `/services/${s.slug.current}`,
+          })
+        )
+      : hardcodedServices;
+
   return (
     <section className="py-24 px-6 lg:px-10">
       <div className="max-w-7xl mx-auto">
@@ -81,39 +102,48 @@ export default function ServicesPage() {
         </div>
 
         <div className="flex flex-col gap-12">
-          {services.map((service) => (
-            <Link
-              key={service.href}
-              href={service.href}
-              className="group block p-8 lg:p-10 border border-neutral-100 rounded-2xl hover:border-neutral-300 transition-colors"
-            >
-              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                <div className="flex-1">
-                  <h2 className="text-2xl font-semibold text-black group-hover:text-neutral-700 transition-colors">
-                    {service.title}
-                  </h2>
-                  <p className="mt-3 text-neutral-500 leading-relaxed max-w-xl">
-                    {service.description}
-                  </p>
-                </div>
-                <div className="flex-shrink-0 lg:max-w-xs">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
-                    Deliverables
-                  </p>
-                  <div className="flex flex-col gap-1.5">
-                    {service.deliverables.map((item) => (
-                      <p key={item} className="text-sm text-neutral-600">
-                        {item}
-                      </p>
-                    ))}
+          {services.map(
+            (service: {
+              title: string;
+              description: string;
+              deliverables: string[];
+              href: string;
+            }) => (
+              <Link
+                key={service.href}
+                href={service.href}
+                className="group block p-8 lg:p-10 border border-neutral-100 rounded-2xl hover:border-neutral-300 transition-colors"
+              >
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                  <div className="flex-1">
+                    <h2 className="text-2xl font-semibold text-black group-hover:text-neutral-700 transition-colors">
+                      {service.title}
+                    </h2>
+                    <p className="mt-3 text-neutral-500 leading-relaxed max-w-xl">
+                      {service.description}
+                    </p>
                   </div>
+                  {service.deliverables.length > 0 && (
+                    <div className="flex-shrink-0 lg:max-w-xs">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-3">
+                        Deliverables
+                      </p>
+                      <div className="flex flex-col gap-1.5">
+                        {service.deliverables.map((item: string) => (
+                          <p key={item} className="text-sm text-neutral-600">
+                            {item}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </div>
-              <p className="mt-6 text-sm font-medium text-black">
-                Explore this service &rarr;
-              </p>
-            </Link>
-          ))}
+                <p className="mt-6 text-sm font-medium text-black">
+                  Explore this service &rarr;
+                </p>
+              </Link>
+            )
+          )}
         </div>
       </div>
     </section>
