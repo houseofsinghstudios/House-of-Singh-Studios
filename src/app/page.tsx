@@ -1,320 +1,259 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { siteConfig } from "@/lib/config";
-import {
-  getAllServices,
-  getFeaturedCaseStudies,
-  getFeaturedTestimonials,
-} from "@/lib/sanity/queries";
-import { urlFor } from "@/lib/sanity/image";
+import { useEffect, useRef } from "react";
 
-const hardcodedServices = [
-  {
-    title: "Brand Identity & Visual Design",
-    description:
-      "Visual identities that feel as intentional as they look. From strategy to execution.",
-    href: "/services/brand-identity",
-  },
-  {
-    title: "Visual Media & Content Production",
-    description:
-      "Visual narratives that move beyond surface aesthetics. Every frame considered.",
-    href: "/services/visual-media",
-  },
-  {
-    title: "Digital Design & Experience",
-    description:
-      "Digital environments that feel intuitive, refined and purposeful.",
-    href: "/services/digital-design",
-  },
-  {
-    title: "Creative Strategy & Systems",
-    description:
-      "Think clearly before designing boldly. Strategy that is structured and actionable.",
-    href: "/services/creative-strategy",
-  },
-];
+export default function Home() {
+  const crestRef = useRef<HTMLDivElement>(null);
+  const revealRefs = useRef<HTMLElement[]>([]);
 
-export default async function Home() {
-  const [sanityServices, featuredCaseStudies, featuredTestimonials] =
-    await Promise.all([
-      getAllServices(),
-      getFeaturedCaseStudies(),
-      getFeaturedTestimonials(),
-    ]);
+  useEffect(() => {
+    // Crest fade on scroll
+    function handleScroll() {
+      if (!crestRef.current) return;
+      const y = window.scrollY;
+      const progress = Math.min(y / 80, 1);
+      crestRef.current.style.opacity = String(1 - progress);
+      crestRef.current.style.transform = `translateY(${-30 * progress}px)`;
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
-  const services =
-    sanityServices?.length > 0
-      ? sanityServices.map(
-          (s: {
-            _id: string;
-            title: string;
-            slug: { current: string };
-            description?: string;
-          }) => ({
-            title: s.title,
-            description: s.description || "",
-            href: `/services/${s.slug.current}`,
-          })
-        )
-      : hardcodedServices;
+    // Intersection Observer for reveal animation
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = el.dataset.delay || "0";
+            el.style.transitionDelay = `${delay}ms`;
+            el.classList.add("revealed");
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    revealRefs.current.forEach((el) => {
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      observer.disconnect();
+    };
+  }, []);
+
+  function addRevealRef(el: HTMLElement | null, index: number) {
+    if (el) revealRefs.current[index] = el;
+  }
 
   return (
     <>
-      {/* Hero Section */}
-      <section className="min-h-[90vh] flex flex-col justify-center px-6 lg:px-10 max-w-7xl mx-auto">
-        <div className="max-w-3xl">
-          <p className="text-sm font-medium uppercase tracking-widest text-neutral-400 mb-6">
-            AI Powered Design Studio
-          </p>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold leading-tight tracking-tight text-black">
-            We build brands that
+      <section
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "flex-end",
+          padding: "0 var(--page-px) 80px",
+          position: "relative",
+        }}
+      >
+        {/* Crest logo */}
+        <div
+          ref={crestRef}
+          style={{
+            position: "absolute",
+            top: 140,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 120,
+            height: 120,
+          }}
+        >
+          <Image
+            src="/hos-studios-logo.svg"
+            alt="House of Singh Studios crest"
+            width={120}
+            height={120}
+            priority
+          />
+        </div>
+
+        {/* Hero content */}
+        <div style={{ maxWidth: 800 }}>
+          <h1
+            ref={(el) => addRevealRef(el, 0)}
+            data-delay="0"
+            className="reveal-up"
+            style={{
+              fontFamily: "var(--serif)",
+              fontWeight: 600,
+              fontSize: "clamp(44px, 6.2vw, 80px)",
+              lineHeight: 1.08,
+              color: "var(--text-primary)",
+              margin: 0,
+            }}
+          >
+            AI can generate assets.
             <br />
-            think, adapt, and scale.
+            It cannot build a brand.
           </h1>
-          <p className="mt-6 text-lg text-neutral-500 leading-relaxed max-w-xl">
-            House of Singh Studios is a multidisciplinary design studio powered
-            by AI. We deliver brand identity, visual media, digital design, and
-            creative strategy for businesses across North America.
+
+          <p
+            ref={(el) => addRevealRef(el, 1)}
+            data-delay="150"
+            className="reveal-up"
+            style={{
+              fontFamily: "var(--sans)",
+              fontWeight: 400,
+              fontSize: 18,
+              lineHeight: 1.6,
+              color: "var(--text-muted)",
+              marginTop: 28,
+              maxWidth: 560,
+            }}
+          >
+            A design studio powered by AI systems and led by creative direction.
           </p>
-          <div className="mt-10 flex flex-col sm:flex-row gap-4">
+
+          <p
+            ref={(el) => addRevealRef(el, 2)}
+            data-delay="300"
+            className="reveal-up"
+            style={{
+              fontFamily: "var(--sans)",
+              fontWeight: 300,
+              fontSize: 16,
+              lineHeight: 1.7,
+              color: "var(--text-faint)",
+              marginTop: 16,
+              maxWidth: 560,
+            }}
+          >
+            We build brands that hold up across every channel for years. AI
+            handles the production layer. Human judgment drives the creative
+            layer.
+          </p>
+
+          {/* CTAs */}
+          <div
+            ref={(el) => addRevealRef(el as HTMLElement, 3)}
+            data-delay="450"
+            className="reveal-up"
+            style={{
+              display: "flex",
+              gap: 16,
+              marginTop: 40,
+              flexWrap: "wrap",
+            }}
+          >
+            <Link
+              href="/work"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+                padding: "0 32px",
+                borderRadius: 9999,
+                background: "var(--text-primary)",
+                color: "var(--bg)",
+                fontFamily: "var(--sans)",
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "opacity 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+            >
+              View Projects
+            </Link>
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 48,
+                padding: "0 32px",
+                borderRadius: 9999,
+                background: "transparent",
+                border: "1px solid var(--border)",
+                color: "var(--text-primary)",
+                fontFamily: "var(--sans)",
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: "none",
+                transition: "border-color 0.2s ease",
+              }}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.borderColor = "var(--text-muted)")
+              }
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.borderColor = "var(--border)")
+              }
             >
               Start a Project
             </Link>
-            <Link
-              href="/work"
-              className="inline-flex items-center justify-center rounded-full border border-neutral-200 px-8 py-3.5 text-sm font-medium text-black hover:bg-neutral-50 transition-colors"
-            >
-              View Our Work
-            </Link>
           </div>
         </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="border-y border-neutral-100 py-16 px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <p className="text-3xl font-semibold text-black">
-              {siteConfig.stats.projects}
-            </p>
-            <p className="mt-1 text-sm text-neutral-500">Projects Delivered</p>
-          </div>
-          <div>
-            <p className="text-3xl font-semibold text-black">
-              {siteConfig.stats.years}
-            </p>
-            <p className="mt-1 text-sm text-neutral-500">
-              Years of Experience
-            </p>
-          </div>
-          <div>
-            <p className="text-3xl font-semibold text-black">
-              {siteConfig.stats.countries}
-            </p>
-            <p className="mt-1 text-sm text-neutral-500">Countries Served</p>
-          </div>
-          <div>
-            <p className="text-3xl font-semibold text-black">
-              {siteConfig.stats.fewerRevisions}
-            </p>
-            <p className="mt-1 text-sm text-neutral-500">
-              Fewer Revisions with AI
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Case Studies */}
-      {featuredCaseStudies?.length > 0 && (
-        <section className="py-24 px-6 lg:px-10">
-          <div className="max-w-7xl mx-auto">
-            <p className="text-sm font-medium uppercase tracking-widest text-neutral-400 mb-4">
-              Featured Work
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black mb-14">
-              Recent projects
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {featuredCaseStudies.map(
-                (study: {
-                  _id: string;
-                  title: string;
-                  slug: { current: string };
-                  client?: string;
-                  industry?: string;
-                  featuredImage?: object;
-                  overview?: string;
-                }) => (
-                  <Link
-                    key={study._id}
-                    href={`/work/${study.slug.current}`}
-                    className="group block"
-                  >
-                    <div className="aspect-[4/3] bg-neutral-100 rounded-2xl overflow-hidden relative">
-                      {study.featuredImage ? (
-                        <Image
-                          src={urlFor(study.featuredImage)
-                            .width(800)
-                            .height(600)
-                            .url()}
-                          alt={study.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <p className="text-sm text-neutral-400">
-                            {study.title}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="mt-4">
-                      <h3 className="text-lg font-semibold text-black group-hover:text-neutral-700 transition-colors">
-                        {study.title}
-                      </h3>
-                      <p className="mt-1 text-sm text-neutral-500">
-                        {[study.client, study.industry]
-                          .filter(Boolean)
-                          .join(" — ")}
-                      </p>
-                    </div>
-                  </Link>
-                )
-              )}
-            </div>
-            <div className="mt-10 text-center">
-              <Link
-                href="/work"
-                className="inline-flex items-center justify-center rounded-full border border-neutral-200 px-8 py-3.5 text-sm font-medium text-black hover:bg-neutral-50 transition-colors"
-              >
-                View All Work &rarr;
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Services Overview */}
-      <section className="py-24 px-6 lg:px-10">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-sm font-medium uppercase tracking-widest text-neutral-400 mb-4">
-            What We Do
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black mb-14">
-            Four disciplines. One studio.
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map(
-              (service: {
-                title: string;
-                description: string;
-                href: string;
-              }) => (
-                <Link
-                  key={service.href}
-                  href={service.href}
-                  className="group block p-8 border border-neutral-100 rounded-2xl hover:border-neutral-300 transition-colors"
-                >
-                  <h3 className="text-xl font-semibold text-black group-hover:text-neutral-700 transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 text-sm text-neutral-500 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <p className="mt-5 text-sm font-medium text-black">
-                    Learn more &rarr;
-                  </p>
-                </Link>
-              )
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      {featuredTestimonials?.length > 0 && (
-        <section className="py-24 px-6 lg:px-10 border-t border-neutral-100">
-          <div className="max-w-7xl mx-auto">
-            <p className="text-sm font-medium uppercase tracking-widest text-neutral-400 mb-4">
-              Testimonials
-            </p>
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-black mb-14">
-              What our clients say
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredTestimonials.map(
-                (testimonial: {
-                  _id: string;
-                  quote: string;
-                  author: string;
-                  role?: string;
-                  company?: string;
-                  photo?: object;
-                }) => (
-                  <div
-                    key={testimonial._id}
-                    className="p-8 bg-neutral-50 rounded-2xl"
-                  >
-                    <blockquote className="text-neutral-700 leading-relaxed">
-                      &ldquo;{testimonial.quote}&rdquo;
-                    </blockquote>
-                    <div className="mt-6 flex items-center gap-3">
-                      {testimonial.photo && (
-                        <div className="w-10 h-10 rounded-full overflow-hidden relative flex-shrink-0">
-                          <Image
-                            src={urlFor(testimonial.photo)
-                              .width(80)
-                              .height(80)
-                              .url()}
-                            alt={testimonial.author}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-semibold text-black">
-                          {testimonial.author}
-                        </p>
-                        <p className="text-xs text-neutral-500">
-                          {[testimonial.role, testimonial.company]
-                            .filter(Boolean)
-                            .join(", ")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* CTA Section */}
-      <section className="py-24 px-6 lg:px-10 bg-black text-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight">
-            Ready to build something remarkable?
-          </h2>
-          <p className="mt-4 text-neutral-400 text-lg max-w-lg mx-auto">
-            Let&apos;s discuss your project and explore how AI powered design can
-            elevate your brand.
-          </p>
-          <Link
-            href="/contact"
-            className="mt-8 inline-flex items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-black hover:bg-neutral-100 transition-colors"
+        {/* Scroll indicator */}
+        <div
+          ref={(el) => addRevealRef(el as HTMLElement, 4)}
+          data-delay="600"
+          className="reveal-up"
+          style={{
+            position: "absolute",
+            bottom: 32,
+            left: "50%",
+            transform: "translateX(-50%)",
+          }}
+        >
+          <div
+            style={{
+              width: 1,
+              height: 40,
+              background: "var(--border)",
+              position: "relative",
+              overflow: "hidden",
+            }}
           >
-            Start a Conversation
-          </Link>
+            <div className="scroll-line" />
+          </div>
         </div>
       </section>
+
+      <style>{`
+        .reveal-up {
+          opacity: 0;
+          transform: translateY(24px);
+          transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal-up.revealed {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .scroll-line {
+          position: absolute;
+          top: -40px;
+          left: 0;
+          width: 1px;
+          height: 40px;
+          background: var(--text-faint);
+          animation: scrollDown 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDown {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(80px); }
+        }
+      `}</style>
     </>
   );
 }

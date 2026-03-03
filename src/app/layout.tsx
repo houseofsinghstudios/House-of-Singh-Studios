@@ -1,39 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { siteConfig } from "@/lib/config";
 
 const inter = Inter({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
   variable: "--font-inter",
 });
 
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+});
+
 export const metadata: Metadata = {
-  title: {
-    default: `${siteConfig.name} | AI Powered Design Studio`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  metadataBase: new URL(siteConfig.url),
-  openGraph: {
-    title: `${siteConfig.name} | AI Powered Design Studio`,
-    description: siteConfig.description,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    locale: "en_CA",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `${siteConfig.name} | AI Powered Design Studio`,
-    description: siteConfig.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  title: "House of Singh Studios",
+  description: "Design studio. AI powered. Brand focused.",
 };
 
 export default function RootLayout({
@@ -42,10 +28,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-white text-neutral-900 antialiased">
+    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+      <body>
         <Header />
-        <main className="pt-16">{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
