@@ -77,7 +77,7 @@ export default async function AboutPage() {
                 }) => (
                   <div key={member._id}>
                     {member.photo ? (
-                      <div className="aspect-[3/4] bg-neutral-100 rounded-xl overflow-hidden relative mb-4">
+                      <div className="aspect-[3/4] bg-neutral-100 overflow-hidden relative mb-4">
                         <Image
                           src={urlFor(member.photo)
                             .width(400)
@@ -89,7 +89,7 @@ export default async function AboutPage() {
                         />
                       </div>
                     ) : (
-                      <div className="aspect-[3/4] bg-neutral-100 rounded-xl flex items-center justify-center mb-4">
+                      <div className="aspect-[3/4] bg-neutral-100 flex items-center justify-center mb-4">
                         <p className="text-sm text-neutral-400">
                           {member.name}
                         </p>
@@ -124,7 +124,7 @@ export default async function AboutPage() {
         )}
 
         {/* CTA */}
-        <div className="p-8 lg:p-10 bg-neutral-50 rounded-2xl text-center">
+        <div className="p-8 lg:p-10 bg-neutral-50 text-center">
           <h2 className="text-2xl font-semibold text-black">
             Want to work with us?
           </h2>
@@ -134,7 +134,7 @@ export default async function AboutPage() {
           </p>
           <Link
             href="/contact"
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+            className="btn-primary mt-6"
           >
             Get in Touch
           </Link>
