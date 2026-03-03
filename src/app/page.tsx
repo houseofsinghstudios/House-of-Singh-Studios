@@ -20,6 +20,7 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Intersection Observer for reveal animation
+    // Delay observation so the browser paints the initial opacity:0 state first
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -35,12 +36,15 @@ export default function Home() {
       { threshold: 0.1 }
     );
 
-    revealRefs.current.forEach((el) => {
-      if (el) observer.observe(el);
+    const raf = requestAnimationFrame(() => {
+      revealRefs.current.forEach((el) => {
+        if (el) observer.observe(el);
+      });
     });
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(raf);
       observer.disconnect();
     };
   }, []);
@@ -150,53 +154,10 @@ export default function Home() {
               flexWrap: "wrap",
             }}
           >
-            <Link
-              href="/work"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 48,
-                padding: "0 32px",
-                borderRadius: 9999,
-                background: "var(--text-primary)",
-                color: "var(--bg)",
-                fontFamily: "var(--sans)",
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: "none",
-                transition: "opacity 0.2s ease",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-            >
+            <Link href="/work" className="btn-primary">
               View Projects
             </Link>
-            <Link
-              href="/contact"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                height: 48,
-                padding: "0 32px",
-                borderRadius: 9999,
-                background: "transparent",
-                border: "1px solid var(--border)",
-                color: "var(--text-primary)",
-                fontFamily: "var(--sans)",
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: "none",
-                transition: "border-color 0.2s ease",
-              }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.borderColor = "var(--text-muted)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.borderColor = "var(--border)")
-              }
-            >
+            <Link href="/contact" className="btn-outline">
               Start a Project
             </Link>
           </div>
@@ -237,6 +198,45 @@ export default function Home() {
         .reveal-up.revealed {
           opacity: 1;
           transform: translateY(0);
+        }
+
+        .btn-primary {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          padding: 0 32px;
+          border-radius: 0;
+          background: var(--text-primary);
+          color: var(--bg);
+          font-family: var(--sans);
+          font-size: 14px;
+          font-weight: 500;
+          text-decoration: none;
+          transition: opacity 0.2s ease;
+        }
+        .btn-primary:hover {
+          opacity: 0.85;
+        }
+
+        .btn-outline {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 48px;
+          padding: 0 32px;
+          border-radius: 0;
+          background: transparent;
+          border: 1px solid var(--border);
+          color: var(--text-primary);
+          font-family: var(--sans);
+          font-size: 14px;
+          font-weight: 500;
+          text-decoration: none;
+          transition: border-color 0.2s ease;
+        }
+        .btn-outline:hover {
+          border-color: var(--text-muted);
         }
 
         .scroll-line {
