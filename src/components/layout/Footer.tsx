@@ -1,109 +1,132 @@
 import Link from "next/link";
-import { siteConfig } from "@/lib/config";
+
+const studioLinks = [
+  { label: "About", href: "/about" },
+  { label: "Packages", href: "/packages" },
+  { label: "AI Lab", href: "/ai" },
+  { label: "Insights", href: "/insights" },
+  { label: "Careers", href: "/careers" },
+];
+
+const connectLinks = [
+  { label: "Contact", href: "/contact" },
+  { label: "Instagram", href: "https://instagram.com/houseofsingh", external: true },
+  { label: "LinkedIn", href: "https://linkedin.com/company/houseofsingh", external: true },
+];
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="border-t border-neutral-100 bg-white">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <Link href="/" className="text-lg font-semibold tracking-tight text-black">
-              {siteConfig.name}
-            </Link>
-            <p className="mt-3 text-sm text-neutral-500 leading-relaxed max-w-xs">
-              AI powered design studio delivering brand identity, visual media,
-              digital design, and creative strategy.
-            </p>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4">
-              Services
-            </h4>
-            <div className="flex flex-col gap-2.5">
-              <Link href="/services/brand-identity" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Brand Identity
+    <footer className="border-t border-[var(--border)] px-[var(--page-px)] pt-16 pb-10">
+      <div className="footer-grid grid grid-cols-3 gap-12">
+        {/* Column 1: Studio */}
+        <div>
+          <p className="footer-heading">Studio</p>
+          <div className="flex flex-col gap-3">
+            {studioLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="footer-link">
+                {link.label}
               </Link>
-              <Link href="/services/visual-media" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Visual Media
-              </Link>
-              <Link href="/services/digital-design" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Digital Design
-              </Link>
-              <Link href="/services/creative-strategy" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Creative Strategy
-              </Link>
-            </div>
-          </div>
-
-          {/* Studio */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4">
-              Studio
-            </h4>
-            <div className="flex flex-col gap-2.5">
-              <Link href="/work" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Work
-              </Link>
-              <Link href="/ai" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                AI Capabilities
-              </Link>
-              <Link href="/journal" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Journal
-              </Link>
-              <Link href="/about" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                About
-              </Link>
-              <Link href="/packages" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Packages
-              </Link>
-            </div>
-          </div>
-
-          {/* Connect */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4">
-              Connect
-            </h4>
-            <div className="flex flex-col gap-2.5">
-              <Link href="/contact" className="text-sm text-neutral-600 hover:text-black transition-colors">
-                Get in Touch
-              </Link>
-              <a
-                href={siteConfig.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-neutral-600 hover:text-black transition-colors"
-              >
-                Instagram
-              </a>
-              <a
-                href={siteConfig.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-neutral-600 hover:text-black transition-colors"
-              >
-                LinkedIn
-              </a>
-              <p className="text-sm text-neutral-500 mt-2">{siteConfig.location}</p>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-14 pt-6 border-t border-neutral-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-neutral-400">
-            &copy; {currentYear} House of Singh Studios Inc. All rights reserved.
-          </p>
-          <p className="text-xs text-neutral-400">
-            AI Powered Creative Studio
-          </p>
+        {/* Column 2: Connect */}
+        <div>
+          <p className="footer-heading">Connect</p>
+          <div className="flex flex-col gap-3">
+            {connectLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className="footer-link">
+                  {link.label}
+                </Link>
+              )
+            )}
+          </div>
+        </div>
+
+        {/* Column 3: Location */}
+        <div>
+          <p className="footer-heading">Location</p>
+          <div className="flex flex-col gap-2">
+            <p className="footer-text">House of Singh Studios</p>
+            <p className="footer-text">Toronto, Canada</p>
+            <a href="mailto:hello@houseofsingh.com" className="footer-link">
+              hello@houseofsingh.com
+            </a>
+          </div>
         </div>
       </div>
+
+      {/* Tagline */}
+      <div className="mt-14 pt-6 border-t border-[var(--border)] flex flex-col items-center gap-4">
+        <p className="editorial-label">
+          DESIGN STUDIO. AI POWERED. BRAND FOCUSED.
+        </p>
+
+        {/* Copyright bar — two columns */}
+        <div className="w-full flex justify-between items-center">
+          <p className="font-[var(--sans)] text-xs text-[color:var(--text-faint)]">
+            &copy; 2026 House of Singh Studios Inc. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <Link
+              href="/terms"
+              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
+            >
+              Privacy
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .footer-heading {
+          font-family: var(--sans);
+          font-size: 11px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: var(--text-faint);
+          margin-bottom: 20px;
+        }
+        .footer-link {
+          font-family: var(--sans);
+          font-size: 14px;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        .footer-link:hover {
+          color: var(--text-primary);
+        }
+        .footer-text {
+          font-family: var(--sans);
+          font-size: 14px;
+          color: var(--text-muted);
+          margin: 0;
+        }
+        @media (max-width: 699px) {
+          .footer-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </footer>
   );
 }

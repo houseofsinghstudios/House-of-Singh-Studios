@@ -112,7 +112,7 @@ export default async function ServicesPage() {
               <Link
                 key={service.href}
                 href={service.href}
-                className="group block p-8 lg:p-10 border border-neutral-100 rounded-2xl hover:border-neutral-300 transition-colors"
+                className="group block p-8 lg:p-10 border border-neutral-100 hover:border-neutral-300 transition-colors"
               >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                   <div className="flex-1">

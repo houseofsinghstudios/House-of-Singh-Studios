@@ -68,7 +68,7 @@ export default async function CaseStudyPage({ params }: Props) {
                 (service: { _id: string; title: string }) => (
                   <span
                     key={service._id}
-                    className="text-xs px-3 py-1 bg-neutral-100 rounded-full text-neutral-600"
+                    className="text-xs px-3 py-1 bg-neutral-100 text-neutral-600"
                   >
                     {service.title}
                   </span>
@@ -80,7 +80,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
         {/* Featured Image */}
         {caseStudy.featuredImage && (
-          <div className="mt-12 aspect-[16/9] bg-neutral-100 rounded-2xl overflow-hidden relative">
+          <div className="mt-12 aspect-[16/9] bg-neutral-100 overflow-hidden relative">
             <Image
               src={urlFor(caseStudy.featuredImage)
                 .width(1400)
@@ -172,7 +172,7 @@ export default async function CaseStudyPage({ params }: Props) {
                   i: number
                 ) => (
                   <figure key={image._key || i}>
-                    <div className="aspect-[4/3] bg-neutral-100 rounded-xl overflow-hidden relative">
+                    <div className="aspect-[4/3] bg-neutral-100 overflow-hidden relative">
                       <Image
                         src={urlFor(image).width(800).height(600).url()}
                         alt={image.alt || `Gallery image ${i + 1}`}
@@ -194,7 +194,7 @@ export default async function CaseStudyPage({ params }: Props) {
 
         {/* Testimonial */}
         {caseStudy.testimonial?.quote && (
-          <div className="mt-16 p-8 lg:p-10 bg-neutral-50 rounded-2xl max-w-3xl">
+          <div className="mt-16 p-8 lg:p-10 bg-neutral-50 max-w-3xl">
             <blockquote className="text-lg text-neutral-700 leading-relaxed italic">
               &ldquo;{caseStudy.testimonial.quote}&rdquo;
             </blockquote>

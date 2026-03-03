@@ -54,7 +54,7 @@ export default async function JournalPage() {
                   href={`/journal/${post.slug.current}`}
                   className="group block"
                 >
-                  <div className="aspect-[16/10] bg-neutral-100 rounded-xl mb-4 overflow-hidden relative">
+                  <div className="aspect-[16/10] bg-neutral-100 mb-4 overflow-hidden relative">
                     {post.featuredImage ? (
                       <Image
                         src={urlFor(post.featuredImage)
@@ -98,7 +98,7 @@ export default async function JournalPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
               <div key={i} className="group">
-                <div className="aspect-[16/10] bg-neutral-100 rounded-xl mb-4" />
+                <div className="aspect-[16/10] bg-neutral-100 mb-4" />
                 <p className="text-xs text-neutral-400 mb-2">Coming Soon</p>
                 <h3 className="text-lg font-semibold text-black">
                   Blog Post {i}

@@ -42,7 +42,7 @@ export default function BrandIdentityPage() {
           ].map((item) => (
             <div
               key={item}
-              className="p-6 border border-neutral-100 rounded-xl"
+              className="p-6 border border-neutral-100"
             >
               <p className="text-sm font-medium text-black">{item}</p>
             </div>
@@ -50,7 +50,7 @@ export default function BrandIdentityPage() {
         </div>
 
         {/* CTA */}
-        <div className="p-8 lg:p-10 bg-neutral-50 rounded-2xl text-center">
+        <div className="p-8 lg:p-10 bg-neutral-50 text-center">
           <h2 className="text-2xl font-semibold text-black">
             Ready to build your brand identity?
           </h2>
@@ -60,7 +60,7 @@ export default function BrandIdentityPage() {
           </p>
           <Link
             href="/contact"
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+            className="btn-primary mt-6"
           >
             Start a Conversation
           </Link>
