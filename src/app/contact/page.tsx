@@ -64,7 +64,7 @@ export default function ContactPage() {
                 <p className="text-sm text-black">Toronto, Canada</p>
               </div>
             </div>
-            <div className="mt-10 p-6 border border-neutral-100 rounded-xl">
+            <div className="mt-10 p-6 border border-neutral-100">
               <p className="text-sm font-medium text-black mb-2">
                 Book a Discovery Call
               </p>
@@ -75,7 +75,7 @@ export default function ContactPage() {
           </div>
           <div>
             {submitted ? (
-              <div className="p-8 bg-neutral-50 rounded-2xl text-center">
+              <div className="p-8 bg-neutral-50 text-center">
                 <h2 className="text-2xl font-semibold text-black">
                   Thank you
                 </h2>
@@ -87,7 +87,7 @@ export default function ContactPage() {
             ) : (
               <>
                 {error && (
-                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                  <div className="mb-4 p-4 bg-red-50 border border-red-200 text-sm text-red-700">
                     Something went wrong. Please try again or email studio@houseofsingh.com directly.
                   </div>
                 )}
@@ -100,7 +100,7 @@ export default function ContactPage() {
                       type="text"
                       name="name"
                       required
-                      className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
+                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
                       placeholder="Your name"
                     />
                   </div>
@@ -112,7 +112,7 @@ export default function ContactPage() {
                       type="email"
                       name="email"
                       required
-                      className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
+                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
                       placeholder="you@company.com"
                     />
                   </div>
@@ -122,7 +122,7 @@ export default function ContactPage() {
                     </label>
                     <select
                       name="service"
-                      className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
+                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
                     >
                       <option value="">Select a service</option>
                       <option value="Brand Identity">Brand Identity & Visual Design</option>
@@ -138,7 +138,7 @@ export default function ContactPage() {
                     </label>
                     <select
                       name="budget"
-                      className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
+                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
                     >
                       <option value="">Select a range</option>
                       <option value="Under $5,000">Under $5,000</option>
@@ -156,7 +156,7 @@ export default function ContactPage() {
                       name="message"
                       required
                       rows={5}
-                      className="w-full rounded-lg border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors resize-none"
+                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors resize-none"
                       placeholder="What are you looking to build? Any timelines or details you can share."
                     />
                   </div>

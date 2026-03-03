@@ -73,7 +73,7 @@ export default async function JournalPostPage({ params }: Props) {
 
         {/* Featured Image */}
         {post.featuredImage && (
-          <div className="mt-10 aspect-[16/9] bg-neutral-100 rounded-2xl overflow-hidden relative">
+          <div className="mt-10 aspect-[16/9] bg-neutral-100 overflow-hidden relative">
             <Image
               src={urlFor(post.featuredImage).width(1200).height(675).url()}
               alt={post.title}
@@ -97,7 +97,7 @@ export default async function JournalPostPage({ params }: Props) {
                     value: { asset: object; alt?: string; caption?: string };
                   }) => (
                     <figure className="my-8">
-                      <div className="aspect-[16/9] bg-neutral-100 rounded-xl overflow-hidden relative">
+                      <div className="aspect-[16/9] bg-neutral-100 overflow-hidden relative">
                         <Image
                           src={urlFor(value).width(1200).height(675).url()}
                           alt={value.alt || ""}
@@ -124,7 +124,7 @@ export default async function JournalPostPage({ params }: Props) {
             {post.tags.map((tag: string) => (
               <span
                 key={tag}
-                className="text-xs px-3 py-1 bg-neutral-100 rounded-full text-neutral-600"
+                className="text-xs px-3 py-1 bg-neutral-100 text-neutral-600"
               >
                 {tag}
               </span>
@@ -148,7 +148,7 @@ export default async function JournalPostPage({ params }: Props) {
                   <Link
                     key={service._id}
                     href={`/services/${service.slug.current}`}
-                    className="text-sm px-4 py-2 border border-neutral-200 rounded-none hover:border-neutral-400 transition-colors"
+                    className="text-sm px-4 py-2 border border-neutral-200 hover:border-neutral-400 transition-colors"
                   >
                     {service.title}
                   </Link>
@@ -177,7 +177,7 @@ export default async function JournalPostPage({ params }: Props) {
                     href={`/work/${study.slug.current}`}
                     className="group block"
                   >
-                    <div className="aspect-[4/3] bg-neutral-100 rounded-xl overflow-hidden relative">
+                    <div className="aspect-[4/3] bg-neutral-100 overflow-hidden relative">
                       {study.featuredImage && (
                         <Image
                           src={urlFor(study.featuredImage)

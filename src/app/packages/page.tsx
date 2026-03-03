@@ -103,7 +103,7 @@ export default async function PackagesPage() {
             }) => (
               <div
                 key={pkg.name}
-                className={`p-8 rounded-2xl border ${
+                className={`p-8 border ${
                   pkg.featured
                     ? "border-black bg-black text-white"
                     : "border-neutral-100 bg-white text-black"

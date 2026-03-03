@@ -141,6 +141,13 @@ body {
   animation: revealUp 0.8s ease forwards;
 }
 
+/* ── Global sharp corners — no border-radius anywhere ── */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
 /* ── Scroll indicator ── */
 .scroll-track {
   width: 1px;

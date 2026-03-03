@@ -80,18 +80,17 @@ export default function Header() {
             "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease",
         }}
       >
-        {/* Crest Logo — visible in State 1 (top of page) */}
+        {/* Crest Logo — visible in State 1 (top of page), positioned with breathing room */}
         <div
           style={{
-            position: "absolute",
+            position: "fixed",
             left: "var(--page-px)",
-            top: "50%",
-            transform: scrolled
-              ? "translateY(calc(-50% - 20px))"
-              : "translateY(-50%)",
+            top: 48,
             opacity: scrolled ? 0 : 1,
+            transform: scrolled ? "translateY(-20px)" : "translateY(0)",
             transition: "opacity 0.5s ease, transform 0.5s ease",
             pointerEvents: scrolled ? "none" : "auto",
+            zIndex: 100,
           }}
         >
           <Link href="/" aria-label="House of Singh Studios home">
@@ -99,7 +98,7 @@ export default function Header() {
             <img
               src="/hos-studios-logo.svg"
               alt=""
-              style={{ height: 52, width: "auto", display: "block" }}
+              style={{ height: 90, width: "auto", display: "block" }}
             />
           </Link>
         </div>

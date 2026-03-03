@@ -73,6 +73,8 @@ const PROJECTS = [
     sentence:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
     href: "/work/tedxtoronto",
+    color: "#2B2B2B",
+    accent: "#E62B1E",
   },
   {
     name: "Meridian Financial Group",
@@ -80,6 +82,8 @@ const PROJECTS = [
     sentence:
       "Brand identity system for a mid-market financial services firm.",
     href: "/work/meridian",
+    color: "#1A3A5C",
+    accent: "#C9A96E",
   },
   {
     name: "Soulbound Publication",
@@ -87,6 +91,8 @@ const PROJECTS = [
     sentence:
       "Publication cover design and art direction for a leadership book.",
     href: "/work/soulbound",
+    color: "#3C2A4A",
+    accent: "#D4AF37",
   },
   {
     name: "Nomad Kitchen",
@@ -94,6 +100,8 @@ const PROJECTS = [
     sentence:
       "Brand identity and packaging for a modern South Asian food brand.",
     href: "/work/nomad-kitchen",
+    color: "#4A3728",
+    accent: "#E8A848",
   },
 ];
 
@@ -135,6 +143,14 @@ function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
+function clamp01(v: number): number {
+  return Math.max(0, Math.min(1, v));
+}
+
+function rangeProgress(scrollPct: number, start: number, end: number): number {
+  return clamp01((scrollPct - start) / (end - start));
+}
+
 /* ═══════════════════════════════════════════════════════
    Component
    ═══════════════════════════════════════════════════════ */
@@ -144,54 +160,90 @@ export default function Home() {
   const [statValues, setStatValues] = useState([0, 0, 0]);
   const [statsCounted, setStatsCounted] = useState(false);
   const [activeSlide, setActiveSlide] = useState(0);
+  const prevSlideRef = useRef(0);
   const carouselTimer = useRef<ReturnType<typeof setInterval>>(undefined);
 
   /* ── Refs for scroll-driven hero reveal ── */
-  const heroLabelRef = useRef<HTMLParagraphElement>(null);
-  const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
-  const heroSecondaryRef = useRef<HTMLParagraphElement>(null);
+  const heroSecondaryRef = useRef<HTMLDivElement>(null);
   const heroSupportingRef = useRef<HTMLParagraphElement>(null);
   const heroCtaRef = useRef<HTMLDivElement>(null);
   const heroScrollRef = useRef<HTMLDivElement>(null);
 
-  /* ── Scroll-driven hero reveal ── */
+  /* ── Refs for section micro-interactions ── */
+  const s2HeadingRef = useRef<HTMLHeadingElement>(null);
+  const s2WeFixRef = useRef<HTMLParagraphElement>(null);
+  const s4CardsRef = useRef<HTMLDivElement>(null);
+  const s7HeadingRef = useRef<HTMLHeadingElement>(null);
+  const s7SupportRef = useRef<HTMLDivElement>(null);
+  const testimonialQuoteRef = useRef<HTMLQuoteElement>(null);
+  const testimonialAuthorRef = useRef<HTMLParagraphElement>(null);
+
+  /* ── Scroll-driven hero reveal with character-level animations ── */
   useEffect(() => {
-    const elements: { ref: React.RefObject<HTMLElement | null>; start: number; end: number }[] = [
-      { ref: heroLabelRef, start: 0, end: 8 },
-      { ref: heroHeadlineRef, start: 0, end: 10 },
-      { ref: heroSecondaryRef, start: 10, end: 20 },
-      { ref: heroSupportingRef, start: 20, end: 28 },
-      { ref: heroCtaRef, start: 28, end: 35 },
-    ];
+    const secondaryText = "A design studio powered by AI systems and led by creative direction.";
+    const secondaryEl = heroSecondaryRef.current;
+
+    // Wrap secondary text in individual character spans
+    if (secondaryEl && !secondaryEl.dataset.initialized) {
+      secondaryEl.dataset.initialized = "1";
+      secondaryEl.innerHTML = "";
+      for (let i = 0; i < secondaryText.length; i++) {
+        const span = document.createElement("span");
+        span.textContent = secondaryText[i] === " " ? "\u00A0" : secondaryText[i];
+        span.style.opacity = "0";
+        span.style.filter = "blur(6px)";
+        span.style.transform = "translateY(8px)";
+        span.style.display = "inline-block";
+        span.style.transition = "none";
+        span.dataset.charIdx = String(i);
+        secondaryEl.appendChild(span);
+      }
+    }
 
     let ticking = false;
 
     function update() {
       const vh = window.innerHeight;
-      const scrollY = window.scrollY;
+      const scrollPct = (window.scrollY / vh) * 100;
 
-      elements.forEach(({ ref, start, end }) => {
-        const el = ref.current;
-        if (!el) return;
+      // ── Secondary text: char-by-char blur-to-sharp (5–30%) ──
+      if (secondaryEl) {
+        const chars = secondaryEl.querySelectorAll<HTMLSpanElement>("span[data-char-idx]");
+        const totalChars = chars.length;
+        chars.forEach((ch) => {
+          const idx = Number(ch.dataset.charIdx);
+          // Each character has its own micro-window within the 5-30% range
+          const charStart = 5 + (idx / totalChars) * 20;
+          const charEnd = charStart + 5;
+          const p = clamp01((scrollPct - charStart) / (charEnd - charStart));
+          ch.style.opacity = String(p);
+          ch.style.filter = `blur(${6 * (1 - p)}px)`;
+          ch.style.transform = `translateY(${8 * (1 - p)}px)`;
+        });
+      }
 
-        const startPx = (vh * start) / 100;
-        const endPx = (vh * end) / 100;
+      // ── Supporting text: clip-path wipe left-to-right (25–45%) ──
+      const supportEl = heroSupportingRef.current;
+      if (supportEl) {
+        const p = rangeProgress(scrollPct, 25, 45);
+        supportEl.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
+        supportEl.style.opacity = p > 0 ? "1" : "0";
+      }
 
-        let progress = 0;
-        if (scrollY >= endPx) progress = 1;
-        else if (scrollY > startPx)
-          progress = (scrollY - startPx) / (endPx - startPx);
+      // ── CTAs: scale + fade (40–55%) ──
+      const ctaEl = heroCtaRef.current;
+      if (ctaEl) {
+        const p = rangeProgress(scrollPct, 40, 55);
+        ctaEl.style.opacity = String(p);
+        ctaEl.style.transform = `scale(${0.96 + 0.04 * p})`;
+      }
 
-        el.style.opacity = String(progress);
-        el.style.transform = `translateY(${30 * (1 - progress)}px)`;
-      });
-
-      // Scroll indicator fades OUT as user scrolls
+      // ── Scroll indicator: fade in (50–60%) then fade out after ──
       const scrollEl = heroScrollRef.current;
       if (scrollEl) {
-        const fadeEnd = vh * 0.2;
-        const fadeProgress = Math.min(scrollY / fadeEnd, 1);
-        scrollEl.style.opacity = String(1 - fadeProgress);
+        const fadeIn = rangeProgress(scrollPct, 50, 60);
+        const fadeOut = rangeProgress(scrollPct, 80, 100);
+        scrollEl.style.opacity = String(fadeIn * (1 - fadeOut));
       }
 
       ticking = false;
@@ -204,23 +256,206 @@ export default function Home() {
       }
     }
 
-    // Set initial state
-    elements.forEach(({ ref }) => {
-      const el = ref.current;
-      if (el) {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(30px)";
-        el.style.transition = "none";
-      }
-    });
-
     window.addEventListener("scroll", onScroll, { passive: true });
-    update(); // Run once immediately
+    update();
 
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ── Scroll-reveal observer ── */
+  /* ── Section 2: Word-by-word heading reveal + snap "We fix that" ── */
+  useEffect(() => {
+    const headingEl = s2HeadingRef.current;
+    const weFixEl = s2WeFixRef.current;
+
+    if (headingEl && !headingEl.dataset.initialized) {
+      headingEl.dataset.initialized = "1";
+      const text = headingEl.textContent || "";
+      const words = text.split(" ");
+      headingEl.innerHTML = "";
+      words.forEach((word, i) => {
+        const span = document.createElement("span");
+        span.textContent = word;
+        span.style.opacity = "0";
+        span.style.display = "inline-block";
+        span.style.transition = `opacity 0.4s ease ${i * 40}ms`;
+        span.dataset.wordIdx = String(i);
+        headingEl.appendChild(span);
+        if (i < words.length - 1) {
+          headingEl.appendChild(document.createTextNode(" "));
+        }
+      });
+    }
+
+    if (weFixEl) {
+      weFixEl.style.opacity = "0";
+      weFixEl.style.transition = "none";
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const target = entry.target as HTMLElement;
+          if (target === headingEl) {
+            const words = headingEl.querySelectorAll<HTMLSpanElement>("span[data-word-idx]");
+            words.forEach((w) => { w.style.opacity = "1"; });
+            observer.unobserve(headingEl);
+          }
+          if (target === weFixEl) {
+            weFixEl!.style.opacity = "1";
+            observer.unobserve(weFixEl!);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (headingEl) observer.observe(headingEl);
+    if (weFixEl) observer.observe(weFixEl);
+
+    return () => observer.disconnect();
+  }, []);
+
+  /* ── Section 4: Border draw + staggered card content ── */
+  useEffect(() => {
+    const grid = s4CardsRef.current;
+    if (!grid) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const card = entry.target as HTMLElement;
+          const col = Number(card.dataset.col);
+          const delay = col * 150;
+
+          const border = card.querySelector<HTMLElement>(".service-border-draw");
+          const content = card.querySelector<HTMLElement>(".service-content");
+
+          if (border) {
+            border.style.transition = `width 0.6s ease ${delay}ms`;
+            border.style.width = "100%";
+          }
+          if (content) {
+            content.style.transition = `opacity 0.5s ease ${delay + 600}ms, transform 0.5s ease ${delay + 600}ms`;
+            content.style.opacity = "1";
+            content.style.transform = "translateY(0)";
+          }
+
+          observer.unobserve(card);
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    grid.querySelectorAll<HTMLElement>(".service-card-animated").forEach((el) =>
+      observer.observe(el)
+    );
+
+    return () => observer.disconnect();
+  }, []);
+
+  /* ── Section 6: Word-by-word testimonial animation ── */
+  useEffect(() => {
+    const quoteEl = testimonialQuoteRef.current;
+    const authorEl = testimonialAuthorRef.current;
+    if (!quoteEl) return;
+
+    const text = TESTIMONIALS[activeSlide].quote;
+    const words = text.split(" ");
+
+    quoteEl.innerHTML = "";
+    words.forEach((word, i) => {
+      const span = document.createElement("span");
+      span.textContent = word;
+      span.style.opacity = "0";
+      span.style.transform = "translateY(8px)";
+      span.style.display = "inline-block";
+      span.style.transition = `opacity 0.3s ease ${i * 25}ms, transform 0.3s ease ${i * 25}ms`;
+      span.dataset.tWordIdx = String(i);
+      quoteEl.appendChild(span);
+      if (i < words.length - 1) {
+        quoteEl.appendChild(document.createTextNode(" "));
+      }
+    });
+
+    if (authorEl) {
+      authorEl.style.opacity = "0";
+      authorEl.style.transition = `opacity 0.4s ease ${words.length * 25 + 300}ms`;
+    }
+
+    // Trigger after paint
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        quoteEl.querySelectorAll<HTMLSpanElement>("span[data-t-word-idx]").forEach((w) => {
+          w.style.opacity = "1";
+          w.style.transform = "translateY(0)";
+        });
+        if (authorEl) authorEl.style.opacity = "1";
+      });
+    });
+
+    prevSlideRef.current = activeSlide;
+  }, [activeSlide]);
+
+  /* ── Section 7: Gathering heading animation ── */
+  useEffect(() => {
+    const headingEl = s7HeadingRef.current;
+    const supportEl = s7SupportRef.current;
+
+    if (headingEl && !headingEl.dataset.initialized) {
+      headingEl.dataset.initialized = "1";
+      const text = headingEl.textContent || "";
+      const words = text.split(" ");
+      headingEl.innerHTML = "";
+      words.forEach((word, i) => {
+        const span = document.createElement("span");
+        span.textContent = word;
+        span.style.display = "inline-block";
+        span.style.transform = `translateY(${(words.length - i) * 12}px)`;
+        span.style.opacity = "0";
+        span.style.transition = `transform 0.8s cubic-bezier(0.22,1,0.36,1) ${i * 60}ms, opacity 0.6s ease ${i * 60}ms`;
+        span.dataset.s7Word = String(i);
+        headingEl.appendChild(span);
+        if (i < words.length - 1) {
+          const space = document.createElement("span");
+          space.innerHTML = "&nbsp;";
+          headingEl.appendChild(space);
+        }
+      });
+    }
+
+    if (supportEl) {
+      supportEl.style.opacity = "0";
+      supportEl.style.transform = "translateY(20px)";
+      supportEl.style.transition = "opacity 0.6s ease 0.9s, transform 0.6s ease 0.9s";
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          if (entry.target === headingEl) {
+            headingEl!.querySelectorAll<HTMLSpanElement>("span[data-s7-word]").forEach((w) => {
+              w.style.transform = "translateY(0)";
+              w.style.opacity = "1";
+            });
+            if (supportEl) {
+              supportEl.style.opacity = "1";
+              supportEl.style.transform = "translateY(0)";
+            }
+            observer.unobserve(headingEl!);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (headingEl) observer.observe(headingEl);
+    return () => observer.disconnect();
+  }, []);
+
+  /* ── Scroll-reveal observer (generic for sections that still use it) ── */
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -339,17 +574,17 @@ export default function Home() {
           padding: "0 var(--page-px) 80px",
         }}
       >
+        {/* Editorial label — visible on load */}
         <p
-          ref={heroLabelRef}
           className="editorial-label"
-          style={{ marginBottom: 24, opacity: 0, transform: "translateY(30px)" }}
+          style={{ marginBottom: 24 }}
         >
           (Creative Direction Studio)
         </p>
 
         <div style={{ maxWidth: 800 }}>
+          {/* Primary headline — visible on load, not animated */}
           <h1
-            ref={heroHeadlineRef}
             style={{
               fontFamily: "var(--serif)",
               fontWeight: 600,
@@ -357,8 +592,6 @@ export default function Home() {
               lineHeight: 1.08,
               color: "var(--text-primary)",
               margin: 0,
-              opacity: 0,
-              transform: "translateY(30px)",
             }}
           >
             AI can generate assets.
@@ -366,7 +599,8 @@ export default function Home() {
             It cannot build a brand.
           </h1>
 
-          <p
+          {/* Secondary text — character blur-to-sharp on scroll */}
+          <div
             ref={heroSecondaryRef}
             style={{
               marginTop: 32,
@@ -376,13 +610,12 @@ export default function Home() {
               lineHeight: 1.6,
               color: "var(--text-muted)",
               maxWidth: 560,
-              opacity: 0,
-              transform: "translateY(30px)",
             }}
           >
             A design studio powered by AI systems and led by creative direction.
-          </p>
+          </div>
 
+          {/* Supporting text — clip-path wipe on scroll */}
           <p
             ref={heroSupportingRef}
             style={{
@@ -394,7 +627,7 @@ export default function Home() {
               color: "var(--text-faint)",
               maxWidth: 560,
               opacity: 0,
-              transform: "translateY(30px)",
+              clipPath: "inset(0 100% 0 0)",
             }}
           >
             We build brands that hold up across every channel for years. AI
@@ -402,6 +635,7 @@ export default function Home() {
             layer.
           </p>
 
+          {/* CTAs — scale + fade on scroll */}
           <div
             ref={heroCtaRef}
             style={{
@@ -410,7 +644,7 @@ export default function Home() {
               flexWrap: "wrap",
               gap: 16,
               opacity: 0,
-              transform: "translateY(30px)",
+              transform: "scale(0.96)",
             }}
           >
             <Link href="/work" className="btn-primary">
@@ -422,6 +656,7 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Scroll indicator — bottom RIGHT, fades in last */}
         <div
           ref={heroScrollRef}
           style={{
@@ -432,6 +667,7 @@ export default function Home() {
             flexDirection: "column",
             alignItems: "flex-end",
             gap: 12,
+            opacity: 0,
           }}
         >
           <p className="editorial-label">(Scroll)</p>
@@ -450,8 +686,9 @@ export default function Home() {
           (The Problem)
         </p>
 
+        {/* Word-by-word heading reveal */}
         <h2
-          className="scroll-reveal"
+          ref={s2HeadingRef}
           style={{
             fontFamily: "var(--serif)",
             fontWeight: 600,
@@ -466,6 +703,7 @@ export default function Home() {
           Your business has evolved. Your brand has not.
         </h2>
 
+        {/* Pain copy — normal fade up */}
         <p
           className="scroll-reveal"
           style={{
@@ -485,8 +723,9 @@ export default function Home() {
           system holding it together, and every new campaign widens the gap.
         </p>
 
+        {/* "We fix that." — SNAP in, zero transition */}
         <p
-          className="scroll-reveal"
+          ref={s2WeFixRef}
           style={{
             marginTop: 80,
             marginBottom: 40,
@@ -494,12 +733,13 @@ export default function Home() {
             fontWeight: 500,
             fontSize: "clamp(22px, 2vw, 28px)",
             color: "var(--text-primary)",
-            transitionDelay: "0.2s",
+            opacity: 0,
           }}
         >
           We fix that.
         </p>
 
+        {/* Process copy — normal fade up */}
         <p
           className="scroll-reveal"
           style={{
@@ -509,7 +749,6 @@ export default function Home() {
             lineHeight: 1.65,
             color: "var(--text-secondary)",
             maxWidth: 640,
-            transitionDelay: "0.2s",
           }}
         >
           Every project at House of Singh Studios moves through five stages. AI
@@ -518,7 +757,7 @@ export default function Home() {
           costs before we start.
         </p>
 
-        {/* Process steps */}
+        {/* Process steps — normal fade up */}
         <div
           className="scroll-reveal process-steps"
           style={{
@@ -526,7 +765,6 @@ export default function Home() {
             display: "flex",
             alignItems: "center",
             flexWrap: "wrap",
-            transitionDelay: "0.3s",
           }}
         >
           {PROCESS_STEPS.map((step, i) => (
@@ -636,65 +874,83 @@ export default function Home() {
           good.
         </p>
 
-        <div className="services-grid" style={{ marginTop: 72 }}>
+        <div ref={s4CardsRef} className="services-grid" style={{ marginTop: 72 }}>
           {SERVICES.map((service, i) => (
             <div
               key={service.href}
-              className="scroll-reveal"
-              style={{
-                borderTop: "1px solid var(--border)",
-                paddingTop: 28,
-                transitionDelay: `${i < 2 ? 0 : 0.1}s`,
-              }}
+              className="service-card-animated"
+              data-col={i % 2}
+              style={{ position: "relative", paddingTop: 28 }}
             >
-              <h3
+              {/* Animated border that draws itself */}
+              <div
+                className="service-border-draw"
                 style={{
-                  fontFamily: "var(--serif)",
-                  fontWeight: 600,
-                  fontSize: "clamp(22px, 2vw, 28px)",
-                  color: "var(--text-primary)",
-                  margin: 0,
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: 1,
+                  width: 0,
+                  background: "var(--border)",
+                }}
+              />
+              {/* Card content — fades in after border draws */}
+              <div
+                className="service-content"
+                style={{
+                  opacity: 0,
+                  transform: "translateY(12px)",
                 }}
               >
-                {service.title}
-              </h3>
-              <p
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontWeight: 400,
-                  fontSize: 15,
-                  lineHeight: 1.55,
-                  color: "var(--text-secondary)",
-                  marginTop: 14,
-                }}
-              >
-                {service.sentence}
-              </p>
-              <ul className="service-bullets" style={{ marginTop: 18 }}>
-                {service.bullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-              <Link
-                href={service.href}
-                className="arrow-link"
-                style={{
-                  marginTop: 22,
-                  display: "inline-block",
-                  textDecoration: "none",
-                }}
-              >
-                <span
+                <h3
                   style={{
-                    fontFamily: "var(--sans)",
-                    fontWeight: 500,
-                    fontSize: 13,
+                    fontFamily: "var(--serif)",
+                    fontWeight: 600,
+                    fontSize: "clamp(22px, 2vw, 28px)",
                     color: "var(--text-primary)",
+                    margin: 0,
                   }}
                 >
-                  {service.linkText} <span className="arrow-icon">&rarr;</span>
-                </span>
-              </Link>
+                  {service.title}
+                </h3>
+                <p
+                  style={{
+                    fontFamily: "var(--sans)",
+                    fontWeight: 400,
+                    fontSize: 15,
+                    lineHeight: 1.55,
+                    color: "var(--text-secondary)",
+                    marginTop: 14,
+                  }}
+                >
+                  {service.sentence}
+                </p>
+                <ul className="service-bullets" style={{ marginTop: 18 }}>
+                  {service.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <Link
+                  href={service.href}
+                  className="arrow-link"
+                  style={{
+                    marginTop: 22,
+                    display: "inline-block",
+                    textDecoration: "none",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontFamily: "var(--sans)",
+                      fontWeight: 500,
+                      fontSize: 13,
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {service.linkText} <span className="arrow-icon">&rarr;</span>
+                  </span>
+                </Link>
+              </div>
             </div>
           ))}
         </div>
@@ -739,30 +995,66 @@ export default function Home() {
                 style={{
                   aspectRatio: "4 / 3",
                   overflow: "hidden",
-                  background:
-                    "linear-gradient(145deg, #E8E8E3, #D8D8D3)",
+                  background: project.color,
+                  position: "relative",
                 }}
               >
+                {/* Sample project image placeholder with Ken Burns */}
                 <div
-                  className="project-image-inner"
+                  className="project-image-inner ken-burns"
                   style={{
                     width: "100%",
                     height: "100%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    position: "relative",
                   }}
                 >
+                  {/* Decorative geometric elements as sample imagery */}
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}>
+                    <div style={{
+                      width: "60%",
+                      height: "60%",
+                      border: `1px solid ${project.accent}33`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      position: "relative",
+                    }}>
+                      <div style={{
+                        width: "70%",
+                        height: "70%",
+                        border: `1px solid ${project.accent}55`,
+                      }} />
+                      <div style={{
+                        position: "absolute",
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        background: `${project.accent}22`,
+                        border: `1px solid ${project.accent}44`,
+                      }} />
+                    </div>
+                  </div>
                   <span
                     style={{
                       fontFamily: "var(--sans)",
-                      fontSize: 12,
+                      fontSize: 11,
                       textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                      color: "#999",
+                      letterSpacing: "0.12em",
+                      color: `${project.accent}88`,
+                      position: "relative",
+                      zIndex: 1,
                     }}
                   >
-                    Project Image
+                    {project.name.split(" ")[0]}
                   </span>
                 </div>
               </div>
@@ -870,6 +1162,7 @@ export default function Home() {
               position: "relative",
               maxWidth: 720,
               margin: "0 auto",
+              minHeight: 180,
             }}
           >
             {TESTIMONIALS.map((t, i) => (
@@ -878,6 +1171,7 @@ export default function Home() {
                 className={`carousel-slide${i === activeSlide ? " active" : ""}`}
               >
                 <blockquote
+                  ref={i === activeSlide ? testimonialQuoteRef : undefined}
                   style={{
                     fontFamily: "var(--serif)",
                     fontWeight: 400,
@@ -892,6 +1186,7 @@ export default function Home() {
                   {t.quote}
                 </blockquote>
                 <p
+                  ref={i === activeSlide ? testimonialAuthorRef : undefined}
                   style={{
                     fontFamily: "var(--sans)",
                     fontWeight: 400,
@@ -973,8 +1268,9 @@ export default function Home() {
           (Next Step)
         </p>
 
+        {/* Gathering heading — words slide into place */}
         <h2
-          className="scroll-reveal"
+          ref={s7HeadingRef}
           style={{
             fontFamily: "var(--serif)",
             fontWeight: 600,
@@ -982,37 +1278,33 @@ export default function Home() {
             lineHeight: 1.15,
             color: "var(--text-primary)",
             margin: "0 auto",
-            transitionDelay: "0.1s",
           }}
         >
           Ready to build a brand that holds up?
         </h2>
 
-        <p
-          className="scroll-reveal"
-          style={{
-            marginTop: 20,
-            fontFamily: "var(--sans)",
-            fontWeight: 400,
-            fontSize: 17,
-            color: "var(--text-muted)",
-            maxWidth: 480,
-            marginLeft: "auto",
-            marginRight: "auto",
-            transitionDelay: "0.2s",
-          }}
-        >
-          Whether you are refining an existing brand or building from scratch,
-          the first step is a conversation.
-        </p>
+        <div ref={s7SupportRef}>
+          <p
+            style={{
+              marginTop: 20,
+              fontFamily: "var(--sans)",
+              fontWeight: 400,
+              fontSize: 17,
+              color: "var(--text-muted)",
+              maxWidth: 480,
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
+            Whether you are refining an existing brand or building from scratch,
+            the first step is a conversation.
+          </p>
 
-        <div
-          className="scroll-reveal"
-          style={{ marginTop: 44, transitionDelay: "0.3s" }}
-        >
-          <Link href="/contact" className="btn-primary">
-            Start a Project
-          </Link>
+          <div style={{ marginTop: 44 }}>
+            <Link href="/contact" className="btn-primary">
+              Start a Project
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -1090,12 +1382,23 @@ export default function Home() {
           gap: 28px;
         }
 
+        /* Ken Burns effect for project images */
+        @keyframes kenBurns {
+          0% { transform: scale(1.0); }
+          50% { transform: scale(1.05); }
+          100% { transform: scale(1.0); }
+        }
+        .ken-burns {
+          animation: kenBurns 12s ease-in-out infinite;
+        }
+        .project-card:hover .ken-burns {
+          animation-duration: 6s;
+          transform: scale(1.05) translateX(4px) translateY(-4px);
+        }
+
         /* Project card hover effects */
         .project-card .project-image-inner {
           transition: transform 0.5s ease;
-        }
-        .project-card:hover .project-image-inner {
-          transform: scale(1.03);
         }
         .project-card .project-sentence {
           max-height: 0;

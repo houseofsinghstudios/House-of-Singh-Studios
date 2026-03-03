@@ -50,7 +50,7 @@ export default function AIPage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="p-6 border border-neutral-100 rounded-xl"
+                className="p-6 border border-neutral-100"
               >
                 <h3 className="text-base font-semibold text-black">
                   {item.title}
@@ -64,7 +64,7 @@ export default function AIPage() {
         </div>
 
         {/* Client AI Tools */}
-        <div className="p-8 lg:p-10 bg-neutral-50 rounded-2xl">
+        <div className="p-8 lg:p-10 bg-neutral-50">
           <h2 className="text-2xl font-semibold text-black mb-3">
             AI tools for clients
           </h2>

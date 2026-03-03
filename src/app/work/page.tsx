@@ -45,7 +45,7 @@ export default async function WorkPage() {
                   href={`/work/${study.slug.current}`}
                   className="group block"
                 >
-                  <div className="aspect-[4/3] bg-neutral-100 rounded-2xl overflow-hidden relative">
+                  <div className="aspect-[4/3] bg-neutral-100 overflow-hidden relative">
                     {study.featuredImage ? (
                       <Image
                         src={urlFor(study.featuredImage)
@@ -83,7 +83,7 @@ export default async function WorkPage() {
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="aspect-[4/3] bg-neutral-100 rounded-2xl flex items-center justify-center"
+                className="aspect-[4/3] bg-neutral-100 flex items-center justify-center"
               >
                 <p className="text-sm text-neutral-400">Case Study {i}</p>
               </div>
