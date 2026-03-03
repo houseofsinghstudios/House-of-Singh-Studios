@@ -95,14 +95,10 @@ export default function Header() {
           }}
         >
           <Link href="/" aria-label="House of Singh Studios home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/hos-studios-logo.svg"
-              alt=""
-              style={{ height: 52, width: "auto", display: "block" }}
-              onError={(e) => {
-                e.currentTarget.style.visibility = "hidden";
-              }}
+            {/* Logo placeholder — renders transparent space until SVG file is added */}
+            <span
+              style={{ display: "block", height: 52, width: 52 }}
+              aria-hidden="true"
             />
           </Link>
         </div>

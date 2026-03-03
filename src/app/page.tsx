@@ -146,6 +146,80 @@ export default function Home() {
   const [activeSlide, setActiveSlide] = useState(0);
   const carouselTimer = useRef<ReturnType<typeof setInterval>>(undefined);
 
+  /* ── Refs for scroll-driven hero reveal ── */
+  const heroLabelRef = useRef<HTMLParagraphElement>(null);
+  const heroHeadlineRef = useRef<HTMLHeadingElement>(null);
+  const heroSecondaryRef = useRef<HTMLParagraphElement>(null);
+  const heroSupportingRef = useRef<HTMLParagraphElement>(null);
+  const heroCtaRef = useRef<HTMLDivElement>(null);
+  const heroScrollRef = useRef<HTMLDivElement>(null);
+
+  /* ── Scroll-driven hero reveal ── */
+  useEffect(() => {
+    const elements: { ref: React.RefObject<HTMLElement | null>; start: number; end: number }[] = [
+      { ref: heroLabelRef, start: 0, end: 8 },
+      { ref: heroHeadlineRef, start: 0, end: 10 },
+      { ref: heroSecondaryRef, start: 10, end: 20 },
+      { ref: heroSupportingRef, start: 20, end: 28 },
+      { ref: heroCtaRef, start: 28, end: 35 },
+    ];
+
+    let ticking = false;
+
+    function update() {
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      elements.forEach(({ ref, start, end }) => {
+        const el = ref.current;
+        if (!el) return;
+
+        const startPx = (vh * start) / 100;
+        const endPx = (vh * end) / 100;
+
+        let progress = 0;
+        if (scrollY >= endPx) progress = 1;
+        else if (scrollY > startPx)
+          progress = (scrollY - startPx) / (endPx - startPx);
+
+        el.style.opacity = String(progress);
+        el.style.transform = `translateY(${30 * (1 - progress)}px)`;
+      });
+
+      // Scroll indicator fades OUT as user scrolls
+      const scrollEl = heroScrollRef.current;
+      if (scrollEl) {
+        const fadeEnd = vh * 0.2;
+        const fadeProgress = Math.min(scrollY / fadeEnd, 1);
+        scrollEl.style.opacity = String(1 - fadeProgress);
+      }
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    // Set initial state
+    elements.forEach(({ ref }) => {
+      const el = ref.current;
+      if (el) {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "none";
+      }
+    });
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update(); // Run once immediately
+
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   /* ── Scroll-reveal observer ── */
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -266,34 +340,35 @@ export default function Home() {
         }}
       >
         <p
-          className="editorial-label reveal-up"
-          style={{ animationDelay: "0.1s", marginBottom: 24 }}
+          ref={heroLabelRef}
+          className="editorial-label"
+          style={{ marginBottom: 24, opacity: 0, transform: "translateY(30px)" }}
         >
-          (Creative Direction Studio.)
+          (Creative Direction Studio)
         </p>
 
         <div style={{ maxWidth: 800 }}>
           <h1
-            className="reveal-up"
+            ref={heroHeadlineRef}
             style={{
-              animationDelay: "0.2s",
               fontFamily: "var(--serif)",
               fontWeight: 600,
               fontSize: "clamp(44px, 6.2vw, 80px)",
               lineHeight: 1.08,
               color: "var(--text-primary)",
               margin: 0,
+              opacity: 0,
+              transform: "translateY(30px)",
             }}
           >
-            We build brands that
+            AI can generate assets.
             <br />
-            think, adapt, and scale.
+            It cannot build a brand.
           </h1>
 
           <p
-            className="reveal-up"
+            ref={heroSecondaryRef}
             style={{
-              animationDelay: "0.35s",
               marginTop: 32,
               fontFamily: "var(--sans)",
               fontWeight: 400,
@@ -301,16 +376,16 @@ export default function Home() {
               lineHeight: 1.6,
               color: "var(--text-muted)",
               maxWidth: 560,
+              opacity: 0,
+              transform: "translateY(30px)",
             }}
           >
-            A multidisciplinary design studio powered by AI systems and led by
-            creative direction.
+            A design studio powered by AI systems and led by creative direction.
           </p>
 
           <p
-            className="reveal-up"
+            ref={heroSupportingRef}
             style={{
-              animationDelay: "0.5s",
               marginTop: 20,
               fontFamily: "var(--sans)",
               fontWeight: 300,
@@ -318,20 +393,24 @@ export default function Home() {
               lineHeight: 1.7,
               color: "var(--text-faint)",
               maxWidth: 560,
+              opacity: 0,
+              transform: "translateY(30px)",
             }}
           >
-            We deliver brand identity, visual media, digital design, and
-            creative strategy for businesses across North America.
+            We build brands that hold up across every channel for years. AI
+            handles the production layer. Human judgment drives the creative
+            layer.
           </p>
 
           <div
-            className="reveal-up"
+            ref={heroCtaRef}
             style={{
-              animationDelay: "0.65s",
               marginTop: 48,
               display: "flex",
               flexWrap: "wrap",
               gap: 16,
+              opacity: 0,
+              transform: "translateY(30px)",
             }}
           >
             <Link href="/work" className="btn-primary">
@@ -344,20 +423,18 @@ export default function Home() {
         </div>
 
         <div
-          className="reveal-up"
+          ref={heroScrollRef}
           style={{
-            animationDelay: "0.9s",
             position: "absolute",
             bottom: 40,
-            left: "50%",
-            transform: "translateX(-50%)",
+            right: "var(--page-px)",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            alignItems: "flex-end",
             gap: 12,
           }}
         >
-          <p className="editorial-label">(Scroll.)</p>
+          <p className="editorial-label">(Scroll)</p>
           <div className="scroll-track">
             <div className="scroll-thumb" />
           </div>
@@ -370,7 +447,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 24 }}
         >
-          (The Problem.)
+          (The Problem)
         </p>
 
         <h2
@@ -482,7 +559,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 48 }}
         >
-          (Studio.)
+          (Studio)
         </p>
 
         <div className="stats-grid">
@@ -527,7 +604,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 24 }}
         >
-          (Capabilities.)
+          (Capabilities)
         </p>
 
         <h2
@@ -629,7 +706,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 24 }}
         >
-          (Portfolio.)
+          (Portfolio)
         </p>
 
         <h2
@@ -765,7 +842,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 32 }}
         >
-          (Clients.)
+          (Clients)
         </p>
 
         {/* Decorative opening quotation mark */}
@@ -893,7 +970,7 @@ export default function Home() {
           className="editorial-label scroll-reveal"
           style={{ marginBottom: 24 }}
         >
-          (Next Step.)
+          (Next Step)
         </p>
 
         <h2
