@@ -113,6 +113,17 @@ body {
   opacity: 0.82;
 }
 
+/* ── Scroll-triggered reveal (Intersection Observer) ── */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ── Hero reveal animation ── */
 @keyframes revealUp {
   from {
