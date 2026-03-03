@@ -5,6 +5,7 @@ const studioLinks = [
   { label: "Packages", href: "/packages" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
+  { label: "Careers", href: "/careers" },
 ];
 
 const connectLinks = [
@@ -15,30 +16,14 @@ const connectLinks = [
 
 export default function Footer() {
   return (
-    <footer
-      style={{
-        borderTop: "1px solid var(--border)",
-        padding: "64px var(--page-px) 40px",
-      }}
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr",
-          gap: 48,
-        }}
-        className="footer-grid"
-      >
+    <footer className="border-t border-[var(--border)] px-[var(--page-px)] pt-16 pb-10">
+      <div className="footer-grid grid grid-cols-3 gap-12">
         {/* Column 1: Studio */}
         <div>
           <p className="footer-heading">Studio</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="flex flex-col gap-3">
             {studioLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="footer-link"
-              >
+              <Link key={link.href} href={link.href} className="footer-link">
                 {link.label}
               </Link>
             ))}
@@ -48,7 +33,7 @@ export default function Footer() {
         {/* Column 2: Connect */}
         <div>
           <p className="footer-heading">Connect</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div className="flex flex-col gap-3">
             {connectLinks.map((link) =>
               link.external ? (
                 <a
@@ -61,11 +46,7 @@ export default function Footer() {
                   {link.label}
                 </a>
               ) : (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="footer-link"
-                >
+                <Link key={link.href} href={link.href} className="footer-link">
                   {link.label}
                 </Link>
               )
@@ -73,10 +54,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Column 3: Studio info */}
+        {/* Column 3: Location */}
         <div>
-          <p className="footer-heading">Studio</p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <p className="footer-heading">Location</p>
+          <div className="flex flex-col gap-2">
             <p className="footer-text">House of Singh Studios</p>
             <p className="footer-text">Toronto, Canada</p>
             <a href="mailto:hello@houseofsingh.com" className="footer-link">
@@ -86,30 +67,32 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div
-        style={{
-          marginTop: 56,
-          paddingTop: 24,
-          borderTop: "1px solid var(--border)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 16,
-        }}
-      >
+      {/* Tagline */}
+      <div className="mt-14 pt-6 border-t border-[var(--border)] flex flex-col items-center gap-4">
         <p className="editorial-label">
-          Design studio. AI powered. Brand focused.
+          DESIGN STUDIO. AI POWERED. BRAND FOCUSED.
         </p>
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 12,
-            color: "var(--text-faint)",
-          }}
-        >
-          &copy; {new Date().getFullYear()} House of Singh Studios Inc. All rights reserved.
-        </p>
+
+        {/* Copyright bar — two columns */}
+        <div className="w-full flex justify-between items-center">
+          <p className="font-[var(--sans)] text-xs text-[color:var(--text-faint)]">
+            &copy; 2026 House of Singh Studios Inc. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <Link
+              href="/terms"
+              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
+            >
+              Privacy
+            </Link>
+          </div>
+        </div>
       </div>
 
       <style>{`
@@ -136,6 +119,7 @@ export default function Footer() {
           font-family: var(--sans);
           font-size: 14px;
           color: var(--text-muted);
+          margin: 0;
         }
         @media (max-width: 699px) {
           .footer-grid {

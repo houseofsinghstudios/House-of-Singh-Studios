@@ -3,8 +3,10 @@ export const HERO = {
   headline: ["AI can generate assets.", "It cannot build a brand."],
   secondary:
     "A design studio powered by AI systems and led by creative direction.",
-  supporting:
-    "We build brands that hold up across every channel for years. AI handles the production layer. Human judgment drives the creative layer.",
+  supportingLine1:
+    "We build brands that hold up across every channel for years.",
+  supportingLine2:
+    "AI handles the production layer. Human judgment drives the creative layer.",
   cta: {
     primary: { text: "View Projects", href: "/work" },
     secondary: { text: "Start a Project", href: "/contact" },

@@ -8,7 +8,8 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function HeroSection() {
   const secondaryRef = useRef<HTMLDivElement>(null);
-  const supportingRef = useRef<HTMLParagraphElement>(null);
+  const supportLine1Ref = useRef<HTMLParagraphElement>(null);
+  const supportLine2Ref = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -48,18 +49,26 @@ export default function HeroSection() {
         });
       }
 
-      // Supporting text: clip-path wipe (25–45%)
-      const supportEl = supportingRef.current;
-      if (supportEl) {
-        const p = rangeProgress(scrollPct, 25, 45);
-        supportEl.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
-        supportEl.style.opacity = p > 0 ? "1" : "0";
+      // Supporting Line 1: clip-path wipe (35–55%)
+      const line1 = supportLine1Ref.current;
+      if (line1) {
+        const p = rangeProgress(scrollPct, 35, 55);
+        line1.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
+        line1.style.opacity = p > 0 ? "1" : "0";
       }
 
-      // CTAs: scale + fade (40–55%)
+      // Supporting Line 2: clip-path wipe (48–68%)
+      const line2 = supportLine2Ref.current;
+      if (line2) {
+        const p = rangeProgress(scrollPct, 48, 68);
+        line2.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
+        line2.style.opacity = p > 0 ? "1" : "0";
+      }
+
+      // CTAs: scale + fade (60–75%)
       const ctaEl = ctaRef.current;
       if (ctaEl) {
-        const p = rangeProgress(scrollPct, 40, 55);
+        const p = rangeProgress(scrollPct, 60, 75);
         ctaEl.style.opacity = String(p);
         ctaEl.style.transform = `scale(${0.96 + 0.04 * p})`;
       }
@@ -101,21 +110,43 @@ export default function HeroSection() {
           {HERO.headline[1]}
         </h1>
 
+        {/* Secondary — wider max-width so "direction" doesn't break */}
         <div
           ref={secondaryRef}
-          className="mt-8 font-[var(--sans)] font-normal text-lg leading-relaxed text-[color:var(--text-muted)] max-w-[560px]"
+          className="mt-8 font-[var(--sans)] font-normal text-lg leading-relaxed text-[color:var(--text-muted)] max-w-[700px]"
         >
           {HERO.secondary}
         </div>
 
+        {/* Supporting Line 1 — clip-path wipe at 35% */}
         <p
-          ref={supportingRef}
-          className="mt-5 font-[var(--sans)] font-light text-base leading-[1.7] text-[color:var(--text-faint)] max-w-[560px]"
-          style={{ opacity: 0, clipPath: "inset(0 100% 0 0)" }}
+          ref={supportLine1Ref}
+          className="mt-8 font-[var(--sans)] font-light leading-[1.65] text-[color:var(--text-faint)] max-w-[600px]"
+          style={{
+            fontSize: "clamp(14px, 1.2vw, 16px)",
+            opacity: 0,
+            clipPath: "inset(0 100% 0 0)",
+            transition: "clip-path 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          }}
         >
-          {HERO.supporting}
+          {HERO.supportingLine1}
         </p>
 
+        {/* Supporting Line 2 — clip-path wipe at 48% */}
+        <p
+          ref={supportLine2Ref}
+          className="mt-2.5 font-[var(--sans)] font-light leading-[1.65] text-[color:var(--text-faint)] max-w-[600px]"
+          style={{
+            fontSize: "clamp(14px, 1.2vw, 16px)",
+            opacity: 0,
+            clipPath: "inset(0 100% 0 0)",
+            transition: "clip-path 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          }}
+        >
+          {HERO.supportingLine2}
+        </p>
+
+        {/* CTAs — scale + fade at 60% */}
         <div
           ref={ctaRef}
           className="mt-12 flex flex-wrap gap-4"
