@@ -17,30 +17,21 @@ export default function ServicesSection() {
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          const card = entry.target as HTMLElement;
-          const col = Number(card.dataset.col);
-          const delay = col * 150;
+          const block = entry.target as HTMLElement;
+          const idx = Number(block.dataset.idx);
+          const delay = idx * 100;
 
-          const border = card.querySelector<HTMLElement>(".service-border-draw");
-          const content = card.querySelector<HTMLElement>(".service-content");
+          block.style.transition = `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`;
+          block.style.opacity = "1";
+          block.style.transform = "translateY(0)";
 
-          if (border) {
-            border.style.transition = `width 0.6s ease ${delay}ms`;
-            border.style.width = "100%";
-          }
-          if (content) {
-            content.style.transition = `opacity 0.5s ease ${delay + 600}ms, transform 0.5s ease ${delay + 600}ms`;
-            content.style.opacity = "1";
-            content.style.transform = "translateY(0)";
-          }
-
-          observer.unobserve(card);
+          observer.unobserve(block);
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1 }
     );
 
-    grid.querySelectorAll<HTMLElement>(".service-card-animated").forEach((el) =>
+    grid.querySelectorAll<HTMLElement>(".service-block").forEach((el) =>
       observer.observe(el)
     );
 
@@ -62,51 +53,31 @@ export default function ServicesSection() {
         </h2>
       </ScrollReveal>
 
-      <ScrollReveal>
-        <p className="mt-4 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] max-w-[560px]">
-          {SERVICES_SECTION.subheading}
-        </p>
-      </ScrollReveal>
-
-      <div ref={gridRef} className="services-grid mt-[72px]">
+      <div ref={gridRef} className="services-visual-grid mt-16">
         {SERVICES_SECTION.items.map((service, i) => (
-          <div
+          <Link
             key={service.href}
-            className="service-card-animated relative pt-7"
-            data-col={i % 2}
+            href={service.href}
+            className="service-block no-underline"
+            data-idx={i}
+            style={{
+              opacity: 0,
+              transform: "translateY(20px)",
+              background: service.color,
+            }}
           >
-            <div
-              className="service-border-draw absolute top-0 left-0 h-px bg-[var(--border)]"
-              style={{ width: 0 }}
-            />
-            <div
-              className="service-content"
-              style={{ opacity: 0, transform: "translateY(12px)" }}
-            >
+            <div className="service-block-inner">
               <h3
                 className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
                 style={{ fontSize: "clamp(22px, 2vw, 28px)" }}
               >
                 {service.title}
               </h3>
-              <p className="mt-3.5 font-[var(--sans)] font-normal text-[15px] leading-[1.55] text-[color:var(--text-secondary)]">
+              <p className="service-block-sentence font-[var(--sans)] font-normal text-sm text-[color:var(--text-secondary)] mt-2 m-0">
                 {service.sentence}
               </p>
-              <ul className="service-bullets mt-[18px]">
-                {service.bullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-              <Link
-                href={service.href}
-                className="arrow-link mt-[22px] inline-block no-underline"
-              >
-                <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-                  {service.linkText} <span className="arrow-icon">&rarr;</span>
-                </span>
-              </Link>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

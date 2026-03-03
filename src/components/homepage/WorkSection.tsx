@@ -5,23 +5,14 @@ import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function WorkSection() {
   return (
-    <section className="py-40 px-[var(--page-px)]">
+    <section style={{ padding: "120px var(--page-px) 160px" }}>
       <ScrollReveal>
-        <EditorialLabel text="Portfolio" className="mb-6" />
+        <EditorialLabel text="Selected Work" className="mb-6" />
       </ScrollReveal>
 
-      <ScrollReveal>
-        <h2
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-          style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
-        >
-          Selected Work
-        </h2>
-      </ScrollReveal>
-
-      <div className="work-grid mt-16">
+      <div className="work-grid mt-8">
         {PROJECTS.map((project, i) => (
-          <ScrollReveal key={project.href} delay={i * 0.1}>
+          <ScrollReveal key={project.href} delay={i < 2 ? 0 : 0.15}>
             <Link
               href={project.href}
               className="project-card block no-underline"

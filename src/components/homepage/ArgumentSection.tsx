@@ -104,24 +104,18 @@ export default function ArgumentSection() {
           </h2>
 
           <ScrollReveal>
-            <p className="mt-9 font-[var(--sans)] font-normal text-[17px] leading-[1.65] text-[color:var(--text-secondary)]">
-              {ARGUMENT.pain}
+            <p className="mt-7 font-[var(--sans)] font-normal text-[18px] leading-[1.65] text-[color:var(--text-secondary)]">
+              {ARGUMENT.supporting}
             </p>
           </ScrollReveal>
 
           <p
             ref={weFixRef}
-            className="mt-20 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+            className="mt-12 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
             style={{ fontSize: "clamp(22px, 2vw, 28px)", opacity: 0 }}
           >
             {ARGUMENT.snap}
           </p>
-
-          <ScrollReveal>
-            <p className="font-[var(--sans)] font-normal text-[17px] leading-[1.65] text-[color:var(--text-secondary)]">
-              {ARGUMENT.process}
-            </p>
-          </ScrollReveal>
 
           <ScrollReveal className="process-steps">
             {ARGUMENT.steps.map((step, i) => (
@@ -138,7 +132,7 @@ export default function ArgumentSection() {
           <div className="argument-img-wrap">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/freepik__magazinestyle-closeup-stacked-business-cards-with-__24682.png"
+              src="/images/argument-editorial.png"
               alt="Brand identity detail"
               className="argument-img"
               onError={(e) => {

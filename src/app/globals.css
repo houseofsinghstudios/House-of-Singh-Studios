@@ -225,41 +225,42 @@ body {
   gap: 32px;
 }
 
-/* ── Services grid ── */
-.services-grid {
+/* ── Services visual grid ── */
+.services-visual-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 56px;
-  row-gap: 60px;
+  gap: 2px;
 }
-
-/* ── Service bullets ── */
-.service-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.service-bullets li {
-  padding-left: 16px;
+.service-block {
+  display: block;
   position: relative;
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.5;
+  aspect-ratio: 3/2;
+  transition: background 0.3s ease, transform 0.3s ease;
 }
-.service-bullets li::before {
-  content: '';
+.service-block-inner {
   position: absolute;
+  bottom: 0;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #999;
+  padding: 32px;
+}
+.service-block-inner h3 {
+  border-bottom: 2px solid transparent;
+  display: inline;
+  transition: border-color 0.3s ease;
+  padding-bottom: 2px;
+}
+.service-block:hover .service-block-inner h3 {
+  border-color: var(--text-primary);
+}
+.service-block-sentence {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.service-block:hover .service-block-sentence {
+  opacity: 1;
+}
+.service-block:hover {
+  filter: brightness(0.95);
 }
 
 /* ── Arrow links ── */
@@ -278,7 +279,7 @@ body {
 .work-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  gap: 20px;
 }
 
 /* ── Ken Burns effect for project images ── */
@@ -296,6 +297,12 @@ body {
 }
 
 /* ── Project card hover effects ── */
+.project-card {
+  transition: transform 0.3s ease;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+}
 .project-card .project-image-inner {
   transition: transform 0.5s ease;
 }
@@ -347,7 +354,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 80px;
-  align-items: start;
+  align-items: center;
 }
 .argument-img-wrap {
   width: 100%;
@@ -397,10 +404,10 @@ body {
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 899px) {
   .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
   }
-  .services-grid {
+  .services-visual-grid {
     grid-template-columns: 1fr;
   }
   .work-grid {
@@ -419,5 +426,12 @@ body {
   }
   .visual-break {
     height: 40vh;
+  }
+}
+
+@media (max-width: 479px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }

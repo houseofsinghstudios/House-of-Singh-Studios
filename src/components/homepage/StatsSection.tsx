@@ -3,8 +3,6 @@
 import { STATS } from "@/lib/constants/homepage-data";
 import { useIntersectionObserver } from "@/lib/hooks/useIntersectionObserver";
 import { useCountUp } from "@/lib/hooks/useCountUp";
-import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 
 export default function StatsSection() {
   const { ref, isIntersecting } = useIntersectionObserver<HTMLDivElement>({
@@ -13,24 +11,24 @@ export default function StatsSection() {
   const values = useCountUp(STATS.targets, isIntersecting);
 
   return (
-    <section ref={ref} className="py-[140px] px-[var(--page-px)]">
-      <ScrollReveal>
-        <EditorialLabel text={STATS.label} className="mb-12" />
-      </ScrollReveal>
-
-      <div className="stats-grid">
+    <section
+      ref={ref}
+      className="bg-[var(--bg-shift)]"
+      style={{ padding: "64px var(--page-px)" }}
+    >
+      <div className="stats-grid text-center">
         {STATS.targets.map((_, i) => (
-          <ScrollReveal key={i} delay={i * 0.1}>
+          <div key={i}>
             <p
               className="font-[var(--serif)] font-semibold leading-none text-[color:var(--text-primary)] m-0"
-              style={{ fontSize: "clamp(52px, 5.5vw, 76px)" }}
+              style={{ fontSize: "clamp(40px, 4vw, 56px)" }}
             >
               {values[i]}+
             </p>
-            <p className="mt-3 font-[var(--sans)] font-normal text-sm leading-normal text-[color:var(--text-muted)]">
+            <p className="mt-2 font-[var(--sans)] font-normal text-[13px] leading-normal text-[color:var(--text-muted)]">
               {STATS.labels[i]}
             </p>
-          </ScrollReveal>
+          </div>
         ))}
       </div>
     </section>
