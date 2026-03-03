@@ -35,50 +35,49 @@ export default function HeroSection() {
       const vh = window.innerHeight;
       const scrollPct = (window.scrollY / vh) * 100;
 
-      // Secondary text: char-by-char blur-to-sharp (5–30%)
+      // Secondary text: char-by-char blur-to-sharp (3–18%)
       if (secondaryEl) {
         const chars = secondaryEl.querySelectorAll<HTMLSpanElement>("span[data-char-idx]");
         const total = chars.length;
         chars.forEach((ch) => {
           const idx = Number(ch.dataset.charIdx);
-          const charStart = 5 + (idx / total) * 20;
-          const p = clamp01((scrollPct - charStart) / 5);
+          const charStart = 3 + (idx / total) * 12;
+          const p = clamp01((scrollPct - charStart) / 3);
           ch.style.opacity = String(p);
           ch.style.filter = `blur(${6 * (1 - p)}px)`;
           ch.style.transform = `translateY(${8 * (1 - p)}px)`;
         });
       }
 
-      // Supporting Line 1: clip-path wipe (35–55%)
+      // Supporting Line 1: clip-path wipe (18–28%)
       const line1 = supportLine1Ref.current;
       if (line1) {
-        const p = rangeProgress(scrollPct, 35, 55);
+        const p = rangeProgress(scrollPct, 18, 28);
         line1.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
         line1.style.opacity = p > 0 ? "1" : "0";
       }
 
-      // Supporting Line 2: clip-path wipe (48–68%)
+      // Supporting Line 2: clip-path wipe (26–36%)
       const line2 = supportLine2Ref.current;
       if (line2) {
-        const p = rangeProgress(scrollPct, 48, 68);
+        const p = rangeProgress(scrollPct, 26, 36);
         line2.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
         line2.style.opacity = p > 0 ? "1" : "0";
       }
 
-      // CTAs: scale + fade (60–75%)
+      // CTAs: scale + fade (34–42%)
       const ctaEl = ctaRef.current;
       if (ctaEl) {
-        const p = rangeProgress(scrollPct, 60, 75);
+        const p = rangeProgress(scrollPct, 34, 42);
         ctaEl.style.opacity = String(p);
         ctaEl.style.transform = `scale(${0.96 + 0.04 * p})`;
       }
 
-      // Scroll indicator: fade in (50–60%) then out (80–100%)
+      // Scroll indicator: visible by default, fades out (20–50%)
       const scrollEl = scrollRef.current;
       if (scrollEl) {
-        const fadeIn = rangeProgress(scrollPct, 50, 60);
-        const fadeOut = rangeProgress(scrollPct, 80, 100);
-        scrollEl.style.opacity = String(fadeIn * (1 - fadeOut));
+        const fadeOut = rangeProgress(scrollPct, 20, 50);
+        scrollEl.style.opacity = String(1 - fadeOut);
       }
 
       ticking = false;
@@ -163,7 +162,7 @@ export default function HeroSection() {
       <div
         ref={scrollRef}
         className="absolute bottom-10 right-[var(--page-px)] flex flex-col items-end gap-3"
-        style={{ opacity: 0 }}
+        style={{ opacity: 1 }}
       >
         <EditorialLabel text="Scroll" />
         <div className="scroll-track">

@@ -124,16 +124,12 @@ export default function ArgumentSection() {
           </ScrollReveal>
 
           <ScrollReveal className="process-steps">
-            <div className="mt-12 flex items-center flex-wrap">
-              {ARGUMENT.steps.map((step, i) => (
-                <div key={step} className="flex items-center">
-                  {i > 0 && <div className="process-connector" />}
-                  <span className="font-[var(--sans)] font-medium text-[11px] uppercase tracking-[0.13em] text-[color:var(--text-primary)] whitespace-nowrap">
-                    {step}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {ARGUMENT.steps.map((step, i) => (
+              <div key={step} className="process-step-item">
+                <span className="process-step-number">{String(i + 1).padStart(2, "0")}</span>
+                <span className="process-step-name">{step}</span>
+              </div>
+            ))}
           </ScrollReveal>
         </div>
 
