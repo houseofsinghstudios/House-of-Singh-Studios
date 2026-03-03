@@ -31,37 +31,13 @@ export default function Footer() {
       >
         {/* Column 1: Studio */}
         <div>
-          <p
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 11,
-              fontWeight: 500,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--text-faint)",
-              marginBottom: 20,
-            }}
-          >
-            Studio
-          </p>
+          <p className="footer-heading">Studio</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {studioLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 14,
-                  color: "var(--text-muted)",
-                  textDecoration: "none",
-                  transition: "color 0.2s ease",
-                }}
-                onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                  (e.currentTarget.style.color = "var(--text-primary)")
-                }
-                onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                  (e.currentTarget.style.color = "var(--text-muted)")
-                }
+                className="footer-link"
               >
                 {link.label}
               </Link>
@@ -71,19 +47,7 @@ export default function Footer() {
 
         {/* Column 2: Connect */}
         <div>
-          <p
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 11,
-              fontWeight: 500,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--text-faint)",
-              marginBottom: 20,
-            }}
-          >
-            Connect
-          </p>
+          <p className="footer-heading">Connect</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             {connectLinks.map((link) =>
               link.external ? (
@@ -92,19 +56,7 @@ export default function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 14,
-                    color: "var(--text-muted)",
-                    textDecoration: "none",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                    (e.currentTarget.style.color = "var(--text-primary)")
-                  }
-                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                    (e.currentTarget.style.color = "var(--text-muted)")
-                  }
+                  className="footer-link"
                 >
                   {link.label}
                 </a>
@@ -112,19 +64,7 @@ export default function Footer() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 14,
-                    color: "var(--text-muted)",
-                    textDecoration: "none",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                    (e.currentTarget.style.color = "var(--text-primary)")
-                  }
-                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                    (e.currentTarget.style.color = "var(--text-muted)")
-                  }
+                  className="footer-link"
                 >
                   {link.label}
                 </Link>
@@ -135,54 +75,11 @@ export default function Footer() {
 
         {/* Column 3: Studio info */}
         <div>
-          <p
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 11,
-              fontWeight: 500,
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              color: "var(--text-faint)",
-              marginBottom: 20,
-            }}
-          >
-            Studio
-          </p>
+          <p className="footer-heading">Studio</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 14,
-                color: "var(--text-muted)",
-              }}
-            >
-              House of Singh Studios
-            </p>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 14,
-                color: "var(--text-muted)",
-              }}
-            >
-              Toronto, Canada
-            </p>
-            <a
-              href="mailto:hello@houseofsingh.com"
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 14,
-                color: "var(--text-muted)",
-                textDecoration: "none",
-                transition: "color 0.2s ease",
-              }}
-              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                (e.currentTarget.style.color = "var(--text-primary)")
-              }
-              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) =>
-                (e.currentTarget.style.color = "var(--text-muted)")
-              }
-            >
+            <p className="footer-text">House of Singh Studios</p>
+            <p className="footer-text">Toronto, Canada</p>
+            <a href="mailto:hello@houseofsingh.com" className="footer-link">
               hello@houseofsingh.com
             </a>
           </div>
@@ -209,6 +106,30 @@ export default function Footer() {
       </div>
 
       <style>{`
+        .footer-heading {
+          font-family: var(--sans);
+          font-size: 11px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+          color: var(--text-faint);
+          margin-bottom: 20px;
+        }
+        .footer-link {
+          font-family: var(--sans);
+          font-size: 14px;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        .footer-link:hover {
+          color: var(--text-primary);
+        }
+        .footer-text {
+          font-family: var(--sans);
+          font-size: 14px;
+          color: var(--text-muted);
+        }
         @media (max-width: 699px) {
           .footer-grid {
             grid-template-columns: 1fr !important;
