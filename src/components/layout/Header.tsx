@@ -16,28 +16,29 @@ const mobileLinks = [
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
+  { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
     function onScroll() {
       const y = window.scrollY;
 
-      // Border appears after 200px
-      setScrolled(y > 200);
+      // State 2 activates at 80px
+      setScrolled(y >= 80);
 
-      // Hide/show only activates after 400px
-      if (y > 400) {
-        setHidden(y > lastScrollY.current);
-      } else {
+      // Hide/show after 400px
+      if (y > 400 && y > lastScrollY.current) {
+        setHidden(true);
+        setMenuOpen(false);
+      } else if (y < lastScrollY.current) {
         setHidden(false);
       }
 
@@ -66,45 +67,90 @@ export default function Header() {
           right: 0,
           zIndex: 100,
           height: 64,
-          background: "var(--bg)",
-          padding: "0 var(--page-px)",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
-          transform: hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
-          transition: "transform 0.35s ease, border-color 0.35s ease",
+          padding: "0 var(--page-px)",
+          backgroundColor: scrolled ? "var(--bg)" : "transparent",
+          borderBottom: scrolled
+            ? "1px solid var(--border)"
+            : "1px solid transparent",
+          transform:
+            hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
+          transition:
+            "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease",
         }}
       >
-        {/* Logotype */}
-        <Link
-          href="/"
+        {/* Crest Logo — visible in State 1 (top of page) */}
+        <div
           style={{
-            fontFamily: "var(--sans)",
-            fontSize: 11,
-            fontWeight: 500,
-            textTransform: "uppercase",
-            letterSpacing: "0.18em",
-            color: "var(--text-primary)",
-            textDecoration: "none",
+            position: "absolute",
+            left: "var(--page-px)",
+            top: "50%",
+            transform: scrolled
+              ? "translateY(calc(-50% - 20px))"
+              : "translateY(-50%)",
+            opacity: scrolled ? 0 : 1,
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+            pointerEvents: scrolled ? "none" : "auto",
           }}
         >
-          HOUSE OF SINGH STUDIOS
-        </Link>
+          <Link href="/" aria-label="House of Singh Studios home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/hos-studios-logo.svg"
+              alt=""
+              style={{ height: 52, width: "auto", display: "block" }}
+              onError={(e) => {
+                e.currentTarget.style.visibility = "hidden";
+              }}
+            />
+          </Link>
+        </div>
 
-        {/* Desktop nav */}
+        {/* Text Logotype — fades in for State 2 (scrolled) */}
+        <div
+          style={{
+            opacity: scrolled ? 1 : 0,
+            transition: "opacity 0.5s ease",
+            pointerEvents: scrolled ? "auto" : "none",
+          }}
+        >
+          <Link
+            href="/"
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 11,
+              fontWeight: 500,
+              textTransform: "uppercase",
+              letterSpacing: "0.18em",
+              color: "var(--text-primary)",
+              textDecoration: "none",
+            }}
+          >
+            House of Singh Studios
+          </Link>
+        </div>
+
+        {/* Spacer */}
+        <div style={{ flex: 1 }} />
+
+        {/* Desktop Nav Links — fade in for State 2 */}
         <nav
+          className="header-desktop-nav"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 32,
+            opacity: scrolled ? 1 : 0,
+            transition: "opacity 0.5s ease",
+            pointerEvents: scrolled ? "auto" : "none",
           }}
-          className="header-desktop-nav"
         >
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
+              className="header-nav-link"
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: 11,
@@ -115,23 +161,17 @@ export default function Header() {
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = "var(--text-primary)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "var(--text-muted)")
-              }
             >
               {link.label}
             </Link>
           ))}
         </nav>
 
-        {/* Hamburger */}
+        {/* Mobile Hamburger — State 2 only, below 900px */}
         <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
           className="header-hamburger"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
           style={{
             display: "none",
             flexDirection: "column",
@@ -140,6 +180,9 @@ export default function Header() {
             background: "none",
             border: "none",
             cursor: "pointer",
+            opacity: scrolled ? 1 : 0,
+            pointerEvents: scrolled ? "auto" : "none",
+            transition: "opacity 0.5s ease",
           }}
         >
           <span
@@ -169,7 +212,7 @@ export default function Header() {
         </button>
       </header>
 
-      {/* Mobile overlay */}
+      {/* Mobile Full-Screen Overlay */}
       {menuOpen && (
         <div
           style={{
@@ -184,7 +227,7 @@ export default function Header() {
             gap: 8,
           }}
         >
-          {/* Close button */}
+          {/* Close X */}
           <button
             onClick={() => setMenuOpen(false)}
             aria-label="Close menu"
@@ -211,11 +254,13 @@ export default function Header() {
             </svg>
           </button>
 
+          {/* Overlay Links */}
           {mobileLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
+              className="header-mobile-link"
               style={{
                 fontFamily: "var(--serif)",
                 fontSize: 36,
@@ -225,12 +270,6 @@ export default function Header() {
                 lineHeight: 1.6,
                 transition: "color 0.2s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.color = "var(--text-muted)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.color = "var(--text-primary)")
-              }
             >
               {link.label}
             </Link>
@@ -238,8 +277,13 @@ export default function Header() {
         </div>
       )}
 
-      {/* Responsive styles */}
       <style>{`
+        .header-nav-link:hover {
+          color: var(--text-primary) !important;
+        }
+        .header-mobile-link:hover {
+          color: var(--text-muted) !important;
+        }
         @media (max-width: 899px) {
           .header-desktop-nav { display: none !important; }
           .header-hamburger { display: flex !important; }

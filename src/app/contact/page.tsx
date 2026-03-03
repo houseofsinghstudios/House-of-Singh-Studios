@@ -163,7 +163,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="mt-2 inline-flex items-center justify-center rounded-none bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors disabled:opacity-50"
+                    className="btn-primary mt-2 disabled:opacity-50"
                   >
                     {submitting ? "Sending..." : "Send Inquiry"}
                   </button>

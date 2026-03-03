@@ -139,10 +139,10 @@ export default async function PackagesPage() {
 
                 <Link
                   href="/contact"
-                  className={`mt-6 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+                  className={`mt-6 ${
                     pkg.featured
-                      ? "bg-white text-black hover:bg-neutral-100"
-                      : "bg-black text-white hover:bg-neutral-800"
+                      ? "btn-primary-inverted"
+                      : "btn-primary"
                   }`}
                 >
                   Book a Discovery Call

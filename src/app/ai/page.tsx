@@ -75,7 +75,7 @@ export default function AIPage() {
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center rounded-full bg-black px-8 py-3.5 text-sm font-medium text-white hover:bg-neutral-800 transition-colors"
+            className="btn-primary"
           >
             Get Early Access
           </Link>

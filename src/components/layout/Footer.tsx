@@ -92,8 +92,15 @@ export default function Footer() {
           marginTop: 56,
           paddingTop: 24,
           borderTop: "1px solid var(--border)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 16,
         }}
       >
+        <p className="editorial-label">
+          Design studio. AI powered. Brand focused.
+        </p>
         <p
           style={{
             fontFamily: "var(--sans)",
@@ -101,7 +108,7 @@ export default function Footer() {
             color: "var(--text-faint)",
           }}
         >
-          &copy; 2025 House of Singh Studios Inc.
+          &copy; {new Date().getFullYear()} House of Singh Studios Inc. All rights reserved.
         </p>
       </div>
 

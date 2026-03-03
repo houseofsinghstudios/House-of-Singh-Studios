@@ -148,7 +148,7 @@ export default async function JournalPostPage({ params }: Props) {
                   <Link
                     key={service._id}
                     href={`/services/${service.slug.current}`}
-                    className="text-sm px-4 py-2 border border-neutral-200 rounded-full hover:border-neutral-400 transition-colors"
+                    className="text-sm px-4 py-2 border border-neutral-200 rounded-none hover:border-neutral-400 transition-colors"
                   >
                     {service.title}
                   </Link>
