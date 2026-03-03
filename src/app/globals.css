@@ -172,3 +172,168 @@ body {
     transform: translateY(100%);
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   Homepage component styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Process steps ── */
+.process-connector {
+  width: 48px;
+  height: 1px;
+  background: #999;
+  margin: 0 12px;
+  flex-shrink: 0;
+}
+
+/* ── Stats grid ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+/* ── Services grid ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 56px;
+  row-gap: 60px;
+}
+
+/* ── Service bullets ── */
+.service-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.service-bullets li {
+  padding-left: 16px;
+  position: relative;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.service-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #999;
+}
+
+/* ── Arrow links ── */
+.arrow-link {
+  text-decoration: none;
+}
+.arrow-icon {
+  display: inline-block;
+  transition: transform 0.25s ease;
+}
+.arrow-link:hover .arrow-icon {
+  transform: translateX(6px);
+}
+
+/* ── Work grid ── */
+.work-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* ── Ken Burns effect for project images ── */
+@keyframes kenBurns {
+  0% { transform: scale(1.0); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1.0); }
+}
+.ken-burns {
+  animation: kenBurns 12s ease-in-out infinite;
+}
+.project-card:hover .ken-burns {
+  animation-duration: 6s;
+  transform: scale(1.05) translateX(4px) translateY(-4px);
+}
+
+/* ── Project card hover effects ── */
+.project-card .project-image-inner {
+  transition: transform 0.5s ease;
+}
+.project-card .project-sentence {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease, margin-top 0.4s ease;
+  margin-top: 0;
+}
+.project-card:hover .project-sentence {
+  max-height: 60px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+/* ── Testimonial carousel ── */
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+.carousel-slide.active {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+}
+.carousel-arrow {
+  font-size: 20px;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s ease;
+  font-family: var(--sans);
+  line-height: 1;
+}
+.carousel-arrow:hover {
+  color: var(--text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════
+   Responsive (< 900px)
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 899px) {
+  .process-connector {
+    width: 24px;
+    margin: 0 6px;
+  }
+  .process-steps {
+    gap: 8px 0;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .work-grid {
+    grid-template-columns: 1fr;
+  }
+  .project-card .project-sentence {
+    max-height: none;
+    opacity: 1;
+    margin-top: 8px;
+  }
+}
