@@ -99,10 +99,14 @@ export default function HeroSection() {
     <section className="relative min-h-screen flex flex-col justify-end px-[var(--page-px)] pb-20">
       <EditorialLabel text={HERO.label} className="mb-6" />
 
-      <div className="max-w-[800px]">
+      <div className="max-w-[900px]">
         <h1
-          className="font-[var(--serif)] font-semibold leading-[1.08] text-[color:var(--text-primary)] m-0"
-          style={{ fontSize: "clamp(44px, 6.2vw, 80px)" }}
+          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
+          style={{
+            fontSize: "clamp(36px, 5.5vw, 76px)",
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+          }}
         >
           {HERO.headline[0]}
           <br />
