@@ -45,7 +45,7 @@ export default function VisualBreakSection() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imgRef}
-        src="/images/visual-break-studio.jpg"
+        src="/images/photography-ideas-creative-occupation-design-studio-concept.jpg"
         alt="Design studio workspace"
         className="visual-break-img"
         onError={(e) => {

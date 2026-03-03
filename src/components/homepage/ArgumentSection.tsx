@@ -138,7 +138,7 @@ export default function ArgumentSection() {
           <div className="argument-img-wrap">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/argument-editorial.png"
+              src="/images/freepik__magazinestyle-closeup-stacked-business-cards-with-__24682.png"
               alt="Brand identity detail"
               className="argument-img"
               onError={(e) => {
