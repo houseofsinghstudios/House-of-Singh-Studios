@@ -746,3 +746,60 @@ body {
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   About page
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Stats grid ── */
+.about-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+/* ── Process steps ── */
+.about-process-step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 40px;
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.06);
+}
+
+/* ── Capabilities network ── */
+.about-network-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+/* ── Founder ── */
+.about-founder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+/* ── About responsive ── */
+@media (max-width: 899px) {
+  .about-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+  .about-process-step {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .about-process-step > div:first-child {
+    display: none;
+  }
+  .about-network-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .about-founder-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
