@@ -1,28 +1,54 @@
 import Link from "next/link";
 
-const studioLinks = [
+const pageLinks = [
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
-  { label: "Packages", href: "/packages" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
   { label: "Careers", href: "/careers" },
 ];
 
+const serviceLinks = [
+  { label: "Brand Identity", href: "/services/brand-identity" },
+  { label: "Visual Media", href: "/services/visual-media" },
+  { label: "Digital Design", href: "/services/digital-design" },
+  { label: "Creative Strategy", href: "/services/creative-strategy" },
+];
+
 const connectLinks = [
   { label: "Contact", href: "/contact" },
-  { label: "Instagram", href: "https://instagram.com/houseofsingh", external: true },
-  { label: "LinkedIn", href: "https://linkedin.com/company/houseofsingh", external: true },
+  {
+    label: "Instagram",
+    href: "https://instagram.com/houseofsingh",
+    external: true,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/company/houseofsingh",
+    external: true,
+  },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--border)] px-[var(--page-px)] pt-16 pb-10">
-      <div className="footer-grid grid grid-cols-3 gap-12">
+    <footer className="site-footer">
+      <div className="footer-grid">
         {/* Column 1: Studio */}
-        <div>
+        <div className="footer-col">
           <p className="footer-heading">Studio</p>
-          <div className="flex flex-col gap-3">
-            {studioLinks.map((link) => (
+          <p className="footer-text">House of Singh Studios</p>
+          <p className="footer-text">Toronto, Canada</p>
+          <a href="mailto:hello@houseofsingh.com" className="footer-link">
+            hello@houseofsingh.com
+          </a>
+        </div>
+
+        {/* Column 2: Pages */}
+        <div className="footer-col">
+          <p className="footer-heading">Pages</p>
+          <div className="footer-link-list">
+            {pageLinks.map((link) => (
               <Link key={link.href} href={link.href} className="footer-link">
                 {link.label}
               </Link>
@@ -30,10 +56,22 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Column 2: Connect */}
-        <div>
+        {/* Column 3: Services */}
+        <div className="footer-col">
+          <p className="footer-heading">Services</p>
+          <div className="footer-link-list">
+            {serviceLinks.map((link) => (
+              <Link key={link.href} href={link.href} className="footer-link">
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Column 4: Connect */}
+        <div className="footer-col">
           <p className="footer-heading">Connect</p>
-          <div className="flex flex-col gap-3">
+          <div className="footer-link-list">
             {connectLinks.map((link) =>
               link.external ? (
                 <a
@@ -53,80 +91,22 @@ export default function Footer() {
             )}
           </div>
         </div>
-
-        {/* Column 3: Location */}
-        <div>
-          <p className="footer-heading">Location</p>
-          <div className="flex flex-col gap-2">
-            <p className="footer-text">House of Singh Studios</p>
-            <p className="footer-text">Toronto, Canada</p>
-            <a href="mailto:hello@houseofsingh.com" className="footer-link">
-              hello@houseofsingh.com
-            </a>
-          </div>
-        </div>
       </div>
 
-      {/* Tagline */}
-      <div className="mt-14 pt-6 border-t border-[var(--border)] flex flex-col items-center gap-4">
-        <p className="editorial-label">
-          DESIGN STUDIO. AI POWERED. BRAND FOCUSED.
+      {/* Bottom row */}
+      <div className="footer-bottom">
+        <p className="footer-copyright">
+          &copy; 2026 House of Singh Studios Inc. All rights reserved.
         </p>
-
-        {/* Copyright bar — two columns */}
-        <div className="w-full flex justify-between items-center">
-          <p className="font-[var(--sans)] text-xs text-[color:var(--text-faint)]">
-            &copy; 2026 House of Singh Studios Inc. All rights reserved.
-          </p>
-          <div className="flex gap-6">
-            <Link
-              href="/terms"
-              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/privacy"
-              className="font-[var(--sans)] text-xs text-[color:var(--text-faint)] no-underline hover:text-[color:var(--text-primary)] transition-colors"
-            >
-              Privacy
-            </Link>
-          </div>
+        <div className="footer-legal">
+          <Link href="/terms" className="footer-legal-link">
+            Terms
+          </Link>
+          <Link href="/privacy" className="footer-legal-link">
+            Privacy
+          </Link>
         </div>
       </div>
-
-      <style>{`
-        .footer-heading {
-          font-family: var(--sans);
-          font-size: 11px;
-          font-weight: 500;
-          text-transform: uppercase;
-          letter-spacing: 0.14em;
-          color: var(--text-faint);
-          margin-bottom: 20px;
-        }
-        .footer-link {
-          font-family: var(--sans);
-          font-size: 14px;
-          color: var(--text-muted);
-          text-decoration: none;
-          transition: color 0.2s ease;
-        }
-        .footer-link:hover {
-          color: var(--text-primary);
-        }
-        .footer-text {
-          font-family: var(--sans);
-          font-size: 14px;
-          color: var(--text-muted);
-          margin: 0;
-        }
-        @media (max-width: 699px) {
-          .footer-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-      `}</style>
     </footer>
   );
 }

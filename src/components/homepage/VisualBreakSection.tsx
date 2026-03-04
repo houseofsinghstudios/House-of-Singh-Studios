@@ -1,43 +1,63 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function VisualBreakSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Subtle parallax on scroll
   useEffect(() => {
-    let ticking = false;
+    const section = sectionRef.current;
+    const img = imgRef.current;
+    if (!section || !img) return;
 
-    function update() {
-      const section = sectionRef.current;
-      const img = imgRef.current;
-      if (!section || !img) { ticking = false; return; }
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight;
+    if (reducedMotion) return;
 
-      // Only apply when section is in viewport
-      if (rect.bottom > 0 && rect.top < vh) {
-        const progress = (vh - rect.top) / (vh + rect.height);
-        const offset = (progress - 0.5) * 30; // max ±15px shift
-        img.style.transform = `scale(1.05) translateY(${offset}px)`;
+    const ctx = gsap.context(() => {
+      if (isMobile) {
+        // ── MOBILE: curtain draw-down reveal (no parallax) ──
+        gsap.set(section, { clipPath: "inset(100% 0 0 0)" });
+        gsap.to(section, {
+          clipPath: "inset(0% 0 0 0)",
+          ease: "power3.out",
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            once: true,
+          },
+        });
+        return;
       }
 
-      ticking = false;
-    }
+      // ── TABLET / DESKTOP: parallax ──
+      gsap.fromTo(
+        img,
+        { yPercent: -15, scale: 1.05 },
+        {
+          yPercent: 15,
+          scale: 1.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+    }, section);
 
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    update();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -45,9 +65,10 @@ export default function VisualBreakSection() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imgRef}
-        src="/images/visual-break-studio.jpg"
+        src="/images/photography-ideas-creative-occupation-design-studio-concept.jpg"
         alt="Design studio workspace"
         className="visual-break-img"
+        style={{ willChange: "transform" }}
         onError={(e) => {
           const img = e.currentTarget;
           img.style.display = "none";

@@ -91,7 +91,14 @@ export async function getAllPosts() {
       title,
       slug,
       excerpt,
-      featuredImage,
+      featuredImage {
+        ...,
+        asset-> {
+          _id,
+          url,
+          metadata { dimensions, lqip }
+        }
+      },
       category,
       tags,
       publishedAt
@@ -106,21 +113,50 @@ export async function getPostBySlug(slug: string) {
       title,
       slug,
       excerpt,
-      featuredImage,
+      featuredImage {
+        ...,
+        asset-> {
+          _id,
+          url,
+          metadata { dimensions, lqip }
+        }
+      },
       category,
       tags,
       body[] {
         ...,
         _type == "image" => {
           ...,
-          asset->
+          asset-> {
+            _id,
+            url,
+            metadata { dimensions, lqip }
+          }
         }
       },
       relatedServices[]-> { _id, title, slug },
       relatedCaseStudies[]-> { _id, title, slug, featuredImage },
       seoTitle,
       seoDescription,
-      publishedAt
+      publishedAt,
+      "previousPost": *[_type == "post" && publishedAt < ^.publishedAt] | order(publishedAt desc) [0] {
+        title,
+        slug,
+        category
+      },
+      "nextPost": *[_type == "post" && publishedAt > ^.publishedAt] | order(publishedAt asc) [0] {
+        title,
+        slug,
+        category
+      },
+      "relatedPosts": *[_type == "post" && _id != ^._id] | order(publishedAt desc) [0...3] {
+        _id,
+        title,
+        slug,
+        publishedAt,
+        excerpt,
+        category
+      }
     }`,
     { slug }
   );
@@ -195,5 +231,44 @@ export async function getSiteSettings() {
       linkedinUrl,
       ogImage
     }`
+  );
+}
+
+export async function getAllRoles() {
+  return client.fetch(
+    `*[_type == "role" && isActive == true] | order(order asc, publishedAt desc) {
+      _id,
+      title,
+      slug,
+      department,
+      type,
+      location,
+      summary,
+      description,
+      responsibilities,
+      requirements,
+      niceToHave,
+      publishedAt
+    }`
+  );
+}
+
+export async function getRoleBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "role" && slug.current == $slug && isActive == true][0] {
+      _id,
+      title,
+      slug,
+      department,
+      type,
+      location,
+      summary,
+      description,
+      responsibilities,
+      requirements,
+      niceToHave,
+      publishedAt
+    }`,
+    { slug }
   );
 }

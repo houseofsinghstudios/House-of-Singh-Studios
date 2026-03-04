@@ -1,164 +1,199 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ARGUMENT } from "@/lib/constants/homepage-data";
-import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 
-function ImagePlaceholder() {
-  return (
-    <div
-      className="w-full flex items-center justify-center"
-      style={{ aspectRatio: "4/5", background: "#E8E8E3" }}
-    >
-      <span className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[#999]">
-        Image
-      </span>
-    </div>
-  );
-}
+gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * SECTION 3: THE ARGUMENT — "The Typographic Wall"
+ *
+ * Desktop: Full-viewport typographic wall, variable font weight 700→300.
+ * Mobile: Centered text, CSS SDA weight reverse, "We fix that." instant snap.
+ * Tablet: Same as mobile but larger type and horizontal process steps.
+ */
 export default function ArgumentSection() {
+  const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const weFixRef = useRef<HTMLParagraphElement>(null);
-  const visualRef = useRef<HTMLDivElement>(null);
+  const fixRef = useRef<HTMLParagraphElement>(null);
+  const stepsRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
-    const headingEl = headingRef.current;
-    const weFixEl = weFixRef.current;
-    const visualEl = visualRef.current;
-
-    // Split heading into word spans for staggered reveal
-    if (headingEl && !headingEl.dataset.initialized) {
-      headingEl.dataset.initialized = "1";
-      const words = (headingEl.textContent || "").split(" ");
-      headingEl.innerHTML = "";
-      words.forEach((word, i) => {
-        const span = document.createElement("span");
-        span.textContent = word;
-        span.style.cssText = `opacity:0;display:inline-block;transition:opacity 0.4s ease ${i * 40}ms`;
-        span.dataset.wordIdx = String(i);
-        headingEl.appendChild(span);
-        if (i < words.length - 1) headingEl.appendChild(document.createTextNode(" "));
-      });
-    }
-
-    // "We fix that." starts invisible, no transition (snap)
-    if (weFixEl) {
-      weFixEl.style.opacity = "0";
-      weFixEl.style.transition = "none";
-    }
-
-    // Visual column: starts hidden, fades up
-    if (visualEl) {
-      visualEl.style.opacity = "0";
-      visualEl.style.transform = "translateY(40px)";
-      visualEl.style.transition = "opacity 1s ease 0.3s, transform 1s ease 0.3s";
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const target = entry.target as HTMLElement;
-          if (target === headingEl) {
-            headingEl.querySelectorAll<HTMLSpanElement>("span[data-word-idx]")
-              .forEach((w) => { w.style.opacity = "1"; });
-            observer.unobserve(headingEl);
-          }
-          if (target === weFixEl) {
-            weFixEl!.style.opacity = "1";
-            observer.unobserve(weFixEl!);
-          }
-          if (target === visualEl) {
-            visualEl!.style.opacity = "1";
-            visualEl!.style.transform = "translateY(0)";
-            observer.unobserve(visualEl!);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    if (headingEl) observer.observe(headingEl);
-    if (weFixEl) observer.observe(weFixEl);
-    if (visualEl) observer.observe(visualEl);
-    return () => observer.disconnect();
+    const w = window.innerWidth;
+    setIsMobile(w <= 600);
+    setIsTablet(w > 600 && w <= 900);
   }, []);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) {
+      if (fixRef.current) gsap.set(fixRef.current, { opacity: 1 });
+      if (stepsRef.current) {
+        gsap.set(stepsRef.current.querySelectorAll(".step-item"), { opacity: 1, y: 0 });
+      }
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      // "We fix that." — INSTANT appearance (desktop + Firefox mobile fallback)
+      if (fixRef.current && !(isMobile && CSS.supports("animation-timeline", "view()"))) {
+        gsap.set(fixRef.current, { opacity: 0 });
+        ScrollTrigger.create({
+          trigger: section,
+          start: "60% bottom",
+          once: true,
+          onEnter: () => {
+            gsap.set(fixRef.current, { opacity: 1 });
+          },
+        });
+      }
+
+      // Process steps stagger (desktop + Firefox fallback)
+      if (stepsRef.current && !(isMobile && CSS.supports("animation-timeline", "view()"))) {
+        const items = stepsRef.current.querySelectorAll(".step-item");
+        gsap.set(items, { opacity: 0, y: 15 });
+        ScrollTrigger.create({
+          trigger: stepsRef.current,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            gsap.to(items, {
+              opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: "power3.out",
+            });
+          },
+        });
+      }
+
+      // Firefox fallback for variable font weight
+      if (!CSS.supports("animation-timeline", "view()") && headingRef.current) {
+        gsap.fromTo(headingRef.current, {
+          fontVariationSettings: "'wght' 700",
+          opacity: 1,
+        }, {
+          fontVariationSettings: "'wght' 300",
+          opacity: 0.4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, [isMobile]);
+
+  const steps = [
+    { bold: "Discover", rest: "what your brand should be." },
+    { bold: "Design", rest: "the system that makes it real." },
+    { bold: "Deliver", rest: "assets that hold up everywhere." },
+  ];
+
   return (
-    <section className="argument-section py-40 px-[var(--page-px)]">
-      <div className="argument-grid">
-        {/* Left column: text content */}
-        <div className="argument-text max-w-[640px]">
-          <ScrollReveal>
-            <EditorialLabel text={ARGUMENT.label} className="mb-6" />
-          </ScrollReveal>
+    <section
+      ref={sectionRef}
+      className={isMobile || isTablet ? "m-section-wipe" : "section-reveal-wipe"}
+      style={{
+        minHeight: isMobile ? "80svh" : "150vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--section-py) var(--page-px)",
+      }}
+    >
+      <div style={{ textAlign: "center", maxWidth: 1000, width: "100%" }}>
+        {/* The statement — CSS SDA handles weight decrease */}
+        <h2
+          ref={headingRef}
+          className={
+            isMobile
+              ? "argument-headline-mobile-sda"
+              : "argument-headline-sda argument-parallax-fast"
+          }
+          style={{
+            fontFamily: "var(--serif)",
+            fontWeight: 700,
+            fontSize: isMobile
+              ? "clamp(28px, 7vw, 38px)"
+              : isTablet
+                ? "clamp(32px, 5.5vw, 52px)"
+                : "clamp(48px, 8vw, 120px)",
+            lineHeight: 1.05,
+            letterSpacing: isMobile ? "-0.02em" : undefined,
+            color: "var(--text-primary)",
+            margin: 0,
+          }}
+        >
+          {ARGUMENT.heading}
+        </h2>
 
-          <h2
-            ref={headingRef}
-            className="font-[var(--serif)] font-semibold tracking-[-0.015em] max-w-[800px] text-[color:var(--text-primary)] m-0"
-            style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
-          >
-            {ARGUMENT.heading}
-          </h2>
+        {/* "We fix that." — instant snap */}
+        <p
+          ref={fixRef}
+          className={
+            isMobile
+              ? "argument-fix-mobile"
+              : "argument-parallax-slow"
+          }
+          style={{
+            fontFamily: isMobile ? "var(--sans)" : "var(--serif)",
+            fontWeight: 600,
+            fontSize: isMobile
+              ? 16
+              : "clamp(28px, 4vw, 48px)",
+            textTransform: isMobile ? "uppercase" : undefined,
+            letterSpacing: isMobile ? "0.04em" : undefined,
+            color: "var(--text-primary)",
+            margin: "40px 0 0",
+            opacity: 0,
+          }}
+        >
+          {ARGUMENT.snap}
+        </p>
 
-          <ScrollReveal>
-            <p className="mt-9 font-[var(--sans)] font-normal text-[17px] leading-[1.65] text-[color:var(--text-secondary)]">
-              {ARGUMENT.pain}
-            </p>
-          </ScrollReveal>
-
-          <p
-            ref={weFixRef}
-            className="mt-20 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-            style={{ fontSize: "clamp(22px, 2vw, 28px)", opacity: 0 }}
-          >
-            {ARGUMENT.snap}
-          </p>
-
-          <ScrollReveal>
-            <p className="font-[var(--sans)] font-normal text-[17px] leading-[1.65] text-[color:var(--text-secondary)]">
-              {ARGUMENT.process}
-            </p>
-          </ScrollReveal>
-
-          <ScrollReveal className="process-steps">
-            <div className="mt-12 flex items-center flex-wrap">
-              {ARGUMENT.steps.map((step, i) => (
-                <div key={step} className="flex items-center">
-                  {i > 0 && <div className="process-connector" />}
-                  <span className="font-[var(--sans)] font-medium text-[11px] uppercase tracking-[0.13em] text-[color:var(--text-primary)] whitespace-nowrap">
-                    {step}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </ScrollReveal>
-        </div>
-
-        {/* Right column: editorial image */}
-        <div ref={visualRef} className="argument-visual">
-          <div className="argument-img-wrap">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/argument-editorial.png"
-              alt="Brand identity detail"
-              className="argument-img"
-              onError={(e) => {
-                const img = e.currentTarget;
-                img.style.display = "none";
-                const fallback = img.nextElementSibling as HTMLElement | null;
-                if (fallback) fallback.style.display = "flex";
+        {/* Process steps */}
+        <div
+          ref={stepsRef}
+          style={{
+            marginTop: 48,
+            display: "flex",
+            flexDirection: isTablet ? "row" : "column",
+            gap: isTablet ? 32 : 12,
+            alignItems: "center",
+            justifyContent: isTablet ? "center" : undefined,
+          }}
+        >
+          {steps.map((step, i) => (
+            <p
+              key={i}
+              className={isMobile ? "step-item m-fade-up" : "step-item"}
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: isMobile ? 14 : 16,
+                fontWeight: 400,
+                color: "var(--text-muted)",
+                margin: 0,
+                ...(isMobile && CSS.supports?.("animation-timeline", "view()") ? {
+                  animationRange: `entry ${20 + i * 10}% entry ${50 + i * 10}%`,
+                } : {}),
               }}
-            />
-            <div style={{ display: "none" }}>
-              <ImagePlaceholder />
-            </div>
-          </div>
-          <p className="editorial-label mt-3 text-right">
-            (Brand Identity Detail)
-          </p>
+            >
+              <strong style={{ fontWeight: 600, color: "var(--text-secondary)" }}>
+                {step.bold}
+              </strong>{" "}
+              {step.rest}
+            </p>
+          ))}
         </div>
       </div>
     </section>

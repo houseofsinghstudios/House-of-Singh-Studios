@@ -2,7 +2,7 @@ import Link from "next/link";
 
 type Variant = "primary" | "secondary" | "primary-inverted";
 
-interface ButtonProps {
+interface ButtonProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
   href: string;
   variant?: Variant;
   children: React.ReactNode;
@@ -20,11 +20,13 @@ export default function Button({
   variant = "primary",
   children,
   className = "",
+  ...rest
 }: ButtonProps) {
   return (
     <Link
       href={href}
       className={`${variantClass[variant]}${className ? ` ${className}` : ""}`}
+      {...rest}
     >
       {children}
     </Link>

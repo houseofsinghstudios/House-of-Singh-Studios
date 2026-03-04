@@ -1,132 +1,327 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import { TESTIMONIALS } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function TestimonialsSection() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const quoteMarkRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const controlsRef = useRef<HTMLDivElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
-  const quoteRef = useRef<HTMLQuoteElement>(null);
-  const authorRef = useRef<HTMLParagraphElement>(null);
+  const splitRef = useRef<SplitType | null>(null);
+  const prevSlideRef = useRef(0);
+  const hasEnteredRef = useRef(false);
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % TESTIMONIALS.length);
+      transitionTo(
+        ((prevSlideRef.current) + 1) % TESTIMONIALS.length
+      );
     }, 6000);
   }, []);
 
-  useEffect(() => {
-    resetTimer();
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [resetTimer]);
+  // Animate a slide in with SplitType word reveal
+  const animateSlideIn = useCallback((idx: number, delay = 0) => {
+    const slideEl = slideRefs.current[idx];
+    if (!slideEl) return;
 
-  // Word-by-word animation on slide change
-  useEffect(() => {
-    const quoteEl = quoteRef.current;
-    const authorEl = authorRef.current;
-    if (!quoteEl) return;
-
-    const words = TESTIMONIALS[activeSlide].quote.split(" ");
-    quoteEl.innerHTML = "";
-
-    words.forEach((word, i) => {
-      const span = document.createElement("span");
-      span.textContent = word;
-      span.style.cssText = `opacity:0;transform:translateY(8px);display:inline-block;transition:opacity 0.3s ease ${i * 25}ms, transform 0.3s ease ${i * 25}ms`;
-      span.dataset.tWord = "1";
-      quoteEl.appendChild(span);
-      if (i < words.length - 1) quoteEl.appendChild(document.createTextNode(" "));
-    });
-
-    if (authorEl) {
-      authorEl.style.opacity = "0";
-      authorEl.style.transition = `opacity 0.4s ease ${words.length * 25 + 300}ms`;
+    // Clean up previous SplitType
+    if (splitRef.current) {
+      splitRef.current.revert();
+      splitRef.current = null;
     }
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        quoteEl.querySelectorAll<HTMLSpanElement>("span[data-t-word]").forEach((w) => {
-          w.style.opacity = "1";
-          w.style.transform = "translateY(0)";
-        });
-        if (authorEl) authorEl.style.opacity = "1";
-      });
-    });
-  }, [activeSlide]);
+    const quoteEl = slideEl.querySelector("blockquote") as HTMLElement;
+    const authorEl = slideEl.querySelector("[data-author]") as HTMLElement;
 
-  function goTo(i: number) { setActiveSlide(i); resetTimer(); }
-  function goNext() { setActiveSlide((p) => (p + 1) % TESTIMONIALS.length); resetTimer(); }
-  function goPrev() { setActiveSlide((p) => (p - 1 + TESTIMONIALS.length) % TESTIMONIALS.length); resetTimer(); }
+    // Show slide container
+    gsap.set(slideEl, { opacity: 1, y: 0, pointerEvents: "auto", position: "relative" });
+
+    if (quoteEl) {
+      const split = new SplitType(quoteEl, { types: "words" });
+      splitRef.current = split;
+
+      if (split.words) {
+        gsap.set(split.words, { opacity: 0, y: 20 });
+        gsap.to(split.words, {
+          opacity: 1,
+          y: 0,
+          stagger: 0.02,
+          duration: 0.4,
+          ease: "power3.out",
+          delay,
+        });
+      }
+    }
+
+    if (authorEl) {
+      const wordCount = splitRef.current?.words?.length || 0;
+      gsap.set(authorEl, { opacity: 0 });
+      gsap.to(authorEl, {
+        opacity: 1,
+        duration: 0.3,
+        delay: delay + wordCount * 0.02 + 0.15,
+      });
+    }
+  }, []);
+
+  // Transition from current to new slide
+  const transitionTo = useCallback(
+    (idx: number) => {
+      if (idx === prevSlideRef.current) return;
+
+      const outgoing = slideRefs.current[prevSlideRef.current];
+
+      // Animate outgoing
+      if (outgoing) {
+        if (splitRef.current) {
+          splitRef.current.revert();
+          splitRef.current = null;
+        }
+        gsap.to(outgoing, {
+          opacity: 0,
+          y: -15,
+          duration: 0.3,
+          ease: "power2.in",
+          onComplete: () => {
+            gsap.set(outgoing, { position: "absolute", pointerEvents: "none" });
+          },
+        });
+      }
+
+      // Animate incoming (delayed to let outgoing complete)
+      animateSlideIn(idx, 0.3);
+
+      prevSlideRef.current = idx;
+      setActiveSlide(idx);
+    },
+    [animateSlideIn]
+  );
+
+  function goTo(i: number) {
+    transitionTo(i);
+    resetTimer();
+  }
+  function goNext() {
+    transitionTo((prevSlideRef.current + 1) % TESTIMONIALS.length);
+    resetTimer();
+  }
+  function goPrev() {
+    transitionTo(
+      (prevSlideRef.current - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
+    );
+    resetTimer();
+  }
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const touchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const small = window.innerWidth <= 600;
+    setIsMobile(touchOnly && small);
+  }, []);
+
+  // Auto-rotate timer (desktop/tablet only)
+  useEffect(() => {
+    if (isMobile) return;
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resetTimer, isMobile]);
+
+  // ── ScrollTrigger entrance animation ──
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (isMobile || reducedMotion) {
+      // Mobile/reduced-motion: show everything, no GSAP carousel
+      if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+      if (quoteMarkRef.current) gsap.set(quoteMarkRef.current, { opacity: 1, scale: 1 });
+      if (controlsRef.current) gsap.set(controlsRef.current, { opacity: 1 });
+      slideRefs.current.forEach((el) => {
+        if (el) gsap.set(el, { opacity: 1, position: "relative", pointerEvents: "auto" });
+      });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      // Set initial states for entrance
+      if (labelRef.current) gsap.set(labelRef.current, { opacity: 0, y: 15 });
+      if (quoteMarkRef.current) gsap.set(quoteMarkRef.current, { opacity: 0, scale: 0.8 });
+      if (controlsRef.current) gsap.set(controlsRef.current, { opacity: 0 });
+
+      // Hide all slides initially
+      slideRefs.current.forEach((el, i) => {
+        if (el) {
+          gsap.set(el, {
+            opacity: 0,
+            position: i === 0 ? "relative" : "absolute",
+            pointerEvents: i === 0 ? "auto" : "none",
+          });
+        }
+      });
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          hasEnteredRef.current = true;
+          const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+          // Label fades up
+          if (labelRef.current) {
+            tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+          }
+
+          // Quote mark scales in
+          if (quoteMarkRef.current) {
+            tl.to(quoteMarkRef.current, { opacity: 1, scale: 1, duration: 0.5 }, 0.1);
+          }
+
+          // First testimonial word reveal
+          tl.call(() => animateSlideIn(0, 0), [], 0.4);
+
+          // Controls fade in
+          if (controlsRef.current) {
+            tl.to(controlsRef.current, { opacity: 1, duration: 0.3 }, 1.0);
+          }
+        },
+      });
+    }, section);
+
+    return () => {
+      ctx.revert();
+      if (splitRef.current) {
+        splitRef.current.revert();
+        splitRef.current = null;
+      }
+    };
+  }, [animateSlideIn, isMobile]);
 
   return (
-    <section className="py-[140px] px-[var(--page-px)] bg-[var(--bg-shift)] text-center">
-      <ScrollReveal>
+    <section
+      ref={sectionRef}
+      className="py-[140px] px-[var(--page-px)] bg-[var(--bg-shift)] text-center"
+    >
+      <div ref={labelRef}>
         <EditorialLabel text="Clients" className="mb-8" />
-      </ScrollReveal>
+      </div>
 
-      <ScrollReveal>
-        <div className="font-[var(--serif)] text-[120px] leading-none text-[#E0E0DB] select-none -mb-5">
-          &ldquo;
-        </div>
-      </ScrollReveal>
+      <div
+        ref={quoteMarkRef}
+        className="font-[var(--serif)] text-[120px] leading-none text-[#E0E0DB] select-none -mb-5"
+      >
+        &ldquo;
+      </div>
 
-      <ScrollReveal delay={0.2}>
-        <div className="relative max-w-[720px] mx-auto" style={{ minHeight: 180 }}>
+      {isMobile ? (
+        /* ── MOBILE: native CSS scroll-snap carousel ── */
+        <div className="testimonials-track mt-6">
           {TESTIMONIALS.map((t, i) => (
-            <div
-              key={i}
-              className={`carousel-slide${i === activeSlide ? " active" : ""}`}
-            >
+            <div key={i} className="testimonial-snap-card">
               <blockquote
-                ref={i === activeSlide ? quoteRef : undefined}
                 className="font-[var(--serif)] font-normal italic text-[color:var(--text-primary)] m-0 p-0"
-                style={{ fontSize: "clamp(22px, 2.2vw, 30px)", lineHeight: 1.45 }}
+                style={{ fontSize: "20px", lineHeight: 1.45 }}
               >
                 {t.quote}
               </blockquote>
-              <p
-                ref={i === activeSlide ? authorRef : undefined}
-                className="mt-7 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]"
-              >
+              <p className="mt-5 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]">
                 &mdash; {t.author}
               </p>
             </div>
           ))}
         </div>
-
-        {/* Controls */}
-        <div className="mt-10 flex items-center justify-center gap-4">
-          <button onClick={goPrev} aria-label="Previous testimonial" className="carousel-arrow">
-            &larr;
-          </button>
-          <div className="flex gap-2.5 items-center">
-            {TESTIMONIALS.map((_, i) => (
-              <button
+      ) : (
+        /* ── DESKTOP/TABLET: GSAP carousel ── */
+        <>
+          <div ref={carouselRef} className="relative max-w-[720px] mx-auto" style={{ minHeight: 180 }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div
                 key={i}
-                onClick={() => goTo(i)}
-                aria-label={`Go to testimonial ${i + 1}`}
-                className="carousel-dot"
+                ref={(el) => { slideRefs.current[i] = el; }}
+                className="carousel-slide-gsap"
                 style={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: "50%",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                  background: i === activeSlide ? "var(--text-primary)" : "var(--border)",
-                  transition: "background 0.3s ease",
+                  position: i === 0 ? "relative" : "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  opacity: 0,
+                  pointerEvents: i === 0 ? "auto" : "none",
                 }}
-              />
+              >
+                <blockquote
+                  className="font-[var(--serif)] font-normal italic text-[color:var(--text-primary)] m-0 p-0"
+                  style={{ fontSize: "clamp(22px, 2.2vw, 30px)", lineHeight: 1.45 }}
+                >
+                  {t.quote}
+                </blockquote>
+                <p
+                  data-author
+                  className="mt-7 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]"
+                >
+                  &mdash; {t.author}
+                </p>
+              </div>
             ))}
           </div>
-          <button onClick={goNext} aria-label="Next testimonial" className="carousel-arrow">
-            &rarr;
-          </button>
-        </div>
-      </ScrollReveal>
+
+          {/* Controls */}
+          <div ref={controlsRef} className="mt-10 flex items-center justify-center gap-4">
+            <button
+              onClick={goPrev}
+              aria-label="Previous testimonial"
+              className="carousel-arrow"
+              data-cursor="link"
+            >
+              &larr;
+            </button>
+            <div className="flex gap-2.5 items-center">
+              {TESTIMONIALS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  className="carousel-dot"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    background: i === activeSlide ? "var(--text-primary)" : "var(--border)",
+                    transition: "background 0.3s ease",
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={goNext}
+              aria-label="Next testimonial"
+              className="carousel-arrow"
+              data-cursor="link"
+            >
+              &rarr;
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }

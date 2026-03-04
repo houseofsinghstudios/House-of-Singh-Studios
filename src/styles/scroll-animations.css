@@ -1,0 +1,376 @@
+/* ═══════════════════════════════════════════════════════
+   CSS Scroll-Driven Animations — Experimental Homepage
+   GPU-composited keyframe animations driven by scroll position.
+   Primary animation system. GSAP is Firefox-only fallback.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Generic reveals ── */
+@keyframes fadeRevealUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeRevealRight {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes clipReveal {
+  from { clip-path: inset(8% 6%); }
+  to { clip-path: inset(0%); }
+}
+
+@keyframes imageScale {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+
+/* ── HERO: Variable font weight shift on scroll ── */
+@keyframes heroWeight {
+  from { font-variation-settings: 'wght' 300; letter-spacing: -0.03em; }
+  to { font-variation-settings: 'wght' 600; letter-spacing: -0.05em; }
+}
+
+/* ── HERO: Center line splits apart ── */
+@keyframes lineSplitLeft {
+  from { transform: translateX(0); opacity: 0.15; }
+  to { transform: translateX(-20vw); opacity: 0; }
+}
+
+@keyframes lineSplitRight {
+  from { transform: translateX(0); opacity: 0.15; }
+  to { transform: translateX(20vw); opacity: 0; }
+}
+
+/* ── HERO: Section fade out ── */
+@keyframes heroFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ── HERO: Supporting text fade in ── */
+@keyframes supportFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── ARGUMENT: Reverse weight shift (bold to thin) ── */
+@keyframes argumentWeight {
+  from { font-variation-settings: 'wght' 700; opacity: 1; }
+  to { font-variation-settings: 'wght' 300; opacity: 0.4; }
+}
+
+/* ── ARGUMENT: Reverse parallax ── */
+@keyframes parallaxFast {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10%); }
+}
+
+@keyframes parallaxSlow {
+  from { transform: translateY(0); }
+  to { transform: translateY(10%); }
+}
+
+/* ── SERVICES: Stacking card push-back ── */
+@keyframes pushBack {
+  to {
+    scale: 0.95;
+    translate: 0 20px;
+    filter: brightness(0.92);
+  }
+}
+
+/* ── WORK: Horizontal scroll ── */
+@keyframes horizontalScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-300vw); }
+}
+
+/* ── Section boundary diagonal wipe ── */
+@keyframes diagonalWipe {
+  from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* ── TICKER: Marquee animations ── */
+@keyframes tickerLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes tickerRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* ── Living logotype breathe ── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+/* ── Cursor ring rotate ── */
+@keyframes ringRotate {
+  to { rotate: 360deg; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Base classes (non-supporting browsers use GSAP fallback)
+   ═══════════════════════════════════════════════════════ */
+
+.scroll-reveal-up {
+  animation: fadeRevealUp 1s ease both;
+}
+
+.scroll-clip-reveal {
+  animation: clipReveal 0.8s ease both;
+}
+
+.scroll-clip-reveal > img,
+.scroll-clip-reveal > canvas {
+  animation: imageScale 1s ease both;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Native CSS Scroll-Driven Animations
+   Applied only in browsers that support animation-timeline
+   ═══════════════════════════════════════════════════════ */
+
+@supports (animation-timeline: view()) {
+  .scroll-reveal-up {
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .scroll-clip-reveal {
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  .scroll-clip-reveal > img,
+  .scroll-clip-reveal > canvas {
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+
+  /* Hero headline weight animation */
+  .hero-headline-sda {
+    animation: heroWeight linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 25%;
+  }
+
+  /* Hero center line splits */
+  .center-line-left {
+    animation: lineSplitLeft linear both;
+    animation-timeline: scroll();
+    animation-range: 10% 40%;
+  }
+  .center-line-right {
+    animation: lineSplitRight linear both;
+    animation-timeline: scroll();
+    animation-range: 10% 40%;
+  }
+
+  /* Hero section fade out */
+  .hero-section-fade {
+    animation: heroFadeOut linear both;
+    animation-timeline: scroll();
+    animation-range: 50% 70%;
+  }
+
+  /* Support text reveal */
+  .hero-support-sda {
+    animation: supportFadeIn linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  /* Argument weight decrease */
+  .argument-headline-sda {
+    animation: argumentWeight linear both;
+    animation-timeline: view();
+    animation-range: entry 30% exit 60%;
+  }
+
+  /* Argument reverse parallax */
+  .argument-parallax-fast {
+    animation: parallaxFast linear both;
+    animation-timeline: scroll();
+  }
+  .argument-parallax-slow {
+    animation: parallaxSlow linear both;
+    animation-timeline: scroll();
+  }
+
+  /* Services stacking push-back */
+  .service-panel:not(:last-child) {
+    animation: pushBack linear both;
+    animation-timeline: view();
+    animation-range: exit -40% exit 0%;
+  }
+
+  /* Section reveal wipe */
+  .section-reveal-wipe {
+    animation: diagonalWipe linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE CSS Scroll-Driven Animation Patterns
+   Reusable patterns for mobile/tablet, zero JavaScript.
+   ═══════════════════════════════════════════════════════ */
+
+/* Pattern 1: Fade slide up — standard content entrance */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pattern 2: Image reveal — replacing OGL shaders on mobile */
+@keyframes imageReveal {
+  from {
+    clip-path: inset(8% 6% 8% 6%);
+    filter: blur(6px) grayscale(1);
+    transform: scale(1.06);
+  }
+  to {
+    clip-path: inset(0%);
+    filter: blur(0px) grayscale(0);
+    transform: scale(1);
+  }
+}
+
+/* Pattern 3: Variable font weight shift */
+@keyframes weightShift {
+  from { font-variation-settings: 'wght' 300; }
+  to { font-variation-settings: 'wght' 600; }
+}
+
+/* Pattern 4: Section wipe — diagonal clip-path reveal */
+@keyframes sectionWipe {
+  from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* Pattern 5: Reverse weight shift (argument section) */
+@keyframes weightReverse {
+  from { font-variation-settings: 'wght' 700; }
+  to { font-variation-settings: 'wght' 300; opacity: 0.4; }
+}
+
+/* Pattern 6: Snap in — instant appearance (1% range) */
+@keyframes snapIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Pattern 7: Mobile service card push-back */
+@keyframes cardPushBack {
+  to {
+    scale: 0.93;
+    filter: brightness(0.88);
+  }
+}
+
+/* Pattern 8: Mobile hero fade on scroll */
+@keyframes heroFade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Pattern 9: Mobile scroll progress indicator */
+@keyframes scrollProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ── Apply mobile patterns with @supports ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .m-fade-up {
+      animation: fadeSlideUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+
+    .m-image-reveal {
+      animation: imageReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    .m-section-wipe {
+      animation: sectionWipe linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* ── Mobile hero weight shift ── */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .hero-headline-mobile-sda {
+      animation: weightShift linear both;
+      animation-timeline: scroll();
+      animation-range: 0% 20%;
+    }
+
+    .hero-section-mobile-fade {
+      animation: heroFade linear both;
+      animation-timeline: scroll();
+      animation-range: 40% 60%;
+    }
+  }
+
+  /* Mobile argument reverse weight */
+  @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .argument-headline-mobile-sda {
+      animation: weightReverse linear both;
+      animation-timeline: view();
+      animation-range: entry 20% exit 50%;
+    }
+
+    .argument-fix-mobile {
+      opacity: 0;
+      animation: snapIn linear both;
+      animation-timeline: view();
+      animation-range: entry 55% entry 56%;
+    }
+  }
+
+  /* Mobile service card push-back */
+  @media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .service-card-mobile:not(:last-child) {
+      animation: cardPushBack linear both;
+      animation-timeline: view();
+      animation-range: exit -30% exit 0%;
+    }
+  }
+
+  /* CSS-only scroll progress indicator */
+  @media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .scroll-indicator-css {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text-primary);
+      opacity: 0.2;
+      transform-origin: left;
+      animation: scrollProgress linear both;
+      animation-timeline: scroll();
+      z-index: 101;
+      pointer-events: none;
+    }
+  }
+  @media (pointer: coarse) and (min-width: 601px) and (prefers-reduced-motion: no-preference) {
+    .scroll-indicator-css {
+      top: 64px;
+    }
+  }
+}

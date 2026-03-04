@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { gsap } from "gsap";
 
 const navLinks = [
   { label: "Services", href: "/services" },
@@ -12,13 +13,11 @@ const navLinks = [
 ];
 
 const mobileLinks = [
-  { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-  { label: "About", href: "/about" },
-  { label: "Packages", href: "/packages" },
 ];
 
 export default function Header() {
@@ -26,21 +25,23 @@ export default function Header() {
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const menuTlRef = useRef<gsap.core.Timeline | null>(null);
 
   useEffect(() => {
     function onScroll() {
       const y = window.scrollY;
-
-      // State 2 activates at 80px
       setScrolled(y >= 80);
 
-      // Hide/show after 400px
-      if (y > 400 && y > lastScrollY.current) {
+      // Mobile: hide on scroll down past 100px, Desktop: after 400px
+      const threshold = window.innerWidth <= 900 ? 100 : 400;
+      if (y > threshold && y > lastScrollY.current) {
         setHidden(true);
-        setMenuOpen(false);
       } else if (y < lastScrollY.current) {
         setHidden(false);
       }
+      // Always visible at very top
+      if (y < 10) setHidden(false);
 
       lastScrollY.current = y;
     }
@@ -49,13 +50,50 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [menuOpen]);
+
+  const animateMenuOpen = useCallback(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const links = overlay.querySelectorAll<HTMLElement>(".header-mobile-link");
+    const cta = overlay.querySelector<HTMLElement>(".header-mobile-cta");
+
+    menuTlRef.current?.kill();
+    const tl = gsap.timeline();
+    menuTlRef.current = tl;
+
+    gsap.set(overlay, { display: "flex", y: "100%" });
+    gsap.set(links, { opacity: 0, y: 20 });
+    if (cta) gsap.set(cta, { opacity: 0, y: 16 });
+
+    tl.to(overlay, { y: "0%", duration: 0.45, ease: "cubic-bezier(.23,1,.32,1)" });
+    tl.to(links, { opacity: 1, y: 0, stagger: 0.05, duration: 0.3, ease: "power3.out" }, 0.2);
+    if (cta) tl.to(cta, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, ">");
+  }, []);
+
+  const animateMenuClose = useCallback(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    menuTlRef.current?.kill();
+    gsap.to(overlay, {
+      y: "100%",
+      duration: 0.35,
+      ease: "power4.inOut",
+      onComplete: () => {
+        gsap.set(overlay, { display: "none" });
+        setMenuOpen(false);
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) animateMenuOpen();
+  }, [menuOpen, animateMenuOpen]);
 
   return (
     <>
@@ -74,10 +112,11 @@ export default function Header() {
           borderBottom: scrolled
             ? "1px solid var(--border)"
             : "1px solid transparent",
+          backdropFilter: "blur(12px)",
           transform:
             hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
           transition:
-            "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease",
+            "transform 0.3s cubic-bezier(.23,1,.32,1), background-color 0.5s ease, border-color 0.5s ease",
         }}
       >
         {/* Crest Logo — visible in State 1 (top of page), positioned with breathing room */}
@@ -163,7 +202,7 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Mobile Hamburger — State 2 only, below 900px */}
+        {/* Mobile Hamburger — always visible below 900px */}
         <button
           className="header-hamburger"
           onClick={() => setMenuOpen(true)}
@@ -171,14 +210,15 @@ export default function Header() {
           style={{
             display: "none",
             flexDirection: "column",
-            gap: 5,
-            padding: 8,
+            gap: 6,
+            padding: 10,
             background: "none",
             border: "none",
             cursor: "pointer",
-            opacity: scrolled ? 1 : 0,
-            pointerEvents: scrolled ? "auto" : "none",
-            transition: "opacity 0.5s ease",
+            minHeight: 44,
+            minWidth: 44,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -208,70 +248,93 @@ export default function Header() {
         </button>
       </header>
 
-      {/* Mobile Full-Screen Overlay */}
-      {menuOpen && (
-        <div
+      {/* Mobile Full-Screen Overlay — always in DOM for GSAP animation */}
+      <div
+        ref={overlayRef}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 101,
+          background: "var(--bg)",
+          display: "none",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+          transform: "translateY(100%)",
+        }}
+      >
+        {/* Close X */}
+        <button
+          onClick={animateMenuClose}
+          aria-label="Close menu"
           style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 101,
-            background: "var(--bg)",
+            position: "absolute",
+            top: 18,
+            right: "var(--page-px)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 8,
+            minHeight: 44,
+            minWidth: 44,
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 8,
           }}
         >
-          {/* Close X */}
-          <button
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close menu"
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--text-primary)"
+            strokeWidth="1.5"
+          >
+            <line x1="4" y1="4" x2="20" y2="20" />
+            <line x1="20" y1="4" x2="4" y2="20" />
+          </svg>
+        </button>
+
+        {/* Overlay Links */}
+        {mobileLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            onClick={animateMenuClose}
+            className="header-mobile-link"
             style={{
-              position: "absolute",
-              top: 18,
-              right: "var(--page-px)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 8,
+              fontFamily: "var(--serif)",
+              fontSize: 36,
+              fontWeight: 500,
+              color: "var(--text-primary)",
+              textDecoration: "none",
+              lineHeight: 1.3,
+              transition: "color 0.2s ease",
             }}
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--text-primary)"
-              strokeWidth="1.5"
-            >
-              <line x1="4" y1="4" x2="20" y2="20" />
-              <line x1="20" y1="4" x2="4" y2="20" />
-            </svg>
-          </button>
+            {link.label}
+          </Link>
+        ))}
 
-          {/* Overlay Links */}
-          {mobileLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="header-mobile-link"
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: 36,
-                fontWeight: 400,
-                color: "var(--text-primary)",
-                textDecoration: "none",
-                lineHeight: 1.6,
-                transition: "color 0.2s ease",
-              }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      )}
+        {/* Start a Project CTA */}
+        <Link
+          href="/contact"
+          onClick={animateMenuClose}
+          className="header-mobile-cta btn-primary"
+          style={{
+            position: "absolute",
+            bottom: 40,
+            left: "var(--page-px)",
+            right: "var(--page-px)",
+            height: 52,
+            textAlign: "center",
+            fontSize: 16,
+          }}
+        >
+          Start a Project
+        </Link>
+      </div>
 
       <style>{`
         .header-nav-link:hover {

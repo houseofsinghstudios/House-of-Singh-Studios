@@ -1,36 +1,108 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STATS } from "@/lib/constants/homepage-data";
-import { useIntersectionObserver } from "@/lib/hooks/useIntersectionObserver";
-import { useCountUp } from "@/lib/hooks/useCountUp";
-import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function StatsSection() {
-  const { ref, isIntersecting } = useIntersectionObserver<HTMLDivElement>({
-    threshold: 0.5,
-  });
-  const values = useCountUp(STATS.targets, isIntersecting);
+  const sectionRef = useRef<HTMLElement>(null);
+  const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+  const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        // Show final values instantly
+        STATS.targets.forEach((target, i) => {
+          const numEl = numberRefs.current[i];
+          if (numEl) numEl.textContent = `${target}+`;
+        });
+        descRefs.current.forEach((el) => {
+          if (el) gsap.set(el, { opacity: 1, y: 0 });
+        });
+        return;
+      }
+
+      // Set initial states
+      numberRefs.current.forEach((el) => {
+        if (el) el.textContent = "0+";
+      });
+      descRefs.current.forEach((el) => {
+        if (el) gsap.set(el, { opacity: 0, y: 10 });
+      });
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top 80%",
+        once: true,
+        onEnter: () => {
+          // Count-up each stat
+          STATS.targets.forEach((target, i) => {
+            const numEl = numberRefs.current[i];
+            if (!numEl) return;
+
+            const obj = { val: 0 };
+            gsap.to(obj, {
+              val: target,
+              duration: 1.5,
+              ease: "power2.out",
+              delay: i * 0.15,
+              onUpdate: () => {
+                numEl.textContent = `${Math.round(obj.val)}+`;
+              },
+            });
+          });
+
+          // Description text fades up staggered
+          descRefs.current.forEach((el, i) => {
+            if (el) {
+              gsap.to(el, {
+                opacity: 1,
+                y: 0,
+                duration: 0.4,
+                delay: i * 0.15 + 0.2,
+                ease: "power3.out",
+              });
+            }
+          });
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <section ref={ref} className="py-[140px] px-[var(--page-px)]">
-      <ScrollReveal>
-        <EditorialLabel text={STATS.label} className="mb-12" />
-      </ScrollReveal>
-
-      <div className="stats-grid">
-        {STATS.targets.map((_, i) => (
-          <ScrollReveal key={i} delay={i * 0.1}>
+    <section
+      ref={sectionRef}
+      className="bg-[var(--bg-shift)]"
+      style={{ padding: "64px var(--page-px)" }}
+    >
+      <div className="stats-grid text-center">
+        {STATS.targets.map((target, i) => (
+          <div key={i}>
             <p
+              ref={(el) => { numberRefs.current[i] = el; }}
               className="font-[var(--serif)] font-semibold leading-none text-[color:var(--text-primary)] m-0"
-              style={{ fontSize: "clamp(52px, 5.5vw, 76px)" }}
+              style={{ fontSize: "clamp(40px, 4vw, 56px)" }}
             >
-              {values[i]}+
+              {target}+
             </p>
-            <p className="mt-3 font-[var(--sans)] font-normal text-sm leading-normal text-[color:var(--text-muted)]">
+            <p
+              ref={(el) => { descRefs.current[i] = el; }}
+              className="mt-2 font-[var(--sans)] font-normal text-[13px] leading-normal text-[color:var(--text-muted)]"
+            >
               {STATS.labels[i]}
             </p>
-          </ScrollReveal>
+          </div>
         ))}
       </div>
     </section>
