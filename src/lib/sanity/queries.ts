@@ -233,3 +233,42 @@ export async function getSiteSettings() {
     }`
   );
 }
+
+export async function getAllRoles() {
+  return client.fetch(
+    `*[_type == "role" && isActive == true] | order(order asc, publishedAt desc) {
+      _id,
+      title,
+      slug,
+      department,
+      type,
+      location,
+      summary,
+      description,
+      responsibilities,
+      requirements,
+      niceToHave,
+      publishedAt
+    }`
+  );
+}
+
+export async function getRoleBySlug(slug: string) {
+  return client.fetch(
+    `*[_type == "role" && slug.current == $slug && isActive == true][0] {
+      _id,
+      title,
+      slug,
+      department,
+      type,
+      location,
+      summary,
+      description,
+      responsibilities,
+      requirements,
+      niceToHave,
+      publishedAt
+    }`,
+    { slug }
+  );
+}
