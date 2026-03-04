@@ -10,7 +10,11 @@ import { getNextProject } from "@/data/projects";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function parseNumber(str: string): { num: number; prefix: string; suffix: string } {
+function parseNumber(str: string): {
+  num: number;
+  prefix: string;
+  suffix: string;
+} {
   const match = str.match(/^([^0-9]*)([0-9,]+)(.*)$/);
   if (!match) return { num: 0, prefix: "", suffix: str };
   return {
@@ -20,11 +24,15 @@ function parseNumber(str: string): { num: number; prefix: string; suffix: string
   };
 }
 
-function formatNumber(n: number, original: string): string {
-  const { prefix, suffix } = parseNumber(original);
-  const formatted = n.toLocaleString("en-US");
-  return `${prefix}${formatted}${suffix}`;
-}
+const GALLERY_GRADIENTS = {
+  hero: "linear-gradient(155deg, #DDD8D2, #CFC8C0)",
+  pair1a: "linear-gradient(155deg, #D8DDE2, #C8CFD4)",
+  pair1b: "linear-gradient(155deg, #DDE2D8, #CFD4C8)",
+  full1: "linear-gradient(155deg, #E2DDD8, #CFC8C2)",
+  pair2a: "linear-gradient(155deg, #E0DCD6, #D2CEC6)",
+  pair2b: "linear-gradient(155deg, #D6DCE0, #C6CED2)",
+  full2: "linear-gradient(155deg, #DDD8D2, #CFC8C0)",
+};
 
 interface CaseStudyClientProps {
   project: Project;
@@ -74,7 +82,11 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       if (metaRef.current) {
         const items = metaRef.current.querySelectorAll(".meta-item");
         gsap.set(items, { opacity: 0, y: 12 });
-        tl.to(items, { opacity: 1, y: 0, stagger: 0.06, duration: 0.3 }, 0.6);
+        tl.to(
+          items,
+          { opacity: 1, y: 0, stagger: 0.06, duration: 0.3 },
+          0.6
+        );
       }
 
       // Hero image clip-path reveal
@@ -82,10 +94,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         tl.fromTo(
           heroImgRef.current,
           { clipPath: "inset(8% 8% 8% 8%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1.2,
-          },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
           0.8
         );
         const inner = heroImgRef.current.querySelector(".hero-img-inner");
@@ -95,7 +104,8 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       }
 
       // Content sections scroll triggers
-      const sections = containerRef.current?.querySelectorAll(".case-content-section");
+      const sections =
+        containerRef.current?.querySelectorAll(".case-content-section");
       sections?.forEach((sec) => {
         gsap.fromTo(
           sec,
@@ -105,71 +115,71 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             y: 0,
             duration: 0.8,
             ease: "power3.out",
-            scrollTrigger: {
-              trigger: sec,
-              start: "top 80%",
-            },
+            scrollTrigger: { trigger: sec, start: "top 80%" },
           }
         );
       });
 
-      // Gallery image clip-path reveals
-      const galleryFull = containerRef.current?.querySelectorAll(".gallery-full");
-      galleryFull?.forEach((img) => {
-        gsap.fromTo(
-          img,
-          { clipPath: "inset(6% 4% 6% 4%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: img, start: "top 85%" },
-          }
-        );
-        const inner = img.querySelector(".gallery-inner");
-        if (inner) {
+      // Gallery full-width clip reveals
+      containerRef.current
+        ?.querySelectorAll<HTMLElement>(".gallery-full")
+        .forEach((img) => {
           gsap.fromTo(
-            inner,
-            { scale: 1.1 },
+            img,
+            { clipPath: "inset(6% 4% 6% 4%)" },
             {
-              scale: 1,
+              clipPath: "inset(0% 0% 0% 0%)",
               duration: 1,
               ease: "power3.out",
               scrollTrigger: { trigger: img, start: "top 85%" },
             }
           );
-        }
-      });
-
-      const galleryPaired = containerRef.current?.querySelectorAll(".gallery-pair-item");
-      galleryPaired?.forEach((img, i) => {
-        const delay = (i % 2) * 0.15;
-        gsap.fromTo(
-          img,
-          { clipPath: "inset(8% 6% 8% 6%)" },
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.9,
-            delay,
-            ease: "power3.out",
-            scrollTrigger: { trigger: img, start: "top 85%" },
+          const inner = img.querySelector(".gallery-inner");
+          if (inner) {
+            gsap.fromTo(
+              inner,
+              { scale: 1.1 },
+              {
+                scale: 1,
+                duration: 1,
+                ease: "power3.out",
+                scrollTrigger: { trigger: img, start: "top 85%" },
+              }
+            );
           }
-        );
-        const inner = img.querySelector(".gallery-inner");
-        if (inner) {
+        });
+
+      // Gallery paired clip reveals
+      containerRef.current
+        ?.querySelectorAll<HTMLElement>(".gallery-pair-item")
+        .forEach((img, i) => {
+          const delay = (i % 2) * 0.15;
           gsap.fromTo(
-            inner,
-            { scale: 1.1 },
+            img,
+            { clipPath: "inset(8% 6% 8% 6%)" },
             {
-              scale: 1,
+              clipPath: "inset(0% 0% 0% 0%)",
               duration: 0.9,
               delay,
               ease: "power3.out",
               scrollTrigger: { trigger: img, start: "top 85%" },
             }
           );
-        }
-      });
+          const inner = img.querySelector(".gallery-inner");
+          if (inner) {
+            gsap.fromTo(
+              inner,
+              { scale: 1.1 },
+              {
+                scale: 1,
+                duration: 0.9,
+                delay,
+                ease: "power3.out",
+                scrollTrigger: { trigger: img, start: "top 85%" },
+              }
+            );
+          }
+        });
 
       // Results count-up
       project.results.forEach((result, i) => {
@@ -181,7 +191,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           val: num,
           duration: 1.5,
           ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 85%" },
+          scrollTrigger: { trigger: el, start: "top 80%" },
           onUpdate() {
             el.textContent = `${prefix}${Math.round(obj.val).toLocaleString("en-US")}${suffix}`;
           },
@@ -193,17 +203,27 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
   }, [project]);
 
   const sectionEntries = [
-    { key: "business", label: "The Business", data: project.sections.business },
-    { key: "challenge", label: "The Challenge", data: project.sections.challenge },
-    { key: "approach", label: "Our Approach", data: project.sections.approach },
-    { key: "deliverables", label: "Deliverables", data: project.sections.deliverables },
+    { key: "business", data: project.sections.business },
+    { key: "challenge", data: project.sections.challenge },
+    { key: "approach", data: project.sections.approach },
+    { key: "deliverables", data: project.sections.deliverables },
   ];
 
-  const galleryGradients = [
-    "linear-gradient(135deg, #E8E5E0, #D8D5D0)",
-    "linear-gradient(135deg, #E0E3E8, #D0D3D8)",
-    "linear-gradient(135deg, #E3E8E0, #D3D8D0)",
-  ];
+  // Gallery items between sections:
+  // After business (idx 0): paired
+  // After challenge (idx 1): full-width
+  // After approach (idx 2): paired
+  // After deliverables: full-width (before results)
+  const galleryAfterSection: Record<
+    number,
+    | { type: "paired"; gradients: [string, string] }
+    | { type: "full"; gradient: string }
+  > = {
+    0: { type: "paired", gradients: [GALLERY_GRADIENTS.pair1a, GALLERY_GRADIENTS.pair1b] },
+    1: { type: "full", gradient: GALLERY_GRADIENTS.full1 },
+    2: { type: "paired", gradients: [GALLERY_GRADIENTS.pair2a, GALLERY_GRADIENTS.pair2b] },
+    3: { type: "full", gradient: GALLERY_GRADIENTS.full2 },
+  };
 
   return (
     <div ref={containerRef}>
@@ -274,7 +294,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           style={{
             width: "100%",
             height: "100%",
-            background: project.gradient,
+            background: GALLERY_GRADIENTS.hero,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -287,7 +307,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         </div>
       </div>
 
-      {/* Content Sections with Gallery Images between them */}
+      {/* Content sections + gallery interleaved */}
       {sectionEntries.map((sec, idx) => (
         <div key={sec.key}>
           <section
@@ -296,15 +316,18 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
               display: "grid",
               gridTemplateColumns: "260px 1fr",
               gap: 80,
-              padding: "100px var(--page-px)",
+              padding: "120px var(--page-px)",
               opacity: 0,
             }}
           >
-            <div className="case-sticky-label" style={{ position: "sticky", top: 140, alignSelf: "start" }}>
-              <p className="editorial-label mb-4">({sec.label})</p>
+            <div
+              className="case-sticky-label"
+              style={{ position: "sticky", top: 140, alignSelf: "start" }}
+            >
+              <p className="editorial-label mb-2">{sec.data.label}</p>
               <h2
                 className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-                style={{ fontSize: 26 }}
+                style={{ fontSize: 26, lineHeight: 1.25, marginTop: 6 }}
               >
                 {sec.data.title}
               </h2>
@@ -314,10 +337,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                 <p
                   key={pi}
                   className="font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-secondary)] m-0"
-                  style={{
-                    lineHeight: 1.75,
-                    marginTop: pi > 0 ? 28 : 0,
-                  }}
+                  style={{ lineHeight: 1.75, marginBottom: pi < sec.data.paragraphs.length - 1 ? 24 : 0 }}
                 >
                   {p}
                 </p>
@@ -325,47 +345,25 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             </div>
           </section>
 
-          {/* Gallery image after each section except last */}
-          {idx < sectionEntries.length - 1 && (
-            idx % 2 === 0 ? (
-              /* Full-width gallery */
-              <div
-                className="gallery-full"
-                style={{
-                  margin: "0 var(--page-px)",
-                  aspectRatio: "16/9",
-                  overflow: "hidden",
-                  clipPath: "inset(6% 4% 6% 4%)",
-                }}
-              >
-                <div
-                  className="gallery-inner"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    background: galleryGradients[idx] || galleryGradients[0],
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    transform: "scale(1.1)",
-                  }}
-                >
-                  <span className="editorial-label" style={{ color: "#999" }}>
-                    Gallery Image
-                  </span>
-                </div>
-              </div>
-            ) : (
-              /* Paired gallery */
+          {/* Gallery after this section */}
+          {galleryAfterSection[idx] &&
+            (galleryAfterSection[idx].type === "paired" ? (
               <div
                 style={{
                   display: "grid",
                   gridTemplateColumns: "1fr 1fr",
                   gap: 20,
-                  margin: "0 var(--page-px)",
+                  padding: "0 var(--page-px)",
+                  marginBottom: 20,
                 }}
+                className="gallery-pair-container"
               >
-                {[0, 1].map((gi) => (
+                {(
+                  galleryAfterSection[idx] as {
+                    type: "paired";
+                    gradients: [string, string];
+                  }
+                ).gradients.map((g, gi) => (
                   <div
                     key={gi}
                     className="gallery-pair-item"
@@ -380,22 +378,65 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                       style={{
                         width: "100%",
                         height: "100%",
-                        background: galleryGradients[gi + 1] || galleryGradients[0],
+                        background: g,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         transform: "scale(1.1)",
                       }}
                     >
-                      <span className="editorial-label" style={{ color: "#999" }}>
+                      <span
+                        className="editorial-label"
+                        style={{ color: "#999" }}
+                      >
                         Gallery Image
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
-            )
-          )}
+            ) : (
+              <div
+                className="gallery-full"
+                style={{
+                  padding: "0 var(--page-px)",
+                  marginBottom: 20,
+                }}
+              >
+                <div
+                  style={{
+                    aspectRatio: "16/9",
+                    overflow: "hidden",
+                    clipPath: "inset(6% 4% 6% 4%)",
+                  }}
+                >
+                  <div
+                    className="gallery-inner"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      background: (
+                        galleryAfterSection[idx] as {
+                          type: "full";
+                          gradient: string;
+                        }
+                      ).gradient,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      transform: "scale(1.1)",
+                    }}
+                  >
+                    <span
+                      className="editorial-label"
+                      style={{ color: "#999" }}
+                    >
+                      Gallery Image
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
         </div>
       ))}
 
@@ -406,18 +447,21 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           display: "grid",
           gridTemplateColumns: "260px 1fr",
           gap: 80,
-          padding: "100px var(--page-px)",
+          padding: "120px var(--page-px)",
           background: "var(--bg-shift)",
           opacity: 0,
         }}
       >
-        <div className="case-sticky-label" style={{ position: "sticky", top: 140, alignSelf: "start" }}>
-          <p className="editorial-label mb-4">(Results)</p>
+        <div
+          className="case-sticky-label"
+          style={{ position: "sticky", top: 140, alignSelf: "start" }}
+        >
+          <p className="editorial-label mb-2">(Results)</p>
           <h2
             className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-            style={{ fontSize: 26 }}
+            style={{ fontSize: 26, lineHeight: 1.25, marginTop: 6 }}
           >
-            Impact
+            The outcome
           </h2>
         </div>
         <div style={{ maxWidth: 600 }}>
@@ -428,23 +472,31 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             {project.resultSummary}
           </p>
           <div
-            className="mt-12"
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: "40px 60px",
+              gap: 48,
+              marginTop: 48,
             }}
           >
             {project.results.map((r, i) => (
               <div key={i}>
                 <p
-                  ref={(el) => { statRefs.current[i] = el; }}
+                  ref={(el) => {
+                    statRefs.current[i] = el;
+                  }}
                   className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-                  style={{ fontSize: "clamp(32px, 3.5vw, 48px)" }}
+                  style={{
+                    fontSize: "clamp(36px, 4vw, 52px)",
+                    lineHeight: 1,
+                  }}
                 >
                   {r.number}
                 </p>
-                <p className="mt-2 font-[var(--sans)] font-normal text-[13px] text-[color:var(--text-muted)] m-0">
+                <p
+                  className="font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)] m-0"
+                  style={{ marginTop: 10 }}
+                >
                   {r.description}
                 </p>
               </div>
@@ -454,7 +506,13 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       </section>
 
       {/* Next Project */}
-      <section className="text-center" style={{ padding: "120px var(--page-px)" }}>
+      <section
+        className="text-center"
+        style={{
+          padding: "100px var(--page-px)",
+          borderTop: "1px solid var(--border)",
+        }}
+      >
         <p className="editorial-label mb-6">(Next Project)</p>
         <Link
           href={`/work/${next.slug}`}
@@ -471,7 +529,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             {next.name}
           </h2>
         </Link>
-        <p className="editorial-label mt-4">
+        <p className="editorial-label" style={{ marginTop: 12 }}>
           {next.categories.join(", ")}
         </p>
       </section>
@@ -490,11 +548,18 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         >
           Have a project in mind?
         </h2>
-        <p className="mt-6 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)]" style={{ maxWidth: 520, margin: "24px auto 0" }}>
+        <p
+          className="font-[var(--sans)] font-normal text-[16px] text-[color:var(--text-muted)] m-0"
+          style={{ maxWidth: 520, margin: "14px auto 0", lineHeight: 1.6 }}
+        >
           Whether you are refining an existing brand or building from scratch,
           the first step is a conversation.
         </p>
-        <Link href="/contact" className="btn-primary mt-10 inline-flex">
+        <Link
+          href="/contact"
+          className="btn-primary inline-flex"
+          style={{ marginTop: 28 }}
+        >
           Start a Project
         </Link>
       </section>
