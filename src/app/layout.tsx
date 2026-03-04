@@ -1,31 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
-import "@/styles/scroll-animations.css";
-import "lenis/dist/lenis.css";
-import Header from "@/components/layout/Header";
+import Navigation from "@/components/Navigation";
 import Footer from "@/components/layout/Footer";
-import SmoothScroll from "@/components/SmoothScroll";
-import CustomCursor from "@/components/CustomCursor";
-import GrainCanvas from "@/components/GrainCanvas";
-import PageTransition from "@/components/PageTransition";
-import ScrollProgress from "@/components/ScrollProgress";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "House of Singh Studios",
@@ -39,14 +16,25 @@ export default function RootLayout({
 }) {
   return (
     <ViewTransitions>
-      <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+      <html lang="en">
+        <head>
+          <link
+            rel="preload"
+            href="/fonts/CormorantGaramond-Variable.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            href="/fonts/Inter-Variable.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        </head>
         <body>
-          <SmoothScroll />
-          <CustomCursor />
-          <GrainCanvas />
-          <PageTransition />
-          <ScrollProgress />
-          <Header />
+          <Navigation />
           <main>{children}</main>
           <Footer />
         </body>
