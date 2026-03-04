@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { HERO } from "@/lib/constants/homepage-data";
 import Button from "@/components/ui/Button";
@@ -9,10 +9,8 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 /**
  * SECTION 1: THE OPENING — "The Unfolding"
  *
- * Split typography across a center vertical line.
- * Variable font weight shifts 300→600 on scroll via CSS SDA.
- * Center line splits apart as user scrolls.
- * Page load: crest → line draws → text wipes in.
+ * Desktop: Split typography across a center vertical line.
+ * Mobile: Centered single block with horizontal line, variable font weight shift.
  */
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -25,6 +23,20 @@ export default function HeroSection() {
   const supportRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  // Mobile-specific refs
+  const mobileLineRef = useRef<HTMLDivElement>(null);
+  const mobileHeadlineRef = useRef<HTMLHeadingElement>(null);
+  const mobileCrestRef = useRef<HTMLDivElement>(null);
+  const mobileSupportRef = useRef<HTMLParagraphElement>(null);
+  const mobileCtaRef = useRef<HTMLDivElement>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const mobileLabelRef = useRef<HTMLDivElement>(null);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth <= 600);
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -32,84 +44,172 @@ export default function HeroSection() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) {
-      [lineRef, leftLine1Ref, rightLine1Ref, leftLine2Ref, rightLine2Ref,
-       labelRef, supportRef, ctaRef, scrollRef].forEach((ref) => {
-        if (ref.current) {
-          gsap.set(ref.current, { opacity: 1, y: 0, clipPath: "none" });
-        }
+      // Show everything immediately
+      const allRefs = [lineRef, leftLine1Ref, rightLine1Ref, leftLine2Ref, rightLine2Ref,
+        labelRef, supportRef, ctaRef, scrollRef, mobileLineRef, mobileHeadlineRef,
+        mobileCrestRef, mobileSupportRef, mobileCtaRef, mobileScrollRef, mobileLabelRef];
+      allRefs.forEach((ref) => {
+        if (ref.current) gsap.set(ref.current, { opacity: 1, y: 0, clipPath: "none" });
       });
       if (lineRef.current) gsap.set(lineRef.current, { height: "100%" });
+      if (mobileLineRef.current) gsap.set(mobileLineRef.current, { width: 60 });
       return;
     }
 
+    const mobile = window.innerWidth <= 600;
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    // t=0.30: Vertical center line draws downward
-    if (lineRef.current) {
-      gsap.set(lineRef.current, { height: 0, opacity: 0.15 });
-      tl.to(lineRef.current, { height: "100%", duration: 0.8, ease: "cubic-bezier(.23,1,.32,1)" }, 0.3);
-    }
+    if (mobile) {
+      // Mobile page load animation (simplified, ~1.0s total)
+      if (mobileCrestRef.current) {
+        gsap.set(mobileCrestRef.current, { opacity: 0 });
+        tl.to(mobileCrestRef.current, { opacity: 1, duration: 0.3 }, 0);
+      }
+      if (mobileLineRef.current) {
+        gsap.set(mobileLineRef.current, { width: 0, opacity: 0.2 });
+        tl.to(mobileLineRef.current, { width: 60, duration: 0.6, ease: "power2.out" }, 0.15);
+      }
+      if (mobileHeadlineRef.current) {
+        gsap.set(mobileHeadlineRef.current, { opacity: 0, y: 20 });
+        tl.to(mobileHeadlineRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.2);
+      }
+      if (mobileLabelRef.current) {
+        gsap.set(mobileLabelRef.current, { opacity: 0 });
+        tl.to(mobileLabelRef.current, { opacity: 1, duration: 0.2 }, 0.5);
+      }
+      if (mobileSupportRef.current) {
+        gsap.set(mobileSupportRef.current, { opacity: 0, y: 15 });
+        tl.to(mobileSupportRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.6);
+      }
+      if (mobileCtaRef.current) {
+        gsap.set(mobileCtaRef.current, { opacity: 0, y: 15 });
+        tl.to(mobileCtaRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.7);
+      }
+      if (mobileScrollRef.current) {
+        gsap.set(mobileScrollRef.current, { opacity: 0 });
+        tl.to(mobileScrollRef.current, { opacity: 1, duration: 0.2 }, 0.8);
+      }
+    } else {
+      // Desktop page load animation
+      if (lineRef.current) {
+        gsap.set(lineRef.current, { height: 0, opacity: 0.15 });
+        tl.to(lineRef.current, { height: "100%", duration: 0.8, ease: "cubic-bezier(.23,1,.32,1)" }, 0.3);
+      }
+      if (leftLine1Ref.current) {
+        gsap.set(leftLine1Ref.current, { clipPath: "inset(0 0 0 100%)", opacity: 1 });
+        tl.to(leftLine1Ref.current, { clipPath: "inset(0 0 0 0%)", duration: 0.5 }, 0.6);
+      }
+      if (rightLine1Ref.current) {
+        gsap.set(rightLine1Ref.current, { clipPath: "inset(0 100% 0 0)", opacity: 1 });
+        tl.to(rightLine1Ref.current, { clipPath: "inset(0 0% 0 0)", duration: 0.5 }, 0.72);
+      }
+      if (leftLine2Ref.current) {
+        gsap.set(leftLine2Ref.current, { clipPath: "inset(0 0 0 100%)", opacity: 1 });
+        tl.to(leftLine2Ref.current, { clipPath: "inset(0 0 0 0%)", duration: 0.5 }, 0.84);
+      }
+      if (rightLine2Ref.current) {
+        gsap.set(rightLine2Ref.current, { clipPath: "inset(0 100% 0 0)", opacity: 1 });
+        tl.to(rightLine2Ref.current, { clipPath: "inset(0 0% 0 0)", duration: 0.5 }, 0.96);
+      }
+      if (labelRef.current) {
+        gsap.set(labelRef.current, { opacity: 0, y: 10 });
+        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 1.4);
+      }
+      if (scrollRef.current) {
+        gsap.set(scrollRef.current, { opacity: 0 });
+        tl.to(scrollRef.current, { opacity: 1, duration: 0.3 }, 1.5);
+      }
 
-    // t=0.60: "AI can generate" — left wipe from center outward
-    if (leftLine1Ref.current) {
-      gsap.set(leftLine1Ref.current, { clipPath: "inset(0 0 0 100%)", opacity: 1 });
-      tl.to(leftLine1Ref.current, { clipPath: "inset(0 0 0 0%)", duration: 0.5 }, 0.6);
-    }
-
-    // t=0.72: "assets." — right wipe from center outward
-    if (rightLine1Ref.current) {
-      gsap.set(rightLine1Ref.current, { clipPath: "inset(0 100% 0 0)", opacity: 1 });
-      tl.to(rightLine1Ref.current, { clipPath: "inset(0 0% 0 0)", duration: 0.5 }, 0.72);
-    }
-
-    // t=0.84: "It cannot build"
-    if (leftLine2Ref.current) {
-      gsap.set(leftLine2Ref.current, { clipPath: "inset(0 0 0 100%)", opacity: 1 });
-      tl.to(leftLine2Ref.current, { clipPath: "inset(0 0 0 0%)", duration: 0.5 }, 0.84);
-    }
-
-    // t=0.96: "a brand."
-    if (rightLine2Ref.current) {
-      gsap.set(rightLine2Ref.current, { clipPath: "inset(0 100% 0 0)", opacity: 1 });
-      tl.to(rightLine2Ref.current, { clipPath: "inset(0 0% 0 0)", duration: 0.5 }, 0.96);
-    }
-
-    // t=1.40: Label
-    if (labelRef.current) {
-      gsap.set(labelRef.current, { opacity: 0, y: 10 });
-      tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 1.4);
-    }
-
-    // t=1.50: Scroll indicator
-    if (scrollRef.current) {
-      gsap.set(scrollRef.current, { opacity: 0 });
-      tl.to(scrollRef.current, { opacity: 1, duration: 0.3 }, 1.5);
-    }
-
-    // Firefox fallback for scroll-driven supporting text/CTAs
-    if (!CSS.supports("animation-timeline", "view()")) {
-      import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
-        gsap.registerPlugin(ScrollTrigger);
-        if (supportRef.current) {
-          gsap.set(supportRef.current, { opacity: 0, y: 20 });
-          gsap.to(supportRef.current, {
-            opacity: 1, y: 0, duration: 0.6,
-            scrollTrigger: { trigger: section, start: "20% top", once: true },
-          });
-        }
-        if (ctaRef.current) {
-          gsap.set(ctaRef.current, { opacity: 0, y: 20 });
-          gsap.to(ctaRef.current, {
-            opacity: 1, y: 0, duration: 0.5,
-            scrollTrigger: { trigger: section, start: "30% top", once: true },
-          });
-        }
-      });
+      // Firefox fallback for scroll-driven supporting text/CTAs
+      if (!CSS.supports("animation-timeline", "view()")) {
+        import("gsap/ScrollTrigger").then(({ ScrollTrigger }) => {
+          gsap.registerPlugin(ScrollTrigger);
+          if (supportRef.current) {
+            gsap.set(supportRef.current, { opacity: 0, y: 20 });
+            gsap.to(supportRef.current, {
+              opacity: 1, y: 0, duration: 0.6,
+              scrollTrigger: { trigger: section, start: "20% top", once: true },
+            });
+          }
+          if (ctaRef.current) {
+            gsap.set(ctaRef.current, { opacity: 0, y: 20 });
+            gsap.to(ctaRef.current, {
+              opacity: 1, y: 0, duration: 0.5,
+              scrollTrigger: { trigger: section, start: "30% top", once: true },
+            });
+          }
+        });
+      }
     }
 
     return () => { tl.kill(); };
-  }, []);
+  }, [isMobile]);
 
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <section
+        ref={sectionRef}
+        className="hero-section-mobile-fade"
+        style={{ position: "relative" }}
+      >
+        <div className="hero-mobile">
+          {/* Crest */}
+          <div ref={mobileCrestRef} style={{ marginBottom: 24 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/hos-studios-logo.svg"
+              alt="House of Singh Studios"
+              style={{ height: 48, width: "auto" }}
+            />
+          </div>
+
+          {/* Editorial label */}
+          <div ref={mobileLabelRef}>
+            <EditorialLabel text={`(${HERO.label})`} />
+          </div>
+
+          {/* Headline — variable font weight via CSS SDA */}
+          <h1
+            ref={mobileHeadlineRef}
+            className="hero-headline-mobile-sda hero-mobile-headline"
+          >
+            AI can generate assets.
+            <br />
+            It cannot build a brand.
+          </h1>
+
+          {/* Horizontal line (replacing desktop center vertical line) */}
+          <div
+            ref={mobileLineRef}
+            className="hero-mobile-line"
+          />
+
+          {/* Supporting text */}
+          <p ref={mobileSupportRef} className="hero-mobile-support m-fade-up">
+            {HERO.secondary}
+          </p>
+
+          {/* CTAs — stacked, full width */}
+          <div ref={mobileCtaRef} className="hero-mobile-ctas">
+            <Button href={HERO.cta.primary.href}>
+              {HERO.cta.primary.text}
+            </Button>
+            <Button href={HERO.cta.secondary.href} variant="secondary">
+              {HERO.cta.secondary.text}
+            </Button>
+          </div>
+
+          {/* Scroll indicator */}
+          <div ref={mobileScrollRef} className="hero-mobile-scroll">
+            <EditorialLabel text="(Scroll)" />
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Desktop layout
   return (
     <section
       ref={sectionRef}

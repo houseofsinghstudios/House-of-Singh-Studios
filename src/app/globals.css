@@ -1663,6 +1663,228 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   Revamped Homepage — Mobile/Tablet
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Static grain overlay (replaces OGL canvas on mobile) ── */
+@media (pointer: coarse) {
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%25" height="100%25" filter="url(%23g)" opacity="0.08"/></svg>');
+    background-repeat: repeat;
+    opacity: 0.025;
+    mix-blend-mode: multiply;
+  }
+  .cta-section .grain-overlay {
+    opacity: 0.01;
+  }
+}
+
+/* ── Touch feedback system ── */
+@media (pointer: coarse) {
+  a:active,
+  button:active,
+  [role="button"]:active,
+  .work-card-mobile:active,
+  .service-card-mobile:active {
+    opacity: 0.85;
+    transition: opacity 0.08s ease;
+  }
+  .service-card-mobile:active {
+    transform: scale(0.985);
+    transition: transform 0.1s ease;
+  }
+  .cta-button:active {
+    transform: scale(0.97);
+    transition: transform 0.1s;
+  }
+}
+
+/* ── Mobile hero ── */
+@media (max-width: 600px) {
+  .hero-mobile {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--page-px);
+    text-align: center;
+    position: relative;
+  }
+  .hero-mobile-headline {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(32px, 8vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    text-align: center;
+  }
+  .hero-mobile-line {
+    width: 0;
+    height: 1px;
+    background: var(--text-primary);
+    opacity: 0.2;
+    margin: 20px auto;
+  }
+  .hero-mobile-support {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-muted);
+    max-width: 88vw;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .hero-mobile-ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 28px;
+  }
+  .hero-mobile-ctas .btn-primary,
+  .hero-mobile-ctas .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    height: 52px;
+    font-size: 14px;
+  }
+  .hero-mobile-scroll {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Mobile work section (vertical cards) ── */
+@media (max-width: 600px) {
+  .work-section-mobile {
+    padding: 80px 0;
+  }
+  .work-card-mobile {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 64px;
+  }
+  .work-card-mobile-image {
+    width: 100%;
+    aspect-ratio: 3/2;
+    overflow: hidden;
+    position: relative;
+  }
+  .work-card-mobile-info {
+    padding: 20px var(--page-px);
+  }
+}
+
+/* ── Mobile evidence stats grid ── */
+@media (max-width: 600px) {
+  .evidence-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--border);
+  }
+  .evidence-stat-cell {
+    padding: 28px 16px;
+    text-align: center;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .evidence-stat-cell:nth-child(2n) { border-right: none; }
+  .evidence-stat-cell:nth-child(n+3) { border-bottom: none; }
+}
+
+/* ── Mobile ticker ── */
+.ticker-mobile {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: tickerLeft 30s linear infinite;
+}
+
+/* ── Mobile CTA section ── */
+@media (max-width: 600px) {
+  .cta-section-mobile {
+    min-height: 70svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 var(--page-px);
+    text-align: center;
+  }
+  .cta-mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    margin-top: 32px;
+  }
+  .cta-mobile-buttons .btn-primary,
+  .cta-mobile-buttons .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+  .cta-mobile-buttons .btn-primary { height: 52px; }
+  .cta-mobile-buttons .btn-secondary { height: 48px; }
+}
+
+/* ── Mobile services stacking cards ── */
+@media (max-width: 600px) {
+  .service-card-mobile {
+    position: sticky;
+    top: 56px;
+    min-height: 75svh;
+    padding: 40px var(--page-px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .service-card-mobile-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+}
+
+/* ── Tablet services ── */
+@media (min-width: 601px) and (max-width: 900px) {
+  .service-card-mobile {
+    position: sticky;
+    top: 64px;
+    min-height: 80svh;
+    padding: 40px var(--page-px);
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* ── Mobile header adjustments ── */
+@media (max-width: 600px) {
+  .header-mobile-bar {
+    height: 56px !important;
+    backdrop-filter: blur(12px);
+    background-color: rgba(250, 250, 247, 0.85) !important;
+  }
+}
+
+/* ── Tablet header ── */
+@media (min-width: 601px) and (max-width: 900px) {
+  .header-tablet-bar {
+    height: 64px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    Custom Cursor (dot + ring)
    ═══════════════════════════════════════════════════════ */
 

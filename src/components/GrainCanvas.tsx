@@ -148,16 +148,20 @@ export default function GrainCanvas() {
   }, [cleanup]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 0,
-        pointerEvents: "none",
-        width: "100%",
-        height: "100%",
-      }}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          width: "100%",
+          height: "100%",
+        }}
+      />
+      {/* Static grain overlay for mobile — CSS handles visibility via (pointer: coarse) */}
+      <div className="grain-overlay" />
+    </>
   );
 }

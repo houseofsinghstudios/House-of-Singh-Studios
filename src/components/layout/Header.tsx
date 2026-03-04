@@ -13,13 +13,11 @@ const navLinks = [
 ];
 
 const mobileLinks = [
-  { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-  { label: "About", href: "/about" },
-  { label: "Packages", href: "/packages" },
 ];
 
 export default function Header() {
@@ -35,13 +33,15 @@ export default function Header() {
       const y = window.scrollY;
       setScrolled(y >= 80);
 
-      // Mobile: hide after 200px, Desktop: after 400px
-      const threshold = window.innerWidth <= 900 ? 200 : 400;
+      // Mobile: hide on scroll down past 100px, Desktop: after 400px
+      const threshold = window.innerWidth <= 900 ? 100 : 400;
       if (y > threshold && y > lastScrollY.current) {
         setHidden(true);
       } else if (y < lastScrollY.current) {
         setHidden(false);
       }
+      // Always visible at very top
+      if (y < 10) setHidden(false);
 
       lastScrollY.current = y;
     }
@@ -71,7 +71,7 @@ export default function Header() {
     gsap.set(links, { opacity: 0, y: 20 });
     if (cta) gsap.set(cta, { opacity: 0, y: 16 });
 
-    tl.to(overlay, { y: "0%", duration: 0.4, ease: "power4.inOut" });
+    tl.to(overlay, { y: "0%", duration: 0.45, ease: "cubic-bezier(.23,1,.32,1)" });
     tl.to(links, { opacity: 1, y: 0, stagger: 0.05, duration: 0.3, ease: "power3.out" }, 0.2);
     if (cta) tl.to(cta, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, ">");
   }, []);
@@ -112,10 +112,11 @@ export default function Header() {
           borderBottom: scrolled
             ? "1px solid var(--border)"
             : "1px solid transparent",
+          backdropFilter: "blur(12px)",
           transform:
             hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
           transition:
-            "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease",
+            "transform 0.3s cubic-bezier(.23,1,.32,1), background-color 0.5s ease, border-color 0.5s ease",
         }}
       >
         {/* Crest Logo — visible in State 1 (top of page), positioned with breathing room */}
@@ -201,7 +202,7 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Mobile Hamburger — State 2 only, below 900px */}
+        {/* Mobile Hamburger — always visible below 900px */}
         <button
           className="header-hamburger"
           onClick={() => setMenuOpen(true)}
@@ -209,14 +210,15 @@ export default function Header() {
           style={{
             display: "none",
             flexDirection: "column",
-            gap: 5,
-            padding: 8,
+            gap: 6,
+            padding: 10,
             background: "none",
             border: "none",
             cursor: "pointer",
-            opacity: scrolled ? 1 : 0,
-            pointerEvents: scrolled ? "auto" : "none",
-            transition: "opacity 0.5s ease",
+            minHeight: 44,
+            minWidth: 44,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span
@@ -304,10 +306,10 @@ export default function Header() {
             style={{
               fontFamily: "var(--serif)",
               fontSize: 36,
-              fontWeight: 600,
+              fontWeight: 500,
               color: "var(--text-primary)",
               textDecoration: "none",
-              lineHeight: 1.6,
+              lineHeight: 1.3,
               transition: "color 0.2s ease",
             }}
           >

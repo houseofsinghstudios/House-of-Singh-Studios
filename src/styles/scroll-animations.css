@@ -217,3 +217,160 @@
     animation-range: entry 0% entry 50%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE CSS Scroll-Driven Animation Patterns
+   Reusable patterns for mobile/tablet, zero JavaScript.
+   ═══════════════════════════════════════════════════════ */
+
+/* Pattern 1: Fade slide up — standard content entrance */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pattern 2: Image reveal — replacing OGL shaders on mobile */
+@keyframes imageReveal {
+  from {
+    clip-path: inset(8% 6% 8% 6%);
+    filter: blur(6px) grayscale(1);
+    transform: scale(1.06);
+  }
+  to {
+    clip-path: inset(0%);
+    filter: blur(0px) grayscale(0);
+    transform: scale(1);
+  }
+}
+
+/* Pattern 3: Variable font weight shift */
+@keyframes weightShift {
+  from { font-variation-settings: 'wght' 300; }
+  to { font-variation-settings: 'wght' 600; }
+}
+
+/* Pattern 4: Section wipe — diagonal clip-path reveal */
+@keyframes sectionWipe {
+  from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* Pattern 5: Reverse weight shift (argument section) */
+@keyframes weightReverse {
+  from { font-variation-settings: 'wght' 700; }
+  to { font-variation-settings: 'wght' 300; opacity: 0.4; }
+}
+
+/* Pattern 6: Snap in — instant appearance (1% range) */
+@keyframes snapIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Pattern 7: Mobile service card push-back */
+@keyframes cardPushBack {
+  to {
+    scale: 0.93;
+    filter: brightness(0.88);
+  }
+}
+
+/* Pattern 8: Mobile hero fade on scroll */
+@keyframes heroFade {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Pattern 9: Mobile scroll progress indicator */
+@keyframes scrollProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ── Apply mobile patterns with @supports ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .m-fade-up {
+      animation: fadeSlideUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+
+    .m-image-reveal {
+      animation: imageReveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 60%;
+    }
+
+    .m-section-wipe {
+      animation: sectionWipe linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+  }
+}
+
+/* ── Mobile hero weight shift ── */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .hero-headline-mobile-sda {
+      animation: weightShift linear both;
+      animation-timeline: scroll();
+      animation-range: 0% 20%;
+    }
+
+    .hero-section-mobile-fade {
+      animation: heroFade linear both;
+      animation-timeline: scroll();
+      animation-range: 40% 60%;
+    }
+  }
+
+  /* Mobile argument reverse weight */
+  @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+    .argument-headline-mobile-sda {
+      animation: weightReverse linear both;
+      animation-timeline: view();
+      animation-range: entry 20% exit 50%;
+    }
+
+    .argument-fix-mobile {
+      opacity: 0;
+      animation: snapIn linear both;
+      animation-timeline: view();
+      animation-range: entry 55% entry 56%;
+    }
+  }
+
+  /* Mobile service card push-back */
+  @media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+    .service-card-mobile:not(:last-child) {
+      animation: cardPushBack linear both;
+      animation-timeline: view();
+      animation-range: exit -30% exit 0%;
+    }
+  }
+
+  /* CSS-only scroll progress indicator */
+  @media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .scroll-indicator-css {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--text-primary);
+      opacity: 0.2;
+      transform-origin: left;
+      animation: scrollProgress linear both;
+      animation-timeline: scroll();
+      z-index: 101;
+      pointer-events: none;
+    }
+  }
+  @media (pointer: coarse) and (min-width: 601px) and (prefers-reduced-motion: no-preference) {
+    .scroll-indicator-css {
+      top: 64px;
+    }
+  }
+}
