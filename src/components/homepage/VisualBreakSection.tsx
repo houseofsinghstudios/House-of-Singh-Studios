@@ -1,43 +1,40 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function VisualBreakSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Subtle parallax on scroll
   useEffect(() => {
-    let ticking = false;
+    const section = sectionRef.current;
+    const img = imgRef.current;
+    if (!section || !img) return;
 
-    function update() {
-      const section = sectionRef.current;
-      const img = imgRef.current;
-      if (!section || !img) { ticking = false; return; }
+    const ctx = gsap.context(() => {
+      // GSAP parallax: image translateY(-15%) to translateY(15%) as section scrolls through
+      gsap.fromTo(
+        img,
+        { yPercent: -15, scale: 1.05 },
+        {
+          yPercent: 15,
+          scale: 1.05,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+    }, section);
 
-      const rect = section.getBoundingClientRect();
-      const vh = window.innerHeight;
-
-      // Only apply when section is in viewport
-      if (rect.bottom > 0 && rect.top < vh) {
-        const progress = (vh - rect.top) / (vh + rect.height);
-        const offset = (progress - 0.5) * 30; // max ±15px shift
-        img.style.transform = `scale(1.05) translateY(${offset}px)`;
-      }
-
-      ticking = false;
-    }
-
-    function onScroll() {
-      if (!ticking) {
-        requestAnimationFrame(update);
-        ticking = true;
-      }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    update();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -48,6 +45,7 @@ export default function VisualBreakSection() {
         src="/images/photography-ideas-creative-occupation-design-studio-concept.jpg"
         alt="Design studio workspace"
         className="visual-break-img"
+        style={{ willChange: "transform" }}
         onError={(e) => {
           const img = e.currentTarget;
           img.style.display = "none";

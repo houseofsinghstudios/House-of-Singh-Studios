@@ -2,69 +2,101 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ServicesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const block = entry.target as HTMLElement;
-          const idx = Number(block.dataset.idx);
-          const delay = idx * 100;
+    let headingSplit: SplitType | null = null;
 
-          block.style.transition = `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`;
-          block.style.opacity = "1";
-          block.style.transform = "translateY(0)";
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 75%",
+          once: true,
+        },
+        defaults: { ease: "power3.out" },
+      });
 
-          observer.unobserve(block);
-        });
-      },
-      { threshold: 0.1 }
-    );
+      // Editorial label fades up
+      if (labelRef.current) {
+        gsap.set(labelRef.current, { opacity: 0, y: 15 });
+        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+      }
 
-    grid.querySelectorAll<HTMLElement>(".service-block").forEach((el) =>
-      observer.observe(el)
-    );
+      // Heading — SplitType word reveal
+      if (headingRef.current) {
+        headingSplit = new SplitType(headingRef.current, { types: "words" });
+        if (headingSplit.words) {
+          gsap.set(headingSplit.words, { y: "100%", opacity: 0 });
+          tl.to(
+            headingSplit.words,
+            { y: "0%", opacity: 1, stagger: 0.05, duration: 0.5 },
+            0.15
+          );
+        }
+      }
 
-    return () => observer.disconnect();
+      // Service blocks stagger in with clip-path
+      if (gridRef.current) {
+        const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
+        gsap.set(blocks, { opacity: 0, y: 30, clipPath: "inset(4%)" });
+        tl.to(
+          blocks,
+          {
+            opacity: 1,
+            y: 0,
+            clipPath: "inset(0%)",
+            stagger: 0.1,
+            duration: 0.6,
+          },
+          0.5
+        );
+      }
+    }, section);
+
+    return () => {
+      ctx.revert();
+      if (headingSplit) headingSplit.revert();
+    };
   }, []);
 
   return (
-    <section className="py-40 px-[var(--page-px)]">
-      <ScrollReveal>
+    <section ref={sectionRef} className="py-40 px-[var(--page-px)]">
+      <div ref={labelRef}>
         <EditorialLabel text={SERVICES_SECTION.label} className="mb-6" />
-      </ScrollReveal>
+      </div>
 
-      <ScrollReveal>
-        <h2
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-          style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
-        >
-          {SERVICES_SECTION.heading}
-        </h2>
-      </ScrollReveal>
+      <h2
+        ref={headingRef}
+        className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0 overflow-hidden"
+        style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
+      >
+        {SERVICES_SECTION.heading}
+      </h2>
 
       <div ref={gridRef} className="services-visual-grid mt-16">
-        {SERVICES_SECTION.items.map((service, i) => (
+        {SERVICES_SECTION.items.map((service) => (
           <Link
             key={service.href}
             href={service.href}
             className="service-block no-underline"
-            data-idx={i}
-            style={{
-              opacity: 0,
-              transform: "translateY(20px)",
-              background: service.color,
-            }}
+            data-cursor="link"
+            style={{ background: service.color }}
           >
             <div className="service-block-inner">
               <h3

@@ -1,85 +1,101 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import { CTA } from "@/lib/constants/homepage-data";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
-import ScrollReveal from "@/components/ui/ScrollReveal";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function CtaSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const labelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const supportRef = useRef<HTMLDivElement>(null);
+  const copyRef = useRef<HTMLParagraphElement>(null);
+  const btnRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const headingEl = headingRef.current;
-    const supportEl = supportRef.current;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    // Split heading into words that "gather" into place
-    if (headingEl && !headingEl.dataset.initialized) {
-      headingEl.dataset.initialized = "1";
-      const words = (headingEl.textContent || "").split(" ");
-      headingEl.innerHTML = "";
-      words.forEach((word, i) => {
-        const span = document.createElement("span");
-        span.textContent = word;
-        span.style.cssText = `display:inline-block;transform:translateY(${(words.length - i) * 12}px);opacity:0;transition:transform 0.8s cubic-bezier(0.22,1,0.36,1) ${i * 60}ms, opacity 0.6s ease ${i * 60}ms`;
-        span.dataset.s7Word = "1";
-        headingEl.appendChild(span);
-        if (i < words.length - 1) {
-          const space = document.createElement("span");
-          space.innerHTML = "&nbsp;";
-          headingEl.appendChild(space);
-        }
+    let headingSplit: SplitType | null = null;
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 75%",
+          once: true,
+        },
+        defaults: { ease: "power3.out" },
       });
-    }
 
-    if (supportEl) {
-      supportEl.style.cssText = "opacity:0;transform:translateY(20px);transition:opacity 0.6s ease 0.9s, transform 0.6s ease 0.9s";
-    }
+      // Editorial label fades up
+      if (labelRef.current) {
+        gsap.set(labelRef.current, { opacity: 0, y: 15 });
+        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+      }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          if (entry.target === headingEl) {
-            headingEl!.querySelectorAll<HTMLSpanElement>("span[data-s7-word]")
-              .forEach((w) => { w.style.transform = "translateY(0)"; w.style.opacity = "1"; });
-            if (supportEl) {
-              supportEl.style.opacity = "1";
-              supportEl.style.transform = "translateY(0)";
-            }
-            observer.unobserve(headingEl!);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
+      // Heading — SplitType word reveal
+      if (headingRef.current) {
+        headingSplit = new SplitType(headingRef.current, { types: "words" });
+        if (headingSplit.words) {
+          gsap.set(headingSplit.words, { y: "100%", opacity: 0 });
+          tl.to(
+            headingSplit.words,
+            { y: "0%", opacity: 1, stagger: 0.04, duration: 0.5 },
+            0.15
+          );
+        }
+      }
 
-    if (headingEl) observer.observe(headingEl);
-    return () => observer.disconnect();
+      // Supporting copy fades up
+      if (copyRef.current) {
+        gsap.set(copyRef.current, { opacity: 0, y: 20 });
+        tl.to(copyRef.current, { opacity: 1, y: 0, duration: 0.4 }, ">");
+      }
+
+      // Button fades up and scales in
+      if (btnRef.current) {
+        gsap.set(btnRef.current, { opacity: 0, scale: 0.95 });
+        tl.to(btnRef.current, { opacity: 1, scale: 1, duration: 0.4 }, ">0.2");
+      }
+    }, section);
+
+    return () => {
+      ctx.revert();
+      if (headingSplit) headingSplit.revert();
+    };
   }, []);
 
   return (
-    <section className="py-[200px] px-[var(--page-px)] text-center">
-      <ScrollReveal>
+    <section ref={sectionRef} className="py-[200px] px-[var(--page-px)] text-center">
+      <div ref={labelRef}>
         <EditorialLabel text={CTA.label} className="mb-6" />
-      </ScrollReveal>
+      </div>
 
       <h2
         ref={headingRef}
-        className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] mx-auto"
+        className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] mx-auto overflow-hidden"
         style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
       >
         {CTA.heading}
       </h2>
 
-      <div ref={supportRef}>
-        <p className="mt-5 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] max-w-[480px] mx-auto">
-          {CTA.supporting}
-        </p>
-        <div className="mt-11">
-          <Button href={CTA.button.href}>{CTA.button.text}</Button>
-        </div>
+      <p
+        ref={copyRef}
+        className="mt-5 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] max-w-[480px] mx-auto"
+      >
+        {CTA.supporting}
+      </p>
+
+      <div ref={btnRef} className="mt-11">
+        <Button href={CTA.button.href} data-cursor="link">
+          {CTA.button.text}
+        </Button>
       </div>
     </section>
   );
