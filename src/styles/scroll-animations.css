@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════════════════════
+   CSS Scroll-Driven Animations
+   GPU-composited keyframe animations driven by scroll position.
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes fadeRevealUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeRevealRight {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes clipReveal {
+  from {
+    clip-path: inset(8% 6%);
+  }
+  to {
+    clip-path: inset(0%);
+  }
+}
+
+@keyframes imageScale {
+  from {
+    transform: scale(1.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes highlightActive {
+  0% {
+    opacity: 0.3;
+    transform: translateX(20px);
+  }
+  40% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateX(-20px);
+  }
+}
+
+/* Base animation classes (for non-supporting browsers, GSAP fallback applied via JavaScript) */
+.scroll-reveal-up {
+  animation: fadeRevealUp 1s ease both;
+}
+
+.scroll-clip-reveal {
+  animation: clipReveal 0.8s ease both;
+}
+
+.scroll-clip-reveal > img,
+.scroll-clip-reveal > canvas {
+  animation: imageScale 1s ease both;
+}
+
+/* Native CSS Scroll-Driven Animations for supported browsers */
+@supports (animation-timeline: view()) {
+  .scroll-reveal-up {
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+
+  .scroll-clip-reveal {
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  .scroll-clip-reveal > img,
+  .scroll-clip-reveal > canvas {
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+}

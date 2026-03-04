@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
+import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
+import "@/styles/scroll-animations.css";
 import "lenis/dist/lenis.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -34,15 +36,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
-      <body>
-        <SmoothScroll />
-        <CustomCursor />
-        <PageTransition />
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+        <body>
+          <SmoothScroll />
+          <CustomCursor />
+          <PageTransition />
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

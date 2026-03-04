@@ -1,20 +1,34 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 
+/**
+ * PageTransition: View Transitions API is primary (handled by ViewTransitions
+ * wrapper in layout.tsx). This component renders the GSAP overlay only as
+ * fallback for browsers that do not support View Transitions.
+ */
 export default function PageTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isFirst = useRef(true);
+  const [supportsVT, setSupportsVT] = useState(false);
 
   useEffect(() => {
-    // Skip animation on initial page load
+    setSupportsVT(
+      typeof document !== "undefined" && "startViewTransition" in document
+    );
+  }, []);
+
+  useEffect(() => {
     if (isFirst.current) {
       isFirst.current = false;
       return;
     }
+
+    // View Transitions supported — browser handles transitions
+    if (supportsVT) return;
 
     const el = overlayRef.current;
     if (!el) return;
@@ -37,7 +51,9 @@ export default function PageTransition() {
     return () => {
       tl.kill();
     };
-  }, [pathname]);
+  }, [pathname, supportsVT]);
+
+  if (supportsVT) return null;
 
   return (
     <div

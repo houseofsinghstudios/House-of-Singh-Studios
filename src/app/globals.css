@@ -600,3 +600,149 @@ body {
     gap: 32px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   View Transitions API
+   ═══════════════════════════════════════════════════════ */
+@keyframes vt-fade-out {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+
+::view-transition-old(root) {
+  animation: 0.3s ease-out both vt-fade-out;
+}
+::view-transition-new(root) {
+  animation: 0.4s ease-in both vt-fade-in;
+}
+
+::view-transition-old(service-title) {
+  animation: 0.35s ease-out both vt-fade-out;
+}
+::view-transition-new(service-title) {
+  animation: 0.4s 0.1s ease-in both vt-fade-in;
+}
+
+/* ═══════════════════════════════════════════════════════
+   Services pages
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Horizontal scroll panels ── */
+.service-panel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  overflow: hidden;
+}
+
+.service-panel-text {
+  padding: 80px var(--page-px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.service-panel-image {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Service detail deliverable highlight ── */
+.deliverable-item {
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  opacity: 0.3;
+  transform: translateX(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.deliverable-item.is-active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@supports (animation-timeline: view()) {
+  .deliverable-item {
+    animation: highlightActive 1s ease both;
+    animation-timeline: view();
+    animation-range: entry 20% exit 80%;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Process horizontal scroll ── */
+.process-panel {
+  width: 100vw;
+  height: 100vh;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--page-px);
+  position: relative;
+}
+
+/* ── Related work cards ── */
+.related-work-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+.related-work-card:nth-child(even) {
+  direction: rtl;
+}
+.related-work-card:nth-child(even) > * {
+  direction: ltr;
+}
+
+/* ── Progress indicator ── */
+.scroll-progress-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--text-primary);
+  opacity: 0.2;
+  cursor: pointer;
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+.scroll-progress-dot.active {
+  width: 24px;
+  opacity: 1;
+}
+
+/* ── Services responsive ── */
+@media (max-width: 899px) {
+  .service-panel {
+    width: 100%;
+    height: auto;
+    grid-template-columns: 1fr;
+    padding: 60px var(--page-px);
+    border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  }
+  .service-panel-text {
+    padding: 0;
+  }
+  .service-panel-image {
+    height: 50vh;
+    margin-top: 32px;
+  }
+  .related-work-card,
+  .related-work-card:nth-child(even) {
+    grid-template-columns: 1fr;
+    direction: ltr;
+  }
+  .process-panel {
+    width: 100%;
+    height: auto;
+    padding: 48px var(--page-px);
+    border-left: 2px solid rgba(26, 26, 26, 0.08);
+  }
+  .deliverable-item {
+    opacity: 1;
+    transform: none;
+  }
+}
