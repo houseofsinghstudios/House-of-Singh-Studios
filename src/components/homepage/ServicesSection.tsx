@@ -4,168 +4,189 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * SECTION 4: THE METHOD — "The Rotating Panel"
+ *
+ * Stacking card panels. Each service stacks on top of the previous.
+ * CSS SDA handles the push-back animation on supported browsers.
+ * GSAP ScrollTrigger fallback for Firefox.
+ * Each panel has a slightly different background tint.
+ */
+
+const SERVICE_DESCRIPTIONS: Record<string, string[]> = {
+  "Brand Identity and Visual Design": [
+    "Logo systems and visual marks",
+    "Typography selection and hierarchy",
+    "Color systems and palettes",
+    "Brand guidelines documentation",
+    "Collateral templates",
+  ],
+  "Visual Media and Content Production": [
+    "Photography art direction",
+    "Video concept and production",
+    "Motion graphics and animation",
+    "Social media visual systems",
+    "Campaign creative",
+  ],
+  "Digital Design and Experience": [
+    "Website design and development",
+    "Product interface design",
+    "Interaction design",
+    "Design systems for digital",
+    "Conversion optimization",
+  ],
+  "Creative Strategy and Systems": [
+    "Brand strategy and positioning",
+    "Creative direction frameworks",
+    "Content strategy",
+    "Campaign planning",
+    "Brand architecture",
+  ],
+};
+
 export default function ServicesSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const isMobile = isTouchOnly && isSmallScreen;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion) return;
 
-    let headingSplit: SplitType | null = null;
-
-    const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
-        if (gridRef.current) {
-          const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
-          gsap.set(blocks, { opacity: 1, y: 0, clipPath: "inset(0%)" });
-        }
-        return;
-      }
-
-      if (isMobile) {
-        // ── MOBILE: no SplitType, per-card viewport reveal ──
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            once: true,
-          },
-          defaults: { ease: "power3.out" },
-        });
-
-        if (labelRef.current) {
-          gsap.set(labelRef.current, { opacity: 0, y: 12 });
-          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-        }
-
-        // Block fade-up heading (no SplitType)
-        if (headingRef.current) {
-          gsap.set(headingRef.current, { opacity: 0, y: 20 });
-          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
-        }
-
-        // Service blocks: per-card ScrollTrigger
-        if (gridRef.current) {
-          const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
-          blocks.forEach((block) => {
-            gsap.set(block, { opacity: 0, y: 25 });
+    // Firefox fallback for stacking push-back
+    if (!CSS.supports("animation-timeline", "view()")) {
+      const ctx = gsap.context(() => {
+        const panels = section.querySelectorAll<HTMLElement>(".service-panel");
+        panels.forEach((panel, i) => {
+          if (i < panels.length - 1) {
             ScrollTrigger.create({
-              trigger: block,
-              start: "top 85%",
-              once: true,
-              onEnter: () => gsap.to(block, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }),
+              trigger: panels[i + 1],
+              start: "top bottom",
+              end: "top top",
+              scrub: true,
+              onUpdate: (self) => {
+                const p = self.progress;
+                panel.style.transform = `scale(${1 - p * 0.05}) translateY(${p * 20}px)`;
+                panel.style.filter = `brightness(${1 - p * 0.08})`;
+              },
             });
-          });
-        }
-        return;
-      }
+          }
+        });
+      }, section);
 
-      // ── TABLET / DESKTOP ──
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
-          once: true,
-        },
-        defaults: { ease: "power3.out" },
-      });
-
-      // Editorial label fades up
-      if (labelRef.current) {
-        gsap.set(labelRef.current, { opacity: 0, y: 15 });
-        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-      }
-
-      // Heading — SplitType word reveal
-      if (headingRef.current) {
-        headingSplit = new SplitType(headingRef.current, { types: "words" });
-        if (headingSplit.words) {
-          gsap.set(headingSplit.words, { y: "100%", opacity: 0 });
-          tl.to(
-            headingSplit.words,
-            { y: "0%", opacity: 1, stagger: 0.05, duration: 0.5 },
-            0.15
-          );
-        }
-      }
-
-      // Service blocks stagger in with clip-path
-      if (gridRef.current) {
-        const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
-        gsap.set(blocks, { opacity: 0, y: 30, clipPath: "inset(4%)" });
-        tl.to(
-          blocks,
-          {
-            opacity: 1,
-            y: 0,
-            clipPath: "inset(0%)",
-            stagger: 0.1,
-            duration: 0.6,
-          },
-          0.5
-        );
-      }
-    }, section);
-
-    return () => {
-      ctx.revert();
-      if (headingSplit) headingSplit.revert();
-    };
+      return () => ctx.revert();
+    }
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-40 px-[var(--page-px)]">
-      <div ref={labelRef}>
-        <EditorialLabel text={SERVICES_SECTION.label} className="mb-6" />
+    <section ref={sectionRef} className="section-reveal-wipe">
+      <div style={{ padding: "40px var(--page-px) 0" }}>
+        <EditorialLabel text="(Capabilities)" className="mb-4" />
       </div>
 
-      <h2
-        ref={headingRef}
-        className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0 overflow-hidden"
-        style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
-      >
-        {SERVICES_SECTION.heading}
-      </h2>
+      {SERVICES_SECTION.items.map((service, i) => (
+        <div
+          key={service.href}
+          className="service-panel"
+          style={{
+            position: "sticky",
+            top: 80,
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            padding: "80px var(--page-px)",
+            background: service.color,
+            zIndex: i + 1,
+          }}
+        >
+          <div style={{ display: "flex", gap: "clamp(40px, 6vw, 80px)", width: "100%", alignItems: "center" }}>
+            {/* Left 50%: Text */}
+            <div style={{ flex: "0 0 50%" }}>
+              <span style={{
+                fontFamily: "var(--sans)", fontSize: 12, fontWeight: 400,
+                textTransform: "uppercase", letterSpacing: "0.08em",
+                color: "var(--text-faint)",
+              }}>
+                0{i + 1}
+              </span>
 
-      <div ref={gridRef} className="services-visual-grid mt-16">
-        {SERVICES_SECTION.items.map((service) => (
-          <Link
-            key={service.href}
-            href={service.href}
-            className="service-block no-underline"
-            data-cursor="link"
-            style={{ background: service.color }}
-          >
-            <div className="service-block-inner">
               <h3
-                className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-                style={{ fontSize: "clamp(22px, 2vw, 28px)" }}
+                style={{
+                  fontFamily: "var(--serif)", fontWeight: 600,
+                  fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.15,
+                  color: "var(--text-primary)", margin: "12px 0 0",
+                  viewTransitionName: `service-${service.href.split("/").pop()}`,
+                }}
               >
                 {service.title}
               </h3>
-              <p className="service-block-sentence font-[var(--sans)] font-normal text-sm text-[color:var(--text-secondary)] mt-2 m-0">
+
+              <p style={{
+                fontFamily: "var(--sans)", fontSize: 16, fontWeight: 400,
+                color: "var(--text-muted)", lineHeight: 1.6, marginTop: 16, maxWidth: 400,
+              }}>
                 {service.sentence}
               </p>
+
+              {/* Deliverables list */}
+              <ul style={{
+                listStyle: "none", padding: 0, margin: "24px 0 0",
+                display: "flex", flexDirection: "column", gap: 8,
+              }}>
+                {(SERVICE_DESCRIPTIONS[service.title] || []).map((item, j) => (
+                  <li key={j} style={{
+                    fontFamily: "var(--sans)", fontSize: 14, fontWeight: 400,
+                    color: "var(--text-faint)",
+                  }}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href={service.href}
+                className="arrow-link no-underline"
+                data-cursor="link"
+                style={{ display: "inline-block", marginTop: 28 }}
+              >
+                <span style={{
+                  fontFamily: "var(--sans)", fontSize: 13, fontWeight: 500,
+                  color: "var(--text-primary)",
+                }}>
+                  Learn More <span className="arrow-icon">&rarr;</span>
+                </span>
+              </Link>
             </div>
-          </Link>
-        ))}
-      </div>
+
+            {/* Right 50%: Image placeholder */}
+            <div
+              data-cursor="distort"
+              style={{
+                flex: "0 0 50%",
+                aspectRatio: "4/5",
+                background: `linear-gradient(155deg, ${service.color}, var(--bg-shift))`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+              }}
+            >
+              <span style={{
+                fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase",
+                letterSpacing: "0.12em", color: "var(--text-faint)",
+              }}>
+                {service.title.split(" ")[0]} Image
+              </span>
+            </div>
+          </div>
+        </div>
+      ))}
     </section>
   );
 }

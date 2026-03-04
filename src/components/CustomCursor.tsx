@@ -1,150 +1,103 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-function lerp(a: number, b: number, n: number) {
-  return a + (b - a) * n;
-}
+import { useEffect, useRef, useCallback } from "react";
+import { initMagneticButtons } from "@/lib/magnetic-button";
 
 export default function CustomCursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(true);
+  const dotRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: 0, y: 0 });
-  const pos = useRef({ x: 0, y: 0 });
-  const state = useRef<"default" | "expand" | "link">("default");
+  const ringPos = useRef({ x: 0, y: 0 });
+  const rafId = useRef<number>(0);
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setIsMobile(window.innerWidth < 901);
+  const updateCursor = useCallback(() => {
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
+
+    // Ring lerp toward mouse
+    ringPos.current.x += (mouse.current.x - ringPos.current.x) * 0.12;
+    ringPos.current.y += (mouse.current.y - ringPos.current.y) * 0.12;
+
+    // Apply transforms (GPU-accelerated)
+    dot.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0)`;
+    ring.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0)`;
+
+    rafId.current = requestAnimationFrame(updateCursor);
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
-
-    const cursor = cursorRef.current;
-    if (!cursor) return;
+    const hasPointer = window.matchMedia("(pointer: fine)").matches;
+    if (!hasPointer) return;
 
     document.body.style.cursor = "none";
 
-    let raf: number;
-
-    function animate() {
-      pos.current.x = lerp(pos.current.x, mouse.current.x, 0.15);
-      pos.current.y = lerp(pos.current.y, mouse.current.y, 0.15);
-
-      if (cursor) {
-        cursor.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px) translate(-50%, -50%)`;
-      }
-      raf = requestAnimationFrame(animate);
-    }
-
-    function onMouseMove(e: MouseEvent) {
+    const onMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
-    }
+    };
 
-    function updateCursorState(target: HTMLElement | null) {
-      if (!cursor) return;
+    const onMouseOver = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("[data-cursor]");
+      const ring = ringRef.current;
+      const dot = dotRef.current;
+      if (!ring || !dot) return;
+
       if (!target) {
-        state.current = "default";
-        applyState();
+        ring.className = "cursor-ring";
+        dot.className = "cursor-dot";
+        ring.innerHTML = "";
+        ring.style.width = "";
+        ring.style.height = "";
+        ring.style.borderRadius = "";
         return;
       }
 
-      const expandEl = target.closest("[data-cursor='expand']");
-      const linkEl = target.closest("[data-cursor='link']") || target.closest("a, button");
+      const state = target.getAttribute("data-cursor");
+      ring.className = `cursor-ring cursor-ring--${state}`;
+      dot.className = `cursor-dot cursor-dot--${state}`;
 
-      if (expandEl) {
-        state.current = "expand";
-      } else if (linkEl) {
-        state.current = "link";
+      if (state === "view") {
+        ring.innerHTML = '<span class="cursor-label">View</span>';
+      } else if (state === "pause") {
+        ring.innerHTML =
+          '<span class="cursor-pause-icon"><span></span><span></span></span>';
       } else {
-        state.current = "default";
+        ring.innerHTML = "";
       }
-      applyState();
-    }
 
-    function applyState() {
-      if (!cursor) return;
-      const text = cursor.querySelector<HTMLElement>(".cursor-text");
-      switch (state.current) {
-        case "expand":
-          cursor.style.width = "80px";
-          cursor.style.height = "80px";
-          cursor.style.background = "#fff";
-          cursor.style.mixBlendMode = "normal";
-          if (text) text.style.opacity = "1";
-          break;
-        case "link":
-          cursor.style.width = "24px";
-          cursor.style.height = "24px";
-          cursor.style.background = "var(--text-primary)";
-          cursor.style.mixBlendMode = "difference";
-          if (text) text.style.opacity = "0";
-          break;
-        default:
-          cursor.style.width = "12px";
-          cursor.style.height = "12px";
-          cursor.style.background = "var(--text-primary)";
-          cursor.style.mixBlendMode = "difference";
-          if (text) text.style.opacity = "0";
+      // Magnetic CTA — morph ring to button shape
+      if (state === "magnetic") {
+        const rect = target.getBoundingClientRect();
+        ring.style.width = `${rect.width + 16}px`;
+        ring.style.height = `${rect.height + 16}px`;
+        ring.style.borderRadius = "0px";
+      } else {
+        ring.style.width = "";
+        ring.style.height = "";
+        ring.style.borderRadius = "";
       }
-    }
+    };
 
-    function onMouseOver(e: MouseEvent) {
-      updateCursorState(e.target as HTMLElement);
-    }
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseover", onMouseOver, { passive: true });
+    rafId.current = requestAnimationFrame(updateCursor);
 
-    window.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseover", onMouseOver);
-    raf = requestAnimationFrame(animate);
+    // Initialize magnetic button pull behavior
+    initMagneticButtons();
 
     return () => {
       document.body.style.cursor = "";
       window.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseover", onMouseOver);
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafId.current);
     };
-  }, [isMobile]);
-
-  if (isMobile) return null;
+  }, [updateCursor]);
 
   return (
-    <div
-      ref={cursorRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: 12,
-        height: 12,
-        borderRadius: "50%",
-        background: "var(--text-primary)",
-        mixBlendMode: "difference",
-        pointerEvents: "none",
-        zIndex: 9999,
-        transition:
-          "width 0.3s cubic-bezier(.23,1,.32,1), height 0.3s cubic-bezier(.23,1,.32,1), background 0.3s",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <span
-        className="cursor-text"
-        style={{
-          fontFamily: "var(--sans)",
-          fontSize: 10,
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          color: "var(--text-primary)",
-          opacity: 0,
-          transition: "opacity 0.3s",
-          pointerEvents: "none",
-        }}
-      >
-        View
-      </span>
-    </div>
+    <>
+      <div ref={dotRef} className="cursor-dot" />
+      <div ref={ringRef} className="cursor-ring" />
+    </>
   );
 }

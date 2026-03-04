@@ -1,10 +1,8 @@
 import HeroSection from "@/components/homepage/HeroSection";
 import WorkSection from "@/components/homepage/WorkSection";
 import ArgumentSection from "@/components/homepage/ArgumentSection";
-import VisualBreakSection from "@/components/homepage/VisualBreakSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
-import StatsSection from "@/components/homepage/StatsSection";
-import TestimonialsSection from "@/components/homepage/TestimonialsSection";
+import EvidenceSection from "@/components/homepage/EvidenceSection";
 import CtaSection from "@/components/homepage/CtaSection";
 
 export default function Home() {
@@ -13,10 +11,8 @@ export default function Home() {
       <HeroSection />
       <WorkSection />
       <ArgumentSection />
-      <VisualBreakSection />
       <ServicesSection />
-      <StatsSection />
-      <TestimonialsSection />
+      <EvidenceSection />
       <CtaSection />
     </>
   );

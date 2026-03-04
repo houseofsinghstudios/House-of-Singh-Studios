@@ -8,6 +8,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
+import GrainCanvas from "@/components/GrainCanvas";
 import PageTransition from "@/components/PageTransition";
 import ScrollProgress from "@/components/ScrollProgress";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
         <body>
           <SmoothScroll />
           <CustomCursor />
+          <GrainCanvas />
           <PageTransition />
           <ScrollProgress />
           <Header />

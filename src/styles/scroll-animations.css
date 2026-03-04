@@ -1,68 +1,123 @@
 /* ═══════════════════════════════════════════════════════
-   CSS Scroll-Driven Animations
+   CSS Scroll-Driven Animations — Experimental Homepage
    GPU-composited keyframe animations driven by scroll position.
+   Primary animation system. GSAP is Firefox-only fallback.
    ═══════════════════════════════════════════════════════ */
 
+/* ── Generic reveals ── */
 @keyframes fadeRevealUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeRevealRight {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes clipReveal {
-  from {
-    clip-path: inset(8% 6%);
-  }
-  to {
-    clip-path: inset(0%);
-  }
+  from { clip-path: inset(8% 6%); }
+  to { clip-path: inset(0%); }
 }
 
 @keyframes imageScale {
-  from {
-    transform: scale(1.1);
-  }
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+
+/* ── HERO: Variable font weight shift on scroll ── */
+@keyframes heroWeight {
+  from { font-variation-settings: 'wght' 300; letter-spacing: -0.03em; }
+  to { font-variation-settings: 'wght' 600; letter-spacing: -0.05em; }
+}
+
+/* ── HERO: Center line splits apart ── */
+@keyframes lineSplitLeft {
+  from { transform: translateX(0); opacity: 0.15; }
+  to { transform: translateX(-20vw); opacity: 0; }
+}
+
+@keyframes lineSplitRight {
+  from { transform: translateX(0); opacity: 0.15; }
+  to { transform: translateX(20vw); opacity: 0; }
+}
+
+/* ── HERO: Section fade out ── */
+@keyframes heroFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ── HERO: Supporting text fade in ── */
+@keyframes supportFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── ARGUMENT: Reverse weight shift (bold to thin) ── */
+@keyframes argumentWeight {
+  from { font-variation-settings: 'wght' 700; opacity: 1; }
+  to { font-variation-settings: 'wght' 300; opacity: 0.4; }
+}
+
+/* ── ARGUMENT: Reverse parallax ── */
+@keyframes parallaxFast {
+  from { transform: translateY(0); }
+  to { transform: translateY(-10%); }
+}
+
+@keyframes parallaxSlow {
+  from { transform: translateY(0); }
+  to { transform: translateY(10%); }
+}
+
+/* ── SERVICES: Stacking card push-back ── */
+@keyframes pushBack {
   to {
-    transform: scale(1);
+    scale: 0.95;
+    translate: 0 20px;
+    filter: brightness(0.92);
   }
 }
 
-@keyframes highlightActive {
-  0% {
-    opacity: 0.3;
-    transform: translateX(20px);
-  }
-  40% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  60% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  100% {
-    opacity: 0.3;
-    transform: translateX(-20px);
-  }
+/* ── WORK: Horizontal scroll ── */
+@keyframes horizontalScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-300vw); }
 }
 
-/* Base animation classes (for non-supporting browsers, GSAP fallback applied via JavaScript) */
+/* ── Section boundary diagonal wipe ── */
+@keyframes diagonalWipe {
+  from { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); }
+  to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+}
+
+/* ── TICKER: Marquee animations ── */
+@keyframes tickerLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes tickerRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* ── Living logotype breathe ── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+/* ── Cursor ring rotate ── */
+@keyframes ringRotate {
+  to { rotate: 360deg; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Base classes (non-supporting browsers use GSAP fallback)
+   ═══════════════════════════════════════════════════════ */
+
 .scroll-reveal-up {
   animation: fadeRevealUp 1s ease both;
 }
@@ -76,7 +131,11 @@
   animation: imageScale 1s ease both;
 }
 
-/* Native CSS Scroll-Driven Animations for supported browsers */
+/* ═══════════════════════════════════════════════════════
+   Native CSS Scroll-Driven Animations
+   Applied only in browsers that support animation-timeline
+   ═══════════════════════════════════════════════════════ */
+
 @supports (animation-timeline: view()) {
   .scroll-reveal-up {
     animation-timeline: view();
@@ -90,6 +149,70 @@
 
   .scroll-clip-reveal > img,
   .scroll-clip-reveal > canvas {
+    animation-timeline: view();
+    animation-range: entry 0% entry 50%;
+  }
+
+  /* Hero headline weight animation */
+  .hero-headline-sda {
+    animation: heroWeight linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 25%;
+  }
+
+  /* Hero center line splits */
+  .center-line-left {
+    animation: lineSplitLeft linear both;
+    animation-timeline: scroll();
+    animation-range: 10% 40%;
+  }
+  .center-line-right {
+    animation: lineSplitRight linear both;
+    animation-timeline: scroll();
+    animation-range: 10% 40%;
+  }
+
+  /* Hero section fade out */
+  .hero-section-fade {
+    animation: heroFadeOut linear both;
+    animation-timeline: scroll();
+    animation-range: 50% 70%;
+  }
+
+  /* Support text reveal */
+  .hero-support-sda {
+    animation: supportFadeIn linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  /* Argument weight decrease */
+  .argument-headline-sda {
+    animation: argumentWeight linear both;
+    animation-timeline: view();
+    animation-range: entry 30% exit 60%;
+  }
+
+  /* Argument reverse parallax */
+  .argument-parallax-fast {
+    animation: parallaxFast linear both;
+    animation-timeline: scroll();
+  }
+  .argument-parallax-slow {
+    animation: parallaxSlow linear both;
+    animation-timeline: scroll();
+  }
+
+  /* Services stacking push-back */
+  .service-panel:not(:last-child) {
+    animation: pushBack linear both;
+    animation-timeline: view();
+    animation-range: exit -40% exit 0%;
+  }
+
+  /* Section reveal wipe */
+  .section-reveal-wipe {
+    animation: diagonalWipe linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 50%;
   }

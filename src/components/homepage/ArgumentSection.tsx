@@ -3,281 +3,161 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import { ARGUMENT } from "@/lib/constants/homepage-data";
-import EditorialLabel from "@/components/ui/EditorialLabel";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function ImagePlaceholder() {
-  return (
-    <div
-      className="w-full flex items-center justify-center"
-      style={{ aspectRatio: "4/5", background: "#E8E8E3" }}
-    >
-      <span className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[#999]">
-        Image
-      </span>
-    </div>
-  );
-}
-
+/**
+ * SECTION 3: THE ARGUMENT — "The Typographic Wall"
+ *
+ * Single massive typographic statement filling viewport.
+ * Variable font weight starts at 700 and DECREASES to 300 on scroll.
+ * "We fix that." appears instantly — zero transition.
+ * Three process steps fade up with stagger.
+ * Reverse parallax: headline moves up faster, "We fix that." moves up slower.
+ */
 export default function ArgumentSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const leftColRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const supportRef = useRef<HTMLParagraphElement>(null);
-  const weFixRef = useRef<HTMLParagraphElement>(null);
+  const fixRef = useRef<HTMLParagraphElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
-  const rightColRef = useRef<HTMLDivElement>(null);
-  const imgWrapRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const imgLabelRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const isMobile = isTouchOnly && isSmallScreen;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let headingSplit: SplitType | null = null;
+    if (reducedMotion) {
+      if (fixRef.current) gsap.set(fixRef.current, { opacity: 1 });
+      if (stepsRef.current) {
+        gsap.set(stepsRef.current.querySelectorAll(".step-item"), { opacity: 1, y: 0 });
+      }
+      return;
+    }
 
     const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
-        if (supportRef.current) gsap.set(supportRef.current, { opacity: 1, y: 0 });
-        if (weFixRef.current) gsap.set(weFixRef.current, { opacity: 1 });
-        if (stepsRef.current) {
-          const items = stepsRef.current.querySelectorAll(".process-step-item");
-          gsap.set(items, { opacity: 1, x: 0 });
-        }
-        if (imgWrapRef.current) gsap.set(imgWrapRef.current, { clipPath: "inset(0%)" });
-        if (imgRef.current) gsap.set(imgRef.current, { scale: 1 });
-        if (imgLabelRef.current) gsap.set(imgLabelRef.current, { opacity: 1 });
-        return;
-      }
-
-      if (isMobile) {
-        // ── MOBILE: no SplitType, sequential fade-ups, image below text ──
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: leftColRef.current,
-            start: "top 80%",
-            once: true,
+      // "We fix that." — appears INSTANTLY at 60% through section
+      if (fixRef.current) {
+        gsap.set(fixRef.current, { opacity: 0 });
+        ScrollTrigger.create({
+          trigger: section,
+          start: "60% bottom",
+          once: true,
+          onEnter: () => {
+            gsap.set(fixRef.current, { opacity: 1 });
           },
-          defaults: { ease: "power3.out" },
         });
-
-        if (labelRef.current) {
-          gsap.set(labelRef.current, { opacity: 0, y: 12 });
-          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-        }
-
-        // Heading block fade-up (no SplitType)
-        if (headingRef.current) {
-          gsap.set(headingRef.current, { opacity: 0, y: 20 });
-          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
-        }
-
-        if (supportRef.current) {
-          gsap.set(supportRef.current, { opacity: 0, y: 15 });
-          tl.to(supportRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.4);
-        }
-
-        if (weFixRef.current) {
-          gsap.set(weFixRef.current, { opacity: 0 });
-          tl.to(weFixRef.current, { opacity: 1, duration: 0.01 }, 0.65);
-        }
-
-        if (stepsRef.current) {
-          const items = stepsRef.current.querySelectorAll(".process-step-item");
-          gsap.set(items, { opacity: 0, y: 12 });
-          tl.to(items, { opacity: 1, y: 0, stagger: 0.06, duration: 0.35 }, 0.75);
-        }
-
-        // Image: simple fade-in when scrolled into view
-        if (imgWrapRef.current) {
-          gsap.set(imgWrapRef.current, { opacity: 0, y: 20 });
-          ScrollTrigger.create({
-            trigger: imgWrapRef.current,
-            start: "top 85%",
-            once: true,
-            onEnter: () => gsap.to(imgWrapRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }),
-          });
-        }
-        if (imgLabelRef.current) {
-          gsap.set(imgLabelRef.current, { opacity: 0 });
-          ScrollTrigger.create({
-            trigger: imgLabelRef.current,
-            start: "top 90%",
-            once: true,
-            onEnter: () => gsap.to(imgLabelRef.current, { opacity: 1, duration: 0.3, ease: "power3.out" }),
-          });
-        }
-
-        return;
       }
 
-      // ── TABLET / DESKTOP ──
-      // ── Left column animations ──
-      const leftTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: leftColRef.current,
-          start: "top 75%",
-          once: true,
-        },
-        defaults: { ease: "power3.out" },
-      });
-
-      // Editorial label fades up
-      if (labelRef.current) {
-        gsap.set(labelRef.current, { opacity: 0, y: 15 });
-        leftTl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-      }
-
-      // Heading — SplitType word reveal
-      if (headingRef.current) {
-        headingSplit = new SplitType(headingRef.current, { types: "words" });
-        if (headingSplit.words) {
-          gsap.set(headingSplit.words, { y: "100%", opacity: 0 });
-          leftTl.to(
-            headingSplit.words,
-            { y: "0%", opacity: 1, stagger: 0.05, duration: 0.5 },
-            0.2
-          );
-        }
-      }
-
-      // Supporting line fades up after heading
-      if (supportRef.current) {
-        gsap.set(supportRef.current, { opacity: 0, y: 15 });
-        leftTl.to(supportRef.current, { opacity: 1, y: 0, duration: 0.4 }, ">");
-      }
-
-      // "We fix that." snaps in (instant) 0.2s after supporting line
-      if (weFixRef.current) {
-        gsap.set(weFixRef.current, { opacity: 0 });
-        leftTl.to(weFixRef.current, { opacity: 1, duration: 0.01 }, ">0.2");
-      }
-
-      // Process steps stagger from left
+      // Process steps stagger in
       if (stepsRef.current) {
-        const items = stepsRef.current.querySelectorAll(".process-step-item");
-        gsap.set(items, { opacity: 0, x: -20 });
-        leftTl.to(
-          items,
-          { opacity: 1, x: 0, stagger: 0.08, duration: 0.4 },
-          ">0.1"
-        );
-      }
-
-      // ── Right column animations ──
-      const rightTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: rightColRef.current,
-          start: "top 70%",
+        const items = stepsRef.current.querySelectorAll(".step-item");
+        gsap.set(items, { opacity: 0, y: 15 });
+        ScrollTrigger.create({
+          trigger: stepsRef.current,
+          start: "top 80%",
           once: true,
-        },
-        defaults: { ease: "power3.out" },
-      });
-
-      // Image clip-path reveal
-      if (imgWrapRef.current) {
-        gsap.set(imgWrapRef.current, { clipPath: "inset(8% 6% 8% 6%)" });
-        rightTl.to(
-          imgWrapRef.current,
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 1 },
-          0
-        );
-      }
-      if (imgRef.current) {
-        gsap.set(imgRef.current, { scale: 1.12 });
-        rightTl.to(imgRef.current, { scale: 1, duration: 1 }, 0);
+          onEnter: () => {
+            gsap.to(items, {
+              opacity: 1, y: 0, stagger: 0.1, duration: 0.4, ease: "power3.out",
+            });
+          },
+        });
       }
 
-      // Image label fades in after image
-      if (imgLabelRef.current) {
-        gsap.set(imgLabelRef.current, { opacity: 0 });
-        rightTl.to(imgLabelRef.current, { opacity: 1, duration: 0.3 }, 0.7);
+      // Firefox fallback for variable font weight (CSS SDA handles in Chrome/Safari)
+      if (!CSS.supports("animation-timeline", "view()") && headingRef.current) {
+        gsap.fromTo(headingRef.current, {
+          fontVariationSettings: "'wght' 700",
+          opacity: 1,
+        }, {
+          fontVariationSettings: "'wght' 300",
+          opacity: 0.4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
       }
     }, section);
 
-    return () => {
-      ctx.revert();
-      if (headingSplit) headingSplit.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
+  const steps = [
+    { bold: "Discover", rest: "what your brand should be." },
+    { bold: "Design", rest: "the system that makes it real." },
+    { bold: "Deliver", rest: "assets that hold up everywhere." },
+  ];
+
   return (
-    <section ref={sectionRef} className="argument-section py-40 px-[var(--page-px)]">
-      <div className="argument-grid">
-        {/* Left column: text content */}
-        <div ref={leftColRef} className="argument-text max-w-[640px]">
-          <div ref={labelRef}>
-            <EditorialLabel text={ARGUMENT.label} className="mb-6" />
-          </div>
+    <section
+      ref={sectionRef}
+      className="section-reveal-wipe"
+      style={{
+        minHeight: "150vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--section-py) var(--page-px)",
+      }}
+    >
+      <div style={{ textAlign: "center", maxWidth: 1000, width: "100%" }}>
+        {/* The statement — CSS SDA handles weight decrease */}
+        <h2
+          ref={headingRef}
+          className="argument-headline-sda argument-parallax-fast"
+          style={{
+            fontFamily: "var(--serif)",
+            fontWeight: 700,
+            fontSize: "clamp(48px, 8vw, 120px)",
+            lineHeight: 1.05,
+            color: "var(--text-primary)",
+            margin: 0,
+          }}
+        >
+          {ARGUMENT.heading}
+        </h2>
 
-          <h2
-            ref={headingRef}
-            className="font-[var(--serif)] font-semibold tracking-[-0.015em] max-w-[800px] text-[color:var(--text-primary)] m-0 overflow-hidden"
-            style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
-          >
-            {ARGUMENT.heading}
-          </h2>
+        {/* "We fix that." — instant appearance, reverse parallax (slower) */}
+        <p
+          ref={fixRef}
+          className="argument-parallax-slow"
+          style={{
+            fontFamily: "var(--serif)",
+            fontWeight: 600,
+            fontSize: "clamp(28px, 4vw, 48px)",
+            color: "var(--text-primary)",
+            margin: "40px 0 0",
+            opacity: 0,
+          }}
+        >
+          {ARGUMENT.snap}
+        </p>
 
-          <p
-            ref={supportRef}
-            className="mt-7 font-[var(--sans)] font-normal text-[18px] leading-[1.65] text-[color:var(--text-secondary)]"
-          >
-            {ARGUMENT.supporting}
-          </p>
-
-          <p
-            ref={weFixRef}
-            className="mt-12 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-            style={{ fontSize: "clamp(22px, 2vw, 28px)", opacity: 0 }}
-          >
-            {ARGUMENT.snap}
-          </p>
-
-          <div ref={stepsRef} className="process-steps" style={{ opacity: 1, transform: "none" }}>
-            {ARGUMENT.steps.map((step, i) => (
-              <div key={step} className="process-step-item">
-                <span className="process-step-number">{String(i + 1).padStart(2, "0")}</span>
-                <span className="process-step-name">{step}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right column: editorial image */}
-        <div ref={rightColRef} className="argument-visual">
-          <div ref={imgWrapRef} className="argument-img-wrap">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              ref={imgRef}
-              src="/images/argument-editorial.png"
-              alt="Brand identity detail"
-              className="argument-img"
-              onError={(e) => {
-                const img = e.currentTarget;
-                img.style.display = "none";
-                const fallback = img.nextElementSibling as HTMLElement | null;
-                if (fallback) fallback.style.display = "flex";
+        {/* Process steps */}
+        <div ref={stepsRef} style={{ marginTop: 48, display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
+          {steps.map((step, i) => (
+            <p
+              key={i}
+              className="step-item"
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                fontWeight: 400,
+                color: "var(--text-muted)",
+                margin: 0,
               }}
-            />
-            <div style={{ display: "none" }}>
-              <ImagePlaceholder />
-            </div>
-          </div>
-          <p ref={imgLabelRef} className="editorial-label mt-3 text-right">
-            (Brand Identity Detail)
-          </p>
+            >
+              <strong style={{ fontWeight: 600, color: "var(--text-secondary)" }}>
+                {step.bold}
+              </strong>{" "}
+              {step.rest}
+            </p>
+          ))}
         </div>
       </div>
     </section>

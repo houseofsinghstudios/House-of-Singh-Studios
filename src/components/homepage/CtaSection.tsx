@@ -1,148 +1,67 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
-import { CTA } from "@/lib/constants/homepage-data";
-import Button from "@/components/ui/Button";
-import EditorialLabel from "@/components/ui/EditorialLabel";
+import Link from "next/link";
 
-gsap.registerPlugin(ScrollTrigger);
-
+/**
+ * SECTION 6: THE INVITATION — "The Quiet Close"
+ *
+ * Deliberately stark and still. No animation. No parallax. No shader.
+ * Maximum contrast through restraint after all the motion above.
+ * The OGL grain canvas intensity drops to near zero here (handled by GrainCanvas).
+ */
 export default function CtaSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const copyRef = useRef<HTMLParagraphElement>(null);
-  const btnRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const isMobile = isTouchOnly && isSmallScreen;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let headingSplit: SplitType | null = null;
-
-    const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
-        if (copyRef.current) gsap.set(copyRef.current, { opacity: 1, y: 0 });
-        if (btnRef.current) gsap.set(btnRef.current, { opacity: 1, scale: 1 });
-        return;
-      }
-
-      if (isMobile) {
-        // ── MOBILE: block fade-up, no SplitType ──
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 80%",
-            once: true,
-          },
-          defaults: { ease: "power3.out" },
-        });
-
-        if (labelRef.current) {
-          gsap.set(labelRef.current, { opacity: 0, y: 12 });
-          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-        }
-
-        if (headingRef.current) {
-          gsap.set(headingRef.current, { opacity: 0, y: 20 });
-          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
-        }
-
-        if (copyRef.current) {
-          gsap.set(copyRef.current, { opacity: 0, y: 15 });
-          tl.to(copyRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.35);
-        }
-
-        if (btnRef.current) {
-          gsap.set(btnRef.current, { opacity: 0, y: 10 });
-          tl.to(btnRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
-        }
-        return;
-      }
-
-      // ── TABLET / DESKTOP ──
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 75%",
-          once: true,
-        },
-        defaults: { ease: "power3.out" },
-      });
-
-      // Editorial label fades up
-      if (labelRef.current) {
-        gsap.set(labelRef.current, { opacity: 0, y: 15 });
-        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
-      }
-
-      // Heading — SplitType word reveal
-      if (headingRef.current) {
-        headingSplit = new SplitType(headingRef.current, { types: "words" });
-        if (headingSplit.words) {
-          gsap.set(headingSplit.words, { y: "100%", opacity: 0 });
-          tl.to(
-            headingSplit.words,
-            { y: "0%", opacity: 1, stagger: 0.04, duration: 0.5 },
-            0.15
-          );
-        }
-      }
-
-      // Supporting copy fades up
-      if (copyRef.current) {
-        gsap.set(copyRef.current, { opacity: 0, y: 20 });
-        tl.to(copyRef.current, { opacity: 1, y: 0, duration: 0.4 }, ">");
-      }
-
-      // Button fades up and scales in
-      if (btnRef.current) {
-        gsap.set(btnRef.current, { opacity: 0, scale: 0.95 });
-        tl.to(btnRef.current, { opacity: 1, scale: 1, duration: 0.4 }, ">0.2");
-      }
-    }, section);
-
-    return () => {
-      ctx.revert();
-      if (headingSplit) headingSplit.revert();
-    };
-  }, []);
-
   return (
-    <section ref={sectionRef} className="py-[200px] px-[var(--page-px)] text-center">
-      <div ref={labelRef}>
-        <EditorialLabel text={CTA.label} className="mb-6" />
-      </div>
-
+    <section
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "var(--section-py) var(--page-px)",
+        textAlign: "center",
+      }}
+    >
       <h2
-        ref={headingRef}
-        className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] mx-auto overflow-hidden"
-        style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
+        style={{
+          fontFamily: "var(--serif)",
+          fontWeight: 400,
+          fontSize: "clamp(36px, 5vw, 64px)",
+          lineHeight: 1.15,
+          color: "var(--text-primary)",
+          margin: 0,
+        }}
       >
-        {CTA.heading}
+        Start a project.
       </h2>
 
       <p
-        ref={copyRef}
-        className="mt-5 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] max-w-[480px] mx-auto"
+        style={{
+          fontFamily: "var(--sans)",
+          fontWeight: 400,
+          fontSize: 14,
+          color: "var(--text-faint)",
+          marginTop: 16,
+        }}
       >
-        {CTA.supporting}
+        We respond within 24 hours.
       </p>
 
-      <div ref={btnRef} className="mt-11">
-        <Button href={CTA.button.href} data-cursor="link">
-          {CTA.button.text}
-        </Button>
+      <div style={{ display: "flex", gap: 16, marginTop: 36 }}>
+        <Link
+          href="/contact"
+          className="btn-primary"
+          data-cursor="magnetic"
+        >
+          Book a Call
+        </Link>
+        <Link
+          href="/contact"
+          className="btn-secondary"
+          data-cursor="magnetic"
+        >
+          Send a Brief
+        </Link>
       </div>
     </section>
   );

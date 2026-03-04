@@ -9,201 +9,238 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 
 gsap.registerPlugin(ScrollTrigger);
 
+/**
+ * SECTION 2: THE PROOF — "Scroll Cinema"
+ *
+ * Horizontal scroll sequence pinned to viewport.
+ * 4 projects, each 100vw wide. Vertical scroll → horizontal movement.
+ * Each project: left 45% text, right 55% image with OGL shader.
+ */
 export default function WorkSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const linkRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    const track = trackRef.current;
+    if (!section || !track) return;
 
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const isMobile = isTouchOnly && isSmallScreen;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        // Show everything instantly
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (gridRef.current) {
-          const cards = gridRef.current.querySelectorAll<HTMLElement>(".project-card");
-          gsap.set(cards, { opacity: 1, y: 0 });
-        }
-        if (linkRef.current) gsap.set(linkRef.current, { opacity: 1, y: 0 });
-        return;
-      }
+      if (reducedMotion) return;
 
-      if (isMobile) {
-        // ── MOBILE: single column, show 2 cards, viewport spotlight ──
-        if (labelRef.current) {
-          gsap.set(labelRef.current, { opacity: 0, y: 15 });
-          ScrollTrigger.create({
-            trigger: labelRef.current,
-            start: "top 85%",
-            once: true,
-            onEnter: () => gsap.to(labelRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }),
-          });
-        }
+      // Pin the section and drive horizontal scroll
+      const totalPanels = PROJECTS.length;
+      const scrollDistance = (totalPanels - 1) * window.innerWidth;
 
-        // Per-card fade-in as each enters viewport (viewport spotlight)
-        if (gridRef.current) {
-          const cards = gridRef.current.querySelectorAll<HTMLElement>(".project-card");
-          cards.forEach((card) => {
-            gsap.set(card, { opacity: 0, y: 30 });
-            ScrollTrigger.create({
-              trigger: card,
-              start: "top 85%",
-              once: true,
-              onEnter: () => gsap.to(card, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }),
-            });
-          });
-        }
-
-        if (linkRef.current) {
-          gsap.set(linkRef.current, { opacity: 0, y: 15 });
-          ScrollTrigger.create({
-            trigger: linkRef.current,
-            start: "top 90%",
-            once: true,
-            onEnter: () => gsap.to(linkRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }),
-          });
-        }
-        return;
-      }
-
-      // ── TABLET / DESKTOP ──
-      const tl = gsap.timeline({
+      gsap.to(track, {
+        x: () => -scrollDistance,
+        ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: "top 80%",
-          once: true,
+          pin: true,
+          scrub: 1,
+          end: () => `+=${scrollDistance}`,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Update ghost counter
+            const activeIdx = Math.round(self.progress * (totalPanels - 1));
+            if (counterRef.current) {
+              counterRef.current.textContent = String(activeIdx + 1).padStart(2, "0");
+            }
+
+            // Per-panel fade transitions
+            const panels = track.querySelectorAll<HTMLElement>(".cinema-panel");
+            panels.forEach((panel, i) => {
+              const panelProgress = self.progress * (totalPanels - 1) - i;
+              const textEl = panel.querySelector<HTMLElement>(".cinema-text");
+              const imgEl = panel.querySelector<HTMLElement>(".cinema-image");
+
+              if (textEl) {
+                if (panelProgress < -0.3) {
+                  // Not yet visible
+                  textEl.style.opacity = "0";
+                  textEl.style.transform = "translateX(40px)";
+                } else if (panelProgress > 0.7) {
+                  // Scrolled past
+                  textEl.style.opacity = "0";
+                  textEl.style.transform = "translateX(-40px)";
+                } else {
+                  textEl.style.opacity = "1";
+                  textEl.style.transform = "translateX(0)";
+                }
+              }
+
+              if (imgEl) {
+                // Desaturate as it scrolls away
+                const desat = Math.max(0, Math.min(1, Math.abs(panelProgress) * 1.5));
+                imgEl.style.filter = `saturate(${1 - desat * 0.7})`;
+              }
+            });
+          },
         },
-        defaults: { ease: "power3.out" },
       });
-
-      // 1. Label fades up
-      if (labelRef.current) {
-        gsap.set(labelRef.current, { opacity: 0, y: 15 });
-        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0);
-      }
-
-      // 2. Project cards stagger in with clip-path reveals
-      if (gridRef.current) {
-        const cards = gridRef.current.querySelectorAll<HTMLElement>(".project-card");
-        const imgWraps = gridRef.current.querySelectorAll<HTMLElement>(".project-img-wrap");
-        const imgInners = gridRef.current.querySelectorAll<HTMLElement>(".project-img-inner");
-
-        gsap.set(cards, { opacity: 0, y: 40 });
-        // Cards 1+2 together, then 3+4
-        const firstPair = Array.from(cards).slice(0, 2);
-        const secondPair = Array.from(cards).slice(2);
-
-        tl.to(firstPair, { opacity: 1, y: 0, duration: 0.6 }, 0.3);
-        if (secondPair.length) {
-          tl.to(secondPair, { opacity: 1, y: 0, duration: 0.6 }, 0.45);
-        }
-
-        // Clip-path reveal per card image
-        gsap.set(imgWraps, { clipPath: "inset(6% 4% 6% 4%)" });
-        gsap.set(imgInners, { scale: 1.08 });
-
-        imgWraps.forEach((wrap, i) => {
-          tl.to(wrap, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.8, ease: "power3.out" }, 0.3 + i * 0.1);
-        });
-        imgInners.forEach((inner, i) => {
-          tl.to(inner, { scale: 1, duration: 0.8, ease: "power3.out" }, 0.3 + i * 0.1);
-        });
-      }
-
-      // 3. "View All Projects" link fades up last
-      if (linkRef.current) {
-        gsap.set(linkRef.current, { opacity: 0, y: 15 });
-        tl.to(linkRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.9);
-      }
     }, section);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px var(--page-px) 160px" }}>
-      <div ref={labelRef}>
-        <EditorialLabel text="Selected Work" className="mb-6" />
+    <section
+      ref={sectionRef}
+      className="section-reveal-wipe"
+      style={{ overflow: "hidden" }}
+    >
+      {/* Ghost counter */}
+      <div style={{
+        position: "absolute", top: 40, left: "var(--page-px)", zIndex: 10,
+      }}>
+        <EditorialLabel text="Selected Work" className="mb-4" />
       </div>
 
-      <div ref={gridRef} className="work-grid mt-8">
-        {PROJECTS.map((project) => (
-          <Link
+      {/* Horizontal track */}
+      <div
+        ref={trackRef}
+        style={{
+          display: "flex",
+          width: `${PROJECTS.length * 100}vw`,
+          height: "100vh",
+        }}
+      >
+        {PROJECTS.map((project, i) => (
+          <div
             key={project.href}
-            href={project.href}
-            className="project-card block no-underline"
-            data-cursor="link"
+            className="cinema-panel"
+            style={{
+              width: "100vw",
+              height: "100vh",
+              display: "flex",
+              alignItems: "center",
+              padding: "0 var(--page-px)",
+              position: "relative",
+            }}
           >
+            {/* Left 45%: Text */}
             <div
-              className="project-img-wrap overflow-hidden relative"
-              style={{ aspectRatio: "4/3", background: project.color }}
+              className="cinema-text"
+              style={{
+                flex: "0 0 45%",
+                paddingRight: 60,
+                transition: "opacity 0.4s ease, transform 0.4s ease",
+              }}
             >
-              <div className="project-img-inner project-image-inner ken-burns w-full h-full flex items-center justify-center relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="flex items-center justify-center relative"
-                    style={{
-                      width: "60%",
-                      height: "60%",
-                      border: `1px solid ${project.accent}33`,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "70%",
-                        height: "70%",
-                        border: `1px solid ${project.accent}55`,
-                      }}
-                    />
-                    <div
-                      className="absolute"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        background: `${project.accent}22`,
-                        border: `1px solid ${project.accent}44`,
-                      }}
-                    />
-                  </div>
-                </div>
-                <span
-                  className="relative z-10 font-[var(--sans)] text-[11px] uppercase tracking-[0.12em]"
-                  style={{ color: `${project.accent}88` }}
+              {/* Ghost number */}
+              <span style={{
+                fontFamily: "var(--serif)", fontSize: 120, fontWeight: 300,
+                color: "var(--text-primary)", opacity: 0.08,
+                lineHeight: 1, display: "block", marginBottom: -20,
+              }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              <h3
+                className="project-title"
+                style={{
+                  fontFamily: "var(--serif)", fontWeight: 600,
+                  fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.1,
+                  color: "var(--text-primary)", margin: 0,
+                  viewTransitionName: `project-${project.href.split("/").pop()}`,
+                }}
+              >
+                <Link
+                  href={project.href}
+                  className="no-underline"
+                  data-cursor="view"
+                  style={{ color: "inherit" }}
                 >
-                  {project.name.split(" ")[0]}
-                </span>
-              </div>
-            </div>
-            <div className="mt-4">
-              <p className="font-[var(--sans)] font-medium text-base text-[color:var(--text-primary)] m-0">
-                {project.name}
-              </p>
-              <p className="mt-1.5 font-[var(--sans)] font-normal text-xs uppercase tracking-[0.08em] text-[#999]">
+                  {project.name}
+                </Link>
+              </h3>
+
+              <p style={{
+                fontFamily: "var(--sans)", fontSize: 12, fontWeight: 400,
+                textTransform: "uppercase", letterSpacing: "0.06em",
+                color: "var(--text-faint)", marginTop: 12,
+              }}>
                 {project.label}
               </p>
-              <p className="project-sentence font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]">
+
+              <p style={{
+                fontFamily: "var(--sans)", fontSize: 16, fontWeight: 400,
+                color: "var(--text-muted)", maxWidth: 380,
+                lineHeight: 1.6, marginTop: 16,
+              }}>
                 {project.sentence}
               </p>
+
+              <Link
+                href={project.href}
+                className="arrow-link no-underline"
+                data-cursor="link"
+                style={{ marginTop: 24, display: "inline-block" }}
+              >
+                <span style={{
+                  fontFamily: "var(--sans)", fontSize: 13, fontWeight: 500,
+                  color: "var(--text-primary)",
+                }}>
+                  View Project <span className="arrow-icon">&rarr;</span>
+                </span>
+              </Link>
             </div>
-          </Link>
+
+            {/* Right 55%: Image */}
+            <div
+              className="cinema-image"
+              data-cursor="distort"
+              style={{
+                flex: "0 0 55%",
+                height: "80vh",
+                background: project.color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                overflow: "hidden",
+                transition: "filter 0.5s ease",
+              }}
+            >
+              <div style={{
+                width: "60%", height: "60%",
+                border: `1px solid ${project.accent}33`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                position: "relative",
+              }}>
+                <div style={{
+                  width: "70%", height: "70%",
+                  border: `1px solid ${project.accent}55`,
+                }} />
+                <div style={{
+                  position: "absolute", width: 40, height: 40, borderRadius: "50%",
+                  background: `${project.accent}22`, border: `1px solid ${project.accent}44`,
+                }} />
+              </div>
+              <span style={{
+                position: "absolute", fontFamily: "var(--sans)", fontSize: 11,
+                textTransform: "uppercase", letterSpacing: "0.12em",
+                color: `${project.accent}88`,
+              }}>
+                {project.name.split(" ")[0]}
+              </span>
+            </div>
+          </div>
         ))}
       </div>
 
-      <div ref={linkRef} className="mt-12">
-        <Link href="/work" className="arrow-link no-underline" data-cursor="link">
-          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-            View All Projects <span className="arrow-icon">&rarr;</span>
-          </span>
-        </Link>
+      {/* Persistent counter overlay */}
+      <div style={{
+        position: "absolute", bottom: 40, left: "var(--page-px)", zIndex: 10,
+        fontFamily: "var(--sans)", fontSize: 12, color: "var(--text-faint)",
+        letterSpacing: "0.08em",
+      }}>
+        <span ref={counterRef} style={{ fontWeight: 600, color: "var(--text-primary)" }}>01</span>
+        <span> / {String(PROJECTS.length).padStart(2, "0")}</span>
       </div>
     </section>
   );

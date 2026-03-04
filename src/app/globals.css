@@ -1662,6 +1662,115 @@ body {
   }
 }
 
+/* ═══════════════════════════════════════════════════════
+   Custom Cursor (dot + ring)
+   ═══════════════════════════════════════════════════════ */
+
+/* Hide default cursor on pointer devices */
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+/* Cursor dot — 8px solid, exact mouse tracking */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--text-primary);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+/* Cursor ring — 32px border, lerp trailing */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid var(--text-primary);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.5;
+  transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease, border-style 0.25s ease;
+  will-change: transform;
+}
+
+/* State: link — ring expands to 48px */
+.cursor-ring--link {
+  width: 48px;
+  height: 48px;
+  opacity: 0.3;
+}
+
+/* State: view — ring expands to 80px, shows "View" */
+.cursor-ring--view {
+  width: 80px;
+  height: 80px;
+  opacity: 0.6;
+}
+.cursor-ring--view::after {
+  content: "View";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* State: magnetic — ring morphs to button shape (inline styles set w/h) */
+.cursor-ring--magnetic {
+  opacity: 0.3;
+  transition: width 0.4s cubic-bezier(.23,1,.32,1), height 0.4s cubic-bezier(.23,1,.32,1), opacity 0.25s ease;
+}
+
+/* State: distort — dashed rotating ring */
+.cursor-ring--distort {
+  width: 40px;
+  height: 40px;
+  border-style: dashed;
+  opacity: 0.5;
+  animation: ringRotate 4s linear infinite;
+}
+
+/* State: pause — ring with pause icon */
+.cursor-ring--pause {
+  width: 48px;
+  height: 48px;
+  opacity: 0.4;
+}
+.cursor-ring--pause::after {
+  content: "❚❚";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-primary);
+  opacity: 0.6;
+}
+
+/* Hide cursor on touch devices */
+@media (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+}
+
 /* ── Prefers reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   *,
