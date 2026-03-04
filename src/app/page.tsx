@@ -14,32 +14,46 @@ export default function Home() {
     <>
       {/* ─── SECTION 1: THE OPENING (Hero) ─── */}
       <section className="hero-section">
-        <p className="hero-label">{HERO.label}</p>
+        {/* Center line */}
+        <div className="hero-center-line" />
 
-        <div className="hero-headline-block">
-          <h1 className="hero-headline">
-            <span className="hero-line hero-line-left">{HERO.headline[0]}</span>
-            <span className="hero-divider" />
-            <span className="hero-line hero-line-right">
-              {HERO.headline[1]}
-            </span>
-          </h1>
+        {/* Crest top left */}
+        <div className="hero-crest">
+          <span className="hero-crest-text">HOUSE OF SINGH</span>
         </div>
 
-        <p className="hero-secondary">{HERO.secondary}</p>
+        {/* Editorial label */}
+        <span className="hero-label">({HERO.label})</span>
 
-        <div className="hero-cta-row">
-          <Link href={HERO.cta.primary.href} className="btn-primary">
-            {HERO.cta.primary.text}
-          </Link>
-          <Link href={HERO.cta.secondary.href} className="btn-secondary">
-            {HERO.cta.secondary.text}
-          </Link>
+        {/* The split headline */}
+        <div className="hero-headline-wrapper">
+          <div className="hero-headline">
+            <div className="hero-line">
+              <span className="hero-left">{HERO.headline[0].left}</span>
+              <span className="hero-right">{HERO.headline[0].right}</span>
+            </div>
+            <div className="hero-line">
+              <span className="hero-left">{HERO.headline[1].left}</span>
+              <span className="hero-right">{HERO.headline[1].right}</span>
+            </div>
+          </div>
+
+          {/* Supporting text BELOW the headline, LEFT aligned */}
+          <div className="hero-support">
+            <p className="hero-support-text">{HERO.secondary}</p>
+            <div className="hero-ctas">
+              <Link href={HERO.cta.primary.href} className="btn-primary">
+                {HERO.cta.primary.text}
+              </Link>
+              <Link href={HERO.cta.secondary.href} className="btn-secondary">
+                {HERO.cta.secondary.text}
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <div className="hero-scroll-indicator">
-          <span className="hero-scroll-line" />
-        </div>
+        {/* Scroll indicator */}
+        <span className="hero-scroll">(Scroll)</span>
       </section>
 
       {/* ─── SECTION 2: THE PROOF (Featured Work) ─── */}

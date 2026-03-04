@@ -1,6 +1,9 @@
 export const HERO = {
   label: "Creative Direction Studio",
-  headline: ["AI can generate assets.", "It cannot build a brand."],
+  headline: [
+    { left: "AI can generate", right: "assets." },
+    { left: "It cannot build", right: "a brand." },
+  ],
   secondary:
     "A design studio powered by AI systems and led by creative direction.",
   cta: {
