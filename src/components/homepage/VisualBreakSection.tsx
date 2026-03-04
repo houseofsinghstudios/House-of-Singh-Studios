@@ -15,8 +15,31 @@ export default function VisualBreakSection() {
     const img = imgRef.current;
     if (!section || !img) return;
 
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion) return;
+
     const ctx = gsap.context(() => {
-      // GSAP parallax: image translateY(-15%) to translateY(15%) as section scrolls through
+      if (isMobile) {
+        // ── MOBILE: curtain draw-down reveal (no parallax) ──
+        gsap.set(section, { clipPath: "inset(100% 0 0 0)" });
+        gsap.to(section, {
+          clipPath: "inset(0% 0 0 0)",
+          ease: "power3.out",
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            once: true,
+          },
+        });
+        return;
+      }
+
+      // ── TABLET / DESKTOP: parallax ──
       gsap.fromTo(
         img,
         { yPercent: -15, scale: 1.05 },

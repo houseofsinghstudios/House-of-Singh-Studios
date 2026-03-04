@@ -16,7 +16,21 @@ export default function StatsSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        // Show final values instantly
+        STATS.targets.forEach((target, i) => {
+          const numEl = numberRefs.current[i];
+          if (numEl) numEl.textContent = `${target}+`;
+        });
+        descRefs.current.forEach((el) => {
+          if (el) gsap.set(el, { opacity: 1, y: 0 });
+        });
+        return;
+      }
+
       // Set initial states
       numberRefs.current.forEach((el) => {
         if (el) el.textContent = "0+";

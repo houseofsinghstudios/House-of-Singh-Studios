@@ -39,9 +39,91 @@ export default function ArgumentSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let headingSplit: SplitType | null = null;
 
     const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
+        if (supportRef.current) gsap.set(supportRef.current, { opacity: 1, y: 0 });
+        if (weFixRef.current) gsap.set(weFixRef.current, { opacity: 1 });
+        if (stepsRef.current) {
+          const items = stepsRef.current.querySelectorAll(".process-step-item");
+          gsap.set(items, { opacity: 1, x: 0 });
+        }
+        if (imgWrapRef.current) gsap.set(imgWrapRef.current, { clipPath: "inset(0%)" });
+        if (imgRef.current) gsap.set(imgRef.current, { scale: 1 });
+        if (imgLabelRef.current) gsap.set(imgLabelRef.current, { opacity: 1 });
+        return;
+      }
+
+      if (isMobile) {
+        // ── MOBILE: no SplitType, sequential fade-ups, image below text ──
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: leftColRef.current,
+            start: "top 80%",
+            once: true,
+          },
+          defaults: { ease: "power3.out" },
+        });
+
+        if (labelRef.current) {
+          gsap.set(labelRef.current, { opacity: 0, y: 12 });
+          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+        }
+
+        // Heading block fade-up (no SplitType)
+        if (headingRef.current) {
+          gsap.set(headingRef.current, { opacity: 0, y: 20 });
+          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
+        }
+
+        if (supportRef.current) {
+          gsap.set(supportRef.current, { opacity: 0, y: 15 });
+          tl.to(supportRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.4);
+        }
+
+        if (weFixRef.current) {
+          gsap.set(weFixRef.current, { opacity: 0 });
+          tl.to(weFixRef.current, { opacity: 1, duration: 0.01 }, 0.65);
+        }
+
+        if (stepsRef.current) {
+          const items = stepsRef.current.querySelectorAll(".process-step-item");
+          gsap.set(items, { opacity: 0, y: 12 });
+          tl.to(items, { opacity: 1, y: 0, stagger: 0.06, duration: 0.35 }, 0.75);
+        }
+
+        // Image: simple fade-in when scrolled into view
+        if (imgWrapRef.current) {
+          gsap.set(imgWrapRef.current, { opacity: 0, y: 20 });
+          ScrollTrigger.create({
+            trigger: imgWrapRef.current,
+            start: "top 85%",
+            once: true,
+            onEnter: () => gsap.to(imgWrapRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }),
+          });
+        }
+        if (imgLabelRef.current) {
+          gsap.set(imgLabelRef.current, { opacity: 0 });
+          ScrollTrigger.create({
+            trigger: imgLabelRef.current,
+            start: "top 90%",
+            once: true,
+            onEnter: () => gsap.to(imgLabelRef.current, { opacity: 1, duration: 0.3, ease: "power3.out" }),
+          });
+        }
+
+        return;
+      }
+
+      // ── TABLET / DESKTOP ──
       // ── Left column animations ──
       const leftTl = gsap.timeline({
         scrollTrigger: {

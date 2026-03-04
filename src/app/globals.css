@@ -10,7 +10,24 @@
   --border: #E5E5E0;
   --serif: var(--font-serif), 'Cormorant Garamond', Georgia, serif;
   --sans: var(--font-sans), 'Inter', system-ui, sans-serif;
-  --page-px: max(40px, 8vw);
+  --page-px: clamp(20px, 5vw, 80px);
+  --section-py: clamp(64px, 12vw, 160px);
+  --card-gap: clamp(16px, 3vw, 24px);
+}
+
+@media (max-width: 600px) {
+  :root {
+    --page-px: 20px;
+    --section-py: 64px;
+    --card-gap: 16px;
+  }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  :root {
+    --page-px: 40px;
+    --section-py: 96px;
+    --card-gap: 20px;
+  }
 }
 
 @theme inline {
@@ -520,9 +537,6 @@ body {
    Responsive (< 900px)
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 899px) {
-  :root {
-    --page-px: 24px;
-  }
   .stats-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
@@ -1404,5 +1418,263 @@ body {
   }
   .pulse-email-input {
     width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Mobile + Tablet UX
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Touch targets ── */
+@media (pointer: coarse) {
+  .tappable:active,
+  .btn-primary:active,
+  .btn-secondary:active,
+  .filter-btn:active,
+  .filter-pill:active,
+  .project-card:active,
+  .service-block:active,
+  .carousel-arrow:active,
+  .carousel-dot:active,
+  .pulse-option:active,
+  .pulse-start-btn:active,
+  .pulse-next-btn:active {
+    opacity: 0.85;
+    transition: opacity 0.1s;
+  }
+  .btn-primary,
+  .btn-secondary,
+  .filter-btn,
+  .filter-pill,
+  .carousel-arrow,
+  .carousel-dot {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ── Scroll progress indicator ── */
+.scroll-progress-bar {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  height: 2px;
+  background: var(--text-primary);
+  opacity: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 99;
+  pointer-events: none;
+  width: 100%;
+  transition: opacity 0.3s ease;
+}
+.scroll-progress-bar.visible {
+  opacity: 0.3;
+}
+
+/* ── Testimonial scroll-snap carousel (mobile) ── */
+.testimonials-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 16px;
+  padding: 0 calc((100vw - 85vw) / 2);
+}
+.testimonials-track::-webkit-scrollbar {
+  display: none;
+}
+.testimonial-snap-card {
+  flex: 0 0 85vw;
+  scroll-snap-align: center;
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .testimonial-snap-card {
+    flex: 0 0 70vw;
+  }
+}
+
+/* ── Work page mobile cards ── */
+.work-grid-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.work-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 48px;
+}
+.work-card-image {
+  width: 100%;
+  aspect-ratio: 3/2;
+  overflow: hidden;
+  position: relative;
+}
+.work-card-image img,
+.work-card-image > div {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.work-card-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.work-card-info {
+  margin-top: 16px;
+}
+.work-card-number {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+}
+.work-card-name {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.2;
+  color: var(--text-primary);
+  display: block;
+  margin-top: 4px;
+}
+.work-card-meta {
+  font-family: var(--sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-faint);
+  margin-top: 6px;
+  display: block;
+}
+
+/* ── Filter scroll row (mobile) ── */
+.filter-scroll {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 8px;
+  position: relative;
+}
+.filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Mobile homepage section snap ── */
+@media (pointer: coarse) and (max-width: 600px) {
+  main.homepage-main {
+    scroll-snap-type: y proximity;
+  }
+  .homepage-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+}
+
+/* ── Mobile responsive overrides ── */
+@media (max-width: 600px) {
+  /* Stats 2x2 grid on mobile */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0 !important;
+  }
+  .stats-grid > div {
+    padding: 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-grid > div:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+  /* Services single column with arrow */
+  .services-visual-grid {
+    gap: 12px;
+  }
+  .service-block {
+    aspect-ratio: auto;
+    min-height: auto;
+    padding: 28px;
+  }
+  .service-block-inner {
+    position: static;
+    padding: 0;
+  }
+  .service-block-sentence {
+    opacity: 1 !important;
+    max-height: none;
+    margin-top: 8px;
+  }
+  /* Work grid single card */
+  .work-grid {
+    gap: 32px;
+  }
+  .project-card .project-img-wrap {
+    aspect-ratio: 3/2 !important;
+  }
+  /* Full-width CTAs */
+  .hero-cta-group {
+    flex-direction: column;
+  }
+  .hero-cta-group .btn-primary,
+  .hero-cta-group .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    height: 52px;
+    font-size: 16px;
+  }
+  /* Argument section reorder */
+  .argument-visual {
+    order: 2 !important;
+    margin-top: 40px;
+  }
+  .argument-text {
+    order: 1 !important;
+  }
+  /* Visual break static */
+  .visual-break {
+    height: 50vw !important;
+  }
+  /* CTA section */
+  .cta-section-mobile .btn-primary {
+    width: 100%;
+    height: 56px;
+    font-size: 16px;
+    justify-content: center;
+  }
+}
+
+/* ── Tablet responsive ── */
+@media (min-width: 601px) and (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .work-grid {
+    gap: 16px;
+  }
+  .argument-grid {
+    grid-template-columns: 55% 45%;
+    gap: 48px;
+  }
+}
+
+/* ── Prefers reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .scroll-reveal-up,
+  .scroll-clip-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
   }
 }

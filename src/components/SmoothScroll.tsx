@@ -9,8 +9,20 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function SmoothScroll() {
   useEffect(() => {
+    const isTouchOnly = window.matchMedia(
+      "(hover: none) and (pointer: coarse)"
+    ).matches;
+    const isSmallScreen = window.innerWidth <= 600;
+
+    // Mobile: skip Lenis, use native scroll physics
+    if (isTouchOnly && isSmallScreen) {
+      ScrollTrigger.config({ ignoreMobileResize: true });
+      return;
+    }
+
+    // Tablet/Desktop: Lenis with adjusted duration
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: isTouchOnly ? 1.0 : 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       smoothWheel: true,
@@ -24,6 +36,10 @@ export default function SmoothScroll() {
     gsap.ticker.lagSmoothing(0);
 
     (window as unknown as Record<string, unknown>).__lenis = lenis;
+
+    if (isTouchOnly) {
+      ScrollTrigger.config({ ignoreMobileResize: true });
+    }
 
     return () => {
       lenis.destroy();

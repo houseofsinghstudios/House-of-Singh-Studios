@@ -19,7 +19,62 @@ export default function WorkSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        // Show everything instantly
+        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+        if (gridRef.current) {
+          const cards = gridRef.current.querySelectorAll<HTMLElement>(".project-card");
+          gsap.set(cards, { opacity: 1, y: 0 });
+        }
+        if (linkRef.current) gsap.set(linkRef.current, { opacity: 1, y: 0 });
+        return;
+      }
+
+      if (isMobile) {
+        // ── MOBILE: single column, show 2 cards, viewport spotlight ──
+        if (labelRef.current) {
+          gsap.set(labelRef.current, { opacity: 0, y: 15 });
+          ScrollTrigger.create({
+            trigger: labelRef.current,
+            start: "top 85%",
+            once: true,
+            onEnter: () => gsap.to(labelRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }),
+          });
+        }
+
+        // Per-card fade-in as each enters viewport (viewport spotlight)
+        if (gridRef.current) {
+          const cards = gridRef.current.querySelectorAll<HTMLElement>(".project-card");
+          cards.forEach((card) => {
+            gsap.set(card, { opacity: 0, y: 30 });
+            ScrollTrigger.create({
+              trigger: card,
+              start: "top 85%",
+              once: true,
+              onEnter: () => gsap.to(card, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }),
+            });
+          });
+        }
+
+        if (linkRef.current) {
+          gsap.set(linkRef.current, { opacity: 0, y: 15 });
+          ScrollTrigger.create({
+            trigger: linkRef.current,
+            start: "top 90%",
+            once: true,
+            onEnter: () => gsap.to(linkRef.current, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }),
+          });
+        }
+        return;
+      }
+
+      // ── TABLET / DESKTOP ──
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,

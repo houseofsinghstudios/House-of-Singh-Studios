@@ -21,9 +21,56 @@ export default function CtaSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let headingSplit: SplitType | null = null;
 
     const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
+        if (copyRef.current) gsap.set(copyRef.current, { opacity: 1, y: 0 });
+        if (btnRef.current) gsap.set(btnRef.current, { opacity: 1, scale: 1 });
+        return;
+      }
+
+      if (isMobile) {
+        // ── MOBILE: block fade-up, no SplitType ──
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            once: true,
+          },
+          defaults: { ease: "power3.out" },
+        });
+
+        if (labelRef.current) {
+          gsap.set(labelRef.current, { opacity: 0, y: 12 });
+          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+        }
+
+        if (headingRef.current) {
+          gsap.set(headingRef.current, { opacity: 0, y: 20 });
+          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
+        }
+
+        if (copyRef.current) {
+          gsap.set(copyRef.current, { opacity: 0, y: 15 });
+          tl.to(copyRef.current, { opacity: 1, y: 0, duration: 0.4 }, 0.35);
+        }
+
+        if (btnRef.current) {
+          gsap.set(btnRef.current, { opacity: 0, y: 10 });
+          tl.to(btnRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
+        }
+        return;
+      }
+
+      // ── TABLET / DESKTOP ──
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,

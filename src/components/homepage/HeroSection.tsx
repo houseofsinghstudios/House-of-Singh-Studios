@@ -26,8 +26,14 @@ export default function HeroSection() {
     const secondaryEl = secondaryRef.current;
     if (!section) return;
 
-    // ── Initialize secondary text character spans ──
-    if (secondaryEl && !secondaryEl.dataset.initialized) {
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const isTablet = isTouchOnly && !isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // ── Initialize secondary text character spans (desktop/tablet only) ──
+    if (!isMobile && secondaryEl && !secondaryEl.dataset.initialized) {
       secondaryEl.dataset.initialized = "1";
       secondaryEl.innerHTML = "";
       for (let i = 0; i < HERO.secondary.length; i++) {
@@ -42,6 +48,118 @@ export default function HeroSection() {
     // ── Page load orchestration (GSAP timeline) ──
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
+    if (reducedMotion) {
+      // Reduced motion: show everything instantly
+      if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+      if (headlineRef.current) gsap.set(headlineRef.current, { opacity: 1, y: 0 });
+      if (secondaryEl) gsap.set(secondaryEl, { opacity: 1, y: 0 });
+      if (supportLine1Ref.current) {
+        supportLine1Ref.current.style.clipPath = "inset(0 0% 0 0)";
+        supportLine1Ref.current.style.opacity = "1";
+      }
+      if (supportLine2Ref.current) {
+        supportLine2Ref.current.style.clipPath = "inset(0 0% 0 0)";
+        supportLine2Ref.current.style.opacity = "1";
+      }
+      if (ctaRef.current) gsap.set(ctaRef.current, { opacity: 1, scale: 1 });
+      if (scrollRef.current) gsap.set(scrollRef.current, { opacity: 1 });
+      return () => { tl.kill(); };
+    }
+
+    if (isMobile) {
+      // ── MOBILE: No SplitType, block fade-up ──
+      if (labelRef.current) {
+        gsap.set(labelRef.current, { opacity: 0, y: 12 });
+        tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.1);
+      }
+
+      // Headline as single block fade-up (no SplitType)
+      if (headlineRef.current) {
+        gsap.set(headlineRef.current, { opacity: 0, y: 20 });
+        tl.to(headlineRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
+      }
+
+      // Secondary text: simple fade-up (no character spans)
+      if (secondaryEl) {
+        gsap.set(secondaryEl, { opacity: 0, y: 15 });
+        tl.to(secondaryEl, { opacity: 1, y: 0, duration: 0.35 }, 0.4);
+      }
+
+      // Support lines: simple translateY fade
+      if (supportLine1Ref.current) {
+        supportLine1Ref.current.style.clipPath = "none";
+        gsap.set(supportLine1Ref.current, { opacity: 0, y: 12 });
+        tl.to(supportLine1Ref.current, { opacity: 1, y: 0, duration: 0.3 }, 0.5);
+      }
+      if (supportLine2Ref.current) {
+        supportLine2Ref.current.style.clipPath = "none";
+        gsap.set(supportLine2Ref.current, { opacity: 0, y: 12 });
+        tl.to(supportLine2Ref.current, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
+      }
+
+      // CTAs fade up
+      if (ctaRef.current) {
+        gsap.set(ctaRef.current, { opacity: 0, y: 10 });
+        tl.to(ctaRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
+      }
+
+      // Scroll indicator
+      if (scrollRef.current) {
+        gsap.set(scrollRef.current, { opacity: 0 });
+        tl.to(scrollRef.current, { opacity: 1, duration: 0.2 }, 0.65);
+      }
+
+      // ── Mobile scroll: simple opacity fade for secondary, earlier scroll indicator fade ──
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+        onUpdate: (self) => {
+          const scrollPct = self.progress * 100;
+
+          // Secondary: simple opacity fade 3–15%
+          if (secondaryEl) {
+            const p = clamp01((scrollPct - 3) / 12);
+            secondaryEl.style.opacity = String(0.3 + 0.7 * p);
+          }
+
+          // Support lines: fade in via translateY (18–26%, 24–32%)
+          if (supportLine1Ref.current) {
+            const p = rangeProgress(scrollPct, 18, 26);
+            supportLine1Ref.current.style.opacity = String(p);
+            supportLine1Ref.current.style.transform = `translateY(${12 * (1 - p)}px)`;
+          }
+          if (supportLine2Ref.current) {
+            const p = rangeProgress(scrollPct, 24, 32);
+            supportLine2Ref.current.style.opacity = String(p);
+            supportLine2Ref.current.style.transform = `translateY(${12 * (1 - p)}px)`;
+          }
+
+          // CTAs fade at 28%
+          if (ctaRef.current) {
+            const p = rangeProgress(scrollPct, 28, 36);
+            ctaRef.current.style.opacity = String(p);
+          }
+
+          // Scroll indicator: fades out earlier (5–15%)
+          if (scrollRef.current) {
+            const fadeOut = rangeProgress(scrollPct, 5, 15);
+            scrollRef.current.style.opacity = String(1 - fadeOut);
+          }
+        },
+      });
+
+      return () => {
+        tl.kill();
+        ScrollTrigger.getAll().forEach((t) => {
+          if (t.trigger === section) t.kill();
+        });
+      };
+    }
+
+    // ── TABLET / DESKTOP ──
+
     // t=0.10: Editorial label fades up
     if (labelRef.current) {
       gsap.set(labelRef.current, { opacity: 0, y: 12 });
@@ -51,12 +169,14 @@ export default function HeroSection() {
     // t=0.20: Headline word reveal with SplitType
     let split: SplitType | null = null;
     if (headlineRef.current) {
-      split = new SplitType(headlineRef.current, { types: "words" });
+      split = new SplitType(headlineRef.current, {
+        types: isTablet ? "words" : "words",
+      });
       if (split.words) {
         gsap.set(split.words, { y: "100%", opacity: 0 });
         tl.to(
           split.words,
-          { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 },
+          { y: "0%", opacity: 1, stagger: isTablet ? 0.04 : 0.06, duration: 0.6 },
           0.2
         );
       }
@@ -196,7 +316,7 @@ export default function HeroSection() {
         {/* CTAs — scale + fade */}
         <div
           ref={ctaRef}
-          className="mt-12 flex flex-wrap gap-4"
+          className="hero-cta-group mt-12 flex flex-wrap gap-4"
           style={{ opacity: 0, transform: "scale(0.96)" }}
         >
           <Button href={HERO.cta.primary.href} data-cursor="link">

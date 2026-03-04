@@ -11,6 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function TestimonialsSection() {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const quoteMarkRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -124,18 +125,39 @@ export default function TestimonialsSection() {
     resetTimer();
   }
 
-  // Auto-rotate timer
+  // Detect mobile on mount
   useEffect(() => {
+    const touchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const small = window.innerWidth <= 600;
+    setIsMobile(touchOnly && small);
+  }, []);
+
+  // Auto-rotate timer (desktop/tablet only)
+  useEffect(() => {
+    if (isMobile) return;
     resetTimer();
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [resetTimer]);
+  }, [resetTimer, isMobile]);
 
   // ── ScrollTrigger entrance animation ──
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (isMobile || reducedMotion) {
+      // Mobile/reduced-motion: show everything, no GSAP carousel
+      if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+      if (quoteMarkRef.current) gsap.set(quoteMarkRef.current, { opacity: 1, scale: 1 });
+      if (controlsRef.current) gsap.set(controlsRef.current, { opacity: 1 });
+      slideRefs.current.forEach((el) => {
+        if (el) gsap.set(el, { opacity: 1, position: "relative", pointerEvents: "auto" });
+      });
+      return;
+    }
 
     const ctx = gsap.context(() => {
       // Set initial states for entrance
@@ -190,7 +212,7 @@ export default function TestimonialsSection() {
         splitRef.current = null;
       }
     };
-  }, [animateSlideIn]);
+  }, [animateSlideIn, isMobile]);
 
   return (
     <section
@@ -208,76 +230,98 @@ export default function TestimonialsSection() {
         &ldquo;
       </div>
 
-      <div ref={carouselRef} className="relative max-w-[720px] mx-auto" style={{ minHeight: 180 }}>
-        {TESTIMONIALS.map((t, i) => (
-          <div
-            key={i}
-            ref={(el) => { slideRefs.current[i] = el; }}
-            className="carousel-slide-gsap"
-            style={{
-              position: i === 0 ? "relative" : "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              opacity: 0,
-              pointerEvents: i === 0 ? "auto" : "none",
-            }}
-          >
-            <blockquote
-              className="font-[var(--serif)] font-normal italic text-[color:var(--text-primary)] m-0 p-0"
-              style={{ fontSize: "clamp(22px, 2.2vw, 30px)", lineHeight: 1.45 }}
-            >
-              {t.quote}
-            </blockquote>
-            <p
-              data-author
-              className="mt-7 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]"
-            >
-              &mdash; {t.author}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* Controls */}
-      <div ref={controlsRef} className="mt-10 flex items-center justify-center gap-4">
-        <button
-          onClick={goPrev}
-          aria-label="Previous testimonial"
-          className="carousel-arrow"
-          data-cursor="link"
-        >
-          &larr;
-        </button>
-        <div className="flex gap-2.5 items-center">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              aria-label={`Go to testimonial ${i + 1}`}
-              className="carousel-dot"
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                background: i === activeSlide ? "var(--text-primary)" : "var(--border)",
-                transition: "background 0.3s ease",
-              }}
-            />
+      {isMobile ? (
+        /* ── MOBILE: native CSS scroll-snap carousel ── */
+        <div className="testimonials-track mt-6">
+          {TESTIMONIALS.map((t, i) => (
+            <div key={i} className="testimonial-snap-card">
+              <blockquote
+                className="font-[var(--serif)] font-normal italic text-[color:var(--text-primary)] m-0 p-0"
+                style={{ fontSize: "20px", lineHeight: 1.45 }}
+              >
+                {t.quote}
+              </blockquote>
+              <p className="mt-5 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]">
+                &mdash; {t.author}
+              </p>
+            </div>
           ))}
         </div>
-        <button
-          onClick={goNext}
-          aria-label="Next testimonial"
-          className="carousel-arrow"
-          data-cursor="link"
-        >
-          &rarr;
-        </button>
-      </div>
+      ) : (
+        /* ── DESKTOP/TABLET: GSAP carousel ── */
+        <>
+          <div ref={carouselRef} className="relative max-w-[720px] mx-auto" style={{ minHeight: 180 }}>
+            {TESTIMONIALS.map((t, i) => (
+              <div
+                key={i}
+                ref={(el) => { slideRefs.current[i] = el; }}
+                className="carousel-slide-gsap"
+                style={{
+                  position: i === 0 ? "relative" : "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  opacity: 0,
+                  pointerEvents: i === 0 ? "auto" : "none",
+                }}
+              >
+                <blockquote
+                  className="font-[var(--serif)] font-normal italic text-[color:var(--text-primary)] m-0 p-0"
+                  style={{ fontSize: "clamp(22px, 2.2vw, 30px)", lineHeight: 1.45 }}
+                >
+                  {t.quote}
+                </blockquote>
+                <p
+                  data-author
+                  className="mt-7 font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]"
+                >
+                  &mdash; {t.author}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* Controls */}
+          <div ref={controlsRef} className="mt-10 flex items-center justify-center gap-4">
+            <button
+              onClick={goPrev}
+              aria-label="Previous testimonial"
+              className="carousel-arrow"
+              data-cursor="link"
+            >
+              &larr;
+            </button>
+            <div className="flex gap-2.5 items-center">
+              {TESTIMONIALS.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to testimonial ${i + 1}`}
+                  className="carousel-dot"
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    background: i === activeSlide ? "var(--text-primary)" : "var(--border)",
+                    transition: "background 0.3s ease",
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={goNext}
+              aria-label="Next testimonial"
+              className="carousel-arrow"
+              data-cursor="link"
+            >
+              &rarr;
+            </button>
+          </div>
+        </>
+      )}
     </section>
   );
 }

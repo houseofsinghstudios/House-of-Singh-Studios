@@ -20,9 +20,63 @@ export default function ServicesSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    const isSmallScreen = window.innerWidth <= 600;
+    const isMobile = isTouchOnly && isSmallScreen;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let headingSplit: SplitType | null = null;
 
     const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
+        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
+        if (gridRef.current) {
+          const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
+          gsap.set(blocks, { opacity: 1, y: 0, clipPath: "inset(0%)" });
+        }
+        return;
+      }
+
+      if (isMobile) {
+        // ── MOBILE: no SplitType, per-card viewport reveal ──
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 80%",
+            once: true,
+          },
+          defaults: { ease: "power3.out" },
+        });
+
+        if (labelRef.current) {
+          gsap.set(labelRef.current, { opacity: 0, y: 12 });
+          tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0);
+        }
+
+        // Block fade-up heading (no SplitType)
+        if (headingRef.current) {
+          gsap.set(headingRef.current, { opacity: 0, y: 20 });
+          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
+        }
+
+        // Service blocks: per-card ScrollTrigger
+        if (gridRef.current) {
+          const blocks = gridRef.current.querySelectorAll<HTMLElement>(".service-block");
+          blocks.forEach((block) => {
+            gsap.set(block, { opacity: 0, y: 25 });
+            ScrollTrigger.create({
+              trigger: block,
+              start: "top 85%",
+              once: true,
+              onEnter: () => gsap.to(block, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }),
+            });
+          });
+        }
+        return;
+      }
+
+      // ── TABLET / DESKTOP ──
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
