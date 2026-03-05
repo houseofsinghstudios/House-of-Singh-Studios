@@ -168,6 +168,11 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* ─── VERSION LABEL (test) ─── */}
+      <p className="text-center text-sm text-white/40 py-4">
+        v2.0 — House of Singh Studios
+      </p>
     </>
   );
 }
