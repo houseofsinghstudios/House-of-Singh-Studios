@@ -6,7 +6,7 @@ const pageLinks = [
   { label: "About", href: "/about" },
   { label: "AI Lab", href: "/ai" },
   { label: "Insights", href: "/insights" },
-  { label: "Careers", href: "/careers" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const serviceLinks = [
@@ -17,17 +17,9 @@ const serviceLinks = [
 ];
 
 const connectLinks = [
-  { label: "Contact", href: "/contact" },
-  {
-    label: "Instagram",
-    href: "https://instagram.com/houseofsingh",
-    external: true,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/houseofsingh",
-    external: true,
-  },
+  { label: "hello@houseofsingh.com", href: "mailto:hello@houseofsingh.com" },
+  { label: "Instagram", href: "https://instagram.com/houseofsingh", external: true },
+  { label: "LinkedIn", href: "https://linkedin.com/company/houseofsingh", external: true },
 ];
 
 export default function Footer() {
@@ -35,17 +27,15 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="footer-grid">
         {/* Column 1: Studio */}
-        <div className="footer-col">
-          <p className="footer-heading">Studio</p>
-          <p className="footer-text">House of Singh Studios</p>
-          <p className="footer-text">Toronto, Canada</p>
-          <a href="mailto:hello@houseofsingh.com" className="footer-link">
-            hello@houseofsingh.com
-          </a>
+        <div>
+          <p className="footer-studio-name">HOUSE OF SINGH STUDIOS</p>
+          <p className="footer-studio-tagline">
+            Design studio. AI powered. Brand focused.
+          </p>
         </div>
 
         {/* Column 2: Pages */}
-        <div className="footer-col">
+        <div>
           <p className="footer-heading">Pages</p>
           <div className="footer-link-list">
             {pageLinks.map((link) => (
@@ -57,7 +47,7 @@ export default function Footer() {
         </div>
 
         {/* Column 3: Services */}
-        <div className="footer-col">
+        <div>
           <p className="footer-heading">Services</p>
           <div className="footer-link-list">
             {serviceLinks.map((link) => (
@@ -69,7 +59,7 @@ export default function Footer() {
         </div>
 
         {/* Column 4: Connect */}
-        <div className="footer-col">
+        <div>
           <p className="footer-heading">Connect</p>
           <div className="footer-link-list">
             {connectLinks.map((link) =>
@@ -84,28 +74,20 @@ export default function Footer() {
                   {link.label}
                 </a>
               ) : (
-                <Link key={link.href} href={link.href} className="footer-link">
+                <a key={link.href} href={link.href} className="footer-link">
                   {link.label}
-                </Link>
+                </a>
               )
             )}
           </div>
         </div>
       </div>
 
-      {/* Bottom row */}
       <div className="footer-bottom">
         <p className="footer-copyright">
-          &copy; 2026 House of Singh Studios Inc. All rights reserved.
+          &copy; 2025 House of Singh Studios Inc.
         </p>
-        <div className="footer-legal">
-          <Link href="/terms" className="footer-legal-link">
-            Terms
-          </Link>
-          <Link href="/privacy" className="footer-legal-link">
-            Privacy
-          </Link>
-        </div>
+        <p className="footer-location">Toronto, Canada</p>
       </div>
     </footer>
   );

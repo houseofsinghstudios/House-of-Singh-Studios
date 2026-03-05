@@ -12,20 +12,16 @@ import {
 export default function Home() {
   return (
     <>
-      {/* ─── SECTION 1: THE OPENING (Hero) ─── */}
+      {/* ─── SECTION 1: THE OPENING ─── */}
       <section className="hero-section">
-        {/* Center line */}
         <div className="hero-center-line" />
 
-        {/* Crest top left */}
         <div className="hero-crest">
           <span className="hero-crest-text">HOUSE OF SINGH</span>
         </div>
 
-        {/* Editorial label */}
         <span className="hero-label">({HERO.label})</span>
 
-        {/* The split headline */}
         <div className="hero-headline-wrapper">
           <div className="hero-headline">
             <div className="hero-line">
@@ -38,7 +34,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Supporting text BELOW the headline, LEFT aligned */}
           <div className="hero-support">
             <p className="hero-support-text">{HERO.secondary}</p>
             <div className="hero-ctas">
@@ -52,42 +47,36 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
         <span className="hero-scroll">(Scroll)</span>
       </section>
 
-      {/* ─── SECTION 2: THE PROOF (Featured Work) ─── */}
+      {/* ─── SECTION 2: THE PROOF ─── */}
       <section className="work-section">
-        <div className="work-header">
-          <p className="section-label">Selected Work</p>
-          <h2 className="section-heading">Projects that speak for themselves.</h2>
+        <div className="work-section-header">
+          <p className="editorial-label">(Selected Work)</p>
         </div>
 
-        <div className="work-grid">
-          {PROJECTS.map((project) => (
-            <Link
-              key={project.name}
-              href={project.href}
-              className="work-card"
-              style={
-                {
-                  "--card-bg": project.color,
-                  "--card-accent": project.accent,
-                } as React.CSSProperties
-              }
-            >
-              <div className="work-card-image" />
-              <div className="work-card-info">
-                <p className="work-card-label">{project.label}</p>
-                <h3 className="work-card-name">{project.name}</h3>
-                <p className="work-card-sentence">{project.sentence}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {PROJECTS.map((project, i) => (
+          <Link
+            key={project.name}
+            href={project.href}
+            className="work-card"
+          >
+            <div className="work-card-text">
+              <div className="work-ghost-number">0{i + 1}</div>
+              <h3 className="work-card-name">{project.name}</h3>
+              <p className="work-card-meta">{project.label}</p>
+              <p className="work-card-desc">{project.sentence}</p>
+              <span className="link-arrow" style={{ marginTop: 24 }}>
+                View Project
+              </span>
+            </div>
+            <div className="work-card-image" />
+          </Link>
+        ))}
 
         <div className="work-view-all">
-          <Link href="/work" className="btn-secondary">
+          <Link href="/work" className="link-arrow">
             View All Projects
           </Link>
         </div>
@@ -95,7 +84,7 @@ export default function Home() {
 
       {/* ─── SECTION 3: THE ARGUMENT ─── */}
       <section className="argument-section">
-        <p className="section-label">{ARGUMENT.label}</p>
+        <p className="editorial-label">({ARGUMENT.label})</p>
         <h2 className="argument-heading">{ARGUMENT.heading}</h2>
         <p className="argument-snap">{ARGUMENT.snap}</p>
 
@@ -111,60 +100,62 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── SECTION 4: THE METHOD (Services) ─── */}
+      {/* ─── SECTION 4: THE METHOD ─── */}
       <section className="services-section">
-        <div className="services-header">
-          <p className="section-label">Capabilities</p>
-          <h2 className="section-heading">Four capabilities. One studio.</h2>
+        <div className="services-section-header">
+          <p className="editorial-label">(Services)</p>
         </div>
 
-        <div className="services-grid">
-          {SERVICES.map((service) => (
-            <Link
-              key={service.title}
-              href={service.href}
-              className="service-block"
-              style={{ background: service.tint }}
-            >
-              <div className="service-block-inner">
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-sentence">{service.sentence}</p>
-                <p className="service-description">{service.description}</p>
-                <p className="service-deliverables-label">Deliverables</p>
-                <p className="service-deliverables">{service.deliverables}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {SERVICES.map((service, i) => (
+          <Link
+            key={service.title}
+            href={service.href}
+            className="service-block"
+            style={{ background: service.tint }}
+          >
+            <div className="service-text">
+              <div className="service-ghost-number">0{i + 1}</div>
+              <h3 className="service-name">{service.title}</h3>
+              <p className="service-desc">{service.description}</p>
+              <p className="service-deliverables">{service.deliverables}</p>
+              <span className="link-arrow" style={{ marginTop: 28 }}>
+                Learn More
+              </span>
+            </div>
+            <div className="service-image" />
+          </Link>
+        ))}
       </section>
 
-      {/* ─── SECTION 5: THE EVIDENCE (Stats + Testimonials) ─── */}
+      {/* ─── SECTION 5: THE EVIDENCE ─── */}
       <section className="evidence-section">
-        <div className="evidence-header">
-          <p className="section-label">Results</p>
-          <h2 className="section-heading">The work speaks. The numbers confirm.</h2>
+        <div className="evidence-section-header">
+          <p className="editorial-label">(Evidence)</p>
         </div>
 
         <div className="stats-row">
           {STATS.targets.map((value, i) => (
-            <div key={i} className="stat-item">
+            <div key={i} className="stat-cell">
               <span className="stat-number">{value}+</span>
               <span className="stat-label">{STATS.labels[i]}</span>
             </div>
           ))}
         </div>
 
-        <div className="testimonials-grid">
+        <div className="testimonials-row">
           {TESTIMONIALS.map((t, i) => (
             <blockquote key={i} className="testimonial-card">
-              <p className="testimonial-quote">&ldquo;{t.quote}&rdquo;</p>
-              <cite className="testimonial-author">{t.author}</cite>
+              <div className="testimonial-quote-mark">&ldquo;</div>
+              <p className="testimonial-text">{t.quote}</p>
+              <cite className="testimonial-author">
+                {t.author.toUpperCase()}
+              </cite>
             </blockquote>
           ))}
         </div>
       </section>
 
-      {/* ─── SECTION 6: THE INVITATION (CTA) ─── */}
+      {/* ─── SECTION 6: THE INVITATION ─── */}
       <section className="cta-section">
         <h2 className="cta-heading">{CTA.heading}</h2>
         <p className="cta-subtext">{CTA.subtext}</p>
