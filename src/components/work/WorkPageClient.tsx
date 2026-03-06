@@ -17,7 +17,6 @@ const FILTERS = [
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const labelRef = useRef<HTMLParagraphElement>(null);
@@ -58,29 +57,7 @@ export default function WorkPageClient() {
   );
 
   useEffect(() => {
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const mobile = isTouchOnly && isSmallScreen;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setIsMobile(mobile);
-
     const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (headingRef.current) gsap.set(headingRef.current, { opacity: 1 });
-        if (supportRef.current) gsap.set(supportRef.current, { opacity: 1, y: 0 });
-        if (filtersRef.current) {
-          const btns = filtersRef.current.querySelectorAll("button");
-          gsap.set(btns, { opacity: 1, y: 0 });
-        }
-        if (listRef.current) {
-          const rows = listRef.current.querySelectorAll(".project-row");
-          gsap.set(rows, { opacity: 1, y: 0 });
-        }
-        if (imgPanelRef.current) gsap.set(imgPanelRef.current, { opacity: 1, scale: 1 });
-        return;
-      }
-
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       if (labelRef.current) {
@@ -88,24 +65,15 @@ export default function WorkPageClient() {
         tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.1);
       }
 
-      if (mobile) {
-        // MOBILE: block fade-up (no SplitType)
-        if (headingRef.current) {
-          gsap.set(headingRef.current, { opacity: 0, y: 20 });
-          tl.to(headingRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
-        }
-      } else {
-        // DESKTOP: SplitType char reveal
-        if (headingRef.current) {
-          const split = new SplitType(headingRef.current, { types: "chars" });
-          if (split.chars) {
-            gsap.set(split.chars, { opacity: 0, y: 30 });
-            tl.to(
-              split.chars,
-              { opacity: 1, y: 0, stagger: 0.02, duration: 0.5 },
-              0.15
-            );
-          }
+      if (headingRef.current) {
+        const split = new SplitType(headingRef.current, { types: "chars" });
+        if (split.chars) {
+          gsap.set(split.chars, { opacity: 0, y: 30 });
+          tl.to(
+            split.chars,
+            { opacity: 1, y: 0, stagger: 0.02, duration: 0.5 },
+            0.15
+          );
         }
       }
 
@@ -126,7 +94,7 @@ export default function WorkPageClient() {
         tl.to(rows, { opacity: 1, y: 0, stagger: 0.08, duration: 0.5 }, 0.65);
       }
 
-      if (!mobile && imgPanelRef.current) {
+      if (imgPanelRef.current) {
         gsap.set(imgPanelRef.current, { opacity: 0, scale: 0.96 });
         tl.to(imgPanelRef.current, { opacity: 1, scale: 1, duration: 0.6 }, 0.7);
       }
@@ -162,7 +130,7 @@ export default function WorkPageClient() {
       {/* Filters */}
       <div
         ref={filtersRef}
-        className="filter-scroll flex flex-wrap gap-3"
+        className="flex flex-wrap gap-3"
         style={{ padding: "40px var(--page-px) 0" }}
       >
         {FILTERS.map((f) => (
@@ -189,18 +157,38 @@ export default function WorkPageClient() {
         ))}
       </div>
 
-      {isMobile ? (
-        /* ── MOBILE: full-width stacked card layout ── */
-        <div ref={listRef} className="work-grid-mobile" style={{ padding: "40px var(--page-px)" }}>
-          {projects.map((project) => (
+      {/* Split container */}
+      <div className="split-container">
+        {/* Left panel */}
+        <div ref={listRef} className="split-left">
+          {projects.map((project, i) => (
             <Link
               key={project.slug}
               href={`/work/${project.slug}`}
-              className="work-card project-row block no-underline"
+              className="project-row"
+              data-cursor="expand"
+              onMouseEnter={() => handleHover(i)}
             >
+              <span className="project-row-number">{project.number}</span>
+              <span className="project-row-name">{project.name}</span>
+              <span className="project-row-meta">
+                {project.categories.join(", ")} &mdash; {project.year}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Right panel — sticky image */}
+        <div className="split-right">
+          <div ref={imgPanelRef} className="split-img-panel">
+            {projects.map((project, i) => (
               <div
-                className="work-card-image"
-                style={{ background: project.gradient }}
+                key={project.slug}
+                className="split-img-item"
+                style={{
+                  background: project.gradient,
+                  opacity: i === 0 ? 1 : 0,
+                }}
               >
                 <span
                   className="font-[var(--sans)] text-xs uppercase tracking-[0.12em]"
@@ -209,61 +197,10 @@ export default function WorkPageClient() {
                   {project.name}
                 </span>
               </div>
-              <div className="work-card-info">
-                <p className="work-card-name">{project.name}</p>
-                <p className="work-card-meta">
-                  {project.categories.join(", ")} &mdash; {project.year}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      ) : (
-        /* ── DESKTOP/TABLET: split-screen layout ── */
-        <div className="split-container">
-          {/* Left panel */}
-          <div ref={listRef} className="split-left">
-            {projects.map((project, i) => (
-              <Link
-                key={project.slug}
-                href={`/work/${project.slug}`}
-                className="project-row"
-                data-cursor="expand"
-                onMouseEnter={() => handleHover(i)}
-              >
-                <span className="project-row-number">{project.number}</span>
-                <span className="project-row-name">{project.name}</span>
-                <span className="project-row-meta">
-                  {project.categories.join(", ")} &mdash; {project.year}
-                </span>
-              </Link>
             ))}
           </div>
-
-          {/* Right panel — sticky image */}
-          <div className="split-right">
-            <div ref={imgPanelRef} className="split-img-panel">
-              {projects.map((project, i) => (
-                <div
-                  key={project.slug}
-                  className="split-img-item"
-                  style={{
-                    background: project.gradient,
-                    opacity: i === 0 ? 1 : 0,
-                  }}
-                >
-                  <span
-                    className="font-[var(--sans)] text-xs uppercase tracking-[0.12em]"
-                    style={{ color: "rgba(0,0,0,0.25)" }}
-                  >
-                    {project.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

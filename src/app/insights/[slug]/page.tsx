@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 
-export const dynamic = "force-dynamic";
-
 type Props = {
   params: Promise<{ slug: string }>;
 };

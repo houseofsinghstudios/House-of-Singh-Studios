@@ -50,30 +50,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
   const next = getNextProject(project.slug);
 
   useEffect(() => {
-    const isTouchOnly = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
-    const isSmallScreen = window.innerWidth <= 600;
-    const isMobile = isTouchOnly && isSmallScreen;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        if (labelRef.current) gsap.set(labelRef.current, { opacity: 1, y: 0 });
-        if (titleRef.current) gsap.set(titleRef.current, { opacity: 1 });
-        if (descRef.current) gsap.set(descRef.current, { opacity: 1, y: 0 });
-        if (metaRef.current) {
-          const items = metaRef.current.querySelectorAll(".meta-item");
-          gsap.set(items, { opacity: 1, y: 0 });
-        }
-        if (heroImgRef.current) {
-          gsap.set(heroImgRef.current, { clipPath: "inset(0%)" });
-          const inner = heroImgRef.current.querySelector(".hero-img-inner");
-          if (inner) gsap.set(inner, { scale: 1 });
-        }
-        const sections = containerRef.current?.querySelectorAll(".case-content-section");
-        sections?.forEach((sec) => gsap.set(sec, { opacity: 1, y: 0 }));
-        return;
-      }
-
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       // Label
@@ -82,24 +59,16 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.1);
       }
 
-      if (isMobile) {
-        // MOBILE: block fade-up title (no SplitType)
-        if (titleRef.current) {
-          gsap.set(titleRef.current, { opacity: 0, y: 20 });
-          tl.to(titleRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
-        }
-      } else {
-        // DESKTOP: SplitType word reveal
-        if (titleRef.current) {
-          const split = new SplitType(titleRef.current, { types: "words" });
-          if (split.words) {
-            gsap.set(split.words, { opacity: 0, y: "100%" });
-            tl.to(
-              split.words,
-              { opacity: 1, y: "0%", stagger: 0.08, duration: 0.6 },
-              0.2
-            );
-          }
+      // Title word reveal
+      if (titleRef.current) {
+        const split = new SplitType(titleRef.current, { types: "words" });
+        if (split.words) {
+          gsap.set(split.words, { opacity: 0, y: "100%" });
+          tl.to(
+            split.words,
+            { opacity: 1, y: "0%", stagger: 0.08, duration: 0.6 },
+            0.2
+          );
         }
       }
 
@@ -120,25 +89,17 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         );
       }
 
-      // Hero image
+      // Hero image clip-path reveal
       if (heroImgRef.current) {
-        if (isMobile) {
-          // MOBILE: curtain draw-down
-          gsap.set(heroImgRef.current, { clipPath: "inset(100% 0 0 0)" });
-          tl.to(heroImgRef.current, { clipPath: "inset(0% 0 0 0)", duration: 0.8 }, 0.7);
-          const inner = heroImgRef.current.querySelector(".hero-img-inner");
-          if (inner) gsap.set(inner, { scale: 1 });
-        } else {
-          tl.fromTo(
-            heroImgRef.current,
-            { clipPath: "inset(8% 8% 8% 8%)" },
-            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
-            0.8
-          );
-          const inner = heroImgRef.current.querySelector(".hero-img-inner");
-          if (inner) {
-            tl.fromTo(inner, { scale: 1.15 }, { scale: 1, duration: 1.2 }, 0.8);
-          }
+        tl.fromTo(
+          heroImgRef.current,
+          { clipPath: "inset(8% 8% 8% 8%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
+          0.8
+        );
+        const inner = heroImgRef.current.querySelector(".hero-img-inner");
+        if (inner) {
+          tl.fromTo(inner, { scale: 1.15 }, { scale: 1, duration: 1.2 }, 0.8);
         }
       }
 
@@ -148,91 +109,77 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       sections?.forEach((sec) => {
         gsap.fromTo(
           sec,
-          { opacity: 0, y: isMobile ? 25 : 40 },
+          { opacity: 0, y: 40 },
           {
             opacity: 1,
             y: 0,
-            duration: isMobile ? 0.5 : 0.8,
+            duration: 0.8,
             ease: "power3.out",
-            scrollTrigger: { trigger: sec, start: "top 85%" },
+            scrollTrigger: { trigger: sec, start: "top 80%" },
           }
         );
       });
 
-      if (!isMobile) {
-        // Gallery clip reveals (desktop only — mobile uses simple fade via CSS)
-        containerRef.current
-          ?.querySelectorAll<HTMLElement>(".gallery-full")
-          .forEach((img) => {
+      // Gallery full-width clip reveals
+      containerRef.current
+        ?.querySelectorAll<HTMLElement>(".gallery-full")
+        .forEach((img) => {
+          gsap.fromTo(
+            img,
+            { clipPath: "inset(6% 4% 6% 4%)" },
+            {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: { trigger: img, start: "top 85%" },
+            }
+          );
+          const inner = img.querySelector(".gallery-inner");
+          if (inner) {
             gsap.fromTo(
-              img,
-              { clipPath: "inset(6% 4% 6% 4%)" },
+              inner,
+              { scale: 1.1 },
               {
-                clipPath: "inset(0% 0% 0% 0%)",
+                scale: 1,
                 duration: 1,
                 ease: "power3.out",
                 scrollTrigger: { trigger: img, start: "top 85%" },
               }
             );
-            const inner = img.querySelector(".gallery-inner");
-            if (inner) {
-              gsap.fromTo(
-                inner,
-                { scale: 1.1 },
-                {
-                  scale: 1,
-                  duration: 1,
-                  ease: "power3.out",
-                  scrollTrigger: { trigger: img, start: "top 85%" },
-                }
-              );
-            }
-          });
+          }
+        });
 
-        containerRef.current
-          ?.querySelectorAll<HTMLElement>(".gallery-pair-item")
-          .forEach((img, i) => {
-            const delay = (i % 2) * 0.15;
+      // Gallery paired clip reveals
+      containerRef.current
+        ?.querySelectorAll<HTMLElement>(".gallery-pair-item")
+        .forEach((img, i) => {
+          const delay = (i % 2) * 0.15;
+          gsap.fromTo(
+            img,
+            { clipPath: "inset(8% 6% 8% 6%)" },
+            {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 0.9,
+              delay,
+              ease: "power3.out",
+              scrollTrigger: { trigger: img, start: "top 85%" },
+            }
+          );
+          const inner = img.querySelector(".gallery-inner");
+          if (inner) {
             gsap.fromTo(
-              img,
-              { clipPath: "inset(8% 6% 8% 6%)" },
+              inner,
+              { scale: 1.1 },
               {
-                clipPath: "inset(0% 0% 0% 0%)",
+                scale: 1,
                 duration: 0.9,
                 delay,
                 ease: "power3.out",
                 scrollTrigger: { trigger: img, start: "top 85%" },
               }
             );
-            const inner = img.querySelector(".gallery-inner");
-            if (inner) {
-              gsap.fromTo(
-                inner,
-                { scale: 1.1 },
-                {
-                  scale: 1,
-                  duration: 0.9,
-                  delay,
-                  ease: "power3.out",
-                  scrollTrigger: { trigger: img, start: "top 85%" },
-                }
-              );
-            }
-          });
-      } else {
-        // MOBILE: simple fade-in for gallery items
-        containerRef.current
-          ?.querySelectorAll<HTMLElement>(".gallery-full, .gallery-pair-item")
-          .forEach((el) => {
-            gsap.set(el, { opacity: 0, y: 20 });
-            ScrollTrigger.create({
-              trigger: el,
-              start: "top 85%",
-              once: true,
-              onEnter: () => gsap.to(el, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }),
-            });
-          });
-      }
+          }
+        });
 
       // Results count-up
       project.results.forEach((result, i) => {
