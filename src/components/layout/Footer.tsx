@@ -73,7 +73,7 @@ export default function Footer() {
         </p>
 
         {/* Copyright bar — two columns */}
-        <div className="w-full flex justify-between items-center">
+        <div className="w-full flex justify-between items-center footer-copyright-row">
           <p className="font-[var(--sans)] text-xs text-[color:var(--text-faint)]">
             &copy; 2026 House of Singh Studios Inc. All rights reserved.
           </p>

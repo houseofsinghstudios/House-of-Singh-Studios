@@ -173,7 +173,11 @@ export default function Header() {
             display: "none",
             flexDirection: "column",
             gap: 5,
-            padding: 8,
+            padding: 10,
+            minWidth: 44,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
             background: "none",
             border: "none",
             cursor: "pointer",
@@ -235,7 +239,12 @@ export default function Header() {
               background: "none",
               border: "none",
               cursor: "pointer",
-              padding: 8,
+              padding: 10,
+              minWidth: 44,
+              minHeight: 44,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <svg
@@ -265,6 +274,7 @@ export default function Header() {
                 color: "var(--text-primary)",
                 textDecoration: "none",
                 lineHeight: 1.6,
+                minHeight: 44,
                 transition: "color 0.2s ease",
               }}
             >

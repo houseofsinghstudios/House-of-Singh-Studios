@@ -138,7 +138,8 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen flex flex-col justify-end px-[var(--page-px)] pb-20"
+      className="hero-section relative flex flex-col justify-end px-[var(--page-px)] pb-20"
+      style={{ minHeight: "100svh" }}
     >
       <div ref={labelRef}>
         <EditorialLabel text={HERO.label} className="mb-6" />
@@ -196,7 +197,7 @@ export default function HeroSection() {
         {/* CTAs — scale + fade */}
         <div
           ref={ctaRef}
-          className="mt-12 flex flex-wrap gap-4"
+          className="mt-12 flex flex-wrap gap-3 hero-cta-row"
           style={{ opacity: 0, transform: "scale(0.96)" }}
         >
           <Button href={HERO.cta.primary.href} data-cursor="link">

@@ -72,7 +72,7 @@ export default function CtaSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="css-reveal py-[200px] px-[var(--page-px)] text-center">
+    <section ref={sectionRef} className="css-reveal py-[200px] px-[var(--page-px)] text-center cta-section-mobile">
       <div ref={labelRef}>
         <EditorialLabel text={CTA.label} className="mb-6" />
       </div>
