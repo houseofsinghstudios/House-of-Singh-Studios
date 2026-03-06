@@ -75,6 +75,7 @@ export interface Project {
   href: string;
   color: string;
   accent: string;
+  image: string;
 }
 
 export const PROJECTS: Project[] = [
@@ -86,6 +87,7 @@ export const PROJECTS: Project[] = [
     href: "/work/tedxtoronto",
     color: "#2B2B2B",
     accent: "#E62B1E",
+    image: "/images/tedxtoronto-cover.svg",
   },
   {
     name: "Meridian Financial Group",
@@ -95,6 +97,7 @@ export const PROJECTS: Project[] = [
     href: "/work/meridian",
     color: "#1A3A5C",
     accent: "#C9A96E",
+    image: "/images/meridian-cover.svg",
   },
   {
     name: "Soulbound Publication",
@@ -104,6 +107,7 @@ export const PROJECTS: Project[] = [
     href: "/work/soulbound",
     color: "#3C2A4A",
     accent: "#D4AF37",
+    image: "/images/soulbound-cover.svg",
   },
   {
     name: "Nomad Kitchen",
@@ -113,6 +117,7 @@ export const PROJECTS: Project[] = [
     href: "/work/nomad-kitchen",
     color: "#4A3728",
     accent: "#E8A848",
+    image: "/images/nomad-kitchen-cover.svg",
   },
 ];
 
