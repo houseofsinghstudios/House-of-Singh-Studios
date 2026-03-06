@@ -74,7 +74,7 @@ export default function WorkSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="css-reveal" style={{ padding: "120px var(--page-px) 160px" }}>
+    <section ref={sectionRef} className="css-reveal work-section-mobile" style={{ padding: "120px var(--page-px) 160px" }}>
       <div ref={labelRef}>
         <EditorialLabel text="Selected Work" className="mb-6" />
       </div>
@@ -89,10 +89,9 @@ export default function WorkSection() {
           >
             <div
               className="project-img-wrap overflow-hidden relative"
-              data-cursor="distort"
               style={{ aspectRatio: "4/3", background: project.color }}
             >
-              <div className="project-img-inner project-image-inner ken-burns w-full h-full">
+              <div className="project-img-inner project-image-inner w-full h-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={project.image}
