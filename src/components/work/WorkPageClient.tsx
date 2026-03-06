@@ -166,7 +166,7 @@ export default function WorkPageClient() {
               key={project.slug}
               href={`/work/${project.slug}`}
               className="project-row"
-              data-cursor="expand"
+              data-cursor="view"
               onMouseEnter={() => handleHover(i)}
             >
               <span className="project-row-number">{project.number}</span>

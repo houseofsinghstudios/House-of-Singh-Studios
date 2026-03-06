@@ -1492,6 +1492,67 @@ body {
   opacity: 0.55;
 }
 
+/* ── State 3: View (project cards) ── */
+.custom-cursor-dot.cursor-view {
+  opacity: 0;
+}
+.custom-cursor-ring.cursor-view {
+  width: 80px;
+  height: 80px;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cursor-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(26, 26, 26, 0.8);
+  pointer-events: none;
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* ── State 5: Distort (project images) ── */
+.custom-cursor-dot.cursor-distort {
+  width: 6px;
+  height: 6px;
+}
+.custom-cursor-ring.cursor-distort {
+  width: 40px;
+  height: 40px;
+  border-style: dashed;
+  animation: cursorSpin 8s linear infinite;
+}
+@keyframes cursorSpin {
+  from { rotate: 0deg; }
+  to { rotate: 360deg; }
+}
+
+/* ── State 6: Pause (testimonials) ── */
+.custom-cursor-ring.cursor-pause {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cursor-pause-icon {
+  display: flex;
+  gap: 6px;
+  pointer-events: none;
+  position: absolute;
+}
+.cursor-pause-icon span {
+  display: block;
+  width: 2px;
+  height: 14px;
+  background: rgba(26, 26, 26, 0.6);
+}
+
 /* ═══════════════════════════════════════════════════════
    Layer 1: CSS Scroll-Driven Reveal Animations
    Native CSS animation-timeline: view() — runs on GPU

@@ -85,10 +85,11 @@ export default function WorkSection() {
             key={project.href}
             href={project.href}
             className="project-card block no-underline"
-            data-cursor="link"
+            data-cursor="view"
           >
             <div
               className="project-img-wrap overflow-hidden relative"
+              data-cursor="distort"
               style={{ aspectRatio: "4/3", background: project.color }}
             >
               <div className="project-img-inner project-image-inner ken-burns w-full h-full flex items-center justify-center relative">
