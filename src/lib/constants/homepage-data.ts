@@ -87,7 +87,7 @@ export const PROJECTS: Project[] = [
     href: "/work/tedxtoronto",
     color: "#2B2B2B",
     accent: "#E62B1E",
-    image: "/images/tedxtoronto-cover.jpg",
+    image: "/images/blank-stationery-concept-with-tablet-brochure.jpg",
   },
   {
     name: "Meridian Financial Group",
@@ -97,7 +97,7 @@ export const PROJECTS: Project[] = [
     href: "/work/meridian",
     color: "#1A3A5C",
     accent: "#C9A96E",
-    image: "/images/meridian-cover.jpg",
+    image: "/images/office-desk-table-with-supplies-freelance-business-workplace-objects.jpg",
   },
   {
     name: "Soulbound Publication",
@@ -107,7 +107,7 @@ export const PROJECTS: Project[] = [
     href: "/work/soulbound",
     color: "#3C2A4A",
     accent: "#D4AF37",
-    image: "/images/soulbound-cover.jpg",
+    image: "/images/photography-ideas-creative-occupation-design-studio-concept.jpg",
   },
   {
     name: "Nomad Kitchen",
@@ -117,7 +117,7 @@ export const PROJECTS: Project[] = [
     href: "/work/nomad-kitchen",
     color: "#4A3728",
     accent: "#E8A848",
-    image: "/images/nomad-kitchen-cover.jpg",
+    image: "/images/white-laptop-cylinders-boxes-white-surface.jpg",
   },
 ];
 
