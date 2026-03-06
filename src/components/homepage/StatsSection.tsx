@@ -69,22 +69,20 @@ export default function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      className="bg-[var(--bg-shift)]"
-      style={{ padding: "64px var(--page-px)" }}
+      style={{ padding: "0 var(--page-px)" }}
     >
-      <div className="stats-grid text-center">
+      <div className="stats-row">
         {STATS.targets.map((target, i) => (
-          <div key={i}>
+          <div key={i} className="stat-cell">
             <p
               ref={(el) => { numberRefs.current[i] = el; }}
-              className="font-[var(--serif)] font-semibold leading-none text-[color:var(--text-primary)] m-0"
-              style={{ fontSize: "clamp(40px, 4vw, 56px)" }}
+              className="stat-number"
             >
               {target}+
             </p>
             <p
               ref={(el) => { descRefs.current[i] = el; }}
-              className="mt-2 font-[var(--sans)] font-normal text-[13px] leading-normal text-[color:var(--text-muted)]"
+              className="stat-label"
             >
               {STATS.labels[i]}
             </p>
