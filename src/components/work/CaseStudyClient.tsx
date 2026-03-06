@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
@@ -240,6 +240,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             lineHeight: 1.06,
             letterSpacing: "-0.025em",
             overflow: "hidden",
+            viewTransitionName: `project-${project.slug}`,
           }}
         >
           {project.name}

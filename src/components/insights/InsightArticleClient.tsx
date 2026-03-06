@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import SplitType from "split-type";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextReactComponents } from "@portabletext/react";

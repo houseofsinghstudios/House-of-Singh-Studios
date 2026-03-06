@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { useState, useEffect, useRef } from "react";
 
 const navLinks = [
@@ -121,6 +121,7 @@ export default function Header() {
               letterSpacing: "0.18em",
               color: "var(--text-primary)",
               textDecoration: "none",
+              viewTransitionName: "site-logo",
             }}
           >
             House of Singh Studios

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { gsap } from "gsap";
 import SplitType from "split-type";
 import { projects } from "@/data/projects";

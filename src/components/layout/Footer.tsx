@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 const studioLinks = [
   { label: "About", href: "/about" },
@@ -15,7 +15,7 @@ const connectLinks = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-[var(--border)] px-[var(--page-px)] pt-16 pb-10">
+    <footer className="css-fade border-t border-[var(--border)] px-[var(--page-px)] pt-16 pb-10">
       <div className="footer-grid grid grid-cols-3 gap-12">
         {/* Column 1: Studio */}
         <div>

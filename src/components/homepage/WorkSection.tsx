@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PROJECTS } from "@/lib/constants/homepage-data";
@@ -74,7 +74,7 @@ export default function WorkSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px var(--page-px) 160px" }}>
+    <section ref={sectionRef} className="css-reveal" style={{ padding: "120px var(--page-px) 160px" }}>
       <div ref={labelRef}>
         <EditorialLabel text="Selected Work" className="mb-6" />
       </div>
@@ -129,7 +129,10 @@ export default function WorkSection() {
               </div>
             </div>
             <div className="mt-4">
-              <p className="font-[var(--sans)] font-medium text-base text-[color:var(--text-primary)] m-0">
+              <p
+                className="font-[var(--sans)] font-medium text-base text-[color:var(--text-primary)] m-0"
+                style={{ viewTransitionName: `project-${project.href.split("/").pop()}` }}
+              >
                 {project.name}
               </p>
               <p className="mt-1.5 font-[var(--sans)] font-normal text-xs uppercase tracking-[0.08em] text-[#999]">
