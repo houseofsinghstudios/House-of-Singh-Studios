@@ -1437,3 +1437,66 @@ body {
     width: 100%;
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   Custom Cursor
+   ═══════════════════════════════════════════════════════ */
+
+/* Hide default cursor on mouse (fine-pointer) devices */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+/* Hide cursor elements on touch devices */
+@media (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none !important;
+  }
+}
+
+/* Dot — precision indicator */
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #1A1A1A;
+  border-radius: 50% !important;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Ring — trailing indicator */
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #1A1A1A;
+  border-radius: 50% !important;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Hover state */
+.custom-cursor-dot.cursor-hover {
+  width: 4px;
+  height: 4px;
+  opacity: 0.6;
+}
+
+.custom-cursor-ring.cursor-hover {
+  width: 56px;
+  height: 56px;
+  opacity: 0.55;
+}
