@@ -8,7 +8,6 @@ export const siteConfig = {
   stats: {
     projects: "110+",
     years: "12+",
-    countries: "6+",
     fewerRevisions: "40%",
   },
   social: {

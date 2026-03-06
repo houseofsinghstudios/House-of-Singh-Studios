@@ -22,11 +22,10 @@ export const ARGUMENT = {
 };
 
 export const STATS = {
-  targets: [110, 12, 6, 15] as const,
+  targets: [110, 12, 15] as const,
   labels: [
     "Projects Delivered",
     "Years of Practice",
-    "Countries Served",
     "Industries Served",
   ],
 };
