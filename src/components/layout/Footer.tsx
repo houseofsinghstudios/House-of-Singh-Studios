@@ -3,9 +3,8 @@ import Link from "next/link";
 const studioLinks = [
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
-  { label: "AI Lab", href: "/ai" },
-  { label: "Insights", href: "/insights" },
-  { label: "Careers", href: "/careers" },
+  { label: "AI", href: "/ai" },
+  { label: "Journal", href: "/journal" },
 ];
 
 const connectLinks = [
