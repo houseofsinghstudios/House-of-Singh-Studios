@@ -92,41 +92,19 @@ export default function WorkSection() {
               data-cursor="distort"
               style={{ aspectRatio: "4/3", background: project.color }}
             >
-              <div className="project-img-inner project-image-inner ken-burns w-full h-full flex items-center justify-center relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div
-                    className="flex items-center justify-center relative"
-                    style={{
-                      width: "60%",
-                      height: "60%",
-                      border: `1px solid ${project.accent}33`,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "70%",
-                        height: "70%",
-                        border: `1px solid ${project.accent}55`,
-                      }}
-                    />
-                    <div
-                      className="absolute"
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        background: `${project.accent}22`,
-                        border: `1px solid ${project.accent}44`,
-                      }}
-                    />
-                  </div>
-                </div>
-                <span
-                  className="relative z-10 font-[var(--sans)] text-[11px] uppercase tracking-[0.12em]"
-                  style={{ color: `${project.accent}88` }}
-                >
-                  {project.name.split(" ")[0]}
-                </span>
+              <div className="project-img-inner project-image-inner ken-burns w-full h-full">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={project.image}
+                  alt={project.name}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    pointerEvents: "none",
+                  }}
+                />
               </div>
             </div>
             <div className="mt-4">
