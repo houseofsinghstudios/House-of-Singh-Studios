@@ -218,11 +218,36 @@ body {
   color: var(--text-primary);
 }
 
-/* ── Stats grid ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+/* ── Stats row ── */
+.stats-row {
+  display: flex;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.stat-cell {
+  flex: 1;
+  padding: 48px clamp(32px, 4vw, 64px);
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat-cell:last-child {
+  border-right: none;
+}
+.stat-number {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: clamp(40px, 4vw, 56px);
+  line-height: 1;
+  color: var(--text-primary);
+  margin: 0;
+}
+.stat-label {
+  margin-top: 8px;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-muted);
 }
 
 /* ── Services visual grid ── */
@@ -523,9 +548,8 @@ body {
   :root {
     --page-px: 24px;
   }
-  .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+  .stat-number {
+    font-size: clamp(32px, 8vw, 44px);
   }
   .services-visual-grid {
     grid-template-columns: 1fr;
@@ -594,10 +618,17 @@ body {
   }
 }
 
-@media (max-width: 479px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+@media (max-width: 600px) {
+  .stats-row {
+    flex-direction: column;
+  }
+  .stat-cell {
+    padding: 28px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-cell:last-child {
+    border-bottom: none;
   }
 }
 
@@ -1405,4 +1436,67 @@ body {
   .pulse-email-input {
     width: 100%;
   }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Custom Cursor
+   ═══════════════════════════════════════════════════════ */
+
+/* Hide default cursor on mouse (fine-pointer) devices */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+/* Hide cursor elements on touch devices */
+@media (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none !important;
+  }
+}
+
+/* Dot — precision indicator */
+.custom-cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #1A1A1A;
+  border-radius: 50% !important;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Ring — trailing indicator */
+.custom-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #1A1A1A;
+  border-radius: 50% !important;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Hover state */
+.custom-cursor-dot.cursor-hover {
+  width: 4px;
+  height: 4px;
+  opacity: 0.6;
+}
+
+.custom-cursor-ring.cursor-hover {
+  width: 56px;
+  height: 56px;
+  opacity: 0.55;
 }
