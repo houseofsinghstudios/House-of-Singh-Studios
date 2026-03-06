@@ -146,6 +146,11 @@ body {
   border-radius: 0 !important;
 }
 
+/* Testimonial pagination dots must be circles */
+.testimonial-dot {
+  border-radius: 50% !important;
+}
+
 /* ── Scroll indicator ── */
 .scroll-track {
   width: 1px;
@@ -234,7 +239,7 @@ body {
   border-right: none;
 }
 .stat-number {
-  font-family: var(--serif);
+  font-family: var(--sans);
   font-weight: 600;
   font-size: clamp(40px, 4vw, 56px);
   line-height: 1;

@@ -238,6 +238,7 @@ export default function TestimonialsSection() {
             key={i}
             onClick={() => goTo(i)}
             aria-label={`Go to testimonial ${i + 1}`}
+            className="testimonial-dot"
             style={{
               width: 8,
               height: 8,
