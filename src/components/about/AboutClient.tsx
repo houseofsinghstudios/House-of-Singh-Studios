@@ -18,8 +18,7 @@ gsap.registerPlugin(ScrollTrigger);
 const STATS = [
   { target: 110, suffix: "+", label: "Projects delivered across identity, media, and digital." },
   { target: 12, suffix: "+", label: "Years of multidisciplinary practice." },
-  { target: 6, suffix: "+", label: "Countries served." },
-  { target: 40, suffix: "%", label: "Fewer revisions through AI-assisted quality control." },
+  { target: 15, suffix: "+", label: "Industries served." },
 ];
 
 /* ── Process steps ── */
@@ -567,7 +566,7 @@ export default function AboutClient() {
               Maninder built House of Singh Studios, its creative standards, and
               the systems that power its operations. His work spans brand
               identity, photography, film, and creative strategy across 12+ years
-              and 6+ countries.
+              and 15+ industries.
             </p>
 
             <p
