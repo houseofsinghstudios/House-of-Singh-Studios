@@ -74,7 +74,7 @@ export default function WorkSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ padding: "120px var(--page-px) 160px" }}>
+    <section ref={sectionRef} className="css-reveal" style={{ padding: "120px var(--page-px) 160px" }}>
       <div ref={labelRef}>
         <EditorialLabel text="Selected Work" className="mb-6" />
       </div>

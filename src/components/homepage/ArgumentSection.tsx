@@ -132,7 +132,7 @@ export default function ArgumentSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="argument-section py-40 px-[var(--page-px)]">
+    <section ref={sectionRef} className="argument-section css-reveal py-40 px-[var(--page-px)]">
       <div className="argument-grid">
         {/* Left column: text content */}
         <div ref={leftColRef} className="argument-text max-w-[640px]">

@@ -69,6 +69,7 @@ export default function StatsSection() {
   return (
     <section
       ref={sectionRef}
+      className="css-fade"
       style={{ padding: "0 var(--page-px)" }}
     >
       <div className="stats-row">
