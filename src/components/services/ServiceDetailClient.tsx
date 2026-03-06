@@ -645,7 +645,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           href="/contact"
           className="font-[var(--sans)] font-medium text-sm uppercase tracking-[0.12em] text-[color:var(--text-primary)] no-underline"
           style={{ borderBottom: "1px solid var(--text-primary)", paddingBottom: 4 }}
-          data-cursor="link"
+          data-cursor="magnetic"
         >
           Start a Project
         </Link>
