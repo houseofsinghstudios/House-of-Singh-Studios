@@ -76,7 +76,7 @@ export default function ServicesSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="css-reveal py-40 px-[var(--page-px)]">
+    <section ref={sectionRef} className="css-reveal py-40 px-[var(--page-px)] services-section-mobile">
       <div ref={labelRef}>
         <EditorialLabel text={SERVICES_SECTION.label} className="mb-6" />
       </div>

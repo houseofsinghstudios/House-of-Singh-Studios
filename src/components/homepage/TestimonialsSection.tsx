@@ -185,7 +185,7 @@ export default function TestimonialsSection() {
   return (
     <section
       ref={sectionRef}
-      className="css-fade py-[140px] px-[var(--page-px)] bg-[var(--bg-shift)] text-center"
+      className="css-fade py-[140px] px-[var(--page-px)] bg-[var(--bg-shift)] text-center testimonials-section-mobile"
       data-cursor="pause"
       onMouseEnter={() => { if (timerRef.current) clearInterval(timerRef.current); }}
       onMouseLeave={() => { resetTimer(); }}

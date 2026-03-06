@@ -624,6 +624,89 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   Mobile homepage fixes (≤ 600px)
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* ── Global: prevent horizontal scroll ── */
+  html, body {
+    overflow-x: hidden;
+  }
+
+  /* ── Hero: full-width stacked CTA buttons ── */
+  .hero-cta-row {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero-cta-row .btn-primary,
+  .hero-cta-row .btn-secondary {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  /* ── Reduce vertical padding on homepage sections ── */
+  .argument-section {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+  .work-section-mobile {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+  .services-section-mobile {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+  .testimonials-section-mobile {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+  .cta-section-mobile {
+    padding-top: 100px !important;
+    padding-bottom: 100px !important;
+  }
+
+  /* ── Service blocks: static inner for mobile ── */
+  .service-block {
+    aspect-ratio: auto;
+  }
+  .service-block-inner {
+    position: static;
+    padding: 28px 20px;
+  }
+  .service-block-sentence {
+    opacity: 1;
+  }
+
+  /* ── Carousel arrows + dots: 44px touch targets ── */
+  .carousel-arrow {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel-dot {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    background-clip: content-box !important;
+    padding: 19px !important;
+    border-radius: 50% !important;
+  }
+
+  /* ── Footer: stack copyright row ── */
+  .footer-copyright-row {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start !important;
+  }
+  .footer-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    View Transitions API
    ═══════════════════════════════════════════════════════ */
 @keyframes vt-fade-out {
