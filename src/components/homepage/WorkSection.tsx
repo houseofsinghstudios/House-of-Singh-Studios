@@ -89,10 +89,9 @@ export default function WorkSection() {
           >
             <div
               className="project-img-wrap overflow-hidden relative"
-              data-cursor="distort"
               style={{ aspectRatio: "4/3", background: project.color }}
             >
-              <div className="project-img-inner project-image-inner ken-burns w-full h-full">
+              <div className="project-img-inner project-image-inner w-full h-full">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={project.image}
