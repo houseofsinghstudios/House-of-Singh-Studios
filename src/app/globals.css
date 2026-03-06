@@ -359,20 +359,6 @@ body {
   opacity: 1;
   pointer-events: auto;
 }
-.carousel-arrow {
-  font-size: 20px;
-  color: #999;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 8px;
-  transition: color 0.2s ease;
-  font-family: var(--sans);
-  line-height: 1;
-}
-.carousel-arrow:hover {
-  color: var(--text-primary);
-}
 
 /* ── Argument section two-column grid ── */
 .argument-grid {

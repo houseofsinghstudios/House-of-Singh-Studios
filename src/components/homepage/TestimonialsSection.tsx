@@ -113,16 +113,6 @@ export default function TestimonialsSection() {
     transitionTo(i);
     resetTimer();
   }
-  function goNext() {
-    transitionTo((prevSlideRef.current + 1) % TESTIMONIALS.length);
-    resetTimer();
-  }
-  function goPrev() {
-    transitionTo(
-      (prevSlideRef.current - 1 + TESTIMONIALS.length) % TESTIMONIALS.length
-    );
-    resetTimer();
-  }
 
   // Auto-rotate timer
   useEffect(() => {
@@ -196,6 +186,8 @@ export default function TestimonialsSection() {
     <section
       ref={sectionRef}
       className="py-[140px] px-[var(--page-px)] bg-[var(--bg-shift)] text-center"
+      onMouseEnter={() => { if (timerRef.current) clearInterval(timerRef.current); }}
+      onMouseLeave={() => { resetTimer(); }}
     >
       <div ref={labelRef}>
         <EditorialLabel text="Clients" className="mb-8" />
@@ -239,44 +231,27 @@ export default function TestimonialsSection() {
         ))}
       </div>
 
-      {/* Controls */}
-      <div ref={controlsRef} className="mt-10 flex items-center justify-center gap-4">
-        <button
-          onClick={goPrev}
-          aria-label="Previous testimonial"
-          className="carousel-arrow"
-          data-cursor="link"
-        >
-          &larr;
-        </button>
-        <div className="flex gap-2.5 items-center">
-          {TESTIMONIALS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              aria-label={`Go to testimonial ${i + 1}`}
-              className="carousel-dot"
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                border: "none",
-                cursor: "pointer",
-                padding: 0,
-                background: i === activeSlide ? "var(--text-primary)" : "var(--border)",
-                transition: "background 0.3s ease",
-              }}
-            />
-          ))}
-        </div>
-        <button
-          onClick={goNext}
-          aria-label="Next testimonial"
-          className="carousel-arrow"
-          data-cursor="link"
-        >
-          &rarr;
-        </button>
+      {/* Dot pagination */}
+      <div ref={controlsRef} style={{ marginTop: 40, display: "flex", justifyContent: "center", gap: 12 }}>
+        {TESTIMONIALS.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Go to testimonial ${i + 1}`}
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              border: "none",
+              cursor: "pointer",
+              padding: 8,
+              backgroundClip: "content-box",
+              background: "#1A1A1A",
+              opacity: i === activeSlide ? 0.8 : 0.15,
+              transition: "opacity 0.3s ease",
+            }}
+          />
+        ))}
       </div>
     </section>
   );
