@@ -1528,3 +1528,18 @@ body {
     }
   }
 }
+
+/* ═══════════════════════════════════════════════════════
+   Layer 2: View Transitions API — crossfade & morph timing
+   ═══════════════════════════════════════════════════════ */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}

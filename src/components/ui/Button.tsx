@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 type Variant = "primary" | "secondary" | "primary-inverted";
 

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { gsap } from "gsap";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 
 /* ── Question data ── */
 const QUESTIONS = [

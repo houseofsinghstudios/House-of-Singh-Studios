@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import SplitType from "split-type";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
 import {
   initScrollFallbacks,

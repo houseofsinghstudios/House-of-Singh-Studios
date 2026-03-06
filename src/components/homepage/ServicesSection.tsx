@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import { Link } from "next-view-transitions";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplitType from "split-type";
@@ -101,7 +101,10 @@ export default function ServicesSection() {
             <div className="service-block-inner">
               <h3
                 className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-                style={{ fontSize: "clamp(22px, 2vw, 28px)" }}
+                style={{
+                  fontSize: "clamp(22px, 2vw, 28px)",
+                  viewTransitionName: `service-${service.href.split("/").pop()}`,
+                }}
               >
                 {service.title}
               </h3>
