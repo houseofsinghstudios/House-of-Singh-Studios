@@ -93,7 +93,7 @@ export default function CtaSection() {
       </p>
 
       <div ref={btnRef} className="mt-11">
-        <Button href={CTA.button.href} data-cursor="magnetic">
+        <Button href={CTA.button.href} data-cursor="link">
           {CTA.button.text}
         </Button>
       </div>

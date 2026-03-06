@@ -9,7 +9,7 @@ function lerp(a: number, b: number, n: number) {
 const INTERACTIVE_SELECTOR = 'a, button, [role="button"], input[type="submit"]';
 const DATA_CURSOR_SELECTOR = "[data-cursor]";
 
-type CursorState = "default" | "hover" | "view" | "magnetic" | "distort" | "pause";
+type CursorState = "default" | "hover" | "view" | "distort" | "pause";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -19,7 +19,6 @@ export default function CustomCursor() {
   const prevMouse = useRef({ x: -100, y: -100 });
   const velocity = useRef(0);
   const cursorState = useRef<CursorState>("default");
-  const magneticTarget = useRef<HTMLElement | null>(null);
 
   const setState = useCallback((state: CursorState) => {
     const dot = dotRef.current;
@@ -32,7 +31,7 @@ export default function CustomCursor() {
 
     // Remove all state classes
     dot.classList.remove("cursor-hover", "cursor-view", "cursor-distort", "cursor-pause");
-    ring.classList.remove("cursor-hover", "cursor-view", "cursor-magnetic", "cursor-distort", "cursor-pause");
+    ring.classList.remove("cursor-hover", "cursor-view", "cursor-distort", "cursor-pause");
 
     // Remove dynamic content
     ring.querySelectorAll(".cursor-label, .cursor-pause-icon").forEach((el) => el.remove());
@@ -51,9 +50,6 @@ export default function CustomCursor() {
         ring.appendChild(label);
         break;
       }
-      case "magnetic":
-        ring.classList.add("cursor-magnetic");
-        break;
       case "distort":
         dot.classList.add("cursor-distort");
         ring.classList.add("cursor-distort");
@@ -67,14 +63,6 @@ export default function CustomCursor() {
         ring.appendChild(icon);
         break;
       }
-    }
-  }, []);
-
-  const clearMagnetic = useCallback(() => {
-    if (magneticTarget.current) {
-      magneticTarget.current.style.transition = "transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)";
-      magneticTarget.current.style.transform = "";
-      magneticTarget.current = null;
     }
   }, []);
 
@@ -104,36 +92,6 @@ export default function CustomCursor() {
         ring!.style.animationDuration = `${speed}s`;
       }
 
-      // Magnetic: move ring toward button center
-      if (cursorState.current === "magnetic" && magneticTarget.current) {
-        const rect = magneticTarget.current.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-
-        // Move button toward cursor (max 6px)
-        const offX = (mouse.current.x - cx) * 0.08;
-        const offY = (mouse.current.y - cy) * 0.08;
-        const clampedX = Math.max(-6, Math.min(6, offX));
-        const clampedY = Math.max(-6, Math.min(6, offY));
-        magneticTarget.current.style.transition = "transform 0.15s ease-out";
-        magneticTarget.current.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
-
-        // Morph ring to button shape
-        const rw = rect.width + 16;
-        const rh = rect.height + 16;
-        ring!.style.width = `${rw}px`;
-        ring!.style.height = `${rh}px`;
-
-        // Center ring on button
-        const ringX = cx + clampedX;
-        const ringY = cy + clampedY;
-        ring!.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
-        dot!.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0) translate(-50%, -50%)`;
-
-        raf = requestAnimationFrame(animate);
-        return;
-      }
-
       dot!.style.transform = `translate3d(${mouse.current.x}px, ${mouse.current.y}px, 0) translate(-50%, -50%)`;
       ring!.style.transform = `translate3d(${ringPos.current.x}px, ${ringPos.current.y}px, 0) translate(-50%, -50%)`;
 
@@ -161,17 +119,6 @@ export default function CustomCursor() {
 
       if (attr === "view") {
         setState("view");
-      } else if (attr === "magnetic") {
-        // Find the actual button/link element
-        let btn: HTMLElement | null = target;
-        while (btn && !btn.matches("a, button, [role='button']")) {
-          btn = btn.parentElement;
-        }
-        if (!btn) btn = target.closest("[data-cursor='magnetic']") as HTMLElement;
-        if (btn) {
-          magneticTarget.current = btn;
-          setState("magnetic");
-        }
       } else if (attr === "distort") {
         setState("distort");
       } else if (attr === "pause") {
@@ -192,14 +139,6 @@ export default function CustomCursor() {
         if (relatedAttr === currentAttr) return;
       }
 
-      if (cursorState.current === "magnetic") {
-        clearMagnetic();
-        // Reset ring dimensions
-        if (ring) {
-          ring.style.width = "";
-          ring.style.height = "";
-        }
-      }
       if (cursorState.current === "distort" && ring) {
         ring.style.animationDuration = "";
       }
@@ -273,9 +212,8 @@ export default function CustomCursor() {
       cancelAnimationFrame(raf);
       observer.disconnect();
       detachListeners(document);
-      clearMagnetic();
     };
-  }, [setState, clearMagnetic]);
+  }, [setState]);
 
   return (
     <>

@@ -199,10 +199,10 @@ export default function HeroSection() {
           className="mt-12 flex flex-wrap gap-4"
           style={{ opacity: 0, transform: "scale(0.96)" }}
         >
-          <Button href={HERO.cta.primary.href} data-cursor="magnetic">
+          <Button href={HERO.cta.primary.href} data-cursor="link">
             {HERO.cta.primary.text}
           </Button>
-          <Button href={HERO.cta.secondary.href} variant="secondary" data-cursor="magnetic">
+          <Button href={HERO.cta.secondary.href} variant="secondary" data-cursor="link">
             {HERO.cta.secondary.text}
           </Button>
         </div>

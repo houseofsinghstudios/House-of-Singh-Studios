@@ -1516,13 +1516,6 @@ body {
   white-space: nowrap;
 }
 
-/* ── State 4: Magnetic (CTA buttons) ── */
-.custom-cursor-ring.cursor-magnetic {
-  border-radius: 0 !important;
-  opacity: 0.35;
-  transition: width 0.25s ease-out, height 0.25s ease-out, opacity 0.25s ease-out, border-radius 0.25s ease-out;
-}
-
 /* ── State 5: Distort (project images) ── */
 .custom-cursor-dot.cursor-distort {
   width: 6px;

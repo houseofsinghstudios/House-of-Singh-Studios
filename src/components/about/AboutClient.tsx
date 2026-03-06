@@ -662,7 +662,7 @@ export default function AboutClient() {
             borderBottom: "1px solid var(--text-primary)",
             paddingBottom: 4,
           }}
-          data-cursor="magnetic"
+          data-cursor="link"
         >
           Start a Project
         </Link>
