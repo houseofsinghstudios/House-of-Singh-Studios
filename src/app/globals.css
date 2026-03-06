@@ -1720,9 +1720,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(250, 250, 247, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(250, 250, 247, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .cursor-label {
   font-family: var(--sans);
