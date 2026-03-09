@@ -18,7 +18,11 @@ export const ARGUMENT = {
   heading: "Your business has evolved. Your brand has not.",
   supporting: "We build the system that holds it together.",
   snap: "We fix that.",
-  steps: ["Discovery", "Strategy", "Creative Direction", "Production", "Delivery"],
+  steps: [
+    "Discover what your brand should be.",
+    "Design the system that makes it real.",
+    "Deliver assets that hold up everywhere.",
+  ],
 };
 
 export const STATS = {
