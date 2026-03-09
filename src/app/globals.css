@@ -180,48 +180,6 @@ body {
    Homepage component styles
    ═══════════════════════════════════════════════════════ */
 
-/* ── Process steps (vertical numbered list) ── */
-.process-steps {
-  margin-top: 52px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border-left: 1px solid var(--border);
-  padding-left: 24px;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-
-.process-steps.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.process-step-item {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  padding: 12px 0;
-}
-
-.process-step-number {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--text-faint);
-  letter-spacing: 0.05em;
-  min-width: 20px;
-}
-
-.process-step-name {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-}
 
 /* ── Stats row ── */
 .stats-row {
@@ -354,55 +312,6 @@ body {
   pointer-events: auto;
 }
 
-/* ── Argument section two-column grid ── */
-.argument-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-}
-.argument-img-wrap {
-  width: 100%;
-}
-.argument-img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  display: block;
-}
-
-/* ── Visual break section ── */
-.visual-break {
-  width: 100%;
-  height: 55vh;
-  overflow: hidden;
-  position: relative;
-}
-.visual-break-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
-  display: block;
-  transform: scale(1.05);
-}
-.visual-break-fallback {
-  width: 100%;
-  height: 100%;
-  background: #E8E8E3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.visual-break-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(180deg, rgba(250,250,247,0.15) 0%, rgba(250,250,247,0) 30%, rgba(250,250,247,0) 70%, rgba(250,250,247,0.15) 100%);
-  pointer-events: none;
-}
 
 /* ═══════════════════════════════════════════════════════
    Work page styles
@@ -541,15 +450,6 @@ body {
     max-height: none;
     opacity: 1;
     margin-top: 8px;
-  }
-  .argument-grid {
-    grid-template-columns: 1fr;
-  }
-  .argument-visual {
-    order: -1;
-  }
-  .visual-break {
-    height: 40vh;
   }
   /* Split screen → single column on mobile */
   .split-container {
