@@ -78,6 +78,12 @@ export default function HeroSection() {
     }
 
     // ── Scroll-driven animations via ScrollTrigger ──
+    // Pre-query character spans once (avoid querySelectorAll on every frame)
+    const chars = secondaryEl
+      ? Array.from(secondaryEl.querySelectorAll<HTMLSpanElement>("span[data-char-idx]"))
+      : [];
+    const totalChars = chars.length;
+
     ScrollTrigger.create({
       trigger: section,
       start: "top top",
@@ -87,17 +93,13 @@ export default function HeroSection() {
         const scrollPct = self.progress * 100;
 
         // Secondary text: char-by-char blur-to-sharp (3–18%)
-        if (secondaryEl) {
-          const chars = secondaryEl.querySelectorAll<HTMLSpanElement>("span[data-char-idx]");
-          const total = chars.length;
-          chars.forEach((ch) => {
-            const idx = Number(ch.dataset.charIdx);
-            const charStart = 3 + (idx / total) * 12;
-            const p = clamp01((scrollPct - charStart) / 3);
-            ch.style.opacity = String(p);
-            ch.style.filter = `blur(${6 * (1 - p)}px)`;
-            ch.style.transform = `translateY(${8 * (1 - p)}px)`;
-          });
+        for (let i = 0; i < totalChars; i++) {
+          const ch = chars[i];
+          const charStart = 3 + (i / totalChars) * 12;
+          const p = clamp01((scrollPct - charStart) / 3);
+          ch.style.opacity = String(p);
+          ch.style.filter = `blur(${6 * (1 - p)}px)`;
+          ch.style.transform = `translateY(${8 * (1 - p)}px)`;
         }
 
         // Scroll indicator: fades out (20–50%)

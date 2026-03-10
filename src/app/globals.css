@@ -1038,7 +1038,7 @@ body {
   border-color: rgba(26, 26, 26, 0.3);
 }
 .contact-textarea::placeholder {
-  color: rgba(26, 26, 26, 0.3);
+  color: rgba(26, 26, 26, 0.45);
 }
 .contact-submit {
   font-family: var(--sans);
@@ -1366,7 +1366,7 @@ body {
 .careers-form-input::placeholder,
 .careers-form-textarea::placeholder {
   color: var(--text-primary);
-  opacity: 0.3;
+  opacity: 0.45;
 }
 
 .careers-form-select {
@@ -1483,7 +1483,7 @@ body {
 }
 .pulse-waitlist-input::placeholder {
   color: var(--text-primary);
-  opacity: 0.3;
+  opacity: 0.45;
 }
 .pulse-waitlist-btn {
   font-family: var(--sans);
