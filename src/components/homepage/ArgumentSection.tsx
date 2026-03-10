@@ -13,7 +13,6 @@ export default function ArgumentSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const supportRef = useRef<HTMLParagraphElement>(null);
   const weFixRef = useRef<HTMLParagraphElement>(null);
   const stepsRef = useRef<HTMLDivElement>(null);
 
@@ -50,12 +49,6 @@ export default function ArgumentSection() {
             0.2
           );
         }
-      }
-
-      // Supporting line fades up after heading
-      if (supportRef.current) {
-        gsap.set(supportRef.current, { opacity: 0, y: 15 });
-        tl.to(supportRef.current, { opacity: 1, y: 0, duration: 0.4 }, ">");
       }
 
       // "We fix that." snaps in
@@ -96,13 +89,6 @@ export default function ArgumentSection() {
         >
           {ARGUMENT.heading}
         </h2>
-
-        <p
-          ref={supportRef}
-          className="mt-7 font-[var(--sans)] font-normal text-[18px] leading-[1.65] text-[color:var(--text-secondary)]"
-        >
-          {ARGUMENT.supporting}
-        </p>
 
         <p
           ref={weFixRef}

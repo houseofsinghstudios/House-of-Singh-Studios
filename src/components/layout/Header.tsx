@@ -7,7 +7,7 @@ const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI", href: "/ai" },
-  { label: "Journal", href: "/journal" },
+  { label: "Journal", href: "/insights" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -15,7 +15,7 @@ const mobileLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI", href: "/ai" },
-  { label: "Journal", href: "/journal" },
+  { label: "Journal", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
