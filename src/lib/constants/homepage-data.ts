@@ -3,10 +3,6 @@ export const HERO = {
   headline: ["AI can generate assets.", "It cannot build a brand."],
   secondary:
     "A design studio powered by AI systems and led by creative direction.",
-  supportingLine1:
-    "We build brands that hold up across every channel for years.",
-  supportingLine2:
-    "AI handles the production layer. Human judgment drives the creative layer.",
   cta: {
     primary: { text: "View Projects", href: "/work" },
     secondary: { text: "Start a Project", href: "/contact" },
@@ -16,7 +12,6 @@ export const HERO = {
 export const ARGUMENT = {
   label: "The Problem",
   heading: "Your business has evolved. Your brand has not.",
-  supporting: "We build the system that holds it together.",
   snap: "We fix that.",
   steps: [
     "Discover what your brand should be.",
@@ -26,7 +21,7 @@ export const ARGUMENT = {
 };
 
 export const STATS = {
-  targets: [110, 12, 15] as const,
+  targets: [50, 12, 8] as const,
   labels: [
     "Projects Delivered",
     "Years of Practice",
@@ -43,29 +38,29 @@ export interface ServiceBlock {
 
 export const SERVICES_SECTION = {
   label: "Capabilities",
-  heading: "Four capabilities. One studio.",
+  heading: "Every service solves a business problem.",
   items: [
     {
       title: "Brand Identity and Visual Design",
-      sentence: "The visual foundation your business operates on.",
+      sentence: "Your brand identity is the first thing your market judges you on. We build complete visual systems that give your business a consistent, professional presence across every touchpoint.",
       href: "/services/brand-identity",
       color: "#E8E5E0",
     },
     {
       title: "Visual Media and Content Production",
-      sentence: "Visual work built on strategy, not just aesthetics.",
+      sentence: "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent.",
       href: "/services/visual-media",
       color: "#E0E3E8",
     },
     {
       title: "Digital Design and Experience",
-      sentence: "Your digital presence should convert, not just exist.",
+      sentence: "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
       href: "/services/digital-design",
       color: "#E3E8E0",
     },
     {
       title: "Creative Strategy and Systems",
-      sentence: "The thinking that makes everything else consistent.",
+      sentence: "Most brand problems are strategy problems disguised as design problems. We run positioning workshops and build creative direction frameworks that give your team structure.",
       href: "/services/creative-strategy",
       color: "#E5E0E8",
     },
@@ -85,7 +80,7 @@ export interface Project {
 export const PROJECTS: Project[] = [
   {
     name: "TEDxToronto Visual Identity",
-    label: "Client Project",
+    label: "Brand Identity",
     sentence:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
     href: "/work/tedxtoronto",
@@ -95,7 +90,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Meridian Financial Group",
-    label: "Studio Exploration",
+    label: "Brand Identity",
     sentence:
       "Brand identity system for a mid-market financial services firm.",
     href: "/work/meridian",
@@ -105,7 +100,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Soulbound Publication",
-    label: "Client Project",
+    label: "Publication Design",
     sentence:
       "Publication cover design and art direction for a leadership book.",
     href: "/work/soulbound",
@@ -115,7 +110,7 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Nomad Kitchen",
-    label: "Studio Exploration",
+    label: "Brand Identity, Packaging",
     sentence:
       "Brand identity and packaging for a modern South Asian food brand.",
     href: "/work/nomad-kitchen",
@@ -155,8 +150,10 @@ export const TESTIMONIALS: Testimonial[] = [
 
 export const CTA = {
   label: "Next Step",
-  heading: "Ready to build a brand that holds up?",
-  supporting:
-    "Whether you are refining an existing brand or building from scratch, the first step is a conversation.",
-  button: { text: "Start a Project", href: "/contact" },
+  heading: "Start a project.",
+  supporting: "We respond within 24 hours.",
+  buttons: {
+    primary: { text: "Book a Discovery Call", href: "#" },
+    secondary: { text: "Start a Project", href: "/contact" },
+  },
 };

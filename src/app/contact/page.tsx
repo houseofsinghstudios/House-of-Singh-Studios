@@ -4,7 +4,7 @@ import ContactClient from "@/components/contact/ContactClient";
 export const metadata: Metadata = {
   title: "Contact — House of Singh Studios",
   description:
-    "Start a project with House of Singh Studios. Get in touch for brand identity, visual media, digital design, and creative strategy.",
+    "Start a project with House of Singh Studios. Brand identity, visual media, digital design, and creative strategy for established businesses.",
 };
 
 export default function ContactPage() {

@@ -8,8 +8,8 @@
   --text-muted: #6B6B6B;
   --text-faint: #999999;
   --border: #E5E5E0;
-  --serif: var(--font-serif), 'Cormorant Garamond', Georgia, serif;
-  --sans: var(--font-sans), 'Inter', system-ui, sans-serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
   --page-px: max(40px, 8vw);
 }
 
@@ -767,27 +767,42 @@ body {
    Services pages
    ═══════════════════════════════════════════════════════ */
 
-/* ── Horizontal scroll panels ── */
-.service-panel {
-  width: 100vw;
-  height: 100vh;
-  flex-shrink: 0;
+/* ── Full-width stacked service blocks ── */
+.service-block {
   display: grid;
-  grid-template-columns: 45% 55%;
-  overflow: hidden;
+  grid-template-columns: 60% 40%;
+  gap: 40px;
+  padding: 80px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+.service-block:first-child {
+  border-top: 1px solid rgba(26, 26, 26, 0.1);
+}
+.service-block:hover {
+  background-color: rgba(26, 26, 26, 0.02);
 }
 
-.service-panel-text {
-  padding: 80px var(--page-px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.service-block-content {
   position: relative;
 }
 
-.service-panel-image {
-  position: relative;
-  overflow: hidden;
+.service-block-number {
+  font-size: clamp(80px, 8vw, 100px);
+  color: rgba(26, 26, 26, 0.06);
+  line-height: 1;
+  position: absolute;
+  top: -20px;
+  left: 0;
+  pointer-events: none;
+}
+
+.service-block-color {
+  min-height: 280px;
+  align-self: center;
 }
 
 /* ── Service detail deliverable highlight ── */
@@ -838,35 +853,18 @@ body {
   direction: ltr;
 }
 
-/* ── Progress indicator ── */
-.scroll-progress-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--text-primary);
-  opacity: 0.2;
-  cursor: pointer;
-  transition: width 0.3s ease, opacity 0.3s ease;
-}
-.scroll-progress-dot.active {
-  width: 24px;
-  opacity: 1;
-}
-
 /* ── Services responsive ── */
-@media (max-width: 899px) {
-  .service-panel {
-    width: 100%;
-    height: auto;
+@media (max-width: 768px) {
+  .service-block {
     grid-template-columns: 1fr;
-    padding: 60px var(--page-px);
-    border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+    padding: 60px 0;
   }
-  .service-panel-text {
-    padding: 0;
+  .service-block-color {
+    display: none;
   }
-  .service-panel-image {
-    height: 50vh;
-    margin-top: 32px;
+  .service-block-number {
+    font-size: 64px;
+    top: -12px;
   }
   .related-work-card,
   .related-work-card:nth-child(even) {
@@ -899,17 +897,10 @@ body {
 /* ── Process steps ── */
 .about-process-step {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 200px 1fr;
   gap: 40px;
-  padding: 40px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.06);
-}
-
-/* ── Capabilities network ── */
-.about-network-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
 }
 
 /* ── Founder ── */
@@ -927,18 +918,138 @@ body {
   }
   .about-process-step {
     grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .about-process-step > div:first-child {
-    display: none;
-  }
-  .about-network-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 8px;
   }
   .about-founder-grid {
     grid-template-columns: 1fr;
     gap: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Contact page
+   ═══════════════════════════════════════════════════════ */
+
+.contact-columns {
+  display: grid;
+  grid-template-columns: 55% 1fr;
+  gap: 80px;
+}
+.contact-col-right {
+  border-left: 1px solid rgba(26, 26, 26, 0.08);
+  padding-left: 80px;
+}
+.contact-label {
+  display: block;
+  font-family: var(--sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(26, 26, 26, 0.4);
+  margin-bottom: 8px;
+}
+.contact-input {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.15);
+  padding: 12px 0;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.contact-input:focus {
+  border-bottom-color: rgba(26, 26, 26, 0.5);
+}
+.contact-textarea {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 16px;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  padding: 16px;
+  min-height: 120px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s ease;
+}
+.contact-textarea:focus {
+  border-color: rgba(26, 26, 26, 0.3);
+}
+.contact-textarea::placeholder {
+  color: rgba(26, 26, 26, 0.3);
+}
+.contact-submit {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: #1A1A1A;
+  color: #FAFAF7;
+  padding: 16px 32px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  text-decoration: none;
+}
+.contact-submit:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .contact-columns {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .contact-col-right {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid rgba(26, 26, 26, 0.08);
+    padding-top: 48px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Packages page
+   ═══════════════════════════════════════════════════════ */
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.package-tier {
+  padding: 48px;
+  border-right: 1px solid rgba(26, 26, 26, 0.1);
+  border-top: 1px solid rgba(26, 26, 26, 0.1);
+}
+.package-tier:first-child {
+  padding-left: 0;
+}
+.package-tier:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.package-tier--recommended {
+  background: rgba(26, 26, 26, 0.02);
+}
+
+@media (max-width: 1100px) {
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+  .package-tier {
+    padding: 48px 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+  }
+  .package-tier:last-child {
+    border-bottom: none;
   }
 }
 

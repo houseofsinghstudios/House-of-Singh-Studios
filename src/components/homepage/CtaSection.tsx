@@ -92,9 +92,12 @@ export default function CtaSection() {
         {CTA.supporting}
       </p>
 
-      <div ref={btnRef} className="mt-11">
-        <Button href={CTA.button.href} data-cursor="link">
-          {CTA.button.text}
+      <div ref={btnRef} className="mt-11 flex flex-wrap justify-center gap-3">
+        <Button href={CTA.buttons.primary.href} data-cursor="link">
+          {CTA.buttons.primary.text}
+        </Button>
+        <Button href={CTA.buttons.secondary.href} variant="secondary" data-cursor="link">
+          {CTA.buttons.secondary.text}
         </Button>
       </div>
     </section>

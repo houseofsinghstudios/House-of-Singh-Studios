@@ -16,8 +16,6 @@ export default function HeroSection() {
   const labelRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
-  const supportLine1Ref = useRef<HTMLParagraphElement>(null);
-  const supportLine2Ref = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -97,20 +95,6 @@ export default function HeroSection() {
           });
         }
 
-        // Supporting Line 1: clip-path wipe (18–28%)
-        if (supportLine1Ref.current) {
-          const p = rangeProgress(scrollPct, 18, 28);
-          supportLine1Ref.current.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
-          supportLine1Ref.current.style.opacity = p > 0 ? "1" : "0";
-        }
-
-        // Supporting Line 2: clip-path wipe (26–36%)
-        if (supportLine2Ref.current) {
-          const p = rangeProgress(scrollPct, 26, 36);
-          supportLine2Ref.current.style.clipPath = `inset(0 ${100 * (1 - p)}% 0 0)`;
-          supportLine2Ref.current.style.opacity = p > 0 ? "1" : "0";
-        }
-
         // CTAs: scale + fade (34–42%)
         if (ctaRef.current) {
           const p = rangeProgress(scrollPct, 34, 42);
@@ -167,32 +151,6 @@ export default function HeroSection() {
         >
           {HERO.secondary}
         </div>
-
-        {/* Supporting Line 1 — clip-path wipe */}
-        <p
-          ref={supportLine1Ref}
-          className="mt-8 font-[var(--sans)] font-light leading-[1.65] text-[color:var(--text-faint)] max-w-[600px]"
-          style={{
-            fontSize: "clamp(14px, 1.2vw, 16px)",
-            opacity: 0,
-            clipPath: "inset(0 100% 0 0)",
-          }}
-        >
-          {HERO.supportingLine1}
-        </p>
-
-        {/* Supporting Line 2 — clip-path wipe */}
-        <p
-          ref={supportLine2Ref}
-          className="mt-2.5 font-[var(--sans)] font-light leading-[1.65] text-[color:var(--text-faint)] max-w-[600px]"
-          style={{
-            fontSize: "clamp(14px, 1.2vw, 16px)",
-            opacity: 0,
-            clipPath: "inset(0 100% 0 0)",
-          }}
-        >
-          {HERO.supportingLine2}
-        </p>
 
         {/* CTAs — scale + fade */}
         <div

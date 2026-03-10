@@ -5,7 +5,7 @@ const pageLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
-  { label: "Journal", href: "/journal" },
+  { label: "Journal", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
@@ -30,7 +30,7 @@ const connectLinks = [
     href: "https://linkedin.com/company/houseofsingh",
     external: true,
   },
-  { label: "Email", href: "mailto:hello@houseofsingh.com" },
+  { label: "Email", href: "mailto:studio@houseofsingh.com" },
 ];
 
 export default function Footer() {

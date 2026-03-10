@@ -1,9 +1,15 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import SplitType from "split-type";
+
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitting(true);
@@ -12,8 +18,7 @@ export default function ContactClient() {
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
-      service: formData.get("service"),
-      budget: formData.get("budget"),
+      company: formData.get("company"),
       message: formData.get("message"),
     };
     try {
@@ -30,141 +35,204 @@ export default function ContactClient() {
       setSubmitting(false);
     }
   }
+
+  // ── Hero animation ──
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    let split: SplitType | null = null;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+    const label = hero.querySelector("[data-hero-label]");
+    const heading = hero.querySelector("[data-hero-heading]") as HTMLElement;
+    const sub = hero.querySelector("[data-hero-sub]");
+
+    if (label) {
+      gsap.set(label, { opacity: 0, y: 12 });
+      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
+    }
+
+    if (heading) {
+      split = new SplitType(heading, { types: "words" });
+      if (split.words) {
+        gsap.set(split.words, { y: "100%", opacity: 0 });
+        tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 }, 0.15);
+      }
+    }
+
+    if (sub) {
+      gsap.set(sub, { opacity: 0, y: 12 });
+      tl.to(sub, { opacity: 0.6, y: 0, duration: 0.4 }, 0.6);
+    }
+
+    return () => {
+      tl.kill();
+      if (split) split.revert();
+    };
+  }, []);
+
   return (
-    <section className="py-24 px-6 lg:px-10">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div>
-            <p className="text-sm font-medium uppercase tracking-widest text-neutral-400 mb-4">
-              Contact
+    <>
+      {/* ── HERO ── */}
+      <section
+        ref={heroRef}
+        className="flex flex-col justify-center px-[var(--page-px)]"
+        style={{ minHeight: "100vh" }}
+      >
+        <p
+          data-hero-label
+          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
+          style={{ opacity: 0.4 }}
+        >
+          (Contact)
+        </p>
+
+        <h1
+          data-hero-heading
+          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4 overflow-hidden max-w-[800px]"
+          style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15 }}
+        >
+          Start a conversation.
+        </h1>
+
+        <p
+          data-hero-sub
+          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[600px] mt-6"
+          style={{ opacity: 0.6 }}
+        >
+          Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project and we will respond within 24 hours.
+        </p>
+      </section>
+
+      {/* ── TWO-COLUMN LAYOUT ── */}
+      <section className="contact-columns px-[var(--page-px)] pb-20">
+        {/* LEFT: Form */}
+        <div className="contact-col-left">
+          {submitted ? (
+            <p
+              className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)]"
+              style={{ opacity: 0.7 }}
+            >
+              Thank you. We have received your brief and will respond within 24 hours.
             </p>
-            <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight text-black">
-              Let&apos;s talk
-            </h1>
-            <p className="mt-5 text-lg text-neutral-500 leading-relaxed max-w-md">
-              Tell us about your project and we will get back to you within 24
-              hours.
-            </p>
-            <div className="mt-10 flex flex-col gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">
-                  Email
-                </p>
-                <a
-                  href="mailto:studio@houseofsingh.com"
-                  className="text-sm text-black hover:text-neutral-600 transition-colors"
+          ) : (
+            <>
+              {error && (
+                <p
+                  className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] mb-6"
+                  style={{ color: "rgba(139, 0, 0, 0.8)" }}
                 >
-                  studio@houseofsingh.com
-                </a>
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-1">
-                  Location
+                  Something went wrong. Please try again or email us directly at{" "}
+                  <a href="mailto:studio@houseofsingh.com" className="underline">
+                    studio@houseofsingh.com
+                  </a>
+                  .
                 </p>
-                <p className="text-sm text-black">Toronto, Canada</p>
-              </div>
-            </div>
-          </div>
-          <div>
-            {submitted ? (
-              <div className="p-8 bg-neutral-50 text-center">
-                <h2 className="text-2xl font-semibold text-black">
-                  Thank you
-                </h2>
-                <p className="mt-3 text-neutral-500">
-                  We have received your message and will get back to you within
-                  24 hours.
-                </p>
-              </div>
-            ) : (
-              <>
-                {error && (
-                  <div className="mb-4 p-4 bg-red-50 border border-red-200 text-sm text-red-700">
-                    Something went wrong. Please try again or email studio@houseofsingh.com directly.
-                  </div>
-                )}
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
-                      placeholder="Your name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors"
-                      placeholder="you@company.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                      Service Interested In
-                    </label>
-                    <select
-                      name="service"
-                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
-                    >
-                      <option value="">Select a service</option>
-                      <option value="Brand Identity">Brand Identity & Visual Design</option>
-                      <option value="Visual Media">Visual Media & Content Production</option>
-                      <option value="Digital Design">Digital Design & Experience</option>
-                      <option value="Creative Strategy">Creative Strategy & Systems</option>
-                      <option value="Multiple Services">Multiple Services</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                      Budget Range
-                    </label>
-                    <select
-                      name="budget"
-                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black focus:outline-none focus:border-black transition-colors"
-                    >
-                      <option value="">Select a range</option>
-                      <option value="Under $5,000">Under $5,000</option>
-                      <option value="$5,000 to $10,000">$5,000 to $10,000</option>
-                      <option value="$10,000 to $25,000">$10,000 to $25,000</option>
-                      <option value="$25,000 to $50,000">$25,000 to $50,000</option>
-                      <option value="$50,000+">$50,000+</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-2">
-                      Tell us about your project
-                    </label>
-                    <textarea
-                      name="message"
-                      required
-                      rows={5}
-                      className="w-full border border-neutral-200 px-4 py-3 text-sm text-black placeholder-neutral-400 focus:outline-none focus:border-black transition-colors resize-none"
-                      placeholder="What are you looking to build? Any timelines or details you can share."
-                    />
-                  </div>
+              )}
+              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                <div>
+                  <label className="contact-label">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    className="contact-input"
+                  />
+                </div>
+                <div>
+                  <label className="contact-label">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    className="contact-input"
+                  />
+                </div>
+                <div>
+                  <label className="contact-label">Company (optional)</label>
+                  <input
+                    type="text"
+                    name="company"
+                    className="contact-input"
+                  />
+                </div>
+                <div>
+                  <label className="contact-label">Message</label>
+                  <textarea
+                    name="message"
+                    required
+                    rows={5}
+                    className="contact-textarea"
+                    placeholder="Tell us about your project, your timeline, and what you are looking for."
+                  />
+                </div>
+                <div>
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="btn-primary mt-2 disabled:opacity-50"
+                    className="contact-submit disabled:opacity-50"
                   >
-                    {submitting ? "Sending..." : "Send Inquiry"}
+                    {submitting ? "Sending..." : "Send Brief"}
                   </button>
-                </form>
-              </>
-            )}
+                </div>
+              </form>
+            </>
+          )}
+        </div>
+
+        {/* RIGHT: Book a call */}
+        <div className="contact-col-right">
+          <h2
+            className="font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+            style={{ fontSize: "clamp(24px, 2.5vw, 28px)", lineHeight: 1.2 }}
+          >
+            Prefer to talk?
+          </h2>
+
+          <p
+            className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-4"
+            style={{ opacity: 0.6 }}
+          >
+            Book a 30-minute discovery call. We will discuss your brand, your goals, and whether we are the right fit.
+          </p>
+
+          <a
+            href="#"
+            className="contact-submit inline-block mt-6"
+            data-cursor="link"
+          >
+            Book a Discovery Call
+          </a>
+
+          <div className="mt-8">
+            <p
+              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
+              style={{ opacity: 0.5 }}
+            >
+              Or email us directly
+            </p>
+            <a
+              href="mailto:studio@houseofsingh.com"
+              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)] hover:underline"
+              style={{ opacity: 0.5 }}
+              data-cursor="link"
+            >
+              studio@houseofsingh.com
+            </a>
           </div>
         </div>
+      </section>
+
+      {/* ── BOTTOM LINE ── */}
+      <div className="px-[var(--page-px)] pb-24">
+        <p
+          className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)] text-center"
+          style={{ opacity: 0.35 }}
+        >
+          Based in Toronto. Working with businesses across North America.
+        </p>
       </div>
-    </section>
+    </>
   );
 }
