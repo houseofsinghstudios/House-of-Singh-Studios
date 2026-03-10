@@ -51,10 +51,13 @@ export default function ArgumentSection() {
         }
       }
 
-      // "We fix that." snaps in
+      // "We fix that." snaps in, then underline draws
       if (weFixRef.current) {
         gsap.set(weFixRef.current, { opacity: 0 });
         tl.to(weFixRef.current, { opacity: 1, duration: 0.01 }, ">0.2");
+        tl.add(() => {
+          weFixRef.current?.classList.add("we-fix-that--visible");
+        }, ">0.05");
       }
 
       // Process steps stagger in

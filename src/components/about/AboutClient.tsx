@@ -79,9 +79,12 @@ export default function AboutClient() {
     const section = statsRef.current;
     if (!section) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rafIds: number[] = [];
+
     const ctx = gsap.context(() => {
       numberRefs.current.forEach((el, i) => {
-        if (el) el.textContent = `0${STATS[i].suffix}`;
+        if (el) el.textContent = prefersReducedMotion ? `${STATS[i].target}${STATS[i].suffix}` : `0${STATS[i].suffix}`;
       });
       descRefs.current.forEach((el) => {
         if (el) gsap.set(el, { opacity: 0, y: 10 });
@@ -95,16 +98,32 @@ export default function AboutClient() {
           STATS.forEach((stat, i) => {
             const numEl = numberRefs.current[i];
             if (!numEl) return;
-            const obj = { val: 0 };
-            gsap.to(obj, {
-              val: stat.target,
-              duration: 1.5,
-              ease: "power2.out",
-              delay: i * 0.15,
-              onUpdate: () => {
-                numEl.textContent = `${Math.round(obj.val)}${stat.suffix}`;
-              },
-            });
+
+            if (prefersReducedMotion) {
+              numEl.textContent = `${stat.target}${stat.suffix}`;
+              return;
+            }
+
+            const delay = i * 150;
+            const duration = 1500;
+
+            setTimeout(() => {
+              const startTime = performance.now();
+              const el = numEl!;
+
+              function tick(now: number) {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                const progress = 1 - Math.pow(1 - t, 3);
+                el.textContent = `${Math.round(progress * stat.target)}${stat.suffix}`;
+
+                if (t < 1) {
+                  rafIds.push(requestAnimationFrame(tick));
+                }
+              }
+
+              rafIds.push(requestAnimationFrame(tick));
+            }, delay);
           });
 
           descRefs.current.forEach((el, i) => {
@@ -119,7 +138,10 @@ export default function AboutClient() {
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      rafIds.forEach((id) => cancelAnimationFrame(id));
+    };
   }, []);
 
   // ── Process heading SplitType ──
@@ -284,7 +306,7 @@ export default function AboutClient() {
                 className="font-[var(--serif)] font-semibold leading-none text-[color:var(--text-primary)] m-0"
                 style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
               >
-                0{stat.suffix}
+                {stat.target}{stat.suffix}
               </p>
               <p
                 ref={(el) => { descRefs.current[i] = el; }}
