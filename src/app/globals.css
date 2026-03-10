@@ -897,17 +897,10 @@ body {
 /* ── Process steps ── */
 .about-process-step {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 200px 1fr;
   gap: 40px;
-  padding: 40px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.06);
-}
-
-/* ── Capabilities network ── */
-.about-network-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
 }
 
 /* ── Founder ── */
@@ -925,14 +918,7 @@ body {
   }
   .about-process-step {
     grid-template-columns: 1fr;
-    gap: 0;
-  }
-  .about-process-step > div:first-child {
-    display: none;
-  }
-  .about-network-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 8px;
   }
   .about-founder-grid {
     grid-template-columns: 1fr;
