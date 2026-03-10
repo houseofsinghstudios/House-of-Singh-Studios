@@ -413,16 +413,34 @@ body {
 }
 
 /* ── Filter buttons ── */
-.filter-btn:hover {
-  border-color: var(--text-primary) !important;
-  color: var(--text-primary) !important;
+.work-filter-row {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
-
-/* ── Case study meta row ── */
-.case-meta-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+.work-filter-btn {
+  font-family: var(--sans);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: none;
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0 0 4px;
+  cursor: pointer;
+  color: #1A1A1A;
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  border-radius: 0;
+}
+.work-filter-btn:hover {
+  opacity: 0.6;
+}
+.work-filter-btn.active {
+  opacity: 0.9;
+  border-bottom-color: #1A1A1A;
 }
 
 /* ── Next project link ── */
@@ -483,16 +501,6 @@ body {
     font-size: clamp(24px, 6vw, 36px);
   }
   /* Case study responsive */
-  .case-meta-row {
-    grid-template-columns: 1fr 1fr;
-  }
-  .case-content-section {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
-  }
-  .case-sticky-label {
-    position: static !important;
-  }
   .gallery-pair-container {
     grid-template-columns: 1fr !important;
   }

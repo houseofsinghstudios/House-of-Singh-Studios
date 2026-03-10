@@ -1,336 +1,243 @@
 export interface ProjectSection {
   label: string;
-  title: string;
   paragraphs: string[];
-}
-
-export interface ProjectResult {
-  number: string;
-  description: string;
 }
 
 export interface Project {
   slug: string;
   number: string;
   name: string;
-  categories: string[];
+  workType: string;
+  origin: string;
   year: string;
   description: string;
-  client: string;
-  services: string;
-  industry: string;
+  seoTitle: string;
+  seoDescription: string;
   gradient: string;
   sections: {
     business: ProjectSection;
     challenge: ProjectSection;
     approach: ProjectSection;
     deliverables: ProjectSection;
+    result: ProjectSection;
   };
-  results: ProjectResult[];
-  resultSummary: string;
+  deliverablesList: string[];
 }
+
+const CASE_STUDY_SLUGS = [
+  "tedxtoronto",
+  "meridian",
+  "soulbound",
+  "nomad-kitchen",
+];
 
 export const projects: Project[] = [
   {
     slug: "tedxtoronto",
     number: "01",
     name: "TEDxToronto Visual Identity",
-    categories: ["Brand Identity", "Visual Media"],
+    workType: "Brand Identity",
+    origin: "Client Project",
     year: "2024",
     gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
     description:
-      "Event branding and visual system for one of Canada\u2019s largest independently organized TEDx events.",
-    client: "TEDxToronto",
-    services: "Brand Identity, Visual Media, Creative Direction",
-    industry: "Events and Conferences",
+      "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
+    seoTitle: "TEDxToronto Visual Identity \u2014 House of Singh Studios",
+    seoDescription:
+      "Brand identity and visual system for TEDxToronto. Event branding, creative direction, and design by House of Singh Studios.",
     sections: {
       business: {
         label: "(The Business)",
-        title: "About the client",
         paragraphs: [
-          "TEDxToronto is one of the largest independently organized TEDx events in Canada, bringing together thousands of attendees each year. The event platform spans a full day conference, digital content, and year-round community programming.",
-          "The organization needed a visual identity system that could flex across physical event spaces, digital platforms, printed collateral, and social media while maintaining cohesion.",
+          "TEDxToronto is one of Canada\u2019s largest independently organized TEDx events, bringing together thinkers, creators, and leaders to share ideas across disciplines. The organization operates across digital, print, and live event environments.",
         ],
       },
       challenge: {
         label: "(The Challenge)",
-        title: "What needed solving",
         paragraphs: [
-          "The existing visual identity had been built incrementally over several years without a unified system. Each event cycle introduced new elements that did not connect back to a core identity.",
-          "The challenge was to create a system flexible enough to evolve annually while maintaining a consistent foundation that audiences would recognize immediately.",
+          "The event needed a visual identity system that could hold up across a wide range of applications: stage design, digital content, print materials, and social media. The brand had to feel contemporary and bold while respecting the TEDx framework. Consistency across a large volunteer-driven creative team was a core requirement.",
         ],
       },
       approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
+        label: "(The Approach)",
         paragraphs: [
-          "We began with discovery: stakeholder interviews, audience research, and an audit of how the brand was used across all touchpoints.",
-          "The strategy phase defined the brand visual principles: clarity, energy, and intellectual warmth. From there, we developed a modular identity system with a core mark, flexible color framework, and typography guidelines that scale.",
-          "AI assisted the research phase by analyzing competitor visual positioning and accelerating asset generation during production. Creative direction remained human at every decision point.",
+          "We began with a discovery phase to understand the event\u2019s audience, themes, and operational constraints. Strategy work defined the visual direction and established parameters for the creative team. We developed the identity system with guidelines that ensured consistency whether applied by a designer or a volunteer. Production included all event collateral, digital assets, and brand documentation.",
         ],
       },
       deliverables: {
         label: "(Deliverables)",
-        title: "What we delivered",
+        paragraphs: [],
+      },
+      result: {
+        label: "(The Result)",
         paragraphs: [
-          "The final delivery included a complete brand identity system: primary and secondary logo marks, flexible color palette with event-specific accent options, typography hierarchy, brand guidelines documentation, and templated assets for social, print, and environmental signage.",
-          "We also produced the event visual media: stage graphics, speaker introduction sequences, pre-event campaign assets, and a photography art direction guide.",
+          "The identity system gave TEDxToronto a consistent and professional visual presence across every touchpoint. The guidelines enabled a large team to produce on-brand materials independently, reducing revision cycles and maintaining quality throughout the event lifecycle.",
         ],
       },
     },
-    results: [
-      { number: "3,000+", description: "Attendees at launch event" },
-      { number: "40%", description: "Fewer revision rounds through AI assisted QC" },
-      { number: "50+", description: "Branded assets across print and digital" },
-      { number: "1", description: "Unified system replacing fragmented elements" },
+    deliverablesList: [
+      "Visual identity system",
+      "Event branding and stage design direction",
+      "Print collateral suite",
+      "Digital and social media assets",
+      "Brand guidelines for team-wide application",
+      "Creative direction across production",
     ],
-    resultSummary:
-      "The new identity system launched at the 2024 event and has carried through all subsequent programming. The modular framework allows each event cycle to feel fresh while remaining unmistakably TEDxToronto.",
   },
   {
     slug: "meridian",
     number: "02",
     name: "Meridian Financial Group",
-    categories: ["Brand Identity", "Digital Design"],
+    workType: "Brand Identity",
+    origin: "Studio Exploration",
     year: "2024",
     gradient: "linear-gradient(155deg, #CAD2D8, #B4BFC8)",
     description:
-      "Complete rebrand and digital presence for a mid-market financial services firm.",
-    client: "Meridian Financial Group",
-    services: "Brand Identity, Digital Design, Brand Guidelines",
-    industry: "Financial Services",
+      "Brand identity system for a mid-market financial services firm.",
+    seoTitle: "Meridian Financial Group \u2014 House of Singh Studios",
+    seoDescription:
+      "Brand identity system for a mid-market financial services firm. Studio exploration by House of Singh Studios.",
     sections: {
       business: {
         label: "(The Business)",
-        title: "About the client",
         paragraphs: [
-          "Meridian Financial Group is a mid-market financial advisory firm serving high-net-worth individuals and growing businesses across Ontario. The firm needed to modernize its visual identity to match its evolved service offering.",
+          "Meridian Financial Group is a mid-market financial services firm serving clients across wealth management, corporate advisory, and investment planning. The firm operates in a sector where trust and credibility are communicated through visual presence before any conversation takes place.",
         ],
       },
       challenge: {
         label: "(The Challenge)",
-        title: "What needed solving",
         paragraphs: [
-          "The existing brand felt dated and generic. It did not differentiate Meridian from larger institutional competitors or communicate the personal, strategic approach the firm actually delivers.",
+          "Financial services firms often default to conservative and generic branding that makes them indistinguishable from competitors. Meridian needed a visual identity that conveyed stability and professionalism while standing apart in a crowded market. The brand had to work across digital platforms, print materials, and client-facing presentations.",
         ],
       },
       approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
+        label: "(The Approach)",
         paragraphs: [
-          "We conducted a competitive audit of 20+ financial brands, then developed a visual language that balances authority with approachability. The identity system uses a restrained color palette and structured typography to signal credibility.",
+          "We explored the intersection of tradition and modernity in financial branding. The strategy phase examined competitor positioning and identified an opportunity for Meridian to own a more refined and distinctive visual space. Creative direction established a typographic-led identity with a restrained color palette that communicates confidence without excess.",
         ],
       },
       deliverables: {
         label: "(Deliverables)",
-        title: "What we delivered",
+        paragraphs: [],
+      },
+      result: {
+        label: "(The Result)",
         paragraphs: [
-          "Full brand identity system, website design direction, stationery suite, pitch deck templates, and comprehensive brand guidelines documentation.",
+          "The identity system positions Meridian as a firm that takes its own presentation as seriously as its financial advice. The documented guidelines ensure consistent application across the organization as it grows.",
         ],
       },
     },
-    results: [
-      { number: "35%", description: "Increase in qualified inbound leads" },
-      { number: "12", description: "Touchpoints redesigned under one system" },
+    deliverablesList: [
+      "Logo system with primary and secondary marks",
+      "Typography and color architecture",
+      "Brand guidelines document",
+      "Business card and stationery suite",
+      "Presentation template system",
+      "Digital application direction",
     ],
-    resultSummary:
-      "The rebrand launched alongside a new website and has driven measurable improvement in prospect quality and client confidence.",
   },
   {
     slug: "soulbound",
     number: "03",
     name: "Soulbound Publication",
-    categories: ["Visual Media", "Creative Strategy"],
+    workType: "Publication Design",
+    origin: "Independent Project",
     year: "2023",
     gradient: "linear-gradient(155deg, #D2D8CA, #BFC8B4)",
     description:
-      "Visual identity and editorial design for an independent arts and culture publication.",
-    client: "Soulbound",
-    services: "Visual Media, Creative Strategy, Art Direction",
-    industry: "Publishing and Media",
+      "Publication cover design and art direction for a leadership book.",
+    seoTitle: "Soulbound Publication \u2014 House of Singh Studios",
+    seoDescription:
+      "Publication cover design and art direction for a leadership book. Independent project by House of Singh Studios.",
     sections: {
       business: {
         label: "(The Business)",
-        title: "About the client",
         paragraphs: [
-          "Soulbound is an independent publication exploring the intersection of art, culture, and identity. They needed a visual system that could work across print, digital, and social without losing editorial integrity.",
+          "Soulbound is a publication exploring leadership, personal growth, and the intersection of discipline and creativity. The book is positioned for an audience of emerging leaders and professionals who value substance over self-help cliches.",
         ],
       },
       challenge: {
         label: "(The Challenge)",
-        title: "What needed solving",
         paragraphs: [
-          "The publication had strong written content but inconsistent visual presentation. Each issue looked like it came from a different brand.",
+          "The publication needed cover design and art direction that communicated depth and seriousness without being academic or dry. The visual treatment had to stand out in a market saturated with generic leadership book covers while reflecting the book\u2019s core themes of intentionality and inner strength.",
         ],
       },
       approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
+        label: "(The Approach)",
         paragraphs: [
-          "We built a modular design system with flexible grid structures, a defined typography scale, and an art direction framework that allows editorial freedom within brand boundaries.",
+          "We treated the cover as a brand identity exercise, not just a graphic design task. The discovery phase examined the book\u2019s themes, target audience, and competitive landscape. Creative direction explored typographic treatments that conveyed authority and calm. The final direction uses restrained composition and deliberate negative space to signal confidence.",
         ],
       },
       deliverables: {
         label: "(Deliverables)",
-        title: "What we delivered",
+        paragraphs: [],
+      },
+      result: {
+        label: "(The Result)",
         paragraphs: [
-          "Editorial design system, issue templates, social content framework, and contributor guidelines.",
+          "The cover design gives Soulbound a visual identity that matches the depth of its content. The typographic approach differentiates it from the crowded leadership genre and positions it as a serious, design-conscious publication.",
         ],
       },
     },
-    results: [
-      { number: "3x", description: "Social engagement after visual rebrand" },
-      { number: "8", description: "Issues produced under new system" },
+    deliverablesList: [
+      "Cover design with front, spine, and back",
+      "Typography and layout system",
+      "Art direction for interior chapter openers",
+      "Digital cover variations for online distribution",
+      "Print-ready production files",
     ],
-    resultSummary:
-      "The design system has held across eight issues and over 200 social posts, creating the visual consistency the publication needed to build a recognizable brand.",
   },
   {
     slug: "nomad-kitchen",
     number: "04",
     name: "Nomad Kitchen",
-    categories: ["Brand Identity"],
+    workType: "Brand Identity, Packaging",
+    origin: "Independent Project",
     year: "2023",
     gradient: "linear-gradient(155deg, #D8CAD2, #C8B4BF)",
     description:
-      "Brand identity for a modern restaurant concept rooted in global cuisine and local sourcing.",
-    client: "Nomad Kitchen",
-    services: "Brand Identity, Packaging, Environmental Design",
-    industry: "Food and Hospitality",
+      "Brand identity and packaging for a modern South Asian food brand.",
+    seoTitle: "Nomad Kitchen \u2014 House of Singh Studios",
+    seoDescription:
+      "Brand identity and packaging for a modern South Asian food brand. Independent project by House of Singh Studios.",
     sections: {
       business: {
         label: "(The Business)",
-        title: "About the client",
         paragraphs: [
-          "Nomad Kitchen is a restaurant concept built around global flavors prepared with locally sourced ingredients. The founders needed a brand that communicated both worldliness and warmth.",
+          "Nomad Kitchen is a modern food brand rooted in South Asian culinary traditions. The brand bridges authentic flavors with contemporary presentation, targeting food-conscious consumers who value both heritage and quality.",
         ],
       },
       challenge: {
         label: "(The Challenge)",
-        title: "What needed solving",
         paragraphs: [
-          "The concept needed to feel premium without being pretentious, and global without being generic. The brand had to work across menus, packaging, signage, and social media from day one.",
+          "South Asian food brands in North America often rely on predictable cultural imagery that limits their market appeal. Nomad Kitchen needed a visual identity that honored its roots while feeling current, premium, and accessible to a broad audience. The packaging had to work on shelf, in e-commerce, and across social media.",
         ],
       },
       approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
+        label: "(The Approach)",
         paragraphs: [
-          "We developed the brand identity around the idea of movement and craft. The visual language draws from cartographic and artisan aesthetics, grounded in a warm, earthy palette.",
+          "We approached this as a positioning exercise first. Strategy defined where Nomad Kitchen sits in the market between traditional ethnic food brands and premium contemporary labels. Creative direction developed a visual language that uses warm tones, clean typography, and confident composition. Packaging design was integrated from the start, not treated as an afterthought.",
         ],
       },
       deliverables: {
         label: "(Deliverables)",
-        title: "What we delivered",
+        paragraphs: [],
+      },
+      result: {
+        label: "(The Result)",
         paragraphs: [
-          "Logo system, color palette, typography, menu design, packaging for takeout and retail products, signage specifications, and brand guidelines.",
+          "The identity positions Nomad Kitchen as a brand that belongs on premium shelves alongside established food brands. The visual system connects cultural authenticity with contemporary design, giving the brand room to grow across product categories.",
         ],
       },
     },
-    results: [
-      { number: "100%", description: "Brand-consistent touchpoints at launch" },
-      { number: "4", description: "Revenue streams with branded packaging" },
+    deliverablesList: [
+      "Complete brand identity system",
+      "Logo with primary mark and wordmark",
+      "Color palette and typography system",
+      "Packaging design for product line",
+      "Brand guidelines document",
+      "Social media visual templates",
     ],
-    resultSummary:
-      "Nomad Kitchen launched with complete visual consistency across all customer touchpoints, from signage to takeout bags to social content.",
-  },
-  {
-    slug: "the-collective",
-    number: "05",
-    name: "The Collective Studio",
-    categories: ["Digital Design", "Creative Strategy"],
-    year: "2024",
-    gradient: "linear-gradient(155deg, #CAD8D2, #B4C8BF)",
-    description:
-      "Website design and creative systems for a collaborative workspace and events venue.",
-    client: "The Collective Studio",
-    services: "Digital Design, Creative Strategy, Content Architecture",
-    industry: "Real Estate and Co-working",
-    sections: {
-      business: {
-        label: "(The Business)",
-        title: "About the client",
-        paragraphs: [
-          "The Collective Studio is a creative co-working space and events venue in Toronto. They needed a digital presence that communicated their unique positioning: part workspace, part creative community.",
-        ],
-      },
-      challenge: {
-        label: "(The Challenge)",
-        title: "What needed solving",
-        paragraphs: [
-          "Their existing website was a basic template that failed to convey the energy and purpose of the physical space. It was not generating the quality of inquiries they needed.",
-        ],
-      },
-      approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
-        paragraphs: [
-          "We designed a website that functions as both a brand statement and a lead generation tool. The information architecture was restructured around visitor intent: book a space, join the community, or host an event.",
-        ],
-      },
-      deliverables: {
-        label: "(Deliverables)",
-        title: "What we delivered",
-        paragraphs: [
-          "Website design, content architecture, booking flow UX, and a social content system tied to the website visual language.",
-        ],
-      },
-    },
-    results: [
-      { number: "60%", description: "Increase in booking inquiries" },
-      { number: "2.5x", description: "Average session duration improvement" },
-    ],
-    resultSummary:
-      "The redesigned digital experience directly increased booking inquiries and gave The Collective a platform that matches the quality of their physical space.",
-  },
-  {
-    slug: "raahi",
-    number: "06",
-    name: "Raahi Travel Co",
-    categories: ["Brand Identity", "Visual Media"],
-    year: "2023",
-    gradient: "linear-gradient(155deg, #D2CAD8, #BFB4C8)",
-    description:
-      "Brand identity and visual media for a luxury travel company specializing in South Asian destinations.",
-    client: "Raahi Travel Co",
-    services: "Brand Identity, Visual Media, Photography Direction",
-    industry: "Travel and Hospitality",
-    sections: {
-      business: {
-        label: "(The Business)",
-        title: "About the client",
-        paragraphs: [
-          "Raahi Travel Co curates luxury travel experiences across South Asia. The company needed a brand that would resonate with a North American audience while honoring the authenticity of the destinations.",
-        ],
-      },
-      challenge: {
-        label: "(The Challenge)",
-        title: "What needed solving",
-        paragraphs: [
-          "The travel industry is saturated with generic tropical imagery and vague luxury language. Raahi needed to stand apart with a brand that felt specific, intentional, and culturally grounded.",
-        ],
-      },
-      approach: {
-        label: "(Our Approach)",
-        title: "How we worked",
-        paragraphs: [
-          "We built the brand around the concept of intentional travel. The visual identity uses a refined palette inspired by natural materials and traditional craft, paired with modern typography.",
-        ],
-      },
-      deliverables: {
-        label: "(Deliverables)",
-        title: "What we delivered",
-        paragraphs: [
-          "Complete brand identity, photography art direction guide, social media visual system, pitch deck template, and print collateral for travel fairs.",
-        ],
-      },
-    },
-    results: [
-      { number: "45%", description: "Increase in premium package bookings" },
-      { number: "3", description: "International travel fairs with branded presence" },
-    ],
-    resultSummary:
-      "The brand identity positioned Raahi as a premium alternative in the South Asian travel market and has been the foundation of all client-facing materials since launch.",
   },
 ];
 
@@ -339,6 +246,17 @@ export function getProjectBySlug(slug: string): Project | undefined {
 }
 
 export function getNextProject(currentSlug: string): Project {
-  const idx = projects.findIndex((p) => p.slug === currentSlug);
-  return projects[(idx + 1) % projects.length];
+  const idx = CASE_STUDY_SLUGS.indexOf(currentSlug);
+  const nextSlug =
+    CASE_STUDY_SLUGS[(idx + 1) % CASE_STUDY_SLUGS.length];
+  return projects.find((p) => p.slug === nextSlug) || projects[0];
+}
+
+/** Get unique filter categories from all projects' workType fields */
+export function getWorkTypeFilters(): string[] {
+  const types = new Set<string>();
+  projects.forEach((p) => {
+    p.workType.split(",").forEach((t) => types.add(t.trim()));
+  });
+  return Array.from(types);
 }

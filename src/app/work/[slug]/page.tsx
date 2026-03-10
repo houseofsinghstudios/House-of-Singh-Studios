@@ -16,8 +16,12 @@ export async function generateMetadata({
   const project = getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
   return {
-    title: `${project.name} — House of Singh Studios`,
-    description: project.description,
+    title: project.seoTitle,
+    description: project.seoDescription,
+    openGraph: {
+      title: project.seoTitle,
+      description: project.seoDescription,
+    },
   };
 }
 
