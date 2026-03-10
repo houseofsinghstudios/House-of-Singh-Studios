@@ -277,10 +277,10 @@ body {
 .project-card:hover {
   transform: translateY(-4px);
 }
-.project-card .project-image-inner img {
+.project-card .project-image-inner {
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.project-card:hover .project-image-inner img {
+.project-card:hover .project-image-inner {
   transform: scale(1.03);
 }
 .project-card .project-sentence {
@@ -2005,6 +2005,189 @@ td a:hover,
       animation: drawLine 0.001s linear both;
       animation-timeline: view();
       animation-range: entry 20% entry 50%;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   UI/UX C: Inner Page Interactions
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Interaction 10: Ghost Number Parallax (/services) ── */
+@keyframes parallaxSlow {
+  from { transform: translateY(40px); }
+  to { transform: translateY(-40px); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .service-block-number {
+      animation: parallaxSlow linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+/* ── Interaction 11: Service Block Hover (/services) ── */
+.service-block {
+  transition: background-color 0.3s ease;
+}
+.service-block:hover {
+  background-color: rgba(26, 26, 26, 0.015);
+}
+.service-block-number {
+  transition: color 0.3s ease;
+}
+.service-block:hover .service-block-number {
+  color: rgba(26, 26, 26, 0.1);
+}
+.service-block [data-block-link] svg {
+  transition: transform 0.3s ease;
+}
+.service-block:hover [data-block-link] svg {
+  transform: translateX(8px);
+}
+
+/* ── Interaction 12: Deliverable Rows Cascade (service detail) ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .svc-deliverable-row:nth-child(1) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+    .svc-deliverable-row:nth-child(2) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 3% entry 33%;
+    }
+    .svc-deliverable-row:nth-child(3) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 6% entry 36%;
+    }
+    .svc-deliverable-row:nth-child(4) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 9% entry 39%;
+    }
+    .svc-deliverable-row:nth-child(5) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 12% entry 42%;
+    }
+    .svc-deliverable-row:nth-child(6) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 15% entry 45%;
+    }
+  }
+}
+
+/* ── Interaction 13: Process Stage Cascade (about + service detail) ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .about-process-step:nth-child(1),
+    .svc-process-row:nth-child(1) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+    .about-process-step:nth-child(2),
+    .svc-process-row:nth-child(2) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 34%;
+    }
+    .about-process-step:nth-child(3),
+    .svc-process-row:nth-child(3) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 8% entry 38%;
+    }
+    .about-process-step:nth-child(4),
+    .svc-process-row:nth-child(4) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 12% entry 42%;
+    }
+    .about-process-step:nth-child(5),
+    .svc-process-row:nth-child(5) {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 16% entry 46%;
+    }
+  }
+}
+
+/* ── Interaction 14: Work Page Filter Transition ── */
+.project-row {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ── Interaction 15: Project Card Image Parallax ── */
+@keyframes imageParallax {
+  from { transform: translateY(-5%); }
+  to { transform: translateY(5%); }
+}
+
+.project-image-inner img {
+  height: 110%;
+  width: 100%;
+  object-fit: cover;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .project-image-inner img {
+      animation: imageParallax linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+/* ── Interaction 16: Founder Photo Reveal (/about) ── */
+@keyframes clipRevealIris {
+  from { clip-path: inset(50% 50% 50% 50%); }
+  to { clip-path: inset(0% 0% 0% 0%); }
+}
+
+.founder-photo-reveal {
+  will-change: clip-path;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .founder-photo-reveal {
+      animation: clipRevealIris linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+/* ── Interaction 17: AI Process Stage Active Indicator ── */
+@keyframes stageHighlight {
+  0% { border-left-color: transparent; }
+  30% { border-left-color: rgba(26, 26, 26, 0.2); }
+  70% { border-left-color: rgba(26, 26, 26, 0.2); }
+  100% { border-left-color: transparent; }
+}
+
+.ai-process-row {
+  border-left: 3px solid transparent;
+  padding-left: 16px;
+  transition: border-left-color 0.3s ease;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ai-process-row {
+      animation: stageHighlight linear both;
+      animation-timeline: view();
+      animation-range: entry 30% exit 70%;
     }
   }
 }

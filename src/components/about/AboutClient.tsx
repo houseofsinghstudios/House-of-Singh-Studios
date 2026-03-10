@@ -384,7 +384,7 @@ export default function AboutClient() {
           {/* Photo placeholder */}
           <div>
             <div
-              className="scroll-clip-reveal"
+              className="scroll-clip-reveal founder-photo-reveal"
               style={{
                 aspectRatio: "3/4",
                 overflow: "hidden",
