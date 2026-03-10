@@ -1,18 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Link } from "next-view-transitions";
 import { gsap } from "gsap";
 import SplitType from "split-type";
-import { projects } from "@/data/projects";
-
-const FILTERS = [
-  "All",
-  "Brand Identity",
-  "Visual Media",
-  "Digital Design",
-  "Creative Strategy",
-];
+import { projects, getWorkTypeFilters } from "@/data/projects";
 
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -26,32 +18,50 @@ export default function WorkPageClient() {
   const imgPanelRef = useRef<HTMLDivElement>(null);
   const prevIdx = useRef(0);
 
-  const crossfadeImage = useCallback((newIdx: number) => {
-    if (newIdx === prevIdx.current) return;
-    const panel = imgPanelRef.current;
-    if (!panel) return;
+  const filterCategories = useMemo(
+    () => ["All", ...getWorkTypeFilters()],
+    []
+  );
 
-    const imgs = panel.querySelectorAll<HTMLElement>(".split-img-item");
-    const outgoing = imgs[prevIdx.current];
-    const incoming = imgs[newIdx];
+  const filteredProjects = useMemo(() => {
+    if (activeFilter === "All") return projects;
+    return projects.filter((p) =>
+      p.workType
+        .split(",")
+        .map((t) => t.trim())
+        .includes(activeFilter)
+    );
+  }, [activeFilter]);
 
-    if (outgoing) {
-      gsap.to(outgoing, { opacity: 0, duration: 0.3, ease: "power2.out" });
-    }
-    if (incoming) {
-      gsap.fromTo(
-        incoming,
-        { opacity: 0, y: 8, scale: 1.03 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }
-      );
-    }
-    prevIdx.current = newIdx;
-  }, []);
+  const crossfadeImage = useCallback(
+    (newIdx: number) => {
+      if (newIdx === prevIdx.current) return;
+      const panel = imgPanelRef.current;
+      if (!panel) return;
+
+      const imgs = panel.querySelectorAll<HTMLElement>(".split-img-item");
+      const outgoing = imgs[prevIdx.current];
+      const incoming = imgs[newIdx];
+
+      if (outgoing) {
+        gsap.to(outgoing, { opacity: 0, duration: 0.3, ease: "power2.out" });
+      }
+      if (incoming) {
+        gsap.fromTo(
+          incoming,
+          { opacity: 0, y: 8, scale: 1.03 },
+          { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power2.out" }
+        );
+      }
+      prevIdx.current = newIdx;
+    },
+    []
+  );
 
   const handleHover = useCallback(
-    (idx: number) => {
-      setActiveIdx(idx);
-      crossfadeImage(idx);
+    (globalIdx: number) => {
+      setActiveIdx(globalIdx);
+      crossfadeImage(globalIdx);
     },
     [crossfadeImage]
   );
@@ -85,23 +95,46 @@ export default function WorkPageClient() {
       if (filtersRef.current) {
         const btns = filtersRef.current.querySelectorAll("button");
         gsap.set(btns, { opacity: 0, y: 12 });
-        tl.to(btns, { opacity: 1, y: 0, stagger: 0.05, duration: 0.3 }, 0.55);
+        tl.to(
+          btns,
+          { opacity: 1, y: 0, stagger: 0.05, duration: 0.3 },
+          0.55
+        );
       }
 
       if (listRef.current) {
         const rows = listRef.current.querySelectorAll(".project-row");
         gsap.set(rows, { opacity: 0, y: 25 });
-        tl.to(rows, { opacity: 1, y: 0, stagger: 0.08, duration: 0.5 }, 0.65);
+        tl.to(
+          rows,
+          { opacity: 1, y: 0, stagger: 0.08, duration: 0.5 },
+          0.65
+        );
       }
 
       if (imgPanelRef.current) {
         gsap.set(imgPanelRef.current, { opacity: 0, scale: 0.96 });
-        tl.to(imgPanelRef.current, { opacity: 1, scale: 1, duration: 0.6 }, 0.7);
+        tl.to(
+          imgPanelRef.current,
+          { opacity: 1, scale: 1, duration: 0.6 },
+          0.7
+        );
       }
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
+
+  // Re-animate rows when filter changes
+  useEffect(() => {
+    if (!listRef.current) return;
+    const rows = listRef.current.querySelectorAll(".project-row");
+    gsap.fromTo(
+      rows,
+      { opacity: 0, y: 16 },
+      { opacity: 1, y: 0, stagger: 0.06, duration: 0.35, ease: "power3.out" }
+    );
+  }, [activeFilter]);
 
   return (
     <div ref={containerRef}>
@@ -113,7 +146,11 @@ export default function WorkPageClient() {
         <h1
           ref={headingRef}
           className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
-          style={{ fontSize: "clamp(40px, 5vw, 68px)", lineHeight: 1.1, letterSpacing: "-0.02em" }}
+          style={{
+            fontSize: "clamp(40px, 5vw, 68px)",
+            lineHeight: 1.1,
+            letterSpacing: "-0.02em",
+          }}
         >
           Work that holds up.
         </h1>
@@ -130,27 +167,14 @@ export default function WorkPageClient() {
       {/* Filters */}
       <div
         ref={filtersRef}
-        className="flex flex-wrap gap-3"
+        className="work-filter-row"
         style={{ padding: "40px var(--page-px) 0" }}
       >
-        {FILTERS.map((f) => (
+        {filterCategories.map((f) => (
           <button
             key={f}
             onClick={() => setActiveFilter(f)}
-            className="filter-btn"
-            style={{
-              background: activeFilter === f ? "var(--text-primary)" : "transparent",
-              color: activeFilter === f ? "var(--bg)" : "var(--text-muted)",
-              border: "1px solid var(--border)",
-              borderColor: activeFilter === f ? "var(--text-primary)" : "var(--border)",
-              padding: "9px 18px",
-              fontFamily: "var(--sans)",
-              fontSize: 12,
-              fontWeight: 500,
-              letterSpacing: "0.04em",
-              cursor: "pointer",
-              transition: "all 0.2s ease",
-            }}
+            className={`work-filter-btn${activeFilter === f ? " active" : ""}`}
           >
             {f}
           </button>
@@ -161,21 +185,22 @@ export default function WorkPageClient() {
       <div className="split-container">
         {/* Left panel */}
         <div ref={listRef} className="split-left">
-          {projects.map((project, i) => (
-            <Link
-              key={project.slug}
-              href={`/work/${project.slug}`}
-              className="project-row"
-              data-cursor="view"
-              onMouseEnter={() => handleHover(i)}
-            >
-              <span className="project-row-number">{project.number}</span>
-              <span className="project-row-name">{project.name}</span>
-              <span className="project-row-meta">
-                {project.categories.join(", ")} &mdash; {project.year}
-              </span>
-            </Link>
-          ))}
+          {filteredProjects.map((project) => {
+            const globalIdx = projects.indexOf(project);
+            return (
+              <Link
+                key={project.slug}
+                href={`/work/${project.slug}`}
+                className="project-row"
+                data-cursor="view"
+                onMouseEnter={() => handleHover(globalIdx)}
+              >
+                <span className="project-row-number">{project.number}</span>
+                <span className="project-row-name">{project.name}</span>
+                <span className="project-row-meta">{project.workType}</span>
+              </Link>
+            );
+          })}
         </div>
 
         {/* Right panel — sticky image */}
@@ -201,6 +226,54 @@ export default function WorkPageClient() {
           </div>
         </div>
       </div>
+
+      {/* CTA */}
+      <section
+        className="text-center"
+        style={{
+          padding: "120px var(--page-px)",
+          background: "var(--bg-shift)",
+        }}
+      >
+        <h2
+          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          style={{
+            fontSize: "clamp(32px, 4.5vw, 60px)",
+            lineHeight: 1.1,
+            margin: 0,
+          }}
+        >
+          Have a project in mind?
+        </h2>
+        <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
+          <a
+            href="#"
+            className="contact-submit inline-block"
+            data-cursor="link"
+          >
+            Book a Discovery Call
+          </a>
+          <Link
+            href="/contact"
+            className="inline-block font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
+            style={{
+              padding: "16px 32px",
+              border: "1px solid rgba(26, 26, 26, 0.2)",
+              textDecoration: "none",
+              transition: "opacity 0.2s ease",
+            }}
+            data-cursor="link"
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.opacity = "0.6";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.opacity = "1";
+            }}
+          >
+            Start a Project
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

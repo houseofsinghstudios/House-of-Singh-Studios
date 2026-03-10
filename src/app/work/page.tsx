@@ -4,7 +4,7 @@ import WorkPageClient from "@/components/work/WorkPageClient";
 export const metadata: Metadata = {
   title: "Work — House of Singh Studios",
   description:
-    "Brand identities, visual narratives, and digital experiences for businesses ready to show up differently.",
+    "Selected work across brand identity, visual media, and digital design. Case studies from House of Singh Studios.",
 };
 
 export default function WorkPage() {
