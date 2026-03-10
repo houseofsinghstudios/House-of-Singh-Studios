@@ -539,8 +539,7 @@ body {
   gap: 0;
 }
 .subscribe-input {
-  flex: 1;
-  max-width: 360px;
+  width: 100%;
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(26, 26, 26, 0.2);
@@ -724,7 +723,7 @@ body {
   .subscribe-row {
     flex-direction: column;
   }
-  .subscribe-input {
+  .subscribe-input-wrap {
     max-width: 100%;
   }
   .subscribe-btn {
@@ -2189,54 +2188,36 @@ td a:hover,
 
 /* ── Interaction 18 + 20: Form Field Focus Animation ── */
 
-/* Contact page: input/textarea wrapper divs */
-.contact-field-wrap {
-  position: relative;
-}
-
-.contact-field-wrap::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
+/* Focus line: sibling span approach (works in all browsers) */
+.focus-line {
+  display: block;
   width: 100%;
   height: 2px;
   background: rgba(26, 26, 26, 0.5);
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  margin-top: -1px;
   pointer-events: none;
-  z-index: 1;
 }
 
-.contact-field-wrap:focus-within::after {
+.contact-input:focus + .focus-line,
+.contact-textarea:focus + .focus-line,
+.subscribe-input:focus + .focus-line,
+.pulse-waitlist-input:focus + .focus-line {
   transform: scaleX(1);
 }
 
-/* Footer subscribe input + AI pulse waitlist input */
-.subscribe-row,
-.pulse-waitlist-form {
-  position: relative;
+/* Wrapper divs for subscribe/pulse inputs inside flex rows */
+.subscribe-input-wrap,
+.pulse-input-wrap {
+  flex: 1;
+  max-width: 360px;
 }
-
-.subscribe-row::after,
-.pulse-waitlist-form::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
+.subscribe-input-wrap .subscribe-input,
+.pulse-input-wrap .pulse-waitlist-input {
+  max-width: 100%;
   width: 100%;
-  height: 2px;
-  background: rgba(26, 26, 26, 0.5);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  pointer-events: none;
-}
-
-.subscribe-row:focus-within::after,
-.pulse-waitlist-form:focus-within::after {
-  transform: scaleX(1);
 }
 
 /* ── Interaction 19: Recommended Tag Pulse ── */
@@ -2252,5 +2233,165 @@ td a:hover,
 @media (prefers-reduced-motion: no-preference) {
   .recommended-tag {
     animation: subtlePulse 3s ease-in-out infinite;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Safari/Firefox Fallback: IntersectionObserver
+   Only active when animation-timeline is NOT supported.
+   The ScrollObserver component adds .in-view class to
+   elements as they enter the viewport.
+   ═══════════════════════════════════════════════════════ */
+
+@supports not (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* ── General reveal classes ── */
+    .css-reveal,
+    .css-reveal-late {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .css-fade {
+      opacity: 0;
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .css-reveal.in-view,
+    .css-reveal-late.in-view,
+    .css-fade.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .css-reveal-late.in-view {
+      transition-delay: 0.1s;
+    }
+
+    /* ── Argument section stagger ── */
+    .argument-section h2,
+    .argument-section > div > p {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .argument-section h2.in-view,
+    .argument-section > div > p.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .argument-section .argument-step-line {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .argument-section .argument-step-line.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .argument-section .argument-step-line:nth-child(2).in-view { transition-delay: 0.08s; }
+    .argument-section .argument-step-line:nth-child(3).in-view { transition-delay: 0.16s; }
+
+    /* ── CTA section stagger ── */
+    .cta-section-mobile > div:first-child,
+    .cta-section-mobile > h2,
+    .cta-section-mobile > p,
+    .cta-section-mobile > div:last-child {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .cta-section-mobile > div:first-child.in-view,
+    .cta-section-mobile > h2.in-view,
+    .cta-section-mobile > p.in-view,
+    .cta-section-mobile > div:last-child.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Ghost number parallax: static display in Safari ── */
+    .service-block-number {
+      opacity: 0.06;
+    }
+
+    /* ── Deliverable row cascade ── */
+    .svc-deliverable-row {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .svc-deliverable-row.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .svc-deliverable-row:nth-child(2).in-view { transition-delay: 0.08s; }
+    .svc-deliverable-row:nth-child(3).in-view { transition-delay: 0.16s; }
+    .svc-deliverable-row:nth-child(4).in-view { transition-delay: 0.24s; }
+    .svc-deliverable-row:nth-child(5).in-view { transition-delay: 0.32s; }
+    .svc-deliverable-row:nth-child(6).in-view { transition-delay: 0.4s; }
+
+    /* ── Process stage cascade ── */
+    .about-process-step,
+    .svc-process-row {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .about-process-step.in-view,
+    .svc-process-row.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .about-process-step:nth-child(2).in-view,
+    .svc-process-row:nth-child(2).in-view { transition-delay: 0.08s; }
+    .about-process-step:nth-child(3).in-view,
+    .svc-process-row:nth-child(3).in-view { transition-delay: 0.16s; }
+    .about-process-step:nth-child(4).in-view,
+    .svc-process-row:nth-child(4).in-view { transition-delay: 0.24s; }
+    .about-process-step:nth-child(5).in-view,
+    .svc-process-row:nth-child(5).in-view { transition-delay: 0.32s; }
+
+    /* ── Package tier cards stagger ── */
+    .packages-grid .package-tier {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .packages-grid .package-tier.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .packages-grid .package-tier:nth-child(2).in-view { transition-delay: 0.1s; }
+    .packages-grid .package-tier:nth-child(3).in-view { transition-delay: 0.2s; }
+
+    /* ── Card image parallax: static in Safari ── */
+    .project-image-inner img {
+      /* No parallax, display at default position */
+    }
+
+    /* ── Founder photo reveal ── */
+    .founder-photo-reveal {
+      clip-path: inset(50% 50% 50% 50%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .founder-photo-reveal.in-view {
+      clip-path: inset(0% 0% 0% 0%);
+    }
+
+    /* ── AI stage highlight ── */
+    .ai-process-row {
+      border-left: 3px solid transparent;
+      transition: border-left-color 0.3s ease;
+    }
+    .ai-process-row.in-view {
+      border-left-color: rgba(26, 26, 26, 0.15);
+    }
   }
 }

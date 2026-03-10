@@ -236,14 +236,17 @@ export default function AILabClient() {
             </p>
           ) : (
             <form onSubmit={handlePulseEmail} className="pulse-waitlist-form mt-6">
-              <input
-                type="email"
-                required
-                placeholder="your@email.com"
-                value={pulseEmail}
-                onChange={(e) => setPulseEmail(e.target.value)}
-                className="pulse-waitlist-input"
-              />
+              <div className="pulse-input-wrap">
+                <input
+                  type="email"
+                  required
+                  placeholder="your@email.com"
+                  value={pulseEmail}
+                  onChange={(e) => setPulseEmail(e.target.value)}
+                  className="pulse-waitlist-input"
+                />
+                <span className="focus-line" />
+              </div>
               <button
                 type="submit"
                 disabled={pulseSubmitting}

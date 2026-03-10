@@ -8,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
 import PageTransition from "@/components/PageTransition";
+import ScrollObserver from "@/components/ScrollObserver";
 
 export const metadata: Metadata = {
   title: "House of Singh Studios",
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
+          <ScrollObserver />
         </body>
       </html>
     </ViewTransitions>
