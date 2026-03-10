@@ -4,11 +4,11 @@ import AILabClient from "@/components/ai/AILabClient";
 export const metadata: Metadata = {
   title: "AI Lab — House of Singh Studios",
   description:
-    "See how AI powers our design process. Try our Brand Pulse Check for a free 30-second brand assessment powered by AI.",
+    "How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human. Try our free Brand Pulse Check.",
   openGraph: {
     title: "AI Lab — House of Singh Studios",
     description:
-      "See how AI powers our design process. Try our Brand Pulse Check for a free 30-second brand assessment powered by AI.",
+      "How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human. Try our free Brand Pulse Check.",
   },
 };
 
