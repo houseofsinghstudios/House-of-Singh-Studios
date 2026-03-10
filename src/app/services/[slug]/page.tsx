@@ -16,8 +16,12 @@ export function generateMetadata({
     const service = getServiceBySlug(slug);
     if (!service) return { title: "Service Not Found" };
     return {
-      title: `${service.name} — House of Singh Studios`,
-      description: service.tagline,
+      title: service.seoTitle,
+      description: service.seoDescription,
+      openGraph: {
+        title: service.seoTitle,
+        description: service.seoDescription,
+      },
     };
   });
 }
