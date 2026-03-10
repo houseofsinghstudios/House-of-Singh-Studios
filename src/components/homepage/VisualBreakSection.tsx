@@ -45,6 +45,7 @@ export default function VisualBreakSection() {
         src="/images/photography-ideas-creative-occupation-design-studio-concept.jpg"
         alt="Design studio workspace"
         className="visual-break-img"
+        loading="lazy"
         style={{ willChange: "transform" }}
         onError={(e) => {
           const img = e.currentTarget;

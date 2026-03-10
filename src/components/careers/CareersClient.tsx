@@ -809,7 +809,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }}
                 >
                   Something went wrong. Please try again or email us at
-                  hello@houseofsingh.com
+                  studio@houseofsingh.com
                 </p>
               )}
             </>
