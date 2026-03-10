@@ -927,6 +927,46 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   Packages page
+   ═══════════════════════════════════════════════════════ */
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.package-tier {
+  padding: 48px;
+  border-right: 1px solid rgba(26, 26, 26, 0.1);
+  border-top: 1px solid rgba(26, 26, 26, 0.1);
+}
+.package-tier:first-child {
+  padding-left: 0;
+}
+.package-tier:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.package-tier--recommended {
+  background: rgba(26, 26, 26, 0.02);
+}
+
+@media (max-width: 1100px) {
+  .packages-grid {
+    grid-template-columns: 1fr;
+  }
+  .package-tier {
+    padding: 48px 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+  }
+  .package-tier:last-child {
+    border-bottom: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    Insights pages
    ═══════════════════════════════════════════════════════ */
 
