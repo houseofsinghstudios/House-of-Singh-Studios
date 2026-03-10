@@ -8,8 +8,8 @@
   --text-muted: #6B6B6B;
   --text-faint: #999999;
   --border: #E5E5E0;
-  --serif: var(--font-serif), 'Cormorant Garamond', Georgia, serif;
-  --sans: var(--font-sans), 'Inter', system-ui, sans-serif;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
   --page-px: max(40px, 8vw);
 }
 

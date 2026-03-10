@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
 import "@/styles/scroll-animations.css";
@@ -9,21 +8,6 @@ import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
 import PageTransition from "@/components/PageTransition";
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-serif",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "House of Singh Studios",
@@ -37,7 +21,15 @@ export default function RootLayout({
 }) {
   return (
     <ViewTransitions>
-      <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+      <html lang="en">
+        <head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap"
+            rel="stylesheet"
+          />
+        </head>
         <body>
           <SmoothScroll />
           <CustomCursor />
