@@ -2251,6 +2251,10 @@ div:has(> .contact-textarea:focus)::after {
 }
 
 /* ── Interaction 19: Recommended Tag Pulse ── */
+.recommended-tag {
+  opacity: 0.4;
+}
+
 @keyframes subtlePulse {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.65; }
