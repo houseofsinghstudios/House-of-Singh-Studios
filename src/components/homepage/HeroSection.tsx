@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import { HERO } from "@/lib/constants/homepage-data";
 import { clamp01, rangeProgress } from "@/lib/hooks/useScrollProgress";
 import Button from "@/components/ui/Button";
@@ -15,6 +14,8 @@ export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const labelRef = useRef<HTMLParagraphElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const line1Ref = useRef<HTMLSpanElement>(null);
+  const line2Ref = useRef<HTMLSpanElement>(null);
   const secondaryRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -37,39 +38,43 @@ export default function HeroSection() {
       }
     }
 
-    // ── Page load orchestration (GSAP timeline) ──
+    // ── Page load orchestration — line-by-line entrance ──
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    // t=0.10: Editorial label fades up
+    // t=0: Editorial label
     if (labelRef.current) {
-      gsap.set(labelRef.current, { opacity: 0, y: 12 });
-      tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.3 }, 0.1);
+      gsap.set(labelRef.current, { opacity: 0, y: 20 });
+      tl.to(labelRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0);
     }
 
-    // t=0.20: Headline word reveal with SplitType
-    let split: SplitType | null = null;
-    if (headlineRef.current) {
-      split = new SplitType(headlineRef.current, { types: "words" });
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(
-          split.words,
-          { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 },
-          0.2
-        );
-      }
+    // t=0.1: Headline line 1 — "AI can generate assets."
+    if (line1Ref.current) {
+      gsap.set(line1Ref.current, { opacity: 0, y: 20 });
+      tl.to(line1Ref.current, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
     }
 
-    // t=0.60: Secondary text container fades up
+    // t=0.3: Headline line 2 — "It cannot build a brand."
+    if (line2Ref.current) {
+      gsap.set(line2Ref.current, { opacity: 0, y: 20 });
+      tl.to(line2Ref.current, { opacity: 1, y: 0, duration: 0.5 }, 0.3);
+    }
+
+    // t=0.5: Secondary text container
     if (secondaryEl) {
-      gsap.set(secondaryEl, { opacity: 0, y: 15 });
-      tl.to(secondaryEl, { opacity: 1, y: 0, duration: 0.4 }, 0.6);
+      gsap.set(secondaryEl, { opacity: 0, y: 20 });
+      tl.to(secondaryEl, { opacity: 1, y: 0, duration: 0.5 }, 0.5);
     }
 
-    // t=0.80: Scroll indicator fades in
+    // t=0.7: CTA buttons
+    if (ctaRef.current) {
+      gsap.set(ctaRef.current, { opacity: 0, y: 20 });
+      tl.to(ctaRef.current, { opacity: 1, y: 0, duration: 0.5 }, 0.7);
+    }
+
+    // t=0.9: Scroll indicator
     if (scrollRef.current) {
       gsap.set(scrollRef.current, { opacity: 0 });
-      tl.to(scrollRef.current, { opacity: 1, duration: 0.3 }, 0.8);
+      tl.to(scrollRef.current, { opacity: 1, duration: 0.3 }, 0.9);
     }
 
     // ── Scroll-driven animations via ScrollTrigger ──
@@ -95,13 +100,6 @@ export default function HeroSection() {
           });
         }
 
-        // CTAs: scale + fade (34–42%)
-        if (ctaRef.current) {
-          const p = rangeProgress(scrollPct, 34, 42);
-          ctaRef.current.style.opacity = String(p);
-          ctaRef.current.style.transform = `scale(${0.96 + 0.04 * p})`;
-        }
-
         // Scroll indicator: fades out (20–50%)
         if (scrollRef.current) {
           const fadeOut = rangeProgress(scrollPct, 20, 50);
@@ -115,7 +113,6 @@ export default function HeroSection() {
       ScrollTrigger.getAll().forEach((t) => {
         if (t.trigger === section) t.kill();
       });
-      if (split) split.revert();
     };
   }, []);
 
@@ -132,16 +129,15 @@ export default function HeroSection() {
       <div className="max-w-[900px]">
         <h1
           ref={headlineRef}
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0 overflow-hidden"
+          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
           style={{
             fontSize: "clamp(36px, 5.5vw, 76px)",
             lineHeight: 1.1,
             letterSpacing: "-0.02em",
           }}
         >
-          {HERO.headline[0]}
-          <br />
-          {HERO.headline[1]}
+          <span ref={line1Ref} style={{ display: "block" }}>{HERO.headline[0]}</span>
+          <span ref={line2Ref} style={{ display: "block" }}>{HERO.headline[1]}</span>
         </h1>
 
         {/* Secondary — character blur reveal on scroll */}
@@ -152,11 +148,10 @@ export default function HeroSection() {
           {HERO.secondary}
         </div>
 
-        {/* CTAs — scale + fade */}
+        {/* CTAs */}
         <div
           ref={ctaRef}
           className="mt-12 flex flex-wrap gap-3 hero-cta-row"
-          style={{ opacity: 0, transform: "scale(0.96)" }}
         >
           <Button href={HERO.cta.primary.href} data-cursor="link">
             {HERO.cta.primary.text}

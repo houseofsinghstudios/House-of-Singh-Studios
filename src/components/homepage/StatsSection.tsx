@@ -16,10 +16,13 @@ export default function StatsSection() {
     const section = sectionRef.current;
     if (!section) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rafIds: number[] = [];
+
     const ctx = gsap.context(() => {
       // Set initial states
       numberRefs.current.forEach((el) => {
-        if (el) el.textContent = "0+";
+        if (el) el.textContent = prefersReducedMotion ? `${STATS.targets[numberRefs.current.indexOf(el)]}+` : "0+";
       });
       descRefs.current.forEach((el) => {
         if (el) gsap.set(el, { opacity: 0, y: 10 });
@@ -30,21 +33,37 @@ export default function StatsSection() {
         start: "top 80%",
         once: true,
         onEnter: () => {
-          // Count-up each stat
+          // Count-up each stat with rAF
           STATS.targets.forEach((target, i) => {
             const numEl = numberRefs.current[i];
             if (!numEl) return;
 
-            const obj = { val: 0 };
-            gsap.to(obj, {
-              val: target,
-              duration: 1.5,
-              ease: "power2.out",
-              delay: i * 0.15,
-              onUpdate: () => {
-                numEl.textContent = `${Math.round(obj.val)}+`;
-              },
-            });
+            if (prefersReducedMotion) {
+              numEl.textContent = `${target}+`;
+              return;
+            }
+
+            const delay = i * 150;
+            const duration = 1500;
+
+            setTimeout(() => {
+              const startTime = performance.now();
+              const el = numEl!;
+
+              function tick(now: number) {
+                const elapsed = now - startTime;
+                const t = Math.min(elapsed / duration, 1);
+                // Cubic ease-out: decelerates as approaching target
+                const progress = 1 - Math.pow(1 - t, 3);
+                el.textContent = `${Math.round(progress * target)}+`;
+
+                if (t < 1) {
+                  rafIds.push(requestAnimationFrame(tick));
+                }
+              }
+
+              rafIds.push(requestAnimationFrame(tick));
+            }, delay);
           });
 
           // Description text fades up staggered
@@ -63,7 +82,10 @@ export default function StatsSection() {
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      rafIds.forEach((id) => cancelAnimationFrame(id));
+    };
   }, []);
 
   return (

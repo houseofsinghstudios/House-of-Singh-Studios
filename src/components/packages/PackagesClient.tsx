@@ -219,7 +219,7 @@ export default function PackagesClient() {
               {/* Recommended tag */}
               {tier.recommended && (
                 <p
-                  className="font-[var(--sans)] text-[10px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mt-3"
+                  className="recommended-tag font-[var(--sans)] text-[10px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mt-3"
                   style={{ opacity: 0.4 }}
                 >
                   Recommended

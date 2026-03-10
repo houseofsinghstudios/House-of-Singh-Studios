@@ -92,8 +92,8 @@ export default function ArgumentSection() {
 
         <p
           ref={weFixRef}
-          className="mt-12 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(22px, 2vw, 28px)", opacity: 0 }}
+          className="we-fix-that mt-12 mb-10 font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+          style={{ fontSize: "clamp(22px, 2vw, 28px)", opacity: 0, position: "relative", display: "inline-block" }}
         >
           {ARGUMENT.snap}
         </p>

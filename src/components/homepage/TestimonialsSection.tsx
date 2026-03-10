@@ -26,7 +26,8 @@ export default function TestimonialsSection() {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       transitionTo(
-        ((prevSlideRef.current) + 1) % TESTIMONIALS.length
+        ((prevSlideRef.current) + 1) % TESTIMONIALS.length,
+        1
       );
     }, 6000);
   }, []);
@@ -76,41 +77,68 @@ export default function TestimonialsSection() {
     }
   }, []);
 
-  // Transition from current to new slide
+  // Transition from current to new slide with horizontal slide
   const transitionTo = useCallback(
-    (idx: number) => {
+    (idx: number, dir?: number) => {
       if (idx === prevSlideRef.current) return;
 
+      // Determine slide direction: 1 = forward (left), -1 = backward (right)
+      const direction = dir ?? (idx > prevSlideRef.current ? 1 : -1);
       const outgoing = slideRefs.current[prevSlideRef.current];
+      const incoming = slideRefs.current[idx];
 
-      // Animate outgoing
+      // Clean up SplitType from outgoing
+      if (splitRef.current) {
+        splitRef.current.revert();
+        splitRef.current = null;
+      }
+
+      // Outgoing: fade out + slide in travel direction
       if (outgoing) {
-        if (splitRef.current) {
-          splitRef.current.revert();
-          splitRef.current = null;
-        }
         gsap.to(outgoing, {
           opacity: 0,
-          y: -15,
-          duration: 0.3,
-          ease: "power2.in",
+          x: direction * -20,
+          duration: 0.4,
+          ease: "power3.out",
           onComplete: () => {
-            gsap.set(outgoing, { position: "absolute", pointerEvents: "none" });
+            gsap.set(outgoing, { position: "absolute", pointerEvents: "none", x: 0 });
           },
         });
       }
 
-      // Animate incoming (delayed to let outgoing complete)
-      animateSlideIn(idx, 0.3);
+      // Incoming: slide in from opposite side + fade in
+      if (incoming) {
+        gsap.set(incoming, {
+          opacity: 0,
+          x: direction * 20,
+          position: "relative",
+          pointerEvents: "auto",
+        });
+        gsap.to(incoming, {
+          opacity: 1,
+          x: 0,
+          duration: 0.4,
+          ease: "power3.out",
+          delay: 0.1,
+        });
+
+        // Fade in author separately
+        const authorEl = incoming.querySelector("[data-author]") as HTMLElement;
+        if (authorEl) {
+          gsap.set(authorEl, { opacity: 0 });
+          gsap.to(authorEl, { opacity: 1, duration: 0.3, delay: 0.35 });
+        }
+      }
 
       prevSlideRef.current = idx;
       setActiveSlide(idx);
     },
-    [animateSlideIn]
+    []
   );
 
   function goTo(i: number) {
-    transitionTo(i);
+    const direction = i > prevSlideRef.current ? 1 : -1;
+    transitionTo(i, direction);
     resetTimer();
   }
 
