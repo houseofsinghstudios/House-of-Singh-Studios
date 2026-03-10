@@ -23,102 +23,99 @@ export interface ServiceData {
   name: string;
   tagline: string;
   description: string;
+  seoTitle: string;
+  seoDescription: string;
   gradient: string;
   deliverables: ServiceDeliverable[];
   impact: {
-    quote: string;
-    paragraphs: string[];
+    heading: string;
+    body: string;
   };
   process: ServiceProcessStep[];
-  idealClient: string;
   relatedWork: ServiceRelatedWork[];
 }
-
-const sharedProcess: ServiceProcessStep[] = [
-  {
-    step: "01",
-    name: "Discovery",
-    description:
-      "We learn your business, your audience, and your goals. No assumptions. Interviews, audits, and competitive analysis.",
-  },
-  {
-    step: "02",
-    name: "Strategy",
-    description:
-      "We define the positioning, the scope, and the creative direction. You approve the plan before any production starts.",
-  },
-  {
-    step: "03",
-    name: "Creative Direction",
-    description:
-      "Concepts, references, and creative frameworks. We establish the visual and strategic direction with your input.",
-  },
-  {
-    step: "04",
-    name: "Production",
-    description:
-      "The work gets built. Checkpoints at defined intervals. AI handles production speed. Human judgment handles quality.",
-  },
-  {
-    step: "05",
-    name: "Delivery",
-    description:
-      "Final deliverables, documentation, and handoff. Your team has everything they need to use the system independently.",
-  },
-];
 
 export const services: ServiceData[] = [
   {
     slug: "brand-identity",
     number: "01",
     name: "Brand Identity and Visual Design",
-    tagline: "A brand identity system that works as hard as your business does.",
+    tagline:
+      "Your brand identity is the first thing your market judges you on. We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint. The result is a brand that looks as established as your business actually is.",
     description:
-      "We build complete brand identity systems. Logo, typography, color, visual language, and guidelines documentation. Everything your team needs to show up consistently across every channel and medium.",
+      "Complete brand identity systems built for established businesses. Logo, typography, color architecture, and brand guidelines that scale.",
+    seoTitle: "Brand Identity and Visual Design — House of Singh Studios",
+    seoDescription:
+      "Complete brand identity systems built for established businesses. Logo, typography, color architecture, and brand guidelines that scale.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
     deliverables: [
       {
-        name: "Logo Systems and Brand Marks",
+        name: "Logo System",
         description:
-          "Primary, secondary, and responsive lockups designed for every application from business cards to billboards.",
+          "Primary mark, wordmark, and responsive variations for every application from signage to social.",
       },
       {
-        name: "Color and Typography Systems",
+        name: "Typography System",
         description:
-          "A defined palette and type hierarchy that works across digital, print, and environmental applications.",
+          "Font selection, hierarchy, and usage rules that maintain clarity across all media.",
       },
       {
-        name: "Visual Language and Art Direction",
+        name: "Color Architecture",
         description:
-          "The rules that govern how your brand looks and feels in any context. Photography style, illustration approach, iconography.",
+          "Primary and secondary palettes with specifications for print, digital, and environmental use.",
       },
       {
-        name: "Brand Guidelines Documentation",
+        name: "Brand Guidelines",
         description:
-          "A comprehensive document your team can follow without needing a designer in the room for every decision.",
+          "A comprehensive document that ensures anyone on your team can apply the brand correctly.",
       },
       {
-        name: "Packaging and Collateral Design",
+        name: "Collateral Suite",
         description:
-          "Business cards, letterheads, presentation templates, and packaging that carry the brand system into the physical world.",
+          "Business cards, letterheads, presentation templates, and essential brand applications.",
       },
       {
-        name: "Brand Expressions and Applications",
+        name: "Art Direction",
         description:
-          "Social media templates, email signatures, signage specifications. The brand applied to every touchpoint.",
+          "Photography and content direction that aligns visual assets with the brand system.",
       },
     ],
     impact: {
-      quote:
-        "A consistent brand identity increases revenue by up to 23%. Most businesses lose that money because their visual identity is fragmented across channels.",
-      paragraphs: [
-        "Your brand identity is not your logo. It is the system that makes your business recognizable, trustworthy, and differentiated in a crowded market. When that system is inconsistent, every marketing dollar works harder than it should.",
-        "We build identity systems that hold up under pressure. Across packaging, digital, social, print, and environmental. The system we deliver is designed for your team to use independently, not to create dependency on a designer.",
-      ],
+      heading: "Your brand is a business asset, not a design exercise.",
+      body: "An inconsistent brand costs you clients you never see. They visit your website, check your social presence, compare you to a competitor with sharper visuals, and leave without contacting you. A brand identity system fixes that permanently. It makes every touchpoint work together so your business looks as credible as it actually is.",
     },
-    process: sharedProcess,
-    idealClient:
-      "Established businesses doing $1M to $20M in revenue that have outgrown their original branding. Your business has evolved. Your visual identity has not caught up. You need a system, not a one-off logo refresh.",
+    process: [
+      {
+        step: "01",
+        name: "Discovery",
+        description:
+          "We audit your current brand, research your market, and interview stakeholders to understand what the brand needs to be.",
+      },
+      {
+        step: "02",
+        name: "Strategy",
+        description:
+          "We define positioning, audience priorities, and visual direction before any design work begins.",
+      },
+      {
+        step: "03",
+        name: "Creative Direction",
+        description:
+          "We develop the visual language: logo concepts, typography, color, and expression across key applications.",
+      },
+      {
+        step: "04",
+        name: "Production",
+        description:
+          "We refine, document, and build every deliverable with AI-assisted quality control at each stage.",
+      },
+      {
+        step: "05",
+        name: "Delivery",
+        description:
+          "You receive the complete brand system with guidelines, source files, and a handoff session to ensure your team can use it.",
+      },
+    ],
     relatedWork: [
       {
         slug: "tedxtoronto",
@@ -140,190 +137,233 @@ export const services: ServiceData[] = [
     slug: "visual-media",
     number: "02",
     name: "Visual Media and Content Production",
-    tagline: "Content that does more than fill a feed. Content that builds a brand.",
+    tagline:
+      "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent. Every image and frame reinforces your brand positioning. The output works across channels because it was planned that way from the start.",
     description:
-      "Brand films, campaign visuals, photography direction, and content systems. We produce visual media with strategic intent. Every frame, every shot, every edit serves your brand positioning.",
+      "Brand photography, campaign films, and social content systems built on strategic intent. Visual production directed by brand strategy.",
+    seoTitle: "Visual Media and Content Production — House of Singh Studios",
+    seoDescription:
+      "Brand photography, campaign films, and social content systems built on strategic intent. Visual production directed by brand strategy.",
     gradient: "linear-gradient(135deg, #4A3F35 0%, #2C2419 100%)",
     deliverables: [
       {
-        name: "Brand Films and Short Form Video",
+        name: "Brand Photography",
         description:
-          "Campaign hero films, social-first short form content, product videos. Produced with narrative structure, not just visuals.",
+          "Planned and directed shoots that capture your brand's personality, not generic stock imagery.",
       },
       {
-        name: "Campaign Direction and Visual Storytelling",
+        name: "Campaign Films",
         description:
-          "The creative concept, shot lists, and art direction that turn a brief into a visual narrative with commercial purpose.",
+          "Short form and long form video content built around narrative and brand positioning.",
       },
       {
-        name: "Photography and Art Direction",
+        name: "Social Content Systems",
         description:
-          "Brand photography with a defined style guide. Product, lifestyle, editorial. Consistent look across all channels.",
+          "Templates, formats, and visual frameworks that maintain brand consistency across platforms.",
       },
       {
-        name: "Social and Digital Content Systems",
+        name: "Art Direction",
         description:
-          "Template systems, content calendars, and production workflows that let your team produce on-brand content at scale.",
+          "Creative direction for all visual production, ensuring every asset aligns with the brand system.",
       },
       {
-        name: "Script Development and Narrative Shaping",
+        name: "Script and Narrative",
         description:
-          "The words and structure behind the visuals. Voiceover scripts, campaign narratives, messaging frameworks for video.",
+          "Story development and script writing that gives video and campaign content strategic purpose.",
       },
     ],
     impact: {
-      quote:
-        "Video content generates 1200% more shares than text and images combined. But only when it is built on strategy, not just production value.",
-      paragraphs: [
-        "Most businesses produce content that looks good but says nothing. The result is a library of assets that do not convert, do not build recognition, and do not justify the production spend.",
-        "We start with your brand positioning and business objectives. Then we produce. Every piece of content maps back to a strategic goal. That is the difference between content production and content marketing.",
-      ],
+      heading:
+        "Content that converts starts with direction, not a camera.",
+      body: "Most businesses produce content reactively. A post here, a video there, no visual thread connecting them. The result is a brand that looks different on every platform. We fix that by building content systems that are planned, directed, and designed to maintain brand consistency at scale.",
     },
-    process: sharedProcess,
-    idealClient:
-      "Businesses with an established brand that need visual content at scale. You have the brand foundation. Now you need the content engine to put it in front of the right audience consistently.",
-    relatedWork: [
+    process: [
       {
-        slug: "nomad-kitchen",
-        name: "Nomad Kitchen",
-        client: "Nomad Kitchen",
-        result: "Brand film series driving 3x social engagement",
-        gradient: "linear-gradient(135deg, #4A3F35 0%, #2C2419 100%)",
+        step: "01",
+        name: "Discovery",
+        description:
+          "We review your current content, audit your channels, and identify gaps between your brand and how it shows up visually.",
       },
       {
-        slug: "raahi",
-        name: "Raahi",
-        client: "Raahi Travel",
-        result: "Photography system used across 6 markets",
-        gradient: "linear-gradient(135deg, #3A4A3F 0%, #1A2A1F 100%)",
+        step: "02",
+        name: "Strategy",
+        description:
+          "We define content pillars, visual direction, and a production plan mapped to your business goals.",
+      },
+      {
+        step: "03",
+        name: "Creative Direction",
+        description:
+          "We establish the visual treatment, shot lists, and narrative frameworks before any production begins.",
+      },
+      {
+        step: "04",
+        name: "Production",
+        description:
+          "We direct and produce the content with consistent quality control across every deliverable.",
+      },
+      {
+        step: "05",
+        name: "Delivery",
+        description:
+          "You receive organized, formatted assets with usage guidelines and templates for ongoing content creation.",
       },
     ],
+    relatedWork: [],
   },
   {
     slug: "digital-design",
     number: "03",
     name: "Digital Design and Experience",
-    tagline: "Digital experiences that convert visitors into clients.",
+    tagline:
+      "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially. We lead the design, work with development partners to build it, and ensure every page serves a business purpose — not just an aesthetic one.",
     description:
-      "Website design, interface systems, interactive experiences, and content architecture. We design digital touchpoints that look right and work right. Every page, every interaction, every user flow is intentional.",
+      "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
+    seoTitle: "Digital Design and Experience — House of Singh Studios",
+    seoDescription:
+      "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
     gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
     deliverables: [
       {
-        name: "Website Design and Development Direction",
+        name: "Website Design Direction",
         description:
-          "Complete website design with wireframes, high-fidelity mockups, interaction specifications, and development-ready documentation.",
+          "Visual design, layout systems, and page templates that translate your brand into a digital experience.",
       },
       {
-        name: "Interface and Digital Layout Systems",
+        name: "Content Architecture",
         description:
-          "Reusable component libraries and layout grids that maintain visual consistency across pages and screen sizes.",
+          "Page structure, information hierarchy, and content organization that guides visitors toward action.",
       },
       {
-        name: "Interactive Brand Experiences",
+        name: "Interface Design",
         description:
-          "Microsites, landing pages, and campaign experiences that go beyond standard templates. Built for engagement and conversion.",
+          "Interactive elements, navigation patterns, and micro-interactions that make the experience feel intentional.",
       },
       {
-        name: "Content Architecture and Structure",
+        name: "Digital Brand Systems",
         description:
-          "Information architecture, navigation design, and content hierarchy that helps users find what they need without friction.",
+          "Component libraries and design tokens that ensure consistency across your entire digital presence.",
       },
       {
-        name: "Ongoing Digital Design Support",
+        name: "Ongoing Support",
         description:
-          "Retainer-based design support for new pages, campaign assets, and iterative improvements based on performance data.",
+          "Post-launch design iterations, content updates, and visual refinements as your business evolves.",
       },
     ],
     impact: {
-      quote:
-        "75% of users judge a business's credibility based on its website. Your digital presence is not a brochure. It is your most visible salesperson.",
-      paragraphs: [
-        "A website that looks dated or functions poorly costs you money every day. Visitors leave. Leads do not convert. Your brand loses credibility before a conversation even starts.",
-        "We design digital experiences that are built on user behavior data and business objectives. Not on what looks trendy. The result is a digital presence that works commercially, not just aesthetically.",
-      ],
+      heading: "Your website works 24 hours. It should sell like it.",
+      body: "A website that looks good but does not convert is an expensive brochure. We design digital experiences where every page has a job: build trust, demonstrate capability, and move the visitor toward a conversation. Structure and strategy come before aesthetics.",
     },
-    process: sharedProcess,
-    idealClient:
-      "Businesses whose website does not reflect the quality of their product or service. You know your site is holding you back. You need a digital presence that matches the caliber of your business.",
-    relatedWork: [
+    process: [
       {
-        slug: "soulbound",
-        name: "Soulbound",
-        client: "Soulbound Collective",
-        result: "Website redesign with 65% increase in lead conversion",
-        gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
+        step: "01",
+        name: "Discovery",
+        description:
+          "We audit your current digital presence, analyze user behavior, and define what the website needs to achieve for your business.",
       },
       {
-        slug: "the-collective",
-        name: "The Collective",
-        client: "The Collective",
-        result: "Digital experience platform serving 4 markets",
-        gradient: "linear-gradient(135deg, #4A4A3D 0%, #2A2A1F 100%)",
+        step: "02",
+        name: "Strategy",
+        description:
+          "We map content architecture, page hierarchy, and conversion paths before any visual design begins.",
+      },
+      {
+        step: "03",
+        name: "Creative Direction",
+        description:
+          "We design the visual system: layouts, typography, imagery direction, and interaction patterns.",
+      },
+      {
+        step: "04",
+        name: "Production",
+        description:
+          "We build detailed design files, work with development partners, and ensure pixel-level quality through review cycles.",
+      },
+      {
+        step: "05",
+        name: "Delivery",
+        description:
+          "You receive a launched website with documentation, a component guide, and a plan for ongoing iteration.",
       },
     ],
+    relatedWork: [],
   },
   {
     slug: "creative-strategy",
     number: "04",
     name: "Creative Strategy and Systems",
-    tagline: "Strategy that turns brand decisions into business outcomes.",
+    tagline:
+      "Most brand problems are strategy problems disguised as design problems. We run positioning workshops, build creative direction frameworks, and design content systems that give your team the structure to maintain brand quality without depending on a designer for every decision. For businesses exploring AI in their creative workflow, we provide guidance on tool selection and integration.",
     description:
-      "Brand positioning, creative direction frameworks, communication strategy, and visual consistency systems. We build the strategic layer that makes every creative decision intentional and commercially effective.",
+      "Brand positioning workshops, creative direction frameworks, and visual consistency systems. Strategy that makes everything else work.",
+    seoTitle: "Creative Strategy and Systems — House of Singh Studios",
+    seoDescription:
+      "Brand positioning workshops, creative direction frameworks, and visual consistency systems. Strategy that makes everything else work.",
     gradient: "linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 100%)",
     deliverables: [
       {
-        name: "Brand Positioning and Clarity Workshops",
+        name: "Positioning Workshops",
         description:
-          "Facilitated sessions that define your brand position, audience, differentiation, and messaging hierarchy. The foundation for everything else.",
+          "Facilitated sessions that define your brand's market position, audience, and competitive differentiation.",
       },
       {
-        name: "Creative Direction Frameworks",
+        name: "Creative Frameworks",
         description:
-          "Documented systems for making creative decisions consistently. Visual references, tone parameters, and quality benchmarks your team can follow.",
+          "Direction documents that establish visual and verbal standards for all creative output.",
       },
       {
-        name: "Content and Communication Strategy",
+        name: "Content Strategy",
         description:
-          "Channel strategy, messaging hierarchy, content pillars, and editorial calendars that align creative output with business objectives.",
+          "Channel plans, content pillars, and publishing systems that connect brand messaging to business goals.",
       },
       {
         name: "Visual Consistency Systems",
         description:
-          "Audit your existing brand touchpoints. Identify inconsistencies. Build the governance system that prevents drift.",
+          "Documentation and templates that ensure brand quality is maintained without creative bottlenecks.",
       },
       {
-        name: "AI Supported Workflow Integration",
+        name: "AI Workflow Integration",
         description:
-          "For businesses exploring AI in their creative workflow. Tool selection, process design, and implementation support for AI-assisted creative operations.",
+          "Guidance on adopting AI tools in your creative operations: tool selection, workflow design, and implementation support.",
       },
     ],
     impact: {
-      quote:
-        "Companies with a documented brand strategy grow 3.5x faster than those without one. Strategy is not a luxury. It is infrastructure.",
-      paragraphs: [
-        "Most brand inconsistency is not a design problem. It is a strategy problem. When there is no documented system for making creative decisions, every new hire, every new campaign, and every new channel introduces drift.",
-        "We build the strategic systems that prevent drift. Positioning documents, creative direction frameworks, and governance systems that keep your brand consistent as your team and channels grow.",
-      ],
+      heading: "Strategy is what separates a brand from a logo.",
+      body: "A logo without strategy is decoration. A brand system without a framework is a collection of files nobody uses correctly. We build the strategic layer that gives your team the ability to make brand decisions confidently, consistently, and without needing external creative support for every choice.",
     },
-    process: sharedProcess,
-    idealClient:
-      "Businesses with multiple teams, channels, or markets producing brand content. You have the talent. You do not have the system. Every department interprets the brand differently.",
-    relatedWork: [
+    process: [
       {
-        slug: "tedxtoronto",
-        name: "TEDxToronto",
-        client: "TEDx",
-        result: "Creative framework governing 30+ volunteer designers",
-        gradient: "linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%)",
+        step: "01",
+        name: "Discovery",
+        description:
+          "We interview stakeholders, review existing brand materials, and assess where strategic gaps are causing inconsistency.",
       },
       {
-        slug: "meridian",
-        name: "Meridian",
-        client: "Meridian Financial",
-        result: "Brand governance system across 3 business units",
-        gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
+        step: "02",
+        name: "Strategy",
+        description:
+          "We define positioning, audience frameworks, and the creative principles that will govern all future brand decisions.",
+      },
+      {
+        step: "03",
+        name: "Creative Direction",
+        description:
+          "We build the frameworks, templates, and systems that translate strategy into daily creative operations.",
+      },
+      {
+        step: "04",
+        name: "Production",
+        description:
+          "We document everything: guidelines, playbooks, and reference materials your team can use independently.",
+      },
+      {
+        step: "05",
+        name: "Delivery",
+        description:
+          "You receive a complete strategic toolkit with a handoff session and optional ongoing advisory support.",
       },
     ],
+    relatedWork: [],
   },
 ];
 
