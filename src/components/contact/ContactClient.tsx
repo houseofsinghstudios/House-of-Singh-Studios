@@ -131,7 +131,7 @@ export default function ContactClient() {
                 </p>
               )}
               <form onSubmit={handleSubmit} className="flex flex-col gap-8">
-                <div className="contact-field-wrap">
+                <div>
                   <label className="contact-label">Name</label>
                   <input
                     type="text"
@@ -139,8 +139,9 @@ export default function ContactClient() {
                     required
                     className="contact-input"
                   />
+                  <span className="focus-line" />
                 </div>
-                <div className="contact-field-wrap">
+                <div>
                   <label className="contact-label">Email</label>
                   <input
                     type="email"
@@ -148,16 +149,18 @@ export default function ContactClient() {
                     required
                     className="contact-input"
                   />
+                  <span className="focus-line" />
                 </div>
-                <div className="contact-field-wrap">
+                <div>
                   <label className="contact-label">Company (optional)</label>
                   <input
                     type="text"
                     name="company"
                     className="contact-input"
                   />
+                  <span className="focus-line" />
                 </div>
-                <div className="contact-field-wrap">
+                <div>
                   <label className="contact-label">Message</label>
                   <textarea
                     name="message"
@@ -166,6 +169,7 @@ export default function ContactClient() {
                     className="contact-textarea"
                     placeholder="Tell us about your project, your timeline, and what you are looking for."
                   />
+                  <span className="focus-line" />
                 </div>
                 <div>
                   <button

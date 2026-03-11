@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function stripHtml(str: string): string {
+  return str.replace(/<[^>]*>/g, "").trim();
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -8,6 +12,13 @@ export async function POST(request: NextRequest) {
     if (!name || !email || !role) {
       return NextResponse.json(
         { error: "Name, email, and role are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email format." },
         { status: 400 }
       );
     }
@@ -25,11 +36,11 @@ export async function POST(request: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name,
-        email,
-        role,
-        portfolioUrl: portfolioUrl || "",
-        message: message || "",
+        name: stripHtml(String(name)),
+        email: stripHtml(String(email)),
+        role: stripHtml(String(role)),
+        portfolioUrl: portfolioUrl ? stripHtml(String(portfolioUrl)) : "",
+        message: message ? stripHtml(String(message)) : "",
         source: "careers-page",
         submittedAt: new Date().toISOString(),
       }),

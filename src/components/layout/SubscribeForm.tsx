@@ -36,15 +36,18 @@ export default function SubscribeForm() {
   return (
     <form onSubmit={handleSubmit} className="subscribe-form">
       <div className="subscribe-row">
-        <input
-          type="email"
-          placeholder="your@email.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="subscribe-input"
-          disabled={status === "submitting"}
-        />
+        <div className="subscribe-input-wrap">
+          <input
+            type="email"
+            placeholder="your@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="subscribe-input"
+            disabled={status === "submitting"}
+          />
+          <span className="focus-line" />
+        </div>
         <button
           type="submit"
           className="subscribe-btn"
