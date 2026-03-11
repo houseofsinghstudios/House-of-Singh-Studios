@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PROJECTS } from "@/lib/constants/homepage-data";
@@ -91,15 +92,13 @@ export default function WorkSection() {
               className="project-img-wrap overflow-hidden relative"
               style={{ aspectRatio: "4/3", background: project.color }}
             >
-              <div className="project-img-inner project-image-inner w-full h-full">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="project-img-inner project-image-inner w-full h-full relative">
+                <Image
                   src={project.image}
                   alt={project.name}
-                  loading="lazy"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   style={{
-                    width: "100%",
-                    height: "100%",
                     objectFit: "cover",
                     pointerEvents: "none",
                   }}

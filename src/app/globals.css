@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 :root {
   --bg: #FAFAF7;
   --bg-shift: #F0F0EB;
@@ -296,22 +308,6 @@ body {
   margin-top: 8px;
 }
 
-/* ── Testimonial carousel ── */
-.carousel-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  opacity: 0;
-  transition: opacity 0.6s ease;
-  pointer-events: none;
-}
-.carousel-slide.active {
-  position: relative;
-  opacity: 1;
-  pointer-events: auto;
-}
-
 
 /* ═══════════════════════════════════════════════════════
    Work page styles
@@ -518,7 +514,7 @@ body {
   margin-bottom: 64px;
 }
 .footer-subscribe-heading {
-  font-family: var(--heading);
+  font-family: var(--serif);
   font-size: clamp(24px, 3vw, 36px);
   font-weight: 400;
   color: var(--text-primary);

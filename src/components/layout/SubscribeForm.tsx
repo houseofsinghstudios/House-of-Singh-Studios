@@ -37,7 +37,11 @@ export default function SubscribeForm() {
     <form onSubmit={handleSubmit} className="subscribe-form">
       <div className="subscribe-row">
         <div className="subscribe-input-wrap">
+          <label htmlFor="subscribe-email" className="sr-only">
+            Email address
+          </label>
           <input
+            id="subscribe-email"
             type="email"
             placeholder="your@email.com"
             value={email}
