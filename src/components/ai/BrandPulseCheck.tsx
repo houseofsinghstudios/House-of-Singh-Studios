@@ -297,7 +297,11 @@ export default function BrandPulseCheck() {
 
           {q.type === "text" ? (
             <>
+              <label htmlFor="pulse-business-desc" className="sr-only">
+                {q.text}
+              </label>
               <input
+                id="pulse-business-desc"
                 type="text"
                 className="pulse-text-input"
                 placeholder={q.placeholder}
@@ -426,7 +430,11 @@ export default function BrandPulseCheck() {
                     Get the full assessment sent to your inbox.
                   </p>
                   <div className="pulse-email-row">
+                    <label htmlFor="pulse-email" className="sr-only">
+                      Email address
+                    </label>
                     <input
+                      id="pulse-email"
                       type="email"
                       className="pulse-email-input"
                       placeholder="your@email.com"
