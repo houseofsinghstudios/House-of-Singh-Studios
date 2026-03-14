@@ -16,8 +16,9 @@ export default function StatsSection() {
     const rafIds: number[] = [];
 
     // Set initial states
-    numberRefs.current.forEach((el, i) => {
-      if (el) el.textContent = prefersReducedMotion ? `${STATS.targets[i]}+` : "0+";
+    STATS.items.forEach((stat, i) => {
+      const el = numberRefs.current[i];
+      if (el) el.textContent = prefersReducedMotion ? `${stat.target}${stat.suffix}` : `0${stat.suffix}`;
     });
 
     const observer = new IntersectionObserver(
@@ -25,13 +26,12 @@ export default function StatsSection() {
         if (!entry.isIntersecting) return;
         observer.disconnect();
 
-        // Count-up each stat with rAF
-        STATS.targets.forEach((target, i) => {
+        STATS.items.forEach((stat, i) => {
           const numEl = numberRefs.current[i];
           if (!numEl) return;
 
           if (prefersReducedMotion) {
-            numEl.textContent = `${target}+`;
+            numEl.textContent = `${stat.target}${stat.suffix}`;
             return;
           }
 
@@ -46,7 +46,7 @@ export default function StatsSection() {
               const elapsed = now - startTime;
               const t = Math.min(elapsed / duration, 1);
               const progress = 1 - Math.pow(1 - t, 3);
-              el.textContent = `${Math.round(progress * target)}+`;
+              el.textContent = `${Math.round(progress * stat.target)}${stat.suffix}`;
 
               if (t < 1) {
                 rafIds.push(requestAnimationFrame(tick));
@@ -57,12 +57,11 @@ export default function StatsSection() {
           }, delay);
         });
 
-        // Description text fades up via CSS class
         descRefs.current.forEach((el) => {
           if (el) el.classList.add("in-view");
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.3 }
     );
 
     observer.observe(section);
@@ -80,20 +79,20 @@ export default function StatsSection() {
       style={{ padding: "0 var(--page-px)" }}
     >
       <div className="stats-row">
-        {STATS.targets.map((target, i) => (
+        {STATS.items.map((stat, i) => (
           <div key={i} className="stat-cell">
             <p
               ref={(el) => { numberRefs.current[i] = el; }}
               className="stat-number"
             >
-              {target}+
+              {stat.target}{stat.suffix}
             </p>
             <p
               ref={(el) => { descRefs.current[i] = el; }}
               className="stat-label"
               style={{ opacity: 0, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
             >
-              {STATS.labels[i]}
+              {stat.label}
             </p>
           </div>
         ))}

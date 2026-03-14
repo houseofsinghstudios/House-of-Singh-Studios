@@ -656,14 +656,18 @@ body {
 
 @media (max-width: 600px) {
   .stats-row {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
   .stat-cell {
     padding: 28px 16px;
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
-  .stat-cell:last-child {
+  .stat-cell:nth-child(odd) {
+    border-right: 1px solid var(--border);
+  }
+  .stat-cell:nth-last-child(-n+2) {
     border-bottom: none;
   }
 }

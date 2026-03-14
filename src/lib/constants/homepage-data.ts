@@ -21,11 +21,11 @@ export const ARGUMENT = {
 };
 
 export const STATS = {
-  targets: [50, 12, 8] as const,
-  labels: [
-    "Projects Delivered",
-    "Years of Practice",
-    "Industries Served",
+  items: [
+    { target: 50, suffix: "+", label: "Projects Delivered" },
+    { target: 12, suffix: "+", label: "Years of Practice" },
+    { target: 8, suffix: "+", label: "Industries Served" },
+    { target: 40, suffix: "%", label: "Fewer Revisions" },
   ],
 };
 
