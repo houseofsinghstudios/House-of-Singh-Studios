@@ -21,11 +21,11 @@ export const ARGUMENT = {
 };
 
 export const STATS = {
-  targets: [50, 12, 8] as const,
-  labels: [
-    "Projects Delivered",
-    "Years of Practice",
-    "Industries Served",
+  items: [
+    { target: 50, suffix: "+", label: "Projects Delivered" },
+    { target: 12, suffix: "+", label: "Years of Practice" },
+    { target: 8, suffix: "+", label: "Industries Served" },
+    { target: 40, suffix: "%", label: "Fewer Revisions" },
   ],
 };
 
@@ -33,7 +33,6 @@ export interface ServiceBlock {
   title: string;
   sentence: string;
   href: string;
-  color: string;
 }
 
 export const SERVICES_SECTION = {
@@ -44,25 +43,21 @@ export const SERVICES_SECTION = {
       title: "Brand Identity and Visual Design",
       sentence: "Your brand identity is the first thing your market judges you on. We build complete visual systems that give your business a consistent, professional presence across every touchpoint.",
       href: "/services/brand-identity",
-      color: "#E8E5E0",
     },
     {
       title: "Visual Media and Content Production",
       sentence: "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent.",
       href: "/services/visual-media",
-      color: "#E0E3E8",
     },
     {
       title: "Digital Design and Experience",
       sentence: "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
       href: "/services/digital-design",
-      color: "#E3E8E0",
     },
     {
       title: "Creative Strategy and Systems",
       sentence: "Most brand problems are strategy problems disguised as design problems. We run positioning workshops and build creative direction frameworks that give your team structure.",
       href: "/services/creative-strategy",
-      color: "#E5E0E8",
     },
   ] satisfies ServiceBlock[],
 };
@@ -153,7 +148,7 @@ export const CTA = {
   heading: "Start a project.",
   supporting: "We respond within 24 hours.",
   buttons: {
-    primary: { text: "Book a Discovery Call", href: "#" },
+    primary: { text: "Book a Discovery Call", href: "/contact" },
     secondary: { text: "Start a Project", href: "/contact" },
   },
 };

@@ -32,6 +32,7 @@ export default function RootLayout({
           />
         </head>
         <body>
+          <div className="scroll-progress" />
           <SmoothScroll />
           <ClientCursor />
           <PageTransition />

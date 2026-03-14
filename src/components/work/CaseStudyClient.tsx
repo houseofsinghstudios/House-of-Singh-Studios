@@ -3,6 +3,8 @@
 import { Link } from "next-view-transitions";
 import type { Project } from "@/data/projects";
 import { getNextProject } from "@/data/projects";
+import Button from "@/components/ui/Button";
+import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const GALLERY_GRADIENTS = {
   hero: "linear-gradient(155deg, #DDD8D2, #CFC8C0)",
@@ -27,7 +29,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       >
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] m-0 overflow-hidden"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0 overflow-hidden"
           style={{
             fontSize: "clamp(36px, 5vw, 64px)",
             lineHeight: 1.1,
@@ -72,7 +74,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             justifyContent: "center",
           }}
         >
-          <span className="editorial-label" style={{ color: "#999" }}>
+          <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
             Project Image
           </span>
         </div>
@@ -83,12 +85,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         className="case-content-section css-reveal"
         style={{ padding: "120px var(--page-px)" }}
       >
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          {project.sections.business.label}
-        </p>
+        <EditorialLabel text={project.sections.business.label} className="mb-6" />
         <div className="max-w-[640px]">
           {project.sections.business.paragraphs.map((p, i) => (
             <p
@@ -117,12 +114,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           background: "var(--bg-shift)",
         }}
       >
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          {project.sections.challenge.label}
-        </p>
+        <EditorialLabel text={project.sections.challenge.label} className="mb-6" />
         <div className="max-w-[640px]">
           {project.sections.challenge.paragraphs.map((p, i) => (
             <p
@@ -148,12 +140,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         className="case-content-section css-reveal"
         style={{ padding: "120px var(--page-px)" }}
       >
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          {project.sections.approach.label}
-        </p>
+        <EditorialLabel text={project.sections.approach.label} className="mb-6" />
         <div className="max-w-[640px]">
           {project.sections.approach.paragraphs.map((p, i) => (
             <p
@@ -182,15 +169,10 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           background: "var(--bg-shift)",
         }}
       >
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          {project.sections.deliverables.label}
-        </p>
+        <EditorialLabel text={project.sections.deliverables.label} className="mb-6" />
         <div
           style={{
-            borderLeft: "3px solid rgba(26, 26, 26, 0.1)",
+            borderLeft: "3px solid var(--border)",
             paddingLeft: 24,
           }}
         >
@@ -216,12 +198,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         className="case-content-section css-reveal"
         style={{ padding: "120px var(--page-px)" }}
       >
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          {project.sections.result.label}
-        </p>
+        <EditorialLabel text={project.sections.result.label} className="mb-6" />
         <div className="max-w-[640px]">
           {project.sections.result.paragraphs.map((p, i) => (
             <p
@@ -275,7 +252,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                 justifyContent: "center",
               }}
             >
-              <span className="editorial-label" style={{ color: "#999" }}>
+              <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
                 Gallery Image
               </span>
             </div>
@@ -297,7 +274,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
                 justifyContent: "center",
               }}
             >
-              <span className="editorial-label" style={{ color: "#999" }}>
+              <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
                 Gallery Image
               </span>
             </div>
@@ -321,7 +298,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
               justifyContent: "center",
             }}
           >
-            <span className="editorial-label" style={{ color: "#999" }}>
+            <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
               Gallery Image
             </span>
           </div>
@@ -337,14 +314,14 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           marginTop: 80,
         }}
       >
-        <p className="editorial-label mb-6">(Next Project)</p>
+        <EditorialLabel text="Next Project" className="mb-6" />
         <Link
           href={`/work/${next.slug}`}
           className="next-project-link no-underline inline-block"
           data-cursor="expand"
         >
           <h2
-            className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] m-0"
+            className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0"
             style={{
               fontSize: "clamp(32px, 4.5vw, 56px)",
               transition: "letter-spacing 0.5s ease",
@@ -364,7 +341,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         }}
       >
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
           style={{
             fontSize: "clamp(32px, 4.5vw, 60px)",
             lineHeight: 1.1,
@@ -374,32 +351,12 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           Start a project.
         </h2>
         <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <a
-            href="#"
-            className="contact-submit inline-block"
-            data-cursor="link"
-          >
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
-          </a>
-          <Link
-            href="/contact"
-            className="inline-block font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-            style={{
-              padding: "16px 32px",
-              border: "1px solid rgba(26, 26, 26, 0.2)",
-              textDecoration: "none",
-              transition: "opacity 0.2s ease",
-            }}
-            data-cursor="link"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "0.6";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "1";
-            }}
-          >
+          </Button>
+          <Button href="/contact" variant="secondary" data-cursor="link">
             Start a Project
-          </Link>
+          </Button>
         </div>
       </section>
     </div>

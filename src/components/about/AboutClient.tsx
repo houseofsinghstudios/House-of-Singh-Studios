@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Button from "@/components/ui/Button";
+import EditorialLabel from "@/components/ui/EditorialLabel";
 
 /* ── Stat config ── */
 const STATS = [
@@ -104,15 +105,14 @@ export default function AboutClient() {
       >
         <p
           data-hero-label
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
-          style={{ opacity: 0.4 }}
+          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-muted)]"
         >
           (About)
         </p>
 
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4 max-w-[800px] overflow-hidden"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 max-w-[800px] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15 }}
         >
           Design should be structured, intentional, and commercially effective.
@@ -132,8 +132,8 @@ export default function AboutClient() {
         ref={statsRef}
         style={{
           padding: "80px var(--page-px)",
-          borderTop: "1px solid rgba(26,26,26,0.08)",
-          borderBottom: "1px solid rgba(26,26,26,0.08)",
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
         }}
       >
         <div className="about-stats-grid">
@@ -141,7 +141,7 @@ export default function AboutClient() {
             <div key={i}>
               <p
                 ref={(el) => { numberRefs.current[i] = el; }}
-                className="font-[var(--serif)] font-semibold leading-none text-[color:var(--text-primary)] m-0"
+                className="font-[var(--sans)] font-medium leading-none text-[color:var(--text-primary)] m-0"
                 style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
               >
                 {stat.target}{stat.suffix}
@@ -160,15 +160,10 @@ export default function AboutClient() {
 
       {/* ═══════════════════════ SECTION 3: PROCESS ═══════════════════════ */}
       <section style={{ padding: "140px var(--page-px)" }}>
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] scroll-reveal-up"
-          style={{ opacity: 0.4, marginBottom: 24 }}
-        >
-          (Process)
-        </p>
+        <EditorialLabel text="Process" className="scroll-reveal-up mb-6" />
 
         <h2
-          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
           style={{
             fontSize: "clamp(32px, 4vw, 56px)",
             lineHeight: 1.15,
@@ -191,7 +186,7 @@ export default function AboutClient() {
             className="about-process-step scroll-reveal-up"
           >
             <div>
-              <p className="font-[var(--sans)] text-[15px] font-semibold text-[color:var(--text-primary)]">
+              <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)]">
                 {step.name}
               </p>
             </div>
@@ -209,15 +204,10 @@ export default function AboutClient() {
 
       {/* ═══════════════════════ SECTION 4: CAPABILITIES NETWORK ═══════════════════════ */}
       <section style={{ padding: "140px var(--page-px)" }}>
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] scroll-reveal-up"
-          style={{ opacity: 0.4, marginBottom: 24 }}
-        >
-          (Network)
-        </p>
+        <EditorialLabel text="Network" className="scroll-reveal-up mb-6" />
 
         <h2
-          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15, marginBottom: 24 }}
         >
           Senior thinking on every brief.
@@ -235,7 +225,7 @@ export default function AboutClient() {
       <section
         style={{
           padding: "140px var(--page-px)",
-          borderTop: "1px solid rgba(26,26,26,0.08)",
+          borderTop: "1px solid var(--border)",
         }}
       >
         <div className="about-founder-grid">
@@ -260,15 +250,10 @@ export default function AboutClient() {
               justifyContent: "center",
             }}
           >
-            <p
-              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.4, marginBottom: 24 }}
-            >
-              (Founder)
-            </p>
+            <EditorialLabel text="Founder" className="scroll-reveal-up mb-6" />
 
             <h2
-              className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+              className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
               style={{
                 fontSize: "clamp(28px, 3vw, 32px)",
                 lineHeight: 1.15,
@@ -327,7 +312,7 @@ export default function AboutClient() {
         style={{ padding: "160px var(--page-px)" }}
       >
         <h2
-          className="css-reveal font-[var(--serif)] font-semibold text-[color:var(--text-primary)] overflow-hidden"
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 52px)", lineHeight: 1.1 }}
         >
           Start a project.
@@ -339,7 +324,7 @@ export default function AboutClient() {
           We respond within 24 hours.
         </p>
         <div className="css-reveal flex flex-wrap justify-center gap-3">
-          <Button href="#" data-cursor="link">
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
           </Button>
           <Button href="/contact" variant="secondary" data-cursor="link">

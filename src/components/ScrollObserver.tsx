@@ -45,15 +45,14 @@ export default function ScrollObserver() {
       ".founder-photo-reveal, " +
       ".ai-process-row, " +
       ".packages-grid .package-tier, " +
-      ".argument-section .argument-step-line, " +
-      ".argument-section h2, " +
-      ".argument-section > div > p, " +
+      ".argument-section .argument-step-row, " +
+      ".argument-section .argument-left, " +
       ".cta-section-mobile > div:first-child, " +
       ".cta-section-mobile > h2, " +
       ".cta-section-mobile > p, " +
       ".cta-section-mobile > div:last-child, " +
       ".testimonials-section, " +
-      ".services-section-mobile .service-block, " +
+      ".svc-accordion-row, " +
       ".work-section-mobile .project-card, " +
       ".case-content-section, " +
       ".gallery-full, .gallery-pair-item"

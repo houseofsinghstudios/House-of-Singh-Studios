@@ -70,8 +70,8 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="hero-section relative flex flex-col justify-end px-[var(--page-px)] pb-20"
-      style={{ minHeight: "100svh" }}
+      className="hero-section relative px-[var(--page-px)]"
+      style={{ minHeight: "100svh", display: "flex", flexDirection: "column", justifyContent: "center", paddingTop: "20vh", paddingBottom: 80 }}
     >
       <div data-hero-label>
         <EditorialLabel text={HERO.label} className="mb-6" />
@@ -80,7 +80,7 @@ export default function HeroSection() {
       <div className="max-w-[900px]">
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
+          className="font-[var(--sans)] font-semibold text-[color:var(--text-primary)] m-0"
           style={{
             fontSize: "clamp(36px, 5.5vw, 76px)",
             lineHeight: 1.1,
@@ -124,6 +124,12 @@ export default function HeroSection() {
           <div className="scroll-thumb" />
         </div>
       </div>
+
+      {/* Horizontal divider at section bottom */}
+      <div
+        className="absolute left-0 right-0 bottom-0"
+        style={{ height: 1, background: "var(--border)" }}
+      />
     </section>
   );
 }
