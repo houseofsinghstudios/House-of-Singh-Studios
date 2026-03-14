@@ -7,6 +7,7 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -85,8 +86,8 @@ export default function TestimonialsSection() {
       ref={sectionRef}
       className="testimonials-section css-reveal"
       data-cursor="pause"
-      onMouseEnter={stopTimer}
-      onMouseLeave={startTimer}
+      onMouseEnter={() => { stopTimer(); setIsPaused(true); }}
+      onMouseLeave={() => { startTimer(); setIsPaused(false); }}
     >
       <div className="testimonials-inner">
         {/* Left column: quote */}
@@ -132,6 +133,7 @@ export default function TestimonialsSection() {
                 style={{ width: `${((active + 1) / total) * 100}%` }}
               />
             </div>
+            {isPaused && <span className="testimonials-paused-label">Paused</span>}
           </div>
 
           {/* Navigation arrows */}

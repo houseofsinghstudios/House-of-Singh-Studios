@@ -2295,7 +2295,7 @@ td a:hover,
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   margin-top: 28px;
   letter-spacing: 0.02em;
 }
@@ -2381,7 +2381,7 @@ td a:hover,
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   line-height: 1.5;
   padding: 14px 0;
   border: none;
@@ -2396,7 +2396,18 @@ td a:hover,
 }
 
 .testimonials-preview-btn:hover {
+  color: var(--text-primary);
+}
+
+.testimonials-paused-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
   color: var(--text-secondary);
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
 }
 
 /* ── Responsive: stack on mobile ── */
