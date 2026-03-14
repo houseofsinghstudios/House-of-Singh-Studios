@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "next-view-transitions";
+import Button from "@/components/ui/Button";
 
 const PROCESS_STAGES = [
   {
@@ -65,7 +65,7 @@ export default function AILabClient() {
         </p>
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15, margin: 0 }}
         >
           AI is built into how we work.
@@ -90,7 +90,7 @@ export default function AILabClient() {
           (Why It Matters)
         </p>
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
           style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0 }}
         >
           AI can generate assets. It cannot build a brand.
@@ -118,7 +118,7 @@ export default function AILabClient() {
           (How It Works)
         </p>
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)] mb-12"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mb-12"
           style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0, marginBottom: 48 }}
         >
           What AI does at each stage.
@@ -143,7 +143,7 @@ export default function AILabClient() {
           (Brand Pulse Check)
         </p>
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
           style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0 }}
         >
           How strong is your brand?
@@ -159,7 +159,7 @@ export default function AILabClient() {
         <div
           className="mt-8"
           style={{
-            border: "1px solid rgba(26, 26, 26, 0.1)",
+            border: "1px solid var(--border)",
             padding: 48,
             textAlign: "center",
             maxWidth: 640,
@@ -235,7 +235,7 @@ export default function AILabClient() {
         }}
       >
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
           style={{ fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, margin: 0 }}
         >
           Start a project.
@@ -247,28 +247,12 @@ export default function AILabClient() {
           We respond within 24 hours.
         </p>
         <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <a
-            href="#"
-            className="contact-submit inline-block"
-            data-cursor="link"
-          >
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
-          </a>
-          <Link
-            href="/contact"
-            className="inline-block font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-            style={{
-              padding: "16px 32px",
-              border: "1px solid rgba(26, 26, 26, 0.2)",
-              textDecoration: "none",
-              transition: "opacity 0.2s ease",
-            }}
-            data-cursor="link"
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
-          >
+          </Button>
+          <Button href="/contact" variant="secondary" data-cursor="link">
             Start a Project
-          </Link>
+          </Button>
         </div>
       </section>
     </>

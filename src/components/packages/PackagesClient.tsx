@@ -38,7 +38,7 @@ const tiers = [
     timeline: "8 to 12 weeks",
     bestFor:
       "Businesses doing $1M+ that have outgrown their current brand.",
-    cta: { text: "Book a Discovery Call", href: "#", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: "/contact", variant: "primary" as const },
     recommended: true,
   },
   {
@@ -57,7 +57,7 @@ const tiers = [
     timeline: "12 to 16 weeks",
     bestFor:
       "Businesses preparing for a major growth phase, market expansion, or rebrand.",
-    cta: { text: "Book a Discovery Call", href: "#", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: "/contact", variant: "primary" as const },
     recommended: false,
   },
 ];
@@ -80,7 +80,7 @@ export default function PackagesClient() {
 
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4 overflow-hidden max-w-[800px]"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 overflow-hidden max-w-[800px]"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15 }}
         >
           Clear scope. Defined deliverables. No surprises.
@@ -119,7 +119,7 @@ export default function PackagesClient() {
               )}
 
               <h2
-                className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4"
+                className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4"
                 style={{ fontSize: "clamp(24px, 2.5vw, 28px)", lineHeight: 1.2 }}
               >
                 {tier.title}
@@ -133,7 +133,7 @@ export default function PackagesClient() {
                   Starting at
                 </p>
                 <p
-                  className="font-[var(--sans)] font-semibold text-[color:var(--text-primary)]"
+                  className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
                   style={{ fontSize: "clamp(20px, 2vw, 24px)" }}
                 >
                   {tier.price}
@@ -212,13 +212,13 @@ export default function PackagesClient() {
         style={{ padding: "80px var(--page-px) 160px" }}
       >
         <h2
-          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(28px, 3vw, 36px)", lineHeight: 1.15 }}
         >
           Not sure which package fits?
         </h2>
         <div className="css-reveal flex flex-wrap justify-center gap-3 mt-10">
-          <Button href="#" data-cursor="link">
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
           </Button>
           <Button href="/contact" variant="secondary" data-cursor="link">
