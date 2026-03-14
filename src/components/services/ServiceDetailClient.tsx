@@ -1,63 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
-import { gsap } from "gsap";
-import SplitType from "split-type";
 import { getServiceBySlug } from "@/data/services";
-import {
-  initScrollFallbacks,
-  cleanScrollFallbacks,
-} from "@/lib/scroll-fallback";
 
 export default function ServiceDetailClient({ slug }: { slug: string }) {
   const service = getServiceBySlug(slug);
-
-  const heroRef = useRef<HTMLElement>(null);
-  const splitsRef = useRef<SplitType[]>([]);
-
-  useEffect(() => {
-    initScrollFallbacks();
-
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    const label = hero.querySelector("[data-label]");
-    const heading = hero.querySelector("[data-heading]") as HTMLElement;
-    const desc = hero.querySelector("[data-desc]");
-
-    if (label) {
-      gsap.set(label, { opacity: 0, y: 12 });
-      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (heading) {
-      const split = new SplitType(heading, { types: "words" });
-      splitsRef.current.push(split);
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(
-          split.words,
-          { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 },
-          0.15
-        );
-      }
-    }
-
-    if (desc) {
-      gsap.set(desc, { opacity: 0, y: 20 });
-      tl.to(desc, { opacity: 0.7, y: 0, duration: 0.5 }, 0.6);
-    }
-
-    return () => {
-      cleanScrollFallbacks();
-      splitsRef.current.forEach((s) => s.revert());
-      splitsRef.current = [];
-      tl.kill();
-    };
-  }, []);
 
   if (!service) return null;
 
@@ -67,19 +14,18 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
     <>
       {/* ═══ SECTION 1: HERO ═══ */}
       <section
-        ref={heroRef}
         className="flex flex-col justify-end px-[var(--page-px)]"
         style={{ minHeight: "100vh", paddingBottom: 100 }}
       >
         <p
-          data-label
+          data-hero-label
           className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mb-5"
           style={{ opacity: 0.4 }}
         >
           (Services)
         </p>
         <h1
-          data-heading
+          data-hero-heading
           className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
           style={{
             fontSize: "clamp(36px, 5vw, 64px)",
@@ -240,11 +186,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
       >
         <h2
           className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
-          style={{
-            fontSize: "clamp(28px, 4vw, 36px)",
-            lineHeight: 1.1,
-            margin: 0,
-          }}
+          style={{ fontSize: "clamp(28px, 4vw, 36px)", lineHeight: 1.1, margin: 0 }}
         >
           Ready to start?
         </h2>
@@ -252,33 +194,19 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] mt-4"
           style={{ opacity: 0.6 }}
         >
-          Book a discovery call. We will scope your project and recommend the
-          right approach.
+          Book a discovery call. We will scope your project and recommend the right approach.
         </p>
         <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <a
-            href="#"
-            className="contact-submit inline-block"
-            data-cursor="link"
-          >
+          <a href="#" className="contact-submit inline-block" data-cursor="link">
             Book a Discovery Call
           </a>
           <Link
             href="/packages"
             className="inline-block font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-            style={{
-              padding: "16px 32px",
-              border: "1px solid rgba(26, 26, 26, 0.2)",
-              textDecoration: "none",
-              transition: "opacity 0.2s ease",
-            }}
+            style={{ padding: "16px 32px", border: "1px solid rgba(26, 26, 26, 0.2)", textDecoration: "none", transition: "opacity 0.2s ease" }}
             data-cursor="link"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "0.6";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "1";
-            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
           >
             View Packages
           </Link>

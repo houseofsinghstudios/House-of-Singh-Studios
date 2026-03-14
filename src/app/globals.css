@@ -163,11 +163,6 @@ body {
   border-radius: 0 !important;
 }
 
-/* Testimonial pagination dots must be circles */
-.testimonial-dot {
-  border-radius: 50% !important;
-}
-
 /* ── Scroll indicator ── */
 .scroll-track {
   width: 1px;
@@ -680,10 +675,6 @@ body {
     padding-bottom: 80px !important;
   }
   .services-section-mobile {
-    padding-top: 80px !important;
-    padding-bottom: 80px !important;
-  }
-  .testimonials-section-mobile {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
@@ -1487,6 +1478,17 @@ body {
   opacity: 0.85;
 }
 
+.pulse-loading-bar-animated {
+  height: 2px;
+  background: var(--text-primary);
+  margin-top: 24px;
+  animation: pulseBarOscillate 1s ease-in-out infinite alternate;
+}
+@keyframes pulseBarOscillate {
+  from { width: 0; }
+  to { width: 60px; }
+}
+
 @media (max-width: 767px) {
   .ai-process-row {
     grid-template-columns: 1fr;
@@ -1641,6 +1643,11 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes revealClipIn {
+  from { clip-path: inset(8% 6%); }
+  to   { clip-path: inset(0%); }
+}
+
 @keyframes revealFade {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -1657,6 +1664,16 @@ body {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 10% entry 40%;
+    }
+    .scroll-reveal-up {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+    .scroll-clip-reveal {
+      animation: revealClipIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
     }
     .css-fade {
       animation: revealFade linear both;
@@ -2222,6 +2239,252 @@ td a:hover,
 }
 
 /* ═══════════════════════════════════════════════════════
+   Testimonials Section — Asymmetric Editorial Layout
+   ═══════════════════════════════════════════════════════ */
+
+.testimonials-section {
+  padding: clamp(80px, 10vw, 140px) var(--page-px);
+  background: var(--bg-shift);
+}
+
+.testimonials-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 64px;
+  align-items: start;
+}
+
+/* ── Left column: Quote ── */
+.testimonials-left {
+  min-width: 0;
+}
+
+.testimonials-quote-wrap {
+  position: relative;
+}
+
+.testimonials-ghost-number {
+  font-family: var(--sans);
+  font-size: clamp(80px, 8vw, 120px);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--text-primary);
+  opacity: 0.06;
+  position: absolute;
+  top: -10px;
+  left: -4px;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.testimonials-carousel {
+  position: relative;
+  min-height: 180px;
+}
+
+.testimonials-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.testimonials-slide-active {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.testimonials-quote {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: clamp(22px, 2.4vw, 32px);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  border: none;
+  max-width: 680px;
+}
+
+.testimonials-author {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 28px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Right column: Controls ── */
+.testimonials-right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  border-left: 1px solid var(--text-muted);
+  padding-left: 32px;
+  padding-top: 12px;
+}
+
+.testimonials-counter-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.testimonials-counter {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+.testimonials-counter span {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.testimonials-progress-track {
+  width: 100%;
+  height: 1px;
+  background: var(--text-muted);
+  position: relative;
+  overflow: hidden;
+}
+
+.testimonials-progress-fill {
+  height: 1px;
+  background: var(--text-primary);
+  transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.testimonials-nav {
+  display: flex;
+  gap: 12px;
+}
+
+.testimonials-nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid rgba(26, 26, 26, 0.15);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  padding: 0;
+}
+
+.testimonials-nav-btn:hover {
+  border-color: var(--text-primary);
+  background: rgba(26, 26, 26, 0.03);
+}
+
+.testimonials-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.testimonials-preview-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding: 14px 0;
+  border: none;
+  border-top: 1px solid rgba(26, 26, 26, 0.1);
+  background: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.testimonials-preview-btn:last-child {
+  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+}
+
+.testimonials-preview-btn:hover {
+  color: var(--text-primary);
+}
+
+.testimonials-paused-label {
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* ── Responsive: stack on mobile ── */
+@media (max-width: 899px) {
+  .testimonials-inner {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .testimonials-right {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--text-muted);
+    padding-top: 32px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .testimonials-counter-wrap {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .testimonials-nav {
+    gap: 8px;
+  }
+
+  .testimonials-previews {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .testimonials-ghost-number {
+    font-size: 64px;
+  }
+}
+
+@media (max-width: 600px) {
+  .testimonials-section {
+    padding-top: 80px !important;
+    padding-bottom: 80px !important;
+  }
+
+  .testimonials-previews {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
    Safari/Firefox Fallback: IntersectionObserver
    Only active when animation-timeline is NOT supported.
    The ScrollObserver component adds .in-view class to
@@ -2243,6 +2506,33 @@ td a:hover,
     .css-fade {
       opacity: 0;
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .scroll-reveal-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .scroll-clip-reveal {
+      clip-path: inset(8% 6%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .scroll-reveal-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-clip-reveal.in-view {
+      clip-path: inset(0%);
+    }
+
+    .scroll-clip-reveal.in-view img,
+    .scroll-clip-reveal.in-view canvas {
+      transform: scale(1);
+      transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
     .css-reveal.in-view,
@@ -2377,6 +2667,70 @@ td a:hover,
     }
     .ai-process-row.in-view {
       border-left-color: rgba(26, 26, 26, 0.15);
+    }
+
+    /* ── Case study content sections ── */
+    .case-content-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .case-content-section.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Gallery clip reveals ── */
+    .gallery-full {
+      clip-path: inset(6% 4%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .gallery-full.in-view {
+      clip-path: inset(0%);
+    }
+    .gallery-pair-item {
+      clip-path: inset(8% 6%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .gallery-pair-item.in-view {
+      clip-path: inset(0%);
+    }
+
+    /* ── Services section blocks ── */
+    .services-section-mobile .service-block {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .services-section-mobile .service-block.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Work section project cards ── */
+    .work-section-mobile .project-card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .work-section-mobile .project-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Testimonials section reveal ── */
+    .testimonials-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .testimonials-section.in-view {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }

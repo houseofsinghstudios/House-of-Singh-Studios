@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { gsap } from "gsap";
+import { useState, useRef, useCallback } from "react";
 import { Link } from "next-view-transitions";
 
 /* ── Question data ── */
@@ -86,50 +85,32 @@ export default function BrandPulseCheck() {
   const [error, setError] = useState<string | null>(null);
 
   const contentRef = useRef<HTMLDivElement>(null);
-  const loadingBarRef = useRef<HTMLDivElement>(null);
-  const loadingTweenRef = useRef<gsap.core.Tween | null>(null);
 
   /* ── Transition helper ── */
   const transitionTo = useCallback((nextStep: number) => {
-    if (!contentRef.current) {
+    const el = contentRef.current;
+    if (!el) {
       setCurrentStep(nextStep);
       return;
     }
-    gsap.to(contentRef.current, {
-      opacity: 0,
-      y: -10,
-      duration: 0.25,
-      ease: "power2.in",
-      onComplete: () => {
-        setCurrentStep(nextStep);
-        gsap.fromTo(
-          contentRef.current,
-          { opacity: 0, y: 10 },
-          { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
-        );
-      },
-    });
-  }, []);
+    el.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+    el.style.opacity = "0";
+    el.style.transform = "translateY(-10px)";
 
-  /* ── Loading bar animation ── */
-  useEffect(() => {
-    if (currentStep === 6 && loadingBarRef.current) {
-      loadingTweenRef.current = gsap.fromTo(
-        loadingBarRef.current,
-        { width: 0 },
-        {
-          width: 60,
-          duration: 1,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        }
-      );
-    }
-    return () => {
-      loadingTweenRef.current?.kill();
+    const onEnd = () => {
+      el.removeEventListener("transitionend", onEnd);
+      setCurrentStep(nextStep);
+      el.style.transition = "none";
+      el.style.opacity = "0";
+      el.style.transform = "translateY(10px)";
+      requestAnimationFrame(() => {
+        el.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0)";
+      });
     };
-  }, [currentStep]);
+    el.addEventListener("transitionend", onEnd, { once: true });
+  }, []);
 
   /* ── Submit answers to API ── */
   const submitAssessment = useCallback(
@@ -155,19 +136,23 @@ export default function BrandPulseCheck() {
 
         // Transition to result with a short delay for the loading to feel intentional
         setTimeout(() => {
-          if (contentRef.current) {
-            gsap.to(contentRef.current, {
-              opacity: 0,
-              duration: 0.2,
-              onComplete: () => {
-                setCurrentStep(7);
-                gsap.fromTo(
-                  contentRef.current,
-                  { opacity: 0, y: 20 },
-                  { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
-                );
-              },
-            });
+          const el = contentRef.current;
+          if (el) {
+            el.style.transition = "opacity 0.2s ease";
+            el.style.opacity = "0";
+            const onEnd = () => {
+              el.removeEventListener("transitionend", onEnd);
+              setCurrentStep(7);
+              el.style.transition = "none";
+              el.style.opacity = "0";
+              el.style.transform = "translateY(20px)";
+              requestAnimationFrame(() => {
+                el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+                el.style.opacity = "1";
+                el.style.transform = "translateY(0)";
+              });
+            };
+            el.addEventListener("transitionend", onEnd, { once: true });
           } else {
             setCurrentStep(7);
           }
@@ -348,9 +333,7 @@ export default function BrandPulseCheck() {
         <div className="pulse-loading">
           <p className="pulse-loading-text">Analyzing your brand signals...</p>
           <div
-            ref={loadingBarRef}
-            className="pulse-loading-bar"
-            style={{ width: 0 }}
+            className="pulse-loading-bar pulse-loading-bar-animated"
           />
         </div>
       );

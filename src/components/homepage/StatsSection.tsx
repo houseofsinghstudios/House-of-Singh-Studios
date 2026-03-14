@@ -1,11 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STATS } from "@/lib/constants/homepage-data";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function StatsSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -19,71 +15,60 @@ export default function StatsSection() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const rafIds: number[] = [];
 
-    const ctx = gsap.context(() => {
-      // Set initial states
-      numberRefs.current.forEach((el) => {
-        if (el) el.textContent = prefersReducedMotion ? `${STATS.targets[numberRefs.current.indexOf(el)]}+` : "0+";
-      });
-      descRefs.current.forEach((el) => {
-        if (el) gsap.set(el, { opacity: 0, y: 10 });
-      });
+    // Set initial states
+    numberRefs.current.forEach((el, i) => {
+      if (el) el.textContent = prefersReducedMotion ? `${STATS.targets[i]}+` : "0+";
+    });
 
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          // Count-up each stat with rAF
-          STATS.targets.forEach((target, i) => {
-            const numEl = numberRefs.current[i];
-            if (!numEl) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
 
-            if (prefersReducedMotion) {
-              numEl.textContent = `${target}+`;
-              return;
-            }
+        // Count-up each stat with rAF
+        STATS.targets.forEach((target, i) => {
+          const numEl = numberRefs.current[i];
+          if (!numEl) return;
 
-            const delay = i * 150;
-            const duration = 1500;
+          if (prefersReducedMotion) {
+            numEl.textContent = `${target}+`;
+            return;
+          }
 
-            setTimeout(() => {
-              const startTime = performance.now();
-              const el = numEl!;
+          const delay = i * 150;
+          const duration = 1500;
 
-              function tick(now: number) {
-                const elapsed = now - startTime;
-                const t = Math.min(elapsed / duration, 1);
-                // Cubic ease-out: decelerates as approaching target
-                const progress = 1 - Math.pow(1 - t, 3);
-                el.textContent = `${Math.round(progress * target)}+`;
+          setTimeout(() => {
+            const startTime = performance.now();
+            const el = numEl!;
 
-                if (t < 1) {
-                  rafIds.push(requestAnimationFrame(tick));
-                }
+            function tick(now: number) {
+              const elapsed = now - startTime;
+              const t = Math.min(elapsed / duration, 1);
+              const progress = 1 - Math.pow(1 - t, 3);
+              el.textContent = `${Math.round(progress * target)}+`;
+
+              if (t < 1) {
+                rafIds.push(requestAnimationFrame(tick));
               }
-
-              rafIds.push(requestAnimationFrame(tick));
-            }, delay);
-          });
-
-          // Description text fades up staggered
-          descRefs.current.forEach((el, i) => {
-            if (el) {
-              gsap.to(el, {
-                opacity: 1,
-                y: 0,
-                duration: 0.4,
-                delay: i * 0.15 + 0.2,
-                ease: "power3.out",
-              });
             }
-          });
-        },
-      });
-    }, section);
+
+            rafIds.push(requestAnimationFrame(tick));
+          }, delay);
+        });
+
+        // Description text fades up via CSS class
+        descRefs.current.forEach((el) => {
+          if (el) el.classList.add("in-view");
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
 
     return () => {
-      ctx.revert();
+      observer.disconnect();
       rafIds.forEach((id) => cancelAnimationFrame(id));
     };
   }, []);
@@ -106,6 +91,7 @@ export default function StatsSection() {
             <p
               ref={(el) => { descRefs.current[i] = el; }}
               className="stat-label"
+              style={{ opacity: 0, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
             >
               {STATS.labels[i]}
             </p>

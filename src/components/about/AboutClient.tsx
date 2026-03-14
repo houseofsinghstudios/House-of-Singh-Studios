@@ -1,16 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import Button from "@/components/ui/Button";
-import {
-  initScrollFallbacks,
-  cleanScrollFallbacks,
-} from "@/lib/scroll-fallback";
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ── Stat config ── */
 const STATS = [
@@ -29,50 +20,9 @@ const STEPS = [
 ];
 
 export default function AboutClient() {
-  const heroRef = useRef<HTMLElement>(null);
   const statsRef = useRef<HTMLElement>(null);
-  const processHeadingRef = useRef<HTMLHeadingElement>(null);
-  const networkHeadingRef = useRef<HTMLHeadingElement>(null);
-  const founderNameRef = useRef<HTMLHeadingElement>(null);
-  const ctaRef = useRef<HTMLElement>(null);
-
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-
-  const splitsRef = useRef<SplitType[]>([]);
-
-  // ── Hero page load orchestration ──
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    const label = hero.querySelector("[data-hero-label]");
-    const heading = hero.querySelector("[data-hero-heading]") as HTMLElement;
-    const body = hero.querySelector("[data-hero-body]");
-
-    if (label) {
-      gsap.set(label, { opacity: 0, y: 12 });
-      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (heading) {
-      const split = new SplitType(heading, { types: "words" });
-      splitsRef.current.push(split);
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.05, duration: 0.5 }, 0.15);
-      }
-    }
-
-    if (body) {
-      gsap.set(body, { opacity: 0, y: 16 });
-      tl.to(body, { opacity: 0.7, y: 0, duration: 0.5 }, 0.6);
-    }
-
-    return () => { tl.kill(); };
-  }, []);
 
   // ── Stats count-up ──
   useEffect(() => {
@@ -82,172 +32,61 @@ export default function AboutClient() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const rafIds: number[] = [];
 
-    const ctx = gsap.context(() => {
-      numberRefs.current.forEach((el, i) => {
-        if (el) el.textContent = prefersReducedMotion ? `${STATS[i].target}${STATS[i].suffix}` : `0${STATS[i].suffix}`;
-      });
-      descRefs.current.forEach((el) => {
-        if (el) gsap.set(el, { opacity: 0, y: 10 });
-      });
+    numberRefs.current.forEach((el, i) => {
+      if (el) el.textContent = prefersReducedMotion ? `${STATS[i].target}${STATS[i].suffix}` : `0${STATS[i].suffix}`;
+    });
 
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 80%",
-        once: true,
-        onEnter: () => {
-          STATS.forEach((stat, i) => {
-            const numEl = numberRefs.current[i];
-            if (!numEl) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
 
-            if (prefersReducedMotion) {
-              numEl.textContent = `${stat.target}${stat.suffix}`;
-              return;
-            }
+        STATS.forEach((stat, i) => {
+          const numEl = numberRefs.current[i];
+          if (!numEl) return;
 
-            const delay = i * 150;
-            const duration = 1500;
+          if (prefersReducedMotion) {
+            numEl.textContent = `${stat.target}${stat.suffix}`;
+            return;
+          }
 
-            setTimeout(() => {
-              const startTime = performance.now();
-              const el = numEl!;
+          const delay = i * 150;
+          const duration = 1500;
 
-              function tick(now: number) {
-                const elapsed = now - startTime;
-                const t = Math.min(elapsed / duration, 1);
-                const progress = 1 - Math.pow(1 - t, 3);
-                el.textContent = `${Math.round(progress * stat.target)}${stat.suffix}`;
+          setTimeout(() => {
+            const startTime = performance.now();
+            const el = numEl!;
 
-                if (t < 1) {
-                  rafIds.push(requestAnimationFrame(tick));
-                }
+            function tick(now: number) {
+              const elapsed = now - startTime;
+              const t = Math.min(elapsed / duration, 1);
+              const progress = 1 - Math.pow(1 - t, 3);
+              el.textContent = `${Math.round(progress * stat.target)}${stat.suffix}`;
+
+              if (t < 1) {
+                rafIds.push(requestAnimationFrame(tick));
               }
-
-              rafIds.push(requestAnimationFrame(tick));
-            }, delay);
-          });
-
-          descRefs.current.forEach((el, i) => {
-            if (el) {
-              gsap.to(el, {
-                opacity: 0.6, y: 0, duration: 0.4,
-                delay: i * 0.15 + 0.2, ease: "power3.out",
-              });
             }
-          });
-        },
-      });
-    }, section);
+
+            rafIds.push(requestAnimationFrame(tick));
+          }, delay);
+        });
+
+        descRefs.current.forEach((el) => {
+          if (el) {
+            el.style.opacity = "0.6";
+            el.style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
 
     return () => {
-      ctx.revert();
+      observer.disconnect();
       rafIds.forEach((id) => cancelAnimationFrame(id));
-    };
-  }, []);
-
-  // ── Process heading SplitType ──
-  useEffect(() => {
-    const heading = processHeadingRef.current;
-    if (!heading) return;
-
-    const split = new SplitType(heading, { types: "words" });
-    splitsRef.current.push(split);
-
-    if (split.words) {
-      gsap.set(split.words, { y: "100%", opacity: 0 });
-      gsap.to(split.words, {
-        y: "0%", opacity: 1, stagger: 0.04, duration: 0.5,
-        ease: "power3.out",
-        scrollTrigger: { trigger: heading, start: "top 80%", once: true },
-      });
-    }
-  }, []);
-
-  // ── Network heading SplitType ──
-  useEffect(() => {
-    const heading = networkHeadingRef.current;
-    if (!heading) return;
-
-    const split = new SplitType(heading, { types: "words" });
-    splitsRef.current.push(split);
-
-    if (split.words) {
-      gsap.set(split.words, { y: "100%", opacity: 0 });
-      gsap.to(split.words, {
-        y: "0%", opacity: 1, stagger: 0.04, duration: 0.5,
-        ease: "power3.out",
-        scrollTrigger: { trigger: heading, start: "top 80%", once: true },
-      });
-    }
-  }, []);
-
-  // ── Founder name SplitType ──
-  useEffect(() => {
-    const heading = founderNameRef.current;
-    if (!heading) return;
-
-    const split = new SplitType(heading, { types: "words" });
-    splitsRef.current.push(split);
-
-    if (split.words) {
-      gsap.set(split.words, { y: "100%", opacity: 0 });
-      gsap.to(split.words, {
-        y: "0%", opacity: 1, stagger: 0.05, duration: 0.5,
-        ease: "power3.out",
-        scrollTrigger: { trigger: heading, start: "top 80%", once: true },
-      });
-    }
-  }, []);
-
-  // ── CTA entrance ──
-  useEffect(() => {
-    const cta = ctaRef.current;
-    if (!cta) return;
-
-    const heading = cta.querySelector("[data-cta-heading]") as HTMLElement;
-    const sub = cta.querySelector("[data-cta-sub]");
-    const btns = cta.querySelector("[data-cta-btns]");
-
-    let split: SplitType | null = null;
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: cta, start: "top 75%", once: true },
-        defaults: { ease: "power3.out" },
-      });
-
-      if (heading) {
-        split = new SplitType(heading, { types: "words" });
-        splitsRef.current.push(split);
-        if (split.words) {
-          gsap.set(split.words, { y: "100%", opacity: 0 });
-          tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.04, duration: 0.5 }, 0);
-        }
-      }
-
-      if (sub) {
-        gsap.set(sub, { opacity: 0, y: 12 });
-        tl.to(sub, { opacity: 0.7, y: 0, duration: 0.4 }, ">");
-      }
-
-      if (btns) {
-        gsap.set(btns, { opacity: 0, y: 8 });
-        tl.to(btns, { opacity: 1, y: 0, duration: 0.3 }, ">0.1");
-      }
-    }, cta);
-
-    return () => ctx.revert();
-  }, []);
-
-  // ── Scroll fallbacks + master cleanup ──
-  useEffect(() => {
-    initScrollFallbacks();
-    return () => {
-      cleanScrollFallbacks();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-      splitsRef.current.forEach((s) => {
-        try { s.revert(); } catch { /* already reverted */ }
-      });
-      splitsRef.current = [];
     };
   }, []);
 
@@ -255,7 +94,6 @@ export default function AboutClient() {
     <>
       {/* ═══════════════════════ SECTION 1: STUDIO STORY ═══════════════════════ */}
       <section
-        ref={heroRef}
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -311,7 +149,7 @@ export default function AboutClient() {
               <p
                 ref={(el) => { descRefs.current[i] = el; }}
                 className="font-[var(--sans)] font-normal text-sm leading-[1.5] text-[color:var(--text-primary)]"
-                style={{ opacity: 0.6, marginTop: 12, maxWidth: 200 }}
+                style={{ opacity: 0, marginTop: 12, maxWidth: 200, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
               >
                 {stat.label}
               </p>
@@ -330,8 +168,7 @@ export default function AboutClient() {
         </p>
 
         <h2
-          ref={processHeadingRef}
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
+          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
           style={{
             fontSize: "clamp(32px, 4vw, 56px)",
             lineHeight: 1.15,
@@ -380,8 +217,7 @@ export default function AboutClient() {
         </p>
 
         <h2
-          ref={networkHeadingRef}
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
+          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15, marginBottom: 24 }}
         >
           Senior thinking on every brief.
@@ -432,8 +268,7 @@ export default function AboutClient() {
             </p>
 
             <h2
-              ref={founderNameRef}
-              className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+              className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
               style={{
                 fontSize: "clamp(28px, 3vw, 32px)",
                 lineHeight: 1.15,
@@ -488,25 +323,22 @@ export default function AboutClient() {
 
       {/* ═══════════════════════ CTA ═══════════════════════ */}
       <section
-        ref={ctaRef}
-        className="text-center"
+        className="css-reveal text-center"
         style={{ padding: "160px var(--page-px)" }}
       >
         <h2
-          data-cta-heading
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] overflow-hidden"
+          className="css-reveal font-[var(--serif)] font-semibold text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 52px)", lineHeight: 1.1 }}
         >
           Start a project.
         </h2>
         <p
-          data-cta-sub
-          className="font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-primary)] max-w-[480px] mx-auto"
+          className="css-reveal font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-primary)] max-w-[480px] mx-auto"
           style={{ margin: "24px auto 40px", opacity: 0.7 }}
         >
           We respond within 24 hours.
         </p>
-        <div data-cta-btns className="flex flex-wrap justify-center gap-3">
+        <div className="css-reveal flex flex-wrap justify-center gap-3">
           <Button href="#" data-cursor="link">
             Book a Discovery Call
           </Button>

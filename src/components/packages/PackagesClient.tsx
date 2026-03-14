@@ -1,12 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import Button from "@/components/ui/Button";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const tiers = [
   {
@@ -69,109 +63,10 @@ const tiers = [
 ];
 
 export default function PackagesClient() {
-  const heroRef = useRef<HTMLElement>(null);
-  const tiersRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLElement>(null);
-
-  // ── Hero animation ──
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    let split: SplitType | null = null;
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    const label = hero.querySelector("[data-hero-label]");
-    const heading = hero.querySelector("[data-hero-heading]") as HTMLElement;
-    const sub = hero.querySelector("[data-hero-sub]");
-
-    if (label) {
-      gsap.set(label, { opacity: 0, y: 12 });
-      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (heading) {
-      split = new SplitType(heading, { types: "words" });
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 }, 0.15);
-      }
-    }
-
-    if (sub) {
-      gsap.set(sub, { opacity: 0, y: 12 });
-      tl.to(sub, { opacity: 0.6, y: 0, duration: 0.4 }, 0.6);
-    }
-
-    return () => {
-      tl.kill();
-      if (split) split.revert();
-    };
-  }, []);
-
-  // ── Tier entrance animations ──
-  useEffect(() => {
-    const container = tiersRef.current;
-    if (!container) return;
-
-    const ctx = gsap.context(() => {
-      const cards = container.querySelectorAll<HTMLElement>(".package-tier");
-      cards.forEach((card, i) => {
-        gsap.set(card, { opacity: 0, y: 30 });
-        gsap.to(card, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          delay: i * 0.12,
-          ease: "power3.out",
-          scrollTrigger: { trigger: container, start: "top 80%", once: true },
-        });
-      });
-    }, container);
-
-    return () => ctx.revert();
-  }, []);
-
-  // ── CTA animation ──
-  useEffect(() => {
-    const cta = ctaRef.current;
-    if (!cta) return;
-
-    let split: SplitType | null = null;
-    const ctx = gsap.context(() => {
-      const heading = cta.querySelector("[data-cta-heading]") as HTMLElement;
-      const btns = cta.querySelector("[data-cta-btns]");
-
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: cta, start: "top 75%", once: true },
-        defaults: { ease: "power3.out" },
-      });
-
-      if (heading) {
-        split = new SplitType(heading, { types: "words" });
-        if (split.words) {
-          gsap.set(split.words, { y: "100%", opacity: 0 });
-          tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.04, duration: 0.5 }, 0);
-        }
-      }
-
-      if (btns) {
-        gsap.set(btns, { opacity: 0, y: 8 });
-        tl.to(btns, { opacity: 1, y: 0, duration: 0.3 }, ">0.1");
-      }
-    }, cta);
-
-    return () => {
-      ctx.revert();
-      if (split) split.revert();
-    };
-  }, []);
-
   return (
     <>
       {/* ── HERO ── */}
       <section
-        ref={heroRef}
         className="flex flex-col justify-center px-[var(--page-px)]"
         style={{ minHeight: "100vh" }}
       >
@@ -201,14 +96,13 @@ export default function PackagesClient() {
       </section>
 
       {/* ── TIERS ── */}
-      <div ref={tiersRef} className="packages-grid px-[var(--page-px)]">
+      <div className="packages-grid px-[var(--page-px)]">
         {tiers.map((tier) => (
           <div
             key={tier.number}
-            className={`package-tier${tier.recommended ? " package-tier--recommended" : ""}`}
+            className={`package-tier css-reveal${tier.recommended ? " package-tier--recommended" : ""}`}
           >
             <div className="package-tier-inner">
-              {/* Number */}
               <p
                 className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
                 style={{ opacity: 0.4 }}
@@ -216,7 +110,6 @@ export default function PackagesClient() {
                 {tier.number}
               </p>
 
-              {/* Recommended tag */}
               {tier.recommended && (
                 <p
                   className="recommended-tag font-[var(--sans)] text-[10px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mt-3"
@@ -225,7 +118,6 @@ export default function PackagesClient() {
                 </p>
               )}
 
-              {/* Title */}
               <h2
                 className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4"
                 style={{ fontSize: "clamp(24px, 2.5vw, 28px)", lineHeight: 1.2 }}
@@ -233,7 +125,6 @@ export default function PackagesClient() {
                 {tier.title}
               </h2>
 
-              {/* Price */}
               <div className="mt-5">
                 <p
                   className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
@@ -249,7 +140,6 @@ export default function PackagesClient() {
                 </p>
               </div>
 
-              {/* Description */}
               <p
                 className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-5"
                 style={{ opacity: 0.6 }}
@@ -257,7 +147,6 @@ export default function PackagesClient() {
                 {tier.description}
               </p>
 
-              {/* Includes */}
               <div className="mt-6">
                 <p
                   className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] mb-3"
@@ -278,7 +167,6 @@ export default function PackagesClient() {
                 </div>
               </div>
 
-              {/* Timeline */}
               <p
                 className="font-[var(--sans)] font-normal text-[13px] text-[color:var(--text-primary)] mt-6"
                 style={{ opacity: 0.4 }}
@@ -286,7 +174,6 @@ export default function PackagesClient() {
                 {tier.timeline}
               </p>
 
-              {/* Best for */}
               <p
                 className="font-[var(--sans)] font-normal italic text-[13px] text-[color:var(--text-primary)] mt-2"
                 style={{ opacity: 0.4 }}
@@ -294,7 +181,6 @@ export default function PackagesClient() {
                 {tier.bestFor}
               </p>
 
-              {/* CTA */}
               <div className="mt-8">
                 <Button
                   href={tier.cta.href}
@@ -322,18 +208,16 @@ export default function PackagesClient() {
 
       {/* ── CTA ── */}
       <section
-        ref={ctaRef}
-        className="text-center"
+        className="css-reveal text-center"
         style={{ padding: "80px var(--page-px) 160px" }}
       >
         <h2
-          data-cta-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+          className="css-reveal font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(28px, 3vw, 36px)", lineHeight: 1.15 }}
         >
           Not sure which package fits?
         </h2>
-        <div data-cta-btns className="flex flex-wrap justify-center gap-3 mt-10">
+        <div className="css-reveal flex flex-wrap justify-center gap-3 mt-10">
           <Button href="#" data-cursor="link">
             Book a Discovery Call
           </Button>
