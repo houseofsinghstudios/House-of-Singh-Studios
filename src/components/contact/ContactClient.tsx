@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import SplitType from "split-type";
+import { useState } from "react";
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
-  const heroRef = useRef<HTMLElement>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,47 +33,10 @@ export default function ContactClient() {
     }
   }
 
-  // ── Hero animation ──
-  useEffect(() => {
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    let split: SplitType | null = null;
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    const label = hero.querySelector("[data-hero-label]");
-    const heading = hero.querySelector("[data-hero-heading]") as HTMLElement;
-    const sub = hero.querySelector("[data-hero-sub]");
-
-    if (label) {
-      gsap.set(label, { opacity: 0, y: 12 });
-      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (heading) {
-      split = new SplitType(heading, { types: "words" });
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 }, 0.15);
-      }
-    }
-
-    if (sub) {
-      gsap.set(sub, { opacity: 0, y: 12 });
-      tl.to(sub, { opacity: 0.6, y: 0, duration: 0.4 }, 0.6);
-    }
-
-    return () => {
-      tl.kill();
-      if (split) split.revert();
-    };
-  }, []);
-
   return (
     <>
       {/* ── HERO ── */}
       <section
-        ref={heroRef}
         className="flex flex-col justify-center px-[var(--page-px)]"
         style={{ minHeight: "100vh" }}
       >

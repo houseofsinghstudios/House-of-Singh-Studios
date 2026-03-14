@@ -37,6 +37,7 @@ export default function ScrollObserver() {
     // Observe all elements that use CSS scroll-driven animations
     const targets = document.querySelectorAll(
       ".css-reveal, .css-reveal-late, .css-fade, " +
+      ".scroll-reveal-up, .scroll-clip-reveal, " +
       ".service-block-number, " +
       ".svc-deliverable-row, " +
       ".about-process-step, .svc-process-row, " +
@@ -50,7 +51,12 @@ export default function ScrollObserver() {
       ".cta-section-mobile > div:first-child, " +
       ".cta-section-mobile > h2, " +
       ".cta-section-mobile > p, " +
-      ".cta-section-mobile > div:last-child"
+      ".cta-section-mobile > div:last-child, " +
+      ".testimonials-section, " +
+      ".services-section-mobile .service-block, " +
+      ".work-section-mobile .project-card, " +
+      ".case-content-section, " +
+      ".gallery-full, .gallery-pair-item"
     );
 
     targets.forEach((el) => observer.observe(el));

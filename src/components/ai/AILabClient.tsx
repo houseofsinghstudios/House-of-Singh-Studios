@@ -1,13 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import SplitType from "split-type";
+import { useState } from "react";
 import { Link } from "next-view-transitions";
-import {
-  initScrollFallbacks,
-  cleanScrollFallbacks,
-} from "@/lib/scroll-fallback";
 
 const PROCESS_STAGES = [
   {
@@ -33,9 +27,6 @@ const PROCESS_STAGES = [
 ];
 
 export default function AILabClient() {
-  const heroRef = useRef<HTMLElement>(null);
-  const splitsRef = useRef<SplitType[]>([]);
-
   const [pulseEmail, setPulseEmail] = useState("");
   const [pulseSubmitted, setPulseSubmitted] = useState(false);
   const [pulseSubmitting, setPulseSubmitting] = useState(false);
@@ -58,50 +49,10 @@ export default function AILabClient() {
     }
   }
 
-  useEffect(() => {
-    initScrollFallbacks();
-
-    const hero = heroRef.current;
-    if (!hero) return;
-
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    const label = hero.querySelector("[data-hero-label]");
-    const heading = hero.querySelector("[data-hero-heading]") as HTMLElement;
-    const sub = hero.querySelector("[data-hero-sub]");
-
-    if (label) {
-      gsap.set(label, { opacity: 0, y: 12 });
-      tl.to(label, { opacity: 0.4, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (heading) {
-      const split = new SplitType(heading, { types: "words" });
-      splitsRef.current.push(split);
-      if (split.words) {
-        gsap.set(split.words, { y: "100%", opacity: 0 });
-        tl.to(split.words, { y: "0%", opacity: 1, stagger: 0.06, duration: 0.6 }, 0.15);
-      }
-    }
-
-    if (sub) {
-      gsap.set(sub, { opacity: 0, y: 20 });
-      tl.to(sub, { opacity: 0.7, y: 0, duration: 0.5 }, 0.6);
-    }
-
-    return () => {
-      cleanScrollFallbacks();
-      splitsRef.current.forEach((s) => s.revert());
-      splitsRef.current = [];
-      tl.kill();
-    };
-  }, []);
-
   return (
     <>
       {/* ── HERO ── */}
       <section
-        ref={heroRef}
         className="flex flex-col justify-end px-[var(--page-px)]"
         style={{ minHeight: "100vh", paddingBottom: 100 }}
       >

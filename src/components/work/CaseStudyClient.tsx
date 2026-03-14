@@ -1,18 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplitType from "split-type";
 import type { Project } from "@/data/projects";
 import { getNextProject } from "@/data/projects";
-import {
-  initScrollFallbacks,
-  cleanScrollFallbacks,
-} from "@/lib/scroll-fallback";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const GALLERY_GRADIENTS = {
   hero: "linear-gradient(155deg, #DDD8D2, #CFC8C0)",
@@ -26,125 +16,17 @@ interface CaseStudyClientProps {
 }
 
 export default function CaseStudyClient({ project }: CaseStudyClientProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const metaLineRef = useRef<HTMLParagraphElement>(null);
-  const descRef = useRef<HTMLParagraphElement>(null);
-  const heroImgRef = useRef<HTMLDivElement>(null);
-
   const next = getNextProject(project.slug);
 
-  useEffect(() => {
-    initScrollFallbacks();
-
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      if (titleRef.current) {
-        const split = new SplitType(titleRef.current, { types: "words" });
-        if (split.words) {
-          gsap.set(split.words, { opacity: 0, y: "100%" });
-          tl.to(
-            split.words,
-            { opacity: 1, y: "0%", stagger: 0.08, duration: 0.6 },
-            0.1
-          );
-        }
-      }
-
-      if (metaLineRef.current) {
-        gsap.set(metaLineRef.current, { opacity: 0, y: 10 });
-        tl.to(
-          metaLineRef.current,
-          { opacity: 0.35, y: 0, duration: 0.3 },
-          0.5
-        );
-      }
-
-      if (descRef.current) {
-        gsap.set(descRef.current, { opacity: 0, y: 16 });
-        tl.to(descRef.current, { opacity: 0.6, y: 0, duration: 0.4 }, 0.6);
-      }
-
-      if (heroImgRef.current) {
-        tl.fromTo(
-          heroImgRef.current,
-          { clipPath: "inset(8% 8% 8% 8%)" },
-          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2 },
-          0.8
-        );
-        const inner = heroImgRef.current.querySelector(".hero-img-inner");
-        if (inner) {
-          tl.fromTo(inner, { scale: 1.15 }, { scale: 1, duration: 1.2 }, 0.8);
-        }
-      }
-
-      // Content sections scroll triggers
-      containerRef.current
-        ?.querySelectorAll(".case-content-section")
-        .forEach((sec) => {
-          gsap.fromTo(
-            sec,
-            { opacity: 0, y: 40 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              ease: "power3.out",
-              scrollTrigger: { trigger: sec, start: "top 80%" },
-            }
-          );
-        });
-
-      // Gallery reveals
-      containerRef.current
-        ?.querySelectorAll<HTMLElement>(".gallery-full")
-        .forEach((img) => {
-          gsap.fromTo(
-            img,
-            { clipPath: "inset(6% 4% 6% 4%)" },
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1,
-              ease: "power3.out",
-              scrollTrigger: { trigger: img, start: "top 85%" },
-            }
-          );
-        });
-
-      containerRef.current
-        ?.querySelectorAll<HTMLElement>(".gallery-pair-item")
-        .forEach((img, i) => {
-          const delay = (i % 2) * 0.15;
-          gsap.fromTo(
-            img,
-            { clipPath: "inset(8% 6% 8% 6%)" },
-            {
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 0.9,
-              delay,
-              ease: "power3.out",
-              scrollTrigger: { trigger: img, start: "top 85%" },
-            }
-          );
-        });
-    }, containerRef);
-
-    return () => {
-      cleanScrollFallbacks();
-      ctx.revert();
-    };
-  }, [project]);
-
   return (
-    <div ref={containerRef}>
+    <div>
       {/* ═══ SECTION 1: PROJECT HEADER ═══ */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
         style={{ minHeight: "100vh", paddingBottom: 80 }}
       >
         <h1
-          ref={titleRef}
+          data-hero-heading
           className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] m-0 overflow-hidden"
           style={{
             fontSize: "clamp(36px, 5vw, 64px)",
@@ -155,14 +37,14 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           {project.name}
         </h1>
         <p
-          ref={metaLineRef}
+          data-hero-label
           className="font-[var(--sans)] text-[12px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] mt-4"
           style={{ opacity: 0.35 }}
         >
           {project.workType} &mdash; {project.origin}
         </p>
         <p
-          ref={descRef}
+          data-hero-sub
           className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)] max-w-[640px] mt-4"
           style={{ opacity: 0.6, lineHeight: 1.75 }}
         >
@@ -172,12 +54,11 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 2: HERO IMAGE ═══ */}
       <div
-        ref={heroImgRef}
+        className="scroll-clip-reveal"
         style={{
           margin: "0 var(--page-px)",
           aspectRatio: "16/9",
           overflow: "hidden",
-          clipPath: "inset(8% 8% 8% 8%)",
         }}
       >
         <div
@@ -189,7 +70,6 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            transform: "scale(1.15)",
           }}
         >
           <span className="editorial-label" style={{ color: "#999" }}>
@@ -200,8 +80,8 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 3: THE BUSINESS ═══ */}
       <section
-        className="case-content-section"
-        style={{ padding: "120px var(--page-px)", opacity: 0 }}
+        className="case-content-section css-reveal"
+        style={{ padding: "120px var(--page-px)" }}
       >
         <p
           className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
@@ -231,11 +111,10 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 4: THE CHALLENGE ═══ */}
       <section
-        className="case-content-section"
+        className="case-content-section css-reveal"
         style={{
           padding: "120px var(--page-px)",
           background: "var(--bg-shift)",
-          opacity: 0,
         }}
       >
         <p
@@ -266,8 +145,8 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 5: THE APPROACH ═══ */}
       <section
-        className="case-content-section"
-        style={{ padding: "120px var(--page-px)", opacity: 0 }}
+        className="case-content-section css-reveal"
+        style={{ padding: "120px var(--page-px)" }}
       >
         <p
           className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
@@ -297,11 +176,10 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 6: DELIVERABLES ═══ */}
       <section
-        className="case-content-section"
+        className="case-content-section css-reveal"
         style={{
           padding: "120px var(--page-px)",
           background: "var(--bg-shift)",
-          opacity: 0,
         }}
       >
         <p
@@ -335,8 +213,8 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 7: THE RESULT ═══ */}
       <section
-        className="case-content-section"
-        style={{ padding: "120px var(--page-px)", opacity: 0 }}
+        className="case-content-section css-reveal"
+        style={{ padding: "120px var(--page-px)" }}
       >
         <p
           className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
@@ -385,7 +263,6 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             style={{
               aspectRatio: "4/3",
               overflow: "hidden",
-              clipPath: "inset(8% 6% 8% 6%)",
             }}
           >
             <div
@@ -408,7 +285,6 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             style={{
               aspectRatio: "4/3",
               overflow: "hidden",
-              clipPath: "inset(8% 6% 8% 6%)",
             }}
           >
             <div
@@ -433,7 +309,6 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           style={{
             aspectRatio: "16/9",
             overflow: "hidden",
-            clipPath: "inset(6% 4% 6% 4%)",
           }}
         >
           <div

@@ -1,15 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import SplitType from "split-type";
+import { useState, useRef } from "react";
 import { Link } from "next-view-transitions";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextReactComponents } from "@portabletext/react";
-import {
-  initScrollFallbacks,
-  cleanScrollFallbacks,
-} from "@/lib/scroll-fallback";
 
 /* ── Department label map ── */
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -181,56 +175,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
     message: "",
   });
 
-  const heroRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-  const labelRef = useRef<HTMLParagraphElement>(null);
-  const supportRef = useRef<HTMLParagraphElement>(null);
   const formSectionRef = useRef<HTMLDivElement>(null);
-  const splitsRef = useRef<SplitType[]>([]);
-
-  // Page load orchestration
-  useEffect(() => {
-    initScrollFallbacks();
-
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-    if (labelRef.current) {
-      gsap.set(labelRef.current, { opacity: 0, y: 12 });
-      tl.to(labelRef.current, { opacity: 0.5, y: 0, duration: 0.4 }, 0);
-    }
-
-    if (headingRef.current) {
-      const split = new SplitType(headingRef.current, { types: "words" });
-      splitsRef.current.push(split);
-      if (split.words) {
-        gsap.set(split.words, { opacity: 0, y: "100%" });
-        tl.to(
-          split.words,
-          { opacity: 1, y: "0%", duration: 0.6, stagger: 0.05 },
-          0.15
-        );
-      }
-    }
-
-    if (supportRef.current) {
-      gsap.set(supportRef.current, { opacity: 0, y: 20 });
-      tl.to(supportRef.current, { opacity: 0.6, y: 0, duration: 0.5 }, 0.6);
-    }
-
-    return () => {
-      cleanScrollFallbacks();
-      splitsRef.current.forEach((s) => s.revert());
-      splitsRef.current = [];
-      tl.kill();
-    };
-  }, []);
-
-  // Sync applicationRole → formData.role
-  useEffect(() => {
-    if (applicationRole) {
-      setFormData((prev) => ({ ...prev, role: applicationRole }));
-    }
-  }, [applicationRole]);
 
   function toggleRole(slug: string) {
     setExpandedRole((prev) => (prev === slug ? null : slug));
@@ -238,6 +183,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
 
   function handleApplyClick(roleTitle: string) {
     setApplicationRole(roleTitle);
+    setFormData((prev) => ({ ...prev, role: roleTitle }));
     if (formSectionRef.current) {
       formSectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -274,7 +220,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
     <>
       {/* ── SECTION 1: HERO ── */}
       <section
-        ref={heroRef}
         style={{
           minHeight: "100vh",
           display: "flex",
@@ -284,7 +229,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
         }}
       >
         <p
-          ref={labelRef}
+          data-hero-label
           style={{
             fontFamily: "var(--sans)",
             fontSize: 12,
@@ -297,7 +242,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
           (Careers)
         </p>
         <h1
-          ref={headingRef}
+          data-hero-heading
           style={{
             fontFamily: "var(--serif)",
             fontWeight: 600,
@@ -312,7 +257,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
           Build brands that hold up. With us.
         </h1>
         <p
-          ref={supportRef}
+          data-hero-sub
           style={{
             fontFamily: "var(--sans)",
             fontSize: 17,
@@ -365,7 +310,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   key={role._id}
                   className="role-card scroll-reveal-up"
                 >
-                  {/* Header */}
                   <div
                     className="role-card-header"
                     onClick={() => toggleRole(role.slug.current)}
@@ -419,12 +363,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                     </div>
                   </div>
 
-                  {/* Expandable body */}
                   <div
                     className={`role-card-body${isExpanded ? " expanded" : ""}`}
                   >
                     <div className="role-card-body-inner">
-                      {/* Summary */}
                       <p
                         style={{
                           fontFamily: "var(--sans)",
@@ -436,7 +378,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                         {role.summary}
                       </p>
 
-                      {/* Full description (Portable Text) */}
                       {role.description && (
                         <div style={{ marginTop: 24 }}>
                           <PortableText
@@ -446,7 +387,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                         </div>
                       )}
 
-                      {/* Responsibilities */}
                       {role.responsibilities &&
                         role.responsibilities.length > 0 && (
                           <div style={{ marginTop: 32 }}>
@@ -479,7 +419,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           </div>
                         )}
 
-                      {/* Requirements */}
                       {role.requirements && role.requirements.length > 0 && (
                         <div style={{ marginTop: 28 }}>
                           <p
@@ -511,7 +450,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                         </div>
                       )}
 
-                      {/* Nice to have */}
                       {role.niceToHave && role.niceToHave.length > 0 && (
                         <div style={{ marginTop: 28 }}>
                           <p
@@ -543,7 +481,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                         </div>
                       )}
 
-                      {/* Apply button */}
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -584,7 +521,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
             })}
           </div>
         ) : (
-          /* Empty state */
           <div style={{ textAlign: "center", padding: "80px 0" }}>
             <p
               style={{
@@ -698,7 +634,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
             </div>
           ) : (
             <>
-              {/* Name */}
               <div className="careers-form-field">
                 <label className="careers-form-label">Name</label>
                 <input
@@ -711,8 +646,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
-
-              {/* Email */}
               <div className="careers-form-field">
                 <label className="careers-form-label">Email</label>
                 <input
@@ -725,8 +658,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
-
-              {/* Role */}
               <div className="careers-form-field">
                 <label className="careers-form-label">Role</label>
                 {roles.length > 0 ? (
@@ -756,8 +687,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   />
                 )}
               </div>
-
-              {/* Portfolio URL */}
               <div className="careers-form-field">
                 <label className="careers-form-label">Portfolio</label>
                 <input
@@ -773,8 +702,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
-
-              {/* Message */}
               <div className="careers-form-field">
                 <label className="careers-form-label">Message</label>
                 <textarea
@@ -787,8 +714,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
-
-              {/* Submit */}
               <button
                 className="careers-submit-btn"
                 disabled={formState === "submitting"}
@@ -798,7 +723,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   ? "Sending..."
                   : "Submit Application"}
               </button>
-
               {formState === "error" && (
                 <p
                   style={{
@@ -833,102 +757,35 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </p>
         <div className="how-we-work-grid">
           <div className="scroll-reveal-up">
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 600,
-                fontSize: "clamp(22px, 2.8vw, 30px)",
-                lineHeight: 1.2,
-              }}
-            >
+            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
               Senior thinking on every brief.
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.6,
-                marginTop: 12,
-              }}
-            >
-              No junior designers learning on client projects. Every
-              collaborator brings experience that shapes the work from day one.
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+              No junior designers learning on client projects. Every collaborator brings experience that shapes the work from day one.
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 600,
-                fontSize: "clamp(22px, 2.8vw, 30px)",
-                lineHeight: 1.2,
-              }}
-            >
+            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
               Systems, not chaos.
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.6,
-                marginTop: 12,
-              }}
-            >
-              Every project moves through defined stages: discovery, strategy,
-              creative direction, production, delivery. You will always know
-              where things stand.
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+              Every project moves through defined stages: discovery, strategy, creative direction, production, delivery. You will always know where things stand.
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 600,
-                fontSize: "clamp(22px, 2.8vw, 30px)",
-                lineHeight: 1.2,
-              }}
-            >
+            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
               AI handles production. You handle judgment.
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.6,
-                marginTop: 12,
-              }}
-            >
-              We use AI for research, asset generation, and workflow management.
-              Creative direction stays human. Your taste, your decisions, your
-              standards.
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+              We use AI for research, asset generation, and workflow management. Creative direction stays human. Your taste, your decisions, your standards.
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 600,
-                fontSize: "clamp(22px, 2.8vw, 30px)",
-                lineHeight: 1.2,
-              }}
-            >
+            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
               Remote-first, outcome-driven.
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.6,
-                marginTop: 12,
-              }}
-            >
-              We work with specialists across cities and time zones. What
-              matters is the quality of the output and the clarity of the
-              communication.
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+              We work with specialists across cities and time zones. What matters is the quality of the output and the clarity of the communication.
             </p>
           </div>
         </div>
@@ -942,53 +799,21 @@ export default function CareersClient({ roles }: CareersClientProps) {
           textAlign: "center",
         }}
       >
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            opacity: 0.4,
-            marginBottom: 20,
-          }}
-        >
+        <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 20 }}>
           (Start a project)
         </p>
         <h2
           className="scroll-reveal-up"
-          style={{
-            fontFamily: "var(--serif)",
-            fontWeight: 600,
-            fontSize: "clamp(32px, 4.5vw, 60px)",
-            lineHeight: 1.1,
-            color: "var(--text-primary)",
-            margin: 0,
-          }}
+          style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, color: "var(--text-primary)", margin: 0 }}
         >
           Ready to build a brand that works?
         </h2>
         <Link
           href="/contact"
           className="scroll-reveal-up"
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 14,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            marginTop: 32,
-            display: "inline-block",
-            color: "var(--text-primary)",
-            textDecoration: "none",
-            borderBottom: "1px solid var(--text-primary)",
-            paddingBottom: 4,
-            transition: "opacity 0.3s ease",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.opacity = "0.6";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.opacity = "1";
-          }}
+          style={{ fontFamily: "var(--sans)", fontSize: 14, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 32, display: "inline-block", color: "var(--text-primary)", textDecoration: "none", borderBottom: "1px solid var(--text-primary)", paddingBottom: 4, transition: "opacity 0.3s ease" }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
         >
           Get in touch
         </Link>

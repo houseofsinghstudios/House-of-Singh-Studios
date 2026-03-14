@@ -1478,6 +1478,17 @@ body {
   opacity: 0.85;
 }
 
+.pulse-loading-bar-animated {
+  height: 2px;
+  background: var(--text-primary);
+  margin-top: 24px;
+  animation: pulseBarOscillate 1s ease-in-out infinite alternate;
+}
+@keyframes pulseBarOscillate {
+  from { width: 0; }
+  to { width: 60px; }
+}
+
 @media (max-width: 767px) {
   .ai-process-row {
     grid-template-columns: 1fr;
@@ -1632,6 +1643,11 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes revealClipIn {
+  from { clip-path: inset(8% 6%); }
+  to   { clip-path: inset(0%); }
+}
+
 @keyframes revealFade {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -1648,6 +1664,16 @@ body {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 10% entry 40%;
+    }
+    .scroll-reveal-up {
+      animation: revealFadeUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 30%;
+    }
+    .scroll-clip-reveal {
+      animation: revealClipIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
     }
     .css-fade {
       animation: revealFade linear both;
@@ -2482,6 +2508,33 @@ td a:hover,
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
+    .scroll-reveal-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .scroll-clip-reveal {
+      clip-path: inset(8% 6%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .scroll-reveal-up.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .scroll-clip-reveal.in-view {
+      clip-path: inset(0%);
+    }
+
+    .scroll-clip-reveal.in-view img,
+    .scroll-clip-reveal.in-view canvas {
+      transform: scale(1);
+      transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
     .css-reveal.in-view,
     .css-reveal-late.in-view,
     .css-fade.in-view {
@@ -2614,6 +2667,58 @@ td a:hover,
     }
     .ai-process-row.in-view {
       border-left-color: rgba(26, 26, 26, 0.15);
+    }
+
+    /* ── Case study content sections ── */
+    .case-content-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .case-content-section.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Gallery clip reveals ── */
+    .gallery-full {
+      clip-path: inset(6% 4%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .gallery-full.in-view {
+      clip-path: inset(0%);
+    }
+    .gallery-pair-item {
+      clip-path: inset(8% 6%);
+      transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .gallery-pair-item.in-view {
+      clip-path: inset(0%);
+    }
+
+    /* ── Services section blocks ── */
+    .services-section-mobile .service-block {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .services-section-mobile .service-block.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Work section project cards ── */
+    .work-section-mobile .project-card {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .work-section-mobile .project-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* ── Testimonials section reveal ── */

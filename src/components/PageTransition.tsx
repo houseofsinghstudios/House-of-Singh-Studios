@@ -2,13 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { gsap } from "gsap";
 
-/**
- * PageTransition: View Transitions API is primary (handled by ViewTransitions
- * wrapper in layout.tsx). This component renders the GSAP overlay only as
- * fallback for browsers that do not support View Transitions.
- */
 export default function PageTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
@@ -27,30 +21,35 @@ export default function PageTransition() {
       return;
     }
 
-    // View Transitions supported — browser handles transitions
     if (supportsVT) return;
 
     const el = overlayRef.current;
     if (!el) return;
 
-    const tl = gsap.timeline();
-    tl.set(el, { y: "100%" })
-      .to(el, {
-        y: "0%",
-        duration: 0.5,
-        ease: "power4.inOut",
-      })
-      .to(el, {
-        y: "-100%",
-        duration: 0.4,
-        ease: "power4.inOut",
-        delay: 0.1,
-      })
-      .set(el, { y: "100%" });
+    // Slide in
+    el.style.transition = "none";
+    el.style.transform = "translateY(100%)";
 
-    return () => {
-      tl.kill();
-    };
+    requestAnimationFrame(() => {
+      el.style.transition = "transform 0.5s cubic-bezier(0.76, 0, 0.24, 1)";
+      el.style.transform = "translateY(0%)";
+
+      const onSlideIn = () => {
+        el.removeEventListener("transitionend", onSlideIn);
+        setTimeout(() => {
+          el.style.transition = "transform 0.4s cubic-bezier(0.76, 0, 0.24, 1)";
+          el.style.transform = "translateY(-100%)";
+
+          const onSlideOut = () => {
+            el.removeEventListener("transitionend", onSlideOut);
+            el.style.transition = "none";
+            el.style.transform = "translateY(100%)";
+          };
+          el.addEventListener("transitionend", onSlideOut, { once: true });
+        }, 100);
+      };
+      el.addEventListener("transitionend", onSlideIn, { once: true });
+    });
   }, [pathname, supportsVT]);
 
   if (supportsVT) return null;
