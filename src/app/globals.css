@@ -13,13 +13,13 @@
 }
 
 :root {
-  --bg: #FAFAF7;
-  --bg-shift: #F0F0EB;
-  --text-primary: #1A1A1A;
-  --text-secondary: #4A4A4A;
-  --text-muted: #6B6B6B;
-  --text-faint: #999999;
-  --border: #E5E5E0;
+  --bg: #F7F6F5;
+  --bg-shift: #E5E3E0;
+  --text-primary: #22211F;
+  --text-secondary: #5C5B58;
+  --text-muted: #A9A6A2;
+  --text-faint: #A9A6A2;
+  --border: #E5E3E0;
   --serif: 'Cormorant Garamond', Georgia, serif;
   --sans: 'Inter', system-ui, sans-serif;
   --page-px: max(40px, 8vw);
@@ -33,6 +33,11 @@
   --color-text-muted: var(--text-muted);
   --color-text-faint: var(--text-faint);
   --color-border: var(--border);
+  --color-obsidian: #22211F;
+  --color-gunmetal: #5C5B58;
+  --color-marble: #A9A6A2;
+  --color-cloudy: #E5E3E0;
+  --color-mist: #F7F6F5;
 }
 
 html {
@@ -2374,4 +2379,89 @@ td a:hover,
       border-left-color: rgba(26, 26, 26, 0.15);
     }
   }
+}
+
+/* ── Section wrapper ── */
+.section-wrapper {
+  padding-top: clamp(64px, 8vw, 120px);
+  padding-bottom: clamp(64px, 8vw, 120px);
+}
+.section-wrapper-sm {
+  padding-top: clamp(48px, 6vw, 80px);
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+.section-wrapper-lg {
+  padding-top: clamp(80px, 10vw, 160px);
+  padding-bottom: clamp(80px, 10vw, 160px);
+}
+
+/* ── Text reveal mask animation ── */
+.text-reveal-line {
+  overflow: hidden;
+  display: block;
+}
+.text-reveal-inner {
+  display: block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.text-reveal-inner.revealed {
+  transform: translateY(0);
+  opacity: 1;
+}
+.text-reveal-line:nth-child(2) .text-reveal-inner { transition-delay: 0.12s; }
+.text-reveal-line:nth-child(3) .text-reveal-inner { transition-delay: 0.24s; }
+.text-reveal-line:nth-child(4) .text-reveal-inner { transition-delay: 0.36s; }
+
+/* ── Divider ── */
+.hos-divider {
+  width: 100%;
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0;
+}
+
+/* ── Button text variant ── */
+.btn-text {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn-text-inner {
+  position: relative;
+  display: inline-block;
+}
+.btn-text-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--text-primary);
+  transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.btn-text:hover .btn-text-line {
+  width: 100%;
+}
+
+/* ── Card hover image zoom ── */
+.card-image-hover {
+  overflow: hidden;
+}
+.card-image-hover img {
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.card-image-hover:hover img {
+  transform: scale(1.03);
 }
