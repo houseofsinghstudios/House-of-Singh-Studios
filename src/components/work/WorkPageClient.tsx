@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { Link } from "next-view-transitions";
 import { projects, getWorkTypeFilters } from "@/data/projects";
+import Button from "@/components/ui/Button";
 
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -70,11 +71,10 @@ export default function WorkPageClient() {
         </p>
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0"
           style={{
             fontSize: "clamp(40px, 5vw, 68px)",
             lineHeight: 1.1,
-            letterSpacing: "-0.02em",
           }}
         >
           Work that holds up.
@@ -160,7 +160,7 @@ export default function WorkPageClient() {
         }}
       >
         <h2
-          className="scroll-reveal-up font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
           style={{
             fontSize: "clamp(32px, 4.5vw, 60px)",
             lineHeight: 1.1,
@@ -170,32 +170,12 @@ export default function WorkPageClient() {
           Have a project in mind?
         </h2>
         <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <a
-            href="#"
-            className="contact-submit inline-block"
-            data-cursor="link"
-          >
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
-          </a>
-          <Link
-            href="/contact"
-            className="inline-block font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-            style={{
-              padding: "16px 32px",
-              border: "1px solid rgba(26, 26, 26, 0.2)",
-              textDecoration: "none",
-              transition: "opacity 0.2s ease",
-            }}
-            data-cursor="link"
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "0.6";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.opacity = "1";
-            }}
-          >
+          </Button>
+          <Button href="/contact" variant="secondary" data-cursor="link">
             Start a Project
-          </Link>
+          </Button>
         </div>
       </section>
     </div>

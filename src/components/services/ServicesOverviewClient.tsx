@@ -2,6 +2,7 @@
 
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
+import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const serviceBlocks = [
   {
@@ -11,7 +12,6 @@ const serviceBlocks = [
       "Your brand identity is the first thing your market judges you on. We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint. The result is a brand that looks as established as your business actually is.",
     deliverables: ["Logo System", "Typography", "Color Architecture", "Brand Guidelines", "Collateral Suite", "Art Direction"],
     href: "/services/brand-identity",
-    color: "#E8E5E0",
   },
   {
     number: "02",
@@ -20,7 +20,6 @@ const serviceBlocks = [
       "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent. Every image and frame reinforces your brand positioning. The output works across channels because it was planned that way from the start.",
     deliverables: ["Brand Photography", "Video Production", "Social Systems", "Art Direction", "Script Development"],
     href: "/services/visual-media",
-    color: "#E0E5E8",
   },
   {
     number: "03",
@@ -29,7 +28,6 @@ const serviceBlocks = [
       "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially. We lead the design, work with development partners to build it, and ensure every page serves a business purpose — not just an aesthetic one.",
     deliverables: ["Website Design Direction", "Interface Design", "Content Architecture", "Digital Brand Systems", "Ongoing Support"],
     href: "/services/digital-design",
-    color: "#E5E8E0",
   },
   {
     number: "04",
@@ -38,7 +36,6 @@ const serviceBlocks = [
       "Most brand problems are strategy problems disguised as design problems. We run positioning workshops, build creative direction frameworks, and design content systems that give your team the structure to maintain brand quality without depending on a designer for every decision. For businesses exploring AI in their creative workflow, we provide guidance on tool selection and integration.",
     deliverables: ["Positioning Workshops", "Creative Frameworks", "Content Strategy", "Visual Systems", "AI Workflow Integration"],
     href: "/services/creative-strategy",
-    color: "#E8E0E5",
   },
 ];
 
@@ -50,17 +47,11 @@ export default function ServicesOverviewClient() {
         className="flex flex-col justify-center px-[var(--page-px)]"
         style={{ minHeight: "100vh" }}
       >
-        <p
-          data-hero-label
-          className="font-[var(--sans)] text-xs uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
-          style={{ opacity: 0.5 }}
-        >
-          (Services)
-        </p>
+        <EditorialLabel data-hero-label text="Services" />
 
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] mt-4 overflow-hidden"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 overflow-hidden"
           style={{ fontSize: "clamp(44px, 6vw, 84px)", lineHeight: 1.05 }}
         >
           Every service solves a business problem.
@@ -85,27 +76,26 @@ export default function ServicesOverviewClient() {
             data-cursor="expand"
           >
             <div className="service-block-content">
-              <span className="service-block-number font-[var(--serif)] font-semibold">
+              <span className="service-block-number font-[var(--sans)] font-medium">
                 {service.number}
               </span>
 
               <h2
-                className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] overflow-hidden"
+                className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
                 style={{ fontSize: "clamp(28px, 3vw, 36px)", lineHeight: 1.15, marginBottom: 20 }}
               >
                 {service.title}
               </h2>
 
               <p
-                className="font-[var(--sans)] font-normal text-[15px] leading-[1.7] max-w-[540px]"
-                style={{ color: "rgba(26, 26, 26, 0.7)", marginBottom: 24 }}
+                className="font-[var(--sans)] font-normal text-[15px] leading-[1.7] max-w-[540px] text-[color:var(--text-secondary)]"
+                style={{ marginBottom: 24 }}
               >
                 {service.description}
               </p>
 
               <p
-                className="font-[var(--sans)] uppercase text-[12px] tracking-[0.05em]"
-                style={{ color: "rgba(26, 26, 26, 0.4)" }}
+                className="font-[var(--sans)] uppercase text-[12px] tracking-[0.05em] text-[color:var(--text-muted)]"
               >
                 {service.deliverables.join(" · ")}
               </p>
@@ -122,7 +112,7 @@ export default function ServicesOverviewClient() {
 
             <div
               className="service-block-color"
-              style={{ background: service.color }}
+              style={{ background: "var(--bg-shift)" }}
             />
           </Link>
         ))}
@@ -134,7 +124,7 @@ export default function ServicesOverviewClient() {
         style={{ padding: "160px var(--page-px)" }}
       >
         <h2
-          className="css-reveal font-[var(--serif)] font-semibold text-[color:var(--text-primary)] overflow-hidden"
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 52px)", lineHeight: 1.1 }}
         >
           Not sure where to start?
@@ -146,7 +136,7 @@ export default function ServicesOverviewClient() {
           Book a discovery call. We will help you identify which service fits your business.
         </p>
         <div className="css-reveal flex flex-wrap justify-center gap-3">
-          <Button href="#" data-cursor="link">
+          <Button href="/contact" data-cursor="link">
             Book a Discovery Call
           </Button>
           <Button href="/packages" variant="secondary" data-cursor="link">
