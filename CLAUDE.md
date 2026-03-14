@@ -1,6 +1,6 @@
 # House of Singh Studios — studios.houseofsingh.com
 
-**Designed by Claude (Anthropic) + Maninder Singh**
+**Designed by Maninder Singh**
 
 ## Project Overview
 
