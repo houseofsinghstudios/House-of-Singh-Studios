@@ -45,9 +45,8 @@ export default function ScrollObserver() {
       ".founder-photo-reveal, " +
       ".ai-process-row, " +
       ".packages-grid .package-tier, " +
-      ".argument-section .argument-step-line, " +
-      ".argument-section h2, " +
-      ".argument-section > div > p, " +
+      ".argument-section .argument-step-row, " +
+      ".argument-section .argument-left, " +
       ".cta-section-mobile > div:first-child, " +
       ".cta-section-mobile > h2, " +
       ".cta-section-mobile > p, " +

@@ -1526,6 +1526,52 @@ body {
   }
 }
 
+/* ── Argument Section Layout ── */
+.argument-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+.argument-left {
+  max-width: 520px;
+}
+.argument-steps {
+  display: flex;
+  flex-direction: column;
+}
+.argument-step-row {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 20px 0;
+  border-top: 1px solid var(--border);
+}
+.argument-step-row:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.argument-step-num {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.argument-step-text {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 899px) {
+  .argument-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
 /* ── Homepage CTA Dark Section ── */
 .cta-dark-grid {
   display: grid;
@@ -1882,32 +1928,22 @@ body {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     /* Argument section stagger */
-    .argument-section > div > div:first-child {
+    .argument-section .argument-left {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 30%;
     }
-    .argument-section h2 {
+    .argument-section .argument-step-row:nth-child(1) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
-      animation-range: entry 3% entry 33%;
+      animation-range: entry 5% entry 35%;
     }
-    .argument-section > div > p {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 6% entry 36%;
-    }
-    .argument-section .argument-step-line:nth-child(1) {
+    .argument-section .argument-step-row:nth-child(2) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 9% entry 39%;
     }
-    .argument-section .argument-step-line:nth-child(2) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 11% entry 41%;
-    }
-    .argument-section .argument-step-line:nth-child(3) {
+    .argument-section .argument-step-row:nth-child(3) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 13% entry 43%;
@@ -2612,30 +2648,28 @@ td a:hover,
     }
 
     /* ── Argument section stagger ── */
-    .argument-section h2,
-    .argument-section > div > p {
+    .argument-section .argument-left {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .argument-section h2.in-view,
-    .argument-section > div > p.in-view {
+    .argument-section .argument-left.in-view {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .argument-section .argument-step-line {
+    .argument-section .argument-step-row {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .argument-section .argument-step-line.in-view {
+    .argument-section .argument-step-row.in-view {
       opacity: 1;
       transform: translateY(0);
     }
-    .argument-section .argument-step-line:nth-child(2).in-view { transition-delay: 0.08s; }
-    .argument-section .argument-step-line:nth-child(3).in-view { transition-delay: 0.16s; }
+    .argument-section .argument-step-row:nth-child(2).in-view { transition-delay: 0.08s; }
+    .argument-section .argument-step-row:nth-child(3).in-view { transition-delay: 0.16s; }
 
     /* ── CTA section stagger ── */
     .cta-section-mobile > div:first-child,
