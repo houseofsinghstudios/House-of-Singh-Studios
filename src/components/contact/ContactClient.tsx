@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
@@ -50,7 +51,7 @@ export default function ContactClient() {
 
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-normal text-[color:var(--text-primary)] mt-4 overflow-hidden max-w-[800px]"
+          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 overflow-hidden max-w-[800px]"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15 }}
         >
           Start a conversation.
@@ -148,7 +149,7 @@ export default function ContactClient() {
         {/* RIGHT: Book a call */}
         <div className="contact-col-right">
           <h2
-            className="font-[var(--serif)] font-normal text-[color:var(--text-primary)]"
+            className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
             style={{ fontSize: "clamp(24px, 2.5vw, 28px)", lineHeight: 1.2 }}
           >
             Prefer to talk?
@@ -161,13 +162,10 @@ export default function ContactClient() {
             Book a 30-minute discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
 
-          <a
-            href="#"
-            className="contact-submit inline-block mt-6"
-            data-cursor="link"
-          >
+          {/* TODO: Replace with real Cal.com booking link */}
+          <Button href="https://cal.com" className="mt-6" data-cursor="link">
             Book a Discovery Call
-          </a>
+          </Button>
 
           <div className="mt-8">
             <p
