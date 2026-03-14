@@ -70,9 +70,12 @@ export default function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="hero-section relative flex flex-col justify-end px-[var(--page-px)] pb-20"
-      style={{ minHeight: "100svh" }}
+      className="hero-section relative px-[var(--page-px)]"
+      style={{ minHeight: "100svh", display: "flex", flexDirection: "column", justifyContent: "center", paddingTop: "20vh", paddingBottom: 80 }}
     >
+      {/* Vertical accent line — right side, desktop only */}
+      <div className="hero-accent-line" />
+
       <div data-hero-label>
         <EditorialLabel text={HERO.label} className="mb-6" />
       </div>
@@ -124,6 +127,12 @@ export default function HeroSection() {
           <div className="scroll-thumb" />
         </div>
       </div>
+
+      {/* Horizontal divider at section bottom */}
+      <div
+        className="absolute left-0 right-0 bottom-0"
+        style={{ height: 1, background: "var(--border)" }}
+      />
     </section>
   );
 }

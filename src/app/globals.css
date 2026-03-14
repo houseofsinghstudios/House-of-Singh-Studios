@@ -211,6 +211,22 @@ body {
   }
 }
 
+/* ── Hero accent line ── */
+.hero-accent-line {
+  position: absolute;
+  top: 0;
+  right: calc(var(--page-px) + 6px);
+  width: 1px;
+  bottom: 40px;
+  background: var(--border);
+  pointer-events: none;
+}
+@media (max-width: 899px) {
+  .hero-accent-line {
+    display: none;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════
    Homepage component styles
    ═══════════════════════════════════════════════════════ */
