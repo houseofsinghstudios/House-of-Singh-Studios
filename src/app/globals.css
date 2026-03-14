@@ -128,6 +128,29 @@ body {
   opacity: 0.82;
 }
 
+.btn-secondary-inverted {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 34px;
+  border-radius: 0;
+  background: transparent;
+  border: 1.5px solid rgba(247, 246, 245, 0.25);
+  color: var(--bg);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+.btn-secondary-inverted:hover {
+  border-color: rgba(247, 246, 245, 0.5);
+  background: rgba(247, 246, 245, 0.06);
+}
+
 /* ── Scroll-triggered reveal (Intersection Observer) ── */
 .scroll-reveal {
   opacity: 0;
@@ -1500,6 +1523,48 @@ body {
   }
   .pulse-waitlist-input {
     width: 100%;
+  }
+}
+
+/* ── Homepage CTA Dark Section ── */
+.cta-dark-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 60px;
+}
+.cta-dark-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.cta-dark-info {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  opacity: 0.35;
+}
+
+@media (max-width: 767px) {
+  .cta-dark-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  .cta-dark-buttons {
+    width: 100%;
+  }
+  .cta-dark-buttons > div {
+    width: 100%;
+  }
+  .cta-dark-buttons .btn-primary-inverted,
+  .cta-dark-buttons .btn-secondary-inverted {
+    width: 100%;
+  }
+  .cta-dark-info {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 

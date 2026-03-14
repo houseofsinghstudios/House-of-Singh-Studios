@@ -3,7 +3,7 @@
 import { useRef, useState, useCallback } from "react";
 import { Link } from "next-view-transitions";
 
-type Variant = "primary" | "secondary" | "primary-inverted" | "text";
+type Variant = "primary" | "secondary" | "primary-inverted" | "secondary-inverted" | "text";
 
 interface ButtonProps
   extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
@@ -21,6 +21,7 @@ const variantClass: Record<Variant, string> = {
   primary: "btn-primary",
   secondary: "btn-secondary",
   "primary-inverted": "btn-primary-inverted",
+  "secondary-inverted": "btn-secondary-inverted",
   text: "btn-text",
 };
 

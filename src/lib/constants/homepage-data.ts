@@ -153,7 +153,7 @@ export const CTA = {
   heading: "Start a project.",
   supporting: "We respond within 24 hours.",
   buttons: {
-    primary: { text: "Book a Discovery Call", href: "#" },
+    primary: { text: "Book a Discovery Call", href: "/contact" },
     secondary: { text: "Start a Project", href: "/contact" },
   },
 };

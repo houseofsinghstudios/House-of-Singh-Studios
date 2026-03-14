@@ -1,36 +1,82 @@
 "use client";
 
-import { CTA } from "@/lib/constants/homepage-data";
 import Button from "@/components/ui/Button";
-import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function CtaSection() {
   return (
-    <section className="css-reveal py-[200px] px-[var(--page-px)] text-center cta-section-mobile">
-      <div className="css-reveal">
-        <EditorialLabel text={CTA.label} className="mb-6" />
+    <section
+      className="cta-section-mobile css-reveal"
+      style={{
+        background: "var(--text-primary)",
+        color: "var(--bg)",
+        padding: "120px var(--page-px)",
+      }}
+    >
+      {/* ── Main two-column layout ── */}
+      <div className="cta-dark-grid">
+        {/* Left: editorial content */}
+        <div className="css-reveal">
+          <p
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.15em",
+              opacity: 0.4,
+              marginBottom: 24,
+            }}
+          >
+            (Next Step)
+          </p>
+          <h2
+            style={{
+              fontFamily: "var(--sans)",
+              fontWeight: 500,
+              fontSize: "clamp(48px, 6vw, 80px)",
+              lineHeight: 1.05,
+              letterSpacing: "-0.03em",
+              color: "var(--bg)",
+              margin: 0,
+            }}
+          >
+            Start a project.
+          </h2>
+          <p
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 16,
+              lineHeight: 1.6,
+              opacity: 0.5,
+              marginTop: 20,
+            }}
+          >
+            We respond within 24 hours.
+          </p>
+        </div>
+
+        {/* Right: stacked buttons */}
+        <div className="cta-dark-buttons css-reveal">
+          <Button href="/contact" variant="primary-inverted" data-cursor="link">
+            Book a Discovery Call
+          </Button>
+          <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+            Start a Project
+          </Button>
+        </div>
       </div>
 
-      <h2
-        className="css-reveal font-[var(--serif)] font-semibold text-[color:var(--text-primary)] mx-auto overflow-hidden"
-        style={{ fontSize: "clamp(32px, 4.5vw, 56px)", lineHeight: 1.15 }}
+      {/* ── Bottom info row ── */}
+      <div
+        className="cta-dark-info css-reveal"
+        style={{
+          borderTop: "1px solid rgba(247, 246, 245, 0.12)",
+          marginTop: 80,
+          paddingTop: 24,
+        }}
       >
-        {CTA.heading}
-      </h2>
-
-      <p
-        className="css-reveal mt-5 font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] max-w-[480px] mx-auto"
-      >
-        {CTA.supporting}
-      </p>
-
-      <div className="css-reveal mt-11 flex flex-wrap justify-center gap-3">
-        <Button href={CTA.buttons.primary.href} data-cursor="link">
-          {CTA.buttons.primary.text}
-        </Button>
-        <Button href={CTA.buttons.secondary.href} variant="secondary" data-cursor="link">
-          {CTA.buttons.secondary.text}
-        </Button>
+        <span>Toronto, Canada</span>
+        <span>studio@houseofsingh.com</span>
+        <span>Mon — Fri, 9am — 6pm EST</span>
       </div>
     </section>
   );
