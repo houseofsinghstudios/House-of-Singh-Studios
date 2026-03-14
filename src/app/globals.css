@@ -59,7 +59,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #999999;
+  color: var(--text-muted);
   margin: 0;
 }
 
@@ -151,16 +151,6 @@ body {
   background: rgba(247, 246, 245, 0.06);
 }
 
-/* ── Scroll-triggered reveal (Intersection Observer) ── */
-.scroll-reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.scroll-reveal.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* ── Hero reveal animation ── */
 @keyframes revealUp {
@@ -549,7 +539,7 @@ body {
   border-bottom: 1px solid transparent;
   padding: 0 0 4px;
   cursor: pointer;
-  color: #1A1A1A;
+  color: var(--text-primary);
   opacity: 0.35;
   transition: opacity 0.2s ease;
   white-space: nowrap;
@@ -560,7 +550,7 @@ body {
 }
 .work-filter-btn.active {
   opacity: 0.9;
-  border-bottom-color: #1A1A1A;
+  border-bottom-color: var(--text-primary);
 }
 
 /* ── Next project link ── */
@@ -1135,8 +1125,8 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #1A1A1A;
-  color: #FAFAF7;
+  background: var(--text-primary);
+  color: var(--bg);
   padding: 16px 32px;
   border: none;
   cursor: pointer;
@@ -1579,8 +1569,8 @@ body {
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: #1A1A1A;
-  color: #FAFAF7;
+  background: var(--text-primary);
+  color: var(--bg);
   padding: 12px 24px;
   border: none;
   cursor: pointer;
@@ -1722,7 +1712,7 @@ body {
   left: 0;
   width: 8px;
   height: 8px;
-  background: #1A1A1A;
+  background: var(--text-primary);
   border-radius: 50% !important;
   pointer-events: none;
   z-index: 99999;
@@ -1737,7 +1727,7 @@ body {
   left: 0;
   width: 36px;
   height: 36px;
-  border: 1px solid #1A1A1A;
+  border: 1px solid var(--text-primary);
   border-radius: 50% !important;
   opacity: 0.4;
   pointer-events: none;
@@ -1906,7 +1896,7 @@ body {
   left: 0;
   width: 100%;
   height: 1px;
-  background: #1A1A1A;
+  background: var(--text-primary);
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -1972,7 +1962,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: #1A1A1A;
+  background: var(--text-primary);
   transform: translateX(-100%);
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: -1;
@@ -2195,7 +2185,7 @@ td a:hover,
   left: 0;
   width: 100%;
   height: 2px;
-  background: #1A1A1A;
+  background: var(--text-primary);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);

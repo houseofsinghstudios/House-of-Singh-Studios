@@ -80,7 +80,7 @@ export default function HeroSection() {
       <div className="max-w-[900px]">
         <h1
           data-hero-heading
-          className="font-[var(--serif)] font-semibold text-[color:var(--text-primary)] m-0"
+          className="font-[var(--sans)] font-semibold text-[color:var(--text-primary)] m-0"
           style={{
             fontSize: "clamp(36px, 5.5vw, 76px)",
             lineHeight: 1.1,
