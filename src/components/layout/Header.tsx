@@ -268,7 +268,7 @@ export default function Header() {
               onClick={() => setMenuOpen(false)}
               className="header-mobile-link"
               style={{
-                fontFamily: "var(--serif)",
+                fontFamily: "var(--sans)",
                 fontSize: 36,
                 fontWeight: 400,
                 color: "var(--text-primary)",

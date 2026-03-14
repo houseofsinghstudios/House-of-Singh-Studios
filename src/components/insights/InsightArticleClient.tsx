@@ -130,7 +130,7 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
       return (
         <figure className="scroll-clip-reveal" style={{ margin: "40px 0 8px" }}>
           <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", overflow: "hidden" }}>
-            <Image src={urlFor(value).width(1200).height(675).url()} alt={value.alt || ""} fill style={{ objectFit: "cover" }} />
+            <Image src={urlFor(value).width(1200).height(675).url()} alt={value.alt || "Project image"} fill style={{ objectFit: "cover" }} />
           </div>
           {value.alt && (
             <figcaption style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.4, marginTop: 8 }}>

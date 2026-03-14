@@ -1,9 +1,9 @@
 /**
  * Scroll fallback functions.
- * Previously used GSAP ScrollTrigger — now the ScrollObserver component
- * handles all IntersectionObserver-based reveal logic via CSS classes.
- * These functions are kept as no-ops for backward compatibility with
- * components that still call them during mount/unmount.
+ * The ScrollObserver component handles all IntersectionObserver-based
+ * reveal logic via CSS classes. These functions are kept as no-ops for
+ * backward compatibility with components that still call them during
+ * mount/unmount.
  */
 
 export function initScrollFallbacks() {
