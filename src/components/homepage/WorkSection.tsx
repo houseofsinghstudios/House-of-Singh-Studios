@@ -7,7 +7,7 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function WorkSection() {
   return (
-    <section className="css-reveal work-section-mobile" style={{ padding: "120px var(--page-px) 160px" }}>
+    <section className="css-reveal work-section-mobile" style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
       <div className="css-reveal">
         <EditorialLabel text="Selected Work" className="mb-6" />
       </div>

@@ -12,6 +12,13 @@ export default function Home() {
       <HeroSection />
       <ArgumentSection />
       <ServicesSection />
+      <hr
+        style={{
+          border: "none",
+          borderTop: "1px solid var(--border)",
+          margin: "0 var(--page-px)",
+        }}
+      />
       <StatsSection />
       <WorkSection />
       <TestimonialsSection />

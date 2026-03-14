@@ -76,7 +76,7 @@ export default function StatsSection() {
     <section
       ref={sectionRef}
       className="css-fade"
-      style={{ padding: "0 var(--page-px)" }}
+      style={{ padding: "clamp(40px, 5vw, 64px) var(--page-px)" }}
     >
       <div className="stats-row">
         {STATS.items.map((stat, i) => (

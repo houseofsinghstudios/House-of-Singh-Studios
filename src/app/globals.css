@@ -235,8 +235,6 @@ body {
 /* ── Stats row ── */
 .stats-row {
   display: flex;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
 }
 .stat-cell {
   flex: 1;
