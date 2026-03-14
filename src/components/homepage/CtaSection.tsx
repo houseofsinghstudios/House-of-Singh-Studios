@@ -65,18 +65,28 @@ export default function CtaSection() {
         </div>
       </div>
 
-      {/* ── Bottom info row ── */}
+      {/* ── Bottom credibility line ── */}
       <div
-        className="cta-dark-info css-reveal"
+        className="css-reveal"
         style={{
           borderTop: "1px solid rgba(247, 246, 245, 0.12)",
           marginTop: 80,
           paddingTop: 24,
+          textAlign: "center",
         }}
       >
-        <span>Toronto, Canada</span>
-        <span>studio@houseofsingh.com</span>
-        <span>Mon — Fri, 9am — 6pm EST</span>
+        <p
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: 13,
+            fontWeight: 400,
+            color: "var(--bg)",
+            opacity: 0.3,
+            margin: 0,
+          }}
+        >
+          50+ projects delivered across 8 industries in 12+ years.
+        </p>
       </div>
     </section>
   );

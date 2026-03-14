@@ -237,22 +237,6 @@ body {
   to { transform: scaleX(1); }
 }
 
-/* ── Hero accent line ── */
-.hero-accent-line {
-  position: absolute;
-  top: 0;
-  right: calc(var(--page-px) + 6px);
-  width: 1px;
-  bottom: 40px;
-  background: var(--border);
-  pointer-events: none;
-}
-@media (max-width: 899px) {
-  .hero-accent-line {
-    display: none;
-  }
-}
-
 /* ═══════════════════════════════════════════════════════
    Homepage component styles
    ═══════════════════════════════════════════════════════ */
@@ -1690,13 +1674,9 @@ body {
   flex-direction: column;
   gap: 12px;
 }
-.cta-dark-info {
-  display: flex;
-  justify-content: space-between;
-  font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: 0.02em;
-  opacity: 0.35;
+.cta-dark-buttons .btn-primary-inverted,
+.cta-dark-buttons .btn-secondary-inverted {
+  min-width: 280px;
 }
 
 @media (max-width: 767px) {
@@ -1713,10 +1693,6 @@ body {
   .cta-dark-buttons .btn-primary-inverted,
   .cta-dark-buttons .btn-secondary-inverted {
     width: 100%;
-  }
-  .cta-dark-info {
-    flex-direction: column;
-    gap: 8px;
   }
 }
 

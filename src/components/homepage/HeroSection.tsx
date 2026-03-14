@@ -73,9 +73,6 @@ export default function HeroSection() {
       className="hero-section relative px-[var(--page-px)]"
       style={{ minHeight: "100svh", display: "flex", flexDirection: "column", justifyContent: "center", paddingTop: "20vh", paddingBottom: 80 }}
     >
-      {/* Vertical accent line — right side, desktop only */}
-      <div className="hero-accent-line" />
-
       <div data-hero-label>
         <EditorialLabel text={HERO.label} className="mb-6" />
       </div>
