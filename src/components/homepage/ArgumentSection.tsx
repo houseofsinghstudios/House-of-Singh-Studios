@@ -5,11 +5,11 @@ const STEP_NUMBERS = ["01", "02", "03"];
 
 export default function ArgumentSection() {
   return (
-    <section className="argument-section css-reveal px-[var(--page-px)]" style={{ padding: "100px var(--page-px)" }}>
+    <section className="argument-section css-reveal" style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
       <div className="argument-grid">
         {/* Left column: label, heading, snap */}
         <div className="argument-left">
-          <EditorialLabel text={ARGUMENT.label} className="mb-6" />
+          <EditorialLabel text="02 — The Argument" className="mb-6" />
 
           <h2
             className="css-reveal font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0 overflow-hidden"

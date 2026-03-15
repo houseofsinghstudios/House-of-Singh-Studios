@@ -36,10 +36,10 @@ export default function ContactClient() {
 
   return (
     <>
-      {/* ── HERO ── */}
+      {/* ── HERO (~50vh) ── */}
       <section
-        className="flex flex-col justify-center px-[var(--page-px)]"
-        style={{ minHeight: "100vh" }}
+        className="flex flex-col justify-end px-[var(--page-px)]"
+        style={{ minHeight: "50vh", paddingTop: 140, paddingBottom: 80 }}
       >
         <p
           data-hero-label
@@ -133,13 +133,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <button
-                    type="submit"
-                    disabled={submitting}
-                    className="contact-submit disabled:opacity-50"
-                  >
+                  <Button type="submit" variant="primary" disabled={submitting}>
                     {submitting ? "Sending..." : "Send Brief"}
-                  </button>
+                  </Button>
                 </div>
               </form>
             </>
@@ -162,7 +158,6 @@ export default function ContactClient() {
             Book a 30-minute discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
 
-          {/* TODO: Replace with real Cal.com booking link */}
           <Button href="https://cal.com" className="mt-6" data-cursor="link">
             Book a Discovery Call
           </Button>
@@ -186,15 +181,50 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* ── BOTTOM LINE ── */}
-      <div className="px-[var(--page-px)] pb-24">
-        <p
-          className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)] text-center"
-          style={{ opacity: 0.35 }}
-        >
-          Based in Toronto. Working with businesses across North America.
-        </p>
-      </div>
+      {/* ── CONTACT DETAILS GRID ── */}
+      <section
+        className="css-reveal px-[var(--page-px)] pb-24"
+        style={{ borderTop: "1px solid var(--border)", paddingTop: 48 }}
+      >
+        <div className="contact-details-grid">
+          <div>
+            <p
+              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
+            >
+              Email
+            </p>
+            <a
+              href="mailto:studio@houseofsingh.com"
+              className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] no-underline hover:underline"
+              data-cursor="link"
+            >
+              studio@houseofsingh.com
+            </a>
+          </div>
+          <div className="contact-details-divider" />
+          <div>
+            <p
+              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
+            >
+              Location
+            </p>
+            <p className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] m-0">
+              Toronto, Canada
+            </p>
+          </div>
+          <div className="contact-details-divider" />
+          <div>
+            <p
+              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
+            >
+              Hours
+            </p>
+            <p className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] m-0">
+              Mon — Fri, 9am — 6pm EST
+            </p>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

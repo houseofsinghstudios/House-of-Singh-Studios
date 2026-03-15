@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Link } from "next-view-transitions";
 import { PortableText } from "@portabletext/react";
+import Button from "@/components/ui/Button";
 import type { PortableTextReactComponents } from "@portabletext/react";
 
 /* ── Department label map ── */
@@ -41,10 +41,11 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
     h2: ({ children }: any) => (
       <h3
         style={{
-          fontFamily: "var(--serif)",
-          fontWeight: 600,
+          fontFamily: "var(--sans)",
+          fontWeight: 500,
           fontSize: "clamp(22px, 2.8vw, 30px)",
           lineHeight: 1.2,
+          letterSpacing: "-0.02em",
           marginTop: 32,
           marginBottom: 16,
         }}
@@ -56,7 +57,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
       <h4
         style={{
           fontFamily: "var(--sans)",
-          fontWeight: 600,
+          fontWeight: 500,
           fontSize: "clamp(16px, 2vw, 20px)",
           lineHeight: 1.3,
           marginTop: 24,
@@ -69,7 +70,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
   },
   marks: {
     strong: ({ children }: any) => (
-      <strong style={{ fontWeight: 600 }}>{children}</strong>
+      <strong style={{ fontWeight: 500 }}>{children}</strong>
     ),
     em: ({ children }: any) => (
       <em style={{ fontStyle: "italic" }}>{children}</em>
@@ -82,7 +83,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
           href={href}
           style={{
             color: "var(--text-primary)",
-            borderBottom: "1px solid rgba(26, 26, 26, 0.3)",
+            borderBottom: "1px solid var(--border)",
             textDecoration: "none",
           }}
           {...(isExternal
@@ -244,10 +245,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
         <h1
           data-hero-heading
           style={{
-            fontFamily: "var(--serif)",
-            fontWeight: 600,
+            fontFamily: "var(--sans)",
+            fontWeight: 500,
             fontSize: "clamp(38px, 5vw, 72px)",
             lineHeight: 1.1,
+            letterSpacing: "-0.02em",
             maxWidth: 900,
             color: "var(--text-primary)",
             margin: 0,
@@ -318,10 +320,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
                       <h2
                         className="role-card-title"
                         style={{
-                          fontFamily: "var(--serif)",
-                          fontWeight: 600,
+                          fontFamily: "var(--sans)",
+                          fontWeight: 500,
                           fontSize: "clamp(24px, 3vw, 36px)",
                           lineHeight: 1.15,
+                          letterSpacing: "-0.02em",
                           color: "var(--text-primary)",
                           margin: 0,
                         }}
@@ -486,6 +489,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           e.stopPropagation();
                           handleApplyClick(role.title);
                         }}
+                        className="apply-role-btn"
                         style={{
                           fontFamily: "var(--sans)",
                           fontSize: 13,
@@ -503,13 +507,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           color: "var(--text-primary)",
                           transition: "opacity 0.3s ease",
                           display: "inline-block",
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.opacity =
-                            "0.6";
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.opacity = "1";
                         }}
                       >
                         Apply for this role
@@ -536,10 +533,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
             </p>
             <h2
               style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 400,
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
                 fontSize: "clamp(28px, 4vw, 48px)",
                 lineHeight: 1.2,
+                letterSpacing: "-0.02em",
                 opacity: 0.6,
               }}
             >
@@ -583,10 +581,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
         <h2
           className="scroll-reveal-up"
           style={{
-            fontFamily: "var(--serif)",
-            fontWeight: 600,
+            fontFamily: "var(--sans)",
+            fontWeight: 500,
             fontSize: "clamp(32px, 4.5vw, 56px)",
             lineHeight: 1.1,
+            letterSpacing: "-0.02em",
             color: "var(--text-primary)",
             margin: 0,
           }}
@@ -612,10 +611,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <div>
               <h3
                 style={{
-                  fontFamily: "var(--serif)",
-                  fontWeight: 400,
+                  fontFamily: "var(--sans)",
+                  fontWeight: 500,
                   fontSize: "clamp(28px, 3.5vw, 42px)",
                   lineHeight: 1.2,
+                  letterSpacing: "-0.02em",
                 }}
               >
                 Application received.
@@ -757,7 +757,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </p>
         <div className="how-we-work-grid">
           <div className="scroll-reveal-up">
-            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Senior thinking on every brief.
             </h3>
             <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
@@ -765,7 +765,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Systems, not chaos.
             </h3>
             <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
@@ -773,7 +773,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               AI handles production. You handle judgment.
             </h3>
             <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
@@ -781,7 +781,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             </p>
           </div>
           <div className="scroll-reveal-up">
-            <h3 style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2 }}>
+            <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Remote-first, outcome-driven.
             </h3>
             <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
@@ -804,19 +804,18 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </p>
         <h2
           className="scroll-reveal-up"
-          style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, color: "var(--text-primary)", margin: 0 }}
+          style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--text-primary)", margin: 0 }}
         >
           Ready to build a brand that works?
         </h2>
-        <Link
+        <Button
           href="/contact"
+          variant="text"
           className="scroll-reveal-up"
-          style={{ fontFamily: "var(--sans)", fontSize: 14, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 32, display: "inline-block", color: "var(--text-primary)", textDecoration: "none", borderBottom: "1px solid var(--text-primary)", paddingBottom: 4, transition: "opacity 0.3s ease" }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+          data-cursor="link"
         >
           Get in touch
-        </Link>
+        </Button>
       </section>
     </>
   );

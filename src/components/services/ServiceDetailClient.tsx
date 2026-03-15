@@ -14,10 +14,10 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
 
   return (
     <>
-      {/* ═══ SECTION 1: HERO ═══ */}
+      {/* ═══ SECTION 1: HERO (~50vh) ═══ */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "100vh", paddingBottom: 100 }}
+        style={{ minHeight: "50vh", paddingBottom: 80, paddingTop: 140 }}
       >
         <EditorialLabel data-hero-label text="Services" className="mb-5" />
         <h1
@@ -67,29 +67,33 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* ═══ SECTION 3: WHY IT MATTERS ═══ */}
+      {/* ═══ SECTION 3: BUSINESS IMPACT (asymmetric two-column) ═══ */}
       <section
         className="bg-[var(--bg-shift)]"
         style={{ padding: "120px var(--page-px)" }}
       >
         <EditorialLabel text="Business Impact" className="mb-6" />
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{
-            fontSize: "clamp(28px, 3vw, 32px)",
-            lineHeight: 1.2,
-            margin: 0,
-          }}
-        >
-          {service.impact.heading}
-        </h2>
-        <div className="max-w-[640px] mt-8">
-          <p
-            className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
-            style={{ lineHeight: 1.75, opacity: 0.7 }}
-          >
-            {service.impact.body}
-          </p>
+        <div className="svc-impact-grid">
+          <div>
+            <h2
+              className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+              style={{
+                fontSize: "clamp(28px, 3vw, 32px)",
+                lineHeight: 1.2,
+                margin: 0,
+              }}
+            >
+              {service.impact.heading}
+            </h2>
+          </div>
+          <div>
+            <p
+              className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
+              style={{ lineHeight: 1.75, opacity: 0.7 }}
+            >
+              {service.impact.body}
+            </p>
+          </div>
         </div>
       </section>
 
@@ -143,7 +147,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 />
                 <div className="svc-related-text">
                   <p className="svc-related-label">{work.client}</p>
-                  <h3 className="svc-related-title">{work.name}</h3>
+                  <h3 className="svc-related-title font-[var(--sans)] font-medium">{work.name}</h3>
                   <p className="svc-related-result">{work.result}</p>
                 </div>
               </Link>
@@ -152,33 +156,63 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
         </section>
       )}
 
-      {/* ═══ SECTION 6: CTA ═══ */}
+      {/* ═══ SECTION 6: DARK CTA ═══ */}
       <section
+        className="css-reveal"
         style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
           padding: "120px var(--page-px)",
-          background: hasRelatedWork ? undefined : "var(--bg-shift)",
-          textAlign: "center",
         }}
       >
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(28px, 4vw, 36px)", lineHeight: 1.1, margin: 0 }}
-        >
-          Ready to start?
-        </h2>
-        <p
-          className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] mt-4"
-          style={{ opacity: 0.6 }}
-        >
-          Book a discovery call. We will scope your project and recommend the right approach.
-        </p>
-        <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <Button href="/contact" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/packages" variant="secondary" data-cursor="link">
-            View Packages
-          </Button>
+        <div className="cta-dark-grid">
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Next Step)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Ready to start?
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              Book a discovery call. We will scope your project and recommend the right approach.
+            </p>
+          </div>
+
+          <div className="cta-dark-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Book a Discovery Call
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Start a Project
+            </Button>
+          </div>
         </div>
       </section>
     </>

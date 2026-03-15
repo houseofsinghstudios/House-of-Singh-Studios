@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
+import Button from "@/components/ui/Button";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
 
@@ -76,10 +77,11 @@ export default function InsightsClient({
         <h1
           data-hero-heading
           style={{
-            fontFamily: "var(--serif)",
-            fontWeight: 600,
+            fontFamily: "var(--sans)",
+            fontWeight: 500,
             fontSize: "clamp(38px, 5vw, 72px)",
             lineHeight: 1.1,
+            letterSpacing: "-0.02em",
             maxWidth: 900,
             color: "var(--text-primary)",
             margin: 0,
@@ -164,7 +166,7 @@ export default function InsightsClient({
 
                   <h2
                     className="post-card-title scroll-reveal-up"
-                    style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, marginTop: 12, color: "var(--text-primary)" }}
+                    style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, letterSpacing: "-0.02em", marginTop: 12, color: "var(--text-primary)" }}
                   >
                     {post.title}
                   </h2>
@@ -193,7 +195,7 @@ export default function InsightsClient({
             <p style={{ fontFamily: "var(--sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 16 }}>
               (No posts yet)
             </p>
-            <h2 style={{ fontFamily: "var(--serif)", fontWeight: 400, fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2, opacity: 0.6 }}>
+            <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(28px, 4vw, 48px)", lineHeight: 1.2, letterSpacing: "-0.02em", opacity: 0.6 }}>
               Content is on its way.
             </h2>
           </div>
@@ -207,19 +209,18 @@ export default function InsightsClient({
         </p>
         <h2
           className="scroll-reveal-up"
-          style={{ fontFamily: "var(--serif)", fontWeight: 600, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, color: "var(--text-primary)", margin: 0 }}
+          style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--text-primary)", margin: 0 }}
         >
           Ready to build a brand that works?
         </h2>
-        <Link
+        <Button
           href="/contact"
+          variant="text"
           className="scroll-reveal-up"
-          style={{ fontFamily: "var(--sans)", fontSize: 14, textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 32, display: "inline-block", color: "var(--text-primary)", textDecoration: "none", borderBottom: "1px solid var(--text-primary)", paddingBottom: 4, transition: "opacity 0.3s ease" }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = "0.6"; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = "1"; }}
+          data-cursor="link"
         >
           Get in touch
-        </Link>
+        </Button>
       </section>
     </>
   );

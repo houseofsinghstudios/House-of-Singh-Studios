@@ -241,10 +241,11 @@ export default function BrandPulseCheck() {
           </p>
           <h2
             style={{
-              fontFamily: "var(--serif)",
-              fontWeight: 600,
+              fontFamily: "var(--sans)",
+              fontWeight: 500,
               fontSize: "clamp(32px, 4.5vw, 56px)",
               lineHeight: 1.1,
+              letterSpacing: "-0.02em",
               color: "var(--text-primary)",
               margin: 0,
             }}
@@ -346,10 +347,11 @@ export default function BrandPulseCheck() {
           <div className="pulse-result">
             <h3
               style={{
-                fontFamily: "var(--serif)",
-                fontWeight: 400,
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
                 fontSize: "clamp(24px, 3vw, 36px)",
                 lineHeight: 1.2,
+                letterSpacing: "-0.02em",
                 color: "var(--text-primary)",
               }}
             >
