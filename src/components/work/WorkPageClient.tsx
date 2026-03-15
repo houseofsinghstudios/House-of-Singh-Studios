@@ -6,8 +6,18 @@ import Image from "next/image";
 import { projects, getWorkTypeFilters } from "@/data/projects";
 import Button from "@/components/ui/Button";
 
+const PROJECT_IMAGES: Record<string, string> = {
+  tedxtoronto: "/images/blank-stationery-concept-with-tablet-brochure.jpg",
+  meridian: "/images/office-desk-table-with-supplies-freelance-business-workplace-objects.jpg",
+  soulbound: "/images/photography-ideas-creative-occupation-design-studio-concept.jpg",
+  "nomad-kitchen": "/images/white-laptop-cylinders-boxes-white-surface.jpg",
+};
+
+type ViewMode = "list" | "grid";
+
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   const filterCategories = useMemo(
     () => ["All", ...getWorkTypeFilters()],
@@ -26,7 +36,7 @@ export default function WorkPageClient() {
 
   return (
     <div>
-      {/* Hero (~50vh) */}
+      {/* Hero */}
       <section
         style={{ padding: "180px var(--page-px) 40px", minHeight: "50vh" }}
         className="flex flex-col justify-end"
@@ -34,16 +44,29 @@ export default function WorkPageClient() {
         <p data-hero-label className="editorial-label mb-6">
           (Portfolio)
         </p>
-        <h1
-          data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0"
-          style={{
-            fontSize: "clamp(40px, 5vw, 68px)",
-            lineHeight: 1.1,
-          }}
-        >
-          Work that holds up.
-        </h1>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+          <h1
+            data-hero-heading
+            className="font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0"
+            style={{
+              fontSize: "clamp(48px, 6vw, 80px)",
+              lineHeight: 1.05,
+            }}
+          >
+            Work
+          </h1>
+          <span
+            className="font-[var(--sans)] text-[color:var(--text-muted)]"
+            style={{
+              fontSize: 12,
+              verticalAlign: "super",
+              position: "relative",
+              top: "-0.6em",
+            }}
+          >
+            ({projects.length})
+          </span>
+        </div>
         <p
           data-hero-sub
           className="font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] m-0"
@@ -54,26 +77,89 @@ export default function WorkPageClient() {
         </p>
       </section>
 
-      {/* Filters */}
+      {/* Filters + View Toggle */}
       <div
-        className="work-filter-row"
-        style={{ padding: "40px var(--page-px) 0" }}
+        style={{
+          padding: "40px var(--page-px) 0",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        {filterCategories.map((f) => (
+        <div className="work-filter-row" style={{ padding: 0 }}>
+          {filterCategories.map((f) => (
+            <button
+              key={f}
+              onClick={() => setActiveFilter(f)}
+              className={`work-filter-btn${activeFilter === f ? " active" : ""}`}
+            >
+              {f}
+            </button>
+          ))}
+        </div>
+
+        {/* View toggle - desktop only */}
+        <div className="work-view-toggle">
           <button
-            key={f}
-            onClick={() => setActiveFilter(f)}
-            className={`work-filter-btn${activeFilter === f ? " active" : ""}`}
+            onClick={() => setViewMode("list")}
+            className={`work-view-btn${viewMode === "list" ? " active" : ""}`}
           >
-            {f}
+            LIST
           </button>
+          <button
+            onClick={() => setViewMode("grid")}
+            className={`work-view-btn${viewMode === "grid" ? " active" : ""}`}
+          >
+            GRID
+          </button>
+        </div>
+      </div>
+
+      {/* LIST VIEW */}
+      <div
+        className="work-list-view"
+        style={{
+          padding: "40px var(--page-px) 0",
+          display: viewMode === "list" ? "block" : "none",
+          opacity: viewMode === "list" ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
+      >
+        {filteredProjects.map((project) => (
+          <Link
+            key={project.slug}
+            href={`/work/${project.slug}`}
+            className="work-list-row css-reveal no-underline"
+            data-cursor="view"
+          >
+            <span
+              className="work-list-name"
+              style={{
+                viewTransitionName: `project-${project.slug}`,
+              }}
+            >
+              {project.name}
+            </span>
+            <span className="work-list-tags">
+              {project.workType
+                .split(",")
+                .map((t) => t.trim())
+                .join(" — ")}
+            </span>
+            <span className="work-list-year">{project.year}</span>
+          </Link>
         ))}
       </div>
 
-      {/* Two-column project grid */}
+      {/* GRID VIEW */}
       <div
         className="work-card-grid"
-        style={{ padding: "60px var(--page-px) 0" }}
+        style={{
+          padding: "60px var(--page-px) 0",
+          display: viewMode === "grid" ? "grid" : "none",
+          opacity: viewMode === "grid" ? 1 : 0,
+          transition: "opacity 0.3s ease",
+        }}
       >
         {filteredProjects.map((project, i) => (
           <Link
@@ -85,7 +171,7 @@ export default function WorkPageClient() {
             <div className="work-card-image-wrap">
               <div className="work-card-image-inner relative">
                 <Image
-                  src={`/images/${project.slug === "tedxtoronto" ? "blank-stationery-concept-with-tablet-brochure.jpg" : project.slug === "meridian" ? "office-desk-table-with-supplies-freelance-business-workplace-objects.jpg" : project.slug === "soulbound" ? "photography-ideas-creative-occupation-design-studio-concept.jpg" : "white-laptop-cylinders-boxes-white-surface.jpg"}`}
+                  src={PROJECT_IMAGES[project.slug] || "/images/blank-stationery-concept-with-tablet-brochure.jpg"}
                   alt={project.name}
                   fill
                   sizes="(max-width: 899px) 100vw, 50vw"
@@ -97,22 +183,64 @@ export default function WorkPageClient() {
               <p
                 className="font-[var(--sans)] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-muted)] m-0"
               >
-                {project.workType}
+                {project.workType
+                  .split(",")
+                  .map((t) => t.trim())
+                  .join(" — ")}
               </p>
               <h3
-                className="font-[var(--sans)] font-medium text-[20px] tracking-[-0.01em] text-[color:var(--text-primary)] m-0 mt-2"
-                style={{
-                  viewTransitionName: `project-${project.slug}`,
-                }}
+                className="font-[var(--sans)] font-medium text-[16px] tracking-[-0.01em] text-[color:var(--text-primary)] m-0 mt-2"
               >
                 {project.name}
               </h3>
               <p
-                className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-muted)] m-0 mt-2"
+                className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)] m-0 mt-2"
                 style={{ lineHeight: 1.6 }}
               >
                 {project.description}
               </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Mobile grid (always shown on mobile, replaces toggle) */}
+      <div
+        className="work-mobile-grid"
+        style={{ padding: "40px var(--page-px) 0" }}
+      >
+        {filteredProjects.map((project) => (
+          <Link
+            key={project.slug}
+            href={`/work/${project.slug}`}
+            className="work-card css-reveal no-underline"
+            data-cursor="view"
+          >
+            <div className="work-card-image-wrap">
+              <div className="work-card-image-inner relative">
+                <Image
+                  src={PROJECT_IMAGES[project.slug] || "/images/blank-stationery-concept-with-tablet-brochure.jpg"}
+                  alt={project.name}
+                  fill
+                  sizes="100vw"
+                  style={{ objectFit: "cover", pointerEvents: "none" }}
+                />
+              </div>
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <p
+                className="font-[var(--sans)] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-muted)] m-0"
+              >
+                {project.workType
+                  .split(",")
+                  .map((t) => t.trim())
+                  .join(" — ")}
+              </p>
+              <h3
+                className="font-[var(--sans)] font-medium text-[16px] tracking-[-0.01em] text-[color:var(--text-primary)] m-0 mt-2"
+              >
+                {project.name}
+              </h3>
             </div>
           </Link>
         ))}

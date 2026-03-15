@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
@@ -48,9 +47,60 @@ const serviceBlocks = [
   },
 ];
 
-export default function ServicesOverviewClient() {
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+const capabilityCategories = [
+  {
+    heading: "Brand Identity and Visual Design",
+    items: [
+      "Logo System",
+      "Primary and Secondary Marks",
+      "Typography System",
+      "Color Architecture",
+      "Brand Guidelines",
+      "Business Cards and Stationery",
+      "Presentation Templates",
+      "Collateral Suite",
+      "Art Direction",
+    ],
+  },
+  {
+    heading: "Visual Media and Content",
+    items: [
+      "Brand Photography",
+      "Campaign Films",
+      "Social Content Systems",
+      "Art Direction",
+      "Script and Narrative",
+      "Content Templates",
+      "Platform-Specific Formats",
+    ],
+  },
+  {
+    heading: "Digital Design and Experience",
+    items: [
+      "Website Design Direction",
+      "Content Architecture",
+      "Interface Design",
+      "Digital Brand Systems",
+      "Component Libraries",
+      "Design Tokens",
+      "Ongoing Support",
+    ],
+  },
+  {
+    heading: "Creative Strategy and Systems",
+    items: [
+      "Positioning Workshops",
+      "Creative Frameworks",
+      "Content Strategy",
+      "Channel Plans",
+      "Visual Consistency Systems",
+      "AI Workflow Integration",
+      "Team Playbooks",
+    ],
+  },
+];
 
+export default function ServicesOverviewClient() {
   return (
     <>
       {/* ── HERO (~60vh) ── */}
@@ -94,7 +144,7 @@ export default function ServicesOverviewClient() {
         </span>
       </div>
 
-      {/* ── SERVICE BLOCKS (alternating layout) ── */}
+      {/* ── SERVICE BLOCKS (alternating layout, larger images) ── */}
       <div style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px) 0" }}>
         {serviceBlocks.map((service, i) => {
           const isEven = i % 2 === 0;
@@ -143,20 +193,22 @@ export default function ServicesOverviewClient() {
                 </Link>
               </div>
 
-              {/* Image side */}
+              {/* Image side — larger, portrait */}
               <div className="svc-overview-image-wrap">
                 <div
-                  className="svc-overview-image"
+                  className="svc-overview-image svc-overview-image-large"
                   style={{
                     background: "var(--bg-shift)",
-                    aspectRatio: "4/3",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                   }}
                 >
-                  <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-                    Featured Project
+                  <span
+                    className="font-[var(--sans)] text-[13px] text-[color:var(--text-muted)]"
+                    style={{ opacity: 0.6 }}
+                  >
+                    {service.relatedProject}
                   </span>
                 </div>
                 <div style={{ marginTop: 12 }}>
@@ -177,7 +229,7 @@ export default function ServicesOverviewClient() {
         })}
       </div>
 
-      {/* ── SERVICES UNPACKED ACCORDION ── */}
+      {/* ── DETAILED CAPABILITIES GRID (replaces accordion) ── */}
       <section
         className="css-reveal"
         style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
@@ -190,42 +242,28 @@ export default function ServicesOverviewClient() {
           Detailed capabilities.
         </h2>
 
-        <div className="svc-unpacked-accordion">
-          {serviceBlocks.map((service, i) => {
-            const isOpen = openAccordion === i;
-            return (
-              <div key={service.number} className="svc-unpacked-row">
-                <button
-                  className="svc-unpacked-header"
-                  onClick={() => setOpenAccordion(isOpen ? null : i)}
-                  aria-expanded={isOpen}
-                >
-                  <span className="svc-unpacked-title">{service.title}</span>
+        <div className="capabilities-grid">
+          {capabilityCategories.map((cat) => (
+            <div key={cat.heading} className="capabilities-column">
+              <h3
+                className="font-[var(--sans)] font-medium text-[14px] tracking-[-0.01em] text-[color:var(--text-primary)]"
+                style={{ marginBottom: 20 }}
+              >
+                {cat.heading}
+              </h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {cat.items.map((item) => (
                   <span
-                    className="svc-unpacked-toggle"
-                    style={{
-                      transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
-                    }}
+                    key={item}
+                    className="font-[var(--sans)] text-[13px] text-[color:var(--text-secondary)]"
+                    style={{ lineHeight: 1.5 }}
                   >
-                    +
+                    {item}
                   </span>
-                </button>
-                <div
-                  className="svc-unpacked-body"
-                  style={{
-                    maxHeight: isOpen ? 400 : 0,
-                    opacity: isOpen ? 1 : 0,
-                  }}
-                >
-                  <div className="svc-unpacked-items">
-                    {service.deliverables.map((d) => (
-                      <span key={d} className="svc-unpacked-item">{d}</span>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </section>
 

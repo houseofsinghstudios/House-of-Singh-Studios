@@ -19,12 +19,13 @@ export default function AboutPreview() {
         className="about-preview-grid"
       >
         <div>
-          <EditorialLabel text="04 — About" className="mb-6" />
+          <EditorialLabel text="(04) About" className="mb-6" />
           <h2
             className="font-[var(--sans)] font-medium tracking-[-0.025em] text-[color:var(--text-primary)] m-0"
             style={{
-              fontSize: "clamp(28px, 3vw, 44px)",
+              fontSize: "clamp(24px, 3vw, 36px)",
               lineHeight: 1.15,
+              maxWidth: 480,
             }}
           >
             An AI-powered design studio building brands for established businesses.
@@ -45,7 +46,7 @@ export default function AboutPreview() {
               maxWidth: 520,
             }}
           >
-            House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for established businesses. Design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human.
+            We build brand identities, visual systems, and digital experiences. Design is a business tool. AI powers the production layer. Creative direction stays human.
           </p>
           <div className="mt-8">
             <Link
@@ -59,6 +60,25 @@ export default function AboutPreview() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Divider + services link */}
+      <div
+        style={{
+          borderTop: "1px solid var(--border)",
+          marginTop: "clamp(40px, 5vw, 64px)",
+          paddingTop: 24,
+        }}
+      >
+        <Link
+          href="/services"
+          className="arrow-link no-underline"
+          data-cursor="link"
+        >
+          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
+            View all our services <span className="arrow-icon">&rarr;</span>
+          </span>
+        </Link>
       </div>
     </section>
   );
