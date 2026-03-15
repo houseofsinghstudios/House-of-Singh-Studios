@@ -1,6 +1,7 @@
 "use client";
 
 import { Link } from "next-view-transitions";
+import Image from "next/image";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
@@ -143,8 +144,16 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
               >
                 <div
                   className="svc-related-img"
-                  style={{ background: work.gradient }}
-                />
+                  style={{ position: "relative", overflow: "hidden" }}
+                >
+                  <Image
+                    src={work.image}
+                    alt={work.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
                 <div className="svc-related-text">
                   <p className="svc-related-label">{work.client}</p>
                   <h3 className="svc-related-title font-[var(--sans)] font-medium">{work.name}</h3>

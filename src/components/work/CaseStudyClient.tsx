@@ -1,17 +1,11 @@
 "use client";
 
 import { Link } from "next-view-transitions";
+import Image from "next/image";
 import type { Project } from "@/data/projects";
 import { getNextProject } from "@/data/projects";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
-
-const GALLERY_GRADIENTS = {
-  hero: "linear-gradient(155deg, #DDD8D2, #CFC8C0)",
-  pair1a: "linear-gradient(155deg, #D8DDE2, #C8CFD4)",
-  pair1b: "linear-gradient(155deg, #DDE2D8, #CFD4C8)",
-  full1: "linear-gradient(155deg, #E2DDD8, #CFC8C2)",
-};
 
 interface CaseStudyClientProps {
   project: Project;
@@ -61,23 +55,18 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           margin: "0 var(--page-px)",
           aspectRatio: "16/9",
           overflow: "hidden",
+          position: "relative",
         }}
       >
-        <div
+        <Image
+          src={project.image}
+          alt={project.name}
+          fill
+          sizes="100vw"
           className="hero-img-inner"
-          style={{
-            width: "100%",
-            height: "100%",
-            background: GALLERY_GRADIENTS.hero,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-            Project Image
-          </span>
-        </div>
+          style={{ objectFit: "cover" }}
+          priority
+        />
       </div>
 
       {/* ═══ SECTION 3: THE BUSINESS ═══ */}
@@ -248,62 +237,41 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         >
           <div
             className="gallery-pair-item"
-            style={{ aspectRatio: "4/3", overflow: "hidden" }}
+            style={{ aspectRatio: "4/3", overflow: "hidden", position: "relative" }}
           >
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                background: GALLERY_GRADIENTS.pair1a,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-                Gallery Image
-              </span>
-            </div>
+            <Image
+              src={project.image}
+              alt={`${project.name} gallery`}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ objectFit: "cover" }}
+            />
           </div>
           <div
             className="gallery-pair-item"
-            style={{ aspectRatio: "4/3", overflow: "hidden" }}
+            style={{ aspectRatio: "4/3", overflow: "hidden", position: "relative" }}
           >
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                background: GALLERY_GRADIENTS.pair1b,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-                Gallery Image
-              </span>
-            </div>
+            <Image
+              src={project.image}
+              alt={`${project.name} gallery`}
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              style={{ objectFit: "cover" }}
+            />
           </div>
         </div>
 
         <div
           className="gallery-full"
-          style={{ aspectRatio: "16/9", overflow: "hidden" }}
+          style={{ aspectRatio: "16/9", overflow: "hidden", position: "relative" }}
         >
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: GALLERY_GRADIENTS.full1,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-              Gallery Image
-            </span>
-          </div>
+          <Image
+            src={project.image}
+            alt={`${project.name} gallery`}
+            fill
+            sizes="100vw"
+            style={{ objectFit: "cover" }}
+          />
         </div>
       </div>
 
