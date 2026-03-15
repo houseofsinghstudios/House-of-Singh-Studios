@@ -22,10 +22,10 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
   return (
     <div>
-      {/* ═══ SECTION 1: PROJECT HEADER ═══ */}
+      {/* ═══ SECTION 1: PROJECT HEADER (~50vh) ═══ */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "100vh", paddingBottom: 80 }}
+        style={{ minHeight: "50vh", paddingBottom: 80, paddingTop: 140 }}
       >
         <h1
           data-hero-heading
@@ -106,7 +106,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         </div>
       </section>
 
-      {/* ═══ SECTION 4: THE CHALLENGE ═══ */}
+      {/* ═══ SECTION 4: THE CHALLENGE (two-column) ═══ */}
       <section
         className="case-content-section css-reveal"
         style={{
@@ -115,23 +115,37 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         }}
       >
         <EditorialLabel text={project.sections.challenge.label} className="mb-6" />
-        <div className="max-w-[640px]">
-          {project.sections.challenge.paragraphs.map((p, i) => (
+        <div className="case-challenge-grid">
+          <div>
+            {project.sections.challenge.paragraphs.map((p, i) => (
+              <p
+                key={i}
+                className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
+                style={{
+                  lineHeight: 1.75,
+                  opacity: 0.7,
+                  marginBottom:
+                    i < project.sections.challenge.paragraphs.length - 1
+                      ? 24
+                      : 0,
+                }}
+              >
+                {p}
+              </p>
+            ))}
+          </div>
+          <div className="case-challenge-highlight">
             <p
-              key={i}
-              className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
+              className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
               style={{
-                lineHeight: 1.75,
-                opacity: 0.7,
-                marginBottom:
-                  i < project.sections.challenge.paragraphs.length - 1
-                    ? 24
-                    : 0,
+                fontSize: "clamp(20px, 2vw, 28px)",
+                lineHeight: 1.4,
+                opacity: 0.5,
               }}
             >
-              {p}
+              {project.sections.challenge.paragraphs[0]?.split(".")[0]}.
             </p>
-          ))}
+          </div>
         </div>
       </section>
 
@@ -161,7 +175,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         </div>
       </section>
 
-      {/* ═══ SECTION 6: DELIVERABLES ═══ */}
+      {/* ═══ SECTION 6: DELIVERABLES (two-column grid) ═══ */}
       <section
         className="case-content-section css-reveal"
         style={{
@@ -170,25 +184,22 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         }}
       >
         <EditorialLabel text={project.sections.deliverables.label} className="mb-6" />
-        <div
-          style={{
-            borderLeft: "3px solid var(--border)",
-            paddingLeft: 24,
-          }}
-        >
+        <div className="case-deliverables-grid">
           {project.deliverablesList.map((item, i) => (
-            <p
-              key={i}
-              className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)]"
-              style={{
-                opacity: 0.7,
-                lineHeight: 1.5,
-                marginBottom:
-                  i < project.deliverablesList.length - 1 ? 8 : 0,
-              }}
-            >
-              {item}
-            </p>
+            <div key={i} className="case-deliverable-item">
+              <span
+                className="font-[var(--sans)] text-[12px] text-[color:var(--text-muted)]"
+                style={{ marginRight: 12 }}
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span
+                className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)]"
+                style={{ opacity: 0.7 }}
+              >
+                {item}
+              </span>
+            </div>
           ))}
         </div>
       </section>
@@ -237,10 +248,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         >
           <div
             className="gallery-pair-item"
-            style={{
-              aspectRatio: "4/3",
-              overflow: "hidden",
-            }}
+            style={{ aspectRatio: "4/3", overflow: "hidden" }}
           >
             <div
               style={{
@@ -259,10 +267,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           </div>
           <div
             className="gallery-pair-item"
-            style={{
-              aspectRatio: "4/3",
-              overflow: "hidden",
-            }}
+            style={{ aspectRatio: "4/3", overflow: "hidden" }}
           >
             <div
               style={{
@@ -283,10 +288,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
         <div
           className="gallery-full"
-          style={{
-            aspectRatio: "16/9",
-            overflow: "hidden",
-          }}
+          style={{ aspectRatio: "16/9", overflow: "hidden" }}
         >
           <div
             style={{
@@ -332,31 +334,63 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         </Link>
       </section>
 
-      {/* ═══ SECTION 10: CTA ═══ */}
+      {/* ═══ SECTION 10: DARK CTA ═══ */}
       <section
-        className="text-center"
+        className="css-reveal"
         style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
           padding: "120px var(--page-px)",
-          background: "var(--bg-shift)",
         }}
       >
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{
-            fontSize: "clamp(32px, 4.5vw, 60px)",
-            lineHeight: 1.1,
-            margin: 0,
-          }}
-        >
-          Start a project.
-        </h2>
-        <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <Button href="/contact" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/contact" variant="secondary" data-cursor="link">
-            Start a Project
-          </Button>
+        <div className="cta-dark-grid">
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Next Step)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Start a project.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+
+          <div className="cta-dark-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Book a Discovery Call
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Start a Project
+            </Button>
+          </div>
         </div>
       </section>
     </div>

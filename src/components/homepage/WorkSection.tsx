@@ -6,30 +6,32 @@ import { PROJECTS } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function WorkSection() {
+  const featured = PROJECTS.slice(0, 3);
+
   return (
-    <section className="css-reveal work-section-mobile" style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
+    <section
+      className="css-reveal work-section-mobile"
+      style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
+    >
       <div className="css-reveal">
-        <EditorialLabel text="Selected Work" className="mb-6" />
+        <EditorialLabel text="01 — Featured Work" className="mb-6" />
       </div>
 
-      <div className="work-grid mt-8">
-        {PROJECTS.map((project) => (
+      <div className="mt-8">
+        {featured.map((project) => (
           <Link
             key={project.href}
             href={project.href}
-            className="project-card css-reveal block no-underline"
+            className="featured-work-card css-reveal no-underline"
             data-cursor="view"
           >
-            <div
-              className="project-img-wrap overflow-hidden relative"
-              style={{ aspectRatio: "4/3", background: project.color }}
-            >
-              <div className="project-img-inner project-image-inner w-full h-full relative">
+            <div className="featured-work-card-img">
+              <div className="featured-work-card-img-inner relative">
                 <Image
                   src={project.image}
                   alt={project.name}
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 899px) 100vw, 60vw"
                   style={{
                     objectFit: "cover",
                     pointerEvents: "none",
@@ -37,28 +39,28 @@ export default function WorkSection() {
                 />
               </div>
             </div>
-            <div className="mt-4">
-              <p
-                className="font-[var(--sans)] font-medium text-base text-[color:var(--text-primary)] m-0"
-                style={{ viewTransitionName: `project-${project.href.split("/").pop()}` }}
+            <div className="featured-work-card-info">
+              <p className="featured-work-card-tags">
+                {project.label.split(",").map((tag) => tag.trim()).join(" — ")}
+              </p>
+              <h3
+                className="featured-work-card-name"
+                style={{
+                  viewTransitionName: `project-${project.href.split("/").pop()}`,
+                }}
               >
                 {project.name}
-              </p>
-              <p className="mt-1.5 font-[var(--sans)] font-normal text-xs uppercase tracking-[0.08em] text-[#999]">
-                {project.label}
-              </p>
-              <p className="project-sentence font-[var(--sans)] font-normal text-sm text-[color:var(--text-muted)]">
-                {project.sentence}
-              </p>
+              </h3>
+              <p className="featured-work-card-desc">{project.sentence}</p>
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="css-reveal mt-12">
+      <div className="css-reveal mt-12" style={{ textAlign: "right" }}>
         <Link href="/work" className="arrow-link no-underline" data-cursor="link">
           <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-            View All Projects <span className="arrow-icon">&rarr;</span>
+            View all projects <span className="arrow-icon">&rarr;</span>
           </span>
         </Link>
       </div>

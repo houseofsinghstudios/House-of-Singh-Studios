@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
@@ -18,6 +19,13 @@ const STEPS = [
   { name: "Creative Direction", desc: "We establish the visual language, tone, and systems that will define how your brand shows up." },
   { name: "Production", desc: "We build the assets, documentation, and deliverables with AI-assisted quality control at every step." },
   { name: "Delivery", desc: "You receive a complete brand system with guidelines, files, and the structure to maintain it without us." },
+];
+
+const SERVICE_CATEGORIES = [
+  "Brand Identity",
+  "Visual Media",
+  "Digital Design",
+  "Creative Strategy",
 ];
 
 export default function AboutClient() {
@@ -93,14 +101,14 @@ export default function AboutClient() {
 
   return (
     <>
-      {/* ═══════════════════════ SECTION 1: STUDIO STORY ═══════════════════════ */}
+      {/* ═══ HERO (~50vh) ═══ */}
       <section
         style={{
-          minHeight: "100vh",
+          minHeight: "50vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          padding: "0 var(--page-px) 100px",
+          padding: "140px var(--page-px) 80px",
         }}
       >
         <p
@@ -127,40 +135,59 @@ export default function AboutClient() {
         </p>
       </section>
 
-      {/* ═══════════════════════ SECTION 2: STATS ═══════════════════════ */}
+      {/* ═══ SECTION 01: WHAT WE DO ═══ */}
       <section
-        ref={statsRef}
+        className="css-reveal"
         style={{
-          padding: "80px var(--page-px)",
+          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
           borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
         }}
       >
-        <div className="about-stats-grid">
-          {STATS.map((stat, i) => (
-            <div key={i}>
-              <p
-                ref={(el) => { numberRefs.current[i] = el; }}
-                className="font-[var(--sans)] font-medium leading-none text-[color:var(--text-primary)] m-0"
-                style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
-              >
-                {stat.target}{stat.suffix}
-              </p>
-              <p
-                ref={(el) => { descRefs.current[i] = el; }}
-                className="font-[var(--sans)] font-normal text-sm leading-[1.5] text-[color:var(--text-primary)]"
-                style={{ opacity: 0, marginTop: 12, maxWidth: 200, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
-              >
-                {stat.label}
-              </p>
-            </div>
+        <EditorialLabel text="01 — What We Do" className="mb-10" />
+
+        <div
+          className="about-capabilities-row css-reveal"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "clamp(16px, 2vw, 32px)",
+            marginBottom: "clamp(32px, 4vw, 48px)",
+          }}
+        >
+          {SERVICE_CATEGORIES.map((cat, i) => (
+            <span
+              key={cat}
+              className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
+            >
+              {cat}{i < SERVICE_CATEGORIES.length - 1 && (
+                <span className="text-[color:var(--text-muted)]" style={{ margin: "0 clamp(8px, 1vw, 16px)" }}>/</span>
+              )}
+            </span>
           ))}
         </div>
+
+        <p
+          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px]"
+          style={{ opacity: 0.7, marginBottom: 24 }}
+        >
+          Four capabilities. One studio. Every service connects to measurable business outcomes — from identity systems to content production to digital experiences.
+        </p>
+
+        <Link
+          href="/services"
+          className="arrow-link no-underline"
+          data-cursor="link"
+        >
+          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
+            View our services <span className="arrow-icon">&rarr;</span>
+          </span>
+        </Link>
       </section>
 
-      {/* ═══════════════════════ SECTION 3: PROCESS ═══════════════════════ */}
-      <section style={{ padding: "140px var(--page-px)" }}>
-        <EditorialLabel text="Process" className="scroll-reveal-up mb-6" />
+      {/* ═══ SECTION 02: PROCESS ═══ */}
+      <section style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
+        <EditorialLabel text="02 — Process" className="scroll-reveal-up mb-6" />
 
         <h2
           className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
@@ -202,9 +229,9 @@ export default function AboutClient() {
         ))}
       </section>
 
-      {/* ═══════════════════════ SECTION 4: CAPABILITIES NETWORK ═══════════════════════ */}
-      <section style={{ padding: "140px var(--page-px)" }}>
-        <EditorialLabel text="Network" className="scroll-reveal-up mb-6" />
+      {/* ═══ SECTION 03: NETWORK ═══ */}
+      <section style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
+        <EditorialLabel text="03 — Network" className="scroll-reveal-up mb-6" />
 
         <h2
           className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
@@ -221,13 +248,15 @@ export default function AboutClient() {
         </p>
       </section>
 
-      {/* ═══════════════════════ SECTION 5: FOUNDER ═══════════════════════ */}
+      {/* ═══ SECTION 04: FOUNDER ═══ */}
       <section
         style={{
-          padding: "140px var(--page-px)",
+          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
           borderTop: "1px solid var(--border)",
         }}
       >
+        <EditorialLabel text="04 — Founder" className="scroll-reveal-up mb-6" />
+
         <div className="about-founder-grid">
           {/* Photo placeholder */}
           <div>
@@ -250,8 +279,6 @@ export default function AboutClient() {
               justifyContent: "center",
             }}
           >
-            <EditorialLabel text="Founder" className="scroll-reveal-up mb-6" />
-
             <h2
               className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
               style={{
@@ -306,30 +333,96 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* ═══════════════════════ CTA ═══════════════════════ */}
+      {/* ═══ SECTION 05: STATS ═══ */}
       <section
-        className="css-reveal text-center"
-        style={{ padding: "160px var(--page-px)" }}
+        ref={statsRef}
+        className="css-reveal"
+        style={{
+          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
+          borderTop: "1px solid var(--border)",
+        }}
       >
-        <h2
-          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
-          style={{ fontSize: "clamp(32px, 4vw, 52px)", lineHeight: 1.1 }}
-        >
-          Start a project.
-        </h2>
-        <p
-          className="css-reveal font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-primary)] max-w-[480px] mx-auto"
-          style={{ margin: "24px auto 40px", opacity: 0.7 }}
-        >
-          We respond within 24 hours.
-        </p>
-        <div className="css-reveal flex flex-wrap justify-center gap-3">
-          <Button href="/contact" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/contact" variant="secondary" data-cursor="link">
-            Start a Project
-          </Button>
+        <EditorialLabel text="05 — Results" className="mb-10" />
+
+        <div className="about-stats-grid">
+          {STATS.map((stat, i) => (
+            <div key={i}>
+              <p
+                ref={(el) => { numberRefs.current[i] = el; }}
+                className="font-[var(--sans)] font-medium leading-none text-[color:var(--text-primary)] m-0"
+                style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
+              >
+                {stat.target}{stat.suffix}
+              </p>
+              <p
+                ref={(el) => { descRefs.current[i] = el; }}
+                className="font-[var(--sans)] font-normal text-sm leading-[1.5] text-[color:var(--text-primary)]"
+                style={{ opacity: 0, marginTop: 12, maxWidth: 200, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
+              >
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ DARK CTA ═══ */}
+      <section
+        className="css-reveal"
+        style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
+          padding: "120px var(--page-px)",
+        }}
+      >
+        <div className="cta-dark-grid">
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Next Step)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Start a project.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+
+          <div className="cta-dark-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Book a Discovery Call
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Start a Project
+            </Button>
+          </div>
         </div>
       </section>
     </>

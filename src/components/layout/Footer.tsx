@@ -1,5 +1,6 @@
 import { Link } from "next-view-transitions";
 import SubscribeForm from "./SubscribeForm";
+import FooterNextPage from "./FooterNextPage";
 
 const pageLinks = [
   { label: "Services", href: "/services" },
@@ -35,7 +36,10 @@ const connectLinks = [
 
 export default function Footer() {
   return (
-    <footer className="footer-root css-fade px-[var(--page-px)] pt-20 pb-0">
+    <footer className="footer-root css-fade px-[var(--page-px)] pt-0 pb-0">
+      {/* Next Page navigation */}
+      <FooterNextPage />
+
       {/* ROW 1: Subscribe */}
       <div className="footer-subscribe-section">
         <h2 className="footer-subscribe-heading">Stay in the loop.</h2>

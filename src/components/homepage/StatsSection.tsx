@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { STATS } from "@/lib/constants/homepage-data";
+import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function StatsSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -78,6 +79,9 @@ export default function StatsSection() {
       className="css-fade"
       style={{ padding: "clamp(40px, 5vw, 64px) var(--page-px)" }}
     >
+      <div className="css-reveal mb-10">
+        <EditorialLabel text="06 — Proof" className="mb-6" />
+      </div>
       <div className="stats-row">
         {STATS.items.map((stat, i) => (
           <div key={i} className="stat-cell">
