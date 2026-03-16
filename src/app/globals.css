@@ -1743,6 +1743,15 @@ a.footer-contact-value:hover {
   transition: opacity 0.3s ease;
 }
 
+/* ── Article back link ── */
+.article-back-link:hover {
+  color: var(--text-primary);
+  opacity: 0.7;
+}
+.article-back-link:hover span {
+  transform: translateX(-4px);
+}
+
 /* ── Related posts grid ── */
 .related-grid {
   display: grid;

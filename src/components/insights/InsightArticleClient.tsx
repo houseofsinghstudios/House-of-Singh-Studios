@@ -74,7 +74,7 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
       </p>
     ),
     h2: ({ children }: any) => (
-      <h2 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(28px, 3.5vw, 42px)", lineHeight: 1.15, letterSpacing: "-0.02em", marginTop: 64, marginBottom: 24 }}>
+      <h2 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, letterSpacing: "-0.02em", marginTop: 64, marginBottom: 24 }}>
         {children}
       </h2>
     ),
@@ -98,7 +98,7 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
     strong: ({ children }: any) => <strong style={{ fontWeight: 500 }}>{children}</strong>,
     em: ({ children }: any) => <em style={{ fontStyle: "italic" }}>{children}</em>,
     code: ({ children }: any) => (
-      <code style={{ background: "rgba(0, 0, 0, 0.04)", padding: "2px 6px", fontFamily: "monospace", fontSize: 15 }}>
+      <code style={{ background: "var(--bg-shift)", padding: "2px 6px", fontFamily: "monospace", fontSize: 15 }}>
         {children}
       </code>
     ),
@@ -149,24 +149,25 @@ export default function InsightArticleClient({ post }: { post: Post }) {
 
   return (
     <>
-      {/* ── ARTICLE HERO ── */}
-      <section style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 var(--page-px) 80px", position: "relative" }}>
+      {/* ── ARTICLE HERO (compact ~50vh) ── */}
+      <section style={{ minHeight: "50vh", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 var(--page-px) 60px", position: "relative" }}>
         <Link
           href="/insights"
-          className="post-nav-link"
-          style={{ position: "absolute", top: 120, left: "var(--page-px)", fontFamily: "var(--sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.5, color: "var(--text-primary)", textDecoration: "none", transition: "opacity 0.3s ease" }}
+          className="article-back-link"
+          style={{ position: "absolute", top: 120, left: "var(--page-px)", fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, transition: "color 0.3s ease" }}
         >
+          <span style={{ transition: "transform 0.3s ease" }}>&#8592;</span>
           Back to Insights
         </Link>
 
         <div data-hero-label style={{ display: "flex", alignItems: "center", gap: 0 }}>
-          {post.category && <span style={{ fontFamily: "var(--sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.15em", opacity: 0.5 }}>({post.category})</span>}
-          {post.category && post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.3, margin: "0 8px" }}>—</span>}
-          {post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.5 }}>{formatDateLong(post.publishedAt)}</span>}
+          {post.category && <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{post.category}</span>}
+          {post.category && post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", margin: "0 8px" }}>—</span>}
+          {post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)" }}>{formatDateLong(post.publishedAt)}</span>}
           {readTime > 0 && (
             <>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.3, margin: "0 8px" }}>—</span>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.5 }}>{readTime} min read</span>
+              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", margin: "0 8px" }}>—</span>
+              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)" }}>{readTime} min read</span>
             </>
           )}
         </div>
@@ -179,10 +180,10 @@ export default function InsightArticleClient({ post }: { post: Post }) {
         </h1>
       </section>
 
-      {/* ── HERO IMAGE ── */}
+      {/* ── FEATURED IMAGE ── */}
       {post.featuredImage?.asset && (
-        <section style={{ padding: "0 var(--page-px)", marginTop: 60 }}>
-          <div className="scroll-clip-reveal" style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", position: "relative" }}>
+        <section style={{ padding: "0 var(--page-px)", marginTop: 40 }}>
+          <div className="reveal-clip" style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", position: "relative" }}>
             <Image
               src={urlFor(post.featuredImage).width(1600).height(900).url()}
               alt={post.featuredImage.alt || post.title}
@@ -207,13 +208,13 @@ export default function InsightArticleClient({ post }: { post: Post }) {
       {/* ── ARTICLE FOOTER ── */}
       <section style={{ padding: "0 var(--page-px)" }}>
         <div style={{ maxWidth: 740 }}>
-          <div style={{ borderTop: "1px solid var(--border)", marginTop: 80, paddingTop: 40 }}>
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: 40 }}>
             <Link
               href="/insights"
-              className="post-nav-link"
-              style={{ fontFamily: "var(--sans)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-primary)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, transition: "transform 0.3s ease" }}
+              className="article-back-link"
+              style={{ fontFamily: "var(--sans)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-primary)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.3s ease" }}
             >
-              <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>←</span>
+              <span style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8592;</span>
               Back to Insights
             </Link>
           </div>
@@ -228,7 +229,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
               {post.previousPost && (
                 <Link href={`/insights/${post.previousPost.slug.current}`} className="post-nav-link" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>←</span>
+                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8592;</span>
                     <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4 }}>Previous</span>
                   </div>
                   {post.previousPost.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", opacity: 0.4, marginTop: 8 }}>{post.previousPost.category}</p>}
@@ -241,7 +242,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
                 <Link href={`/insights/${post.nextPost.slug.current}`} className="post-nav-link next" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
                     <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4 }}>Next</span>
-                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>→</span>
+                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8594;</span>
                   </div>
                   {post.nextPost.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", opacity: 0.4, marginTop: 8 }}>{post.nextPost.category}</p>}
                   <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{post.nextPost.title}</p>
@@ -256,33 +257,77 @@ export default function InsightArticleClient({ post }: { post: Post }) {
       {/* ── RELATED POSTS ── */}
       {post.relatedPosts && post.relatedPosts.length > 0 && (
         <section style={{ padding: "80px var(--page-px) 120px" }}>
-          <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 32 }}>(Related)</p>
+          <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", marginBottom: 32 }}>(Related)</p>
           <div className="related-grid">
             {post.relatedPosts.map((rp) => (
-              <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block", transition: "opacity 0.3s ease" }}>
-                {rp.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4 }}>{rp.category}</p>}
+              <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="post-nav-link scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                {rp.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{rp.category}</p>}
                 <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{rp.title}</p>
-                {rp.publishedAt && <p style={{ fontFamily: "var(--sans)", fontSize: 11, opacity: 0.4, marginTop: 8 }}>{formatDateShort(rp.publishedAt)}</p>}
+                {rp.publishedAt && <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>{rp.publishedAt ? formatDateShort(rp.publishedAt) : ""}</p>}
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ── CTA BAND ── */}
-      <section style={{ padding: "120px var(--page-px)", background: "var(--bg-shift)", textAlign: "center" }}>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 20 }}>(Start a project)</p>
-        <h2 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--text-primary)", margin: 0 }}>
-          Ready to build a brand that works?
-        </h2>
-        <Button
-          href="/contact"
-          variant="text"
-          className="scroll-reveal-up"
-          data-cursor="link"
-        >
-          Get in touch
-        </Button>
+      {/* ── DARK CTA ── */}
+      <section
+        className="css-reveal"
+        style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
+          padding: "120px var(--page-px)",
+        }}
+      >
+        <div className="cta-dark-grid">
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Start a project)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Ready to build a brand that works?
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+
+          <div className="cta-dark-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Book a Discovery Call
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Start a Project
+            </Button>
+          </div>
+        </div>
       </section>
     </>
   );
