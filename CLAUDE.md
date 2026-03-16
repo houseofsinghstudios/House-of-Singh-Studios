@@ -1,428 +1,341 @@
-# House of Singh Studios — studios.houseofsingh.com
+# HOUSE OF SINGH STUDIOS — DEFINITIVE UI/UX DESIGN SYSTEM
+# Version 2.0 | Evolved from editorial minimalism toward confident interactive editorial
+# This document governs all design and development decisions across the entire site.
 
-**Designed by Maninder Singh**
+---
 
-## Project Overview
+## DESIGN PHILOSOPHY
 
-Commercial website for House of Singh Studios Inc., a multidisciplinary creative agency and AI powered brand systems studio based in Toronto. This site is designed to Awwwards Site of the Day standard. Every detail, from cursor behavior to scroll timing, is intentional.
+The site operates at the intersection of editorial calm and interactive confidence. Every page should feel like a luxury magazine that responds to your touch. The aesthetic is typographically driven, spatially generous, and interaction rich without being performative.
 
-## Tech Stack
+Three governing principles:
 
-* **Framework:** Next.js (App Router)
-* **CMS:** Sanity (studio at /studio route)
-* **Styling:** Tailwind CSS v4 (configured via `@theme inline` in globals.css)
-* **Deployment:** Vercel
-* **Page transitions:** next-view-transitions (View Transitions API)
-* **Animations:** Pure CSS only. Zero animation libraries. No Framer Motion. No GSAP.
-* **Scroll animations:** CSS `animation-timeline: view()` with IntersectionObserver fallback
-* **Cursor:** Custom dot + ring system with 6 contextual states
+1. CONTENT AS EXPERIENCE — The content does not sit on the page. It arrives. Every heading, image, and section enters the viewport with intention. The scroll is the narrative device.
 
-## Project Structure
+2. QUIET UNTIL ENGAGED — Elements are restrained at rest but responsive on interaction. A row is a simple line of text until you hover it and the background shifts, the spacing breathes, the description reveals. The site rewards attention without demanding it.
 
-```
-src/
-  app/             → Pages and routes (App Router)
-  components/
-    ui/            → Base primitives (Button, Container, Divider, etc.)
-    layout/        → Header, Footer, SubscribeForm
-    homepage/      → Homepage section components
-    [page]/        → Page-specific client components
-  data/            → Static data (projects.ts, services.ts)
-  lib/             → Utilities, hooks, Sanity client
-  styles/          → Additional CSS (scroll-animations.css)
-```
+3. CONTINUOUS FLOW — The page is one long story, not disconnected sections. Sections flow into each other through shared rhythm, consistent dividers, and progressive revelation. Hard visual breaks (dark sections) are used sparingly and only at narrative turning points.
 
-## Development Rules
+---
 
-* Server components by default. Only use `"use client"` when interactivity is required.
-* Every component gets its own file. No multi-component files.
-* Use Tailwind utility classes with the custom `@theme` tokens defined in globals.css.
-* All buttons MUST use the `Button` component from `src/components/ui/Button.tsx`.
-* All links that navigate between pages MUST use `Link` from `"next-view-transitions"`.
-* No new animation libraries. Ever. All animations use pure CSS or the existing ScrollObserver.
-* No `border-radius` anywhere. The global CSS enforces `border-radius: 0 !important`.
-* Never use hardcoded color values. Always use CSS variables (`--bg`, `--text-primary`, etc.).
-* Never use `rgba(26, 26, 26, ...)` directly. Use `var(--text-primary)` with opacity utilities.
+## NON-NEGOTIABLE FOUNDATIONS
 
-## DESIGN SYSTEM
+These never change. They are the identity of House of Singh.
 
 ### Color Palette
 
-| Name | CSS Variable | Tailwind | Hex | Usage |
-|------|-------------|----------|-----|-------|
-| Obsidian Black | `--text-primary` | `text-obsidian`, `bg-obsidian` | `#22211F` | Headlines, primary text, dark sections |
-| Gunmetal Gray | `--text-secondary` | `text-gunmetal`, `bg-gunmetal` | `#5C5B58` | Body text, secondary content |
-| Marble Ash | `--text-muted` | `text-marble`, `bg-marble` | `#A9A6A2` | Labels, metadata, muted elements |
-| Cloudy White | `--bg-shift`, `--border` | `text-cloudy`, `bg-cloudy` | `#E5E3E0` | Alt backgrounds, borders, dividers |
-| Silver Mist | `--bg` | `text-mist`, `bg-mist` | `#F7F6F5` | Page background, lightest surface |
+| Token              | Name           | Hex       | Usage                                              |
+|--------------------|----------------|-----------|-----------------------------------------------------|
+| --bg               | Silver Mist    | #F7F6F5   | Page background, lightest surface                   |
+| --bg-shift         | Cloudy White   | #E5E3E0   | Alternate sections, hover states, cards              |
+| --text-primary     | Obsidian Black | #22211F   | Headlines, primary text, dark section backgrounds   |
+| --text-secondary   | Gunmetal Gray  | #5C5B58   | Body text, descriptions                             |
+| --text-muted       | Marble Ash     | #A9A6A2   | Labels, metadata, dividers, muted elements          |
+| --border           | Cloudy White   | #E5E3E0   | Dividers, borders, structural lines                 |
 
-### Color Rules
-
-* Page background: `--bg` (Silver Mist `#F7F6F5`). Never pure white.
-* Alternate sections: `--bg-shift` (Cloudy White `#E5E3E0`).
-* Headlines and primary text: `--text-primary` (Obsidian Black).
-* Body text: `--text-secondary` (Gunmetal Gray).
-* Labels and metadata: `--text-muted` (Marble Ash).
-* Borders and dividers: `--border` (Cloudy White).
-* Dark inverted sections: `--text-primary` background with `--bg` text.
-* Never use saturated accent colors, gradients, or neon tones.
+No saturated colors. No gradients. No neon. The entire visual language operates in warm neutrals.
 
 ### Typography
 
-**Primary font:** Inter (`--sans: 'Inter', system-ui, sans-serif`)
-**Editorial accent:** Cormorant Garamond (`--serif`) for select display moments only.
-
-| Role | Size (desktop) | Weight | Letter Spacing | Line Height | Case |
-|------|---------------|--------|---------------|-------------|------|
-| Display / Hero | `clamp(48px, 6vw, 96px)` | 500 | `-0.03em` | 0.95 | Normal |
-| Section Heading | `clamp(36px, 4vw, 64px)` | 500 | `-0.025em` | 1.0 | Normal |
-| Subsection | `clamp(24px, 3vw, 36px)` | 500 | `-0.02em` | 1.15 | Normal |
-| Body Large | `20px` | 400 | `-0.01em` | 1.6 | Normal |
-| Body | `15px to 16px` | 400 | `normal` | 1.65 | Normal |
-| Small / Caption | `13px` | 400 | `0.02em` | 1.4 | Normal |
-| Label / Metadata | `11px` | 400 | `0.1em to 0.12em` | 1.3 | Uppercase |
-
-### Typography Rules
-
-* Headlines MUST use tight negative letter spacing. This is the editorial signature.
-* Body text MUST use 1.6+ line height.
-* Labels MUST be small, uppercase, tracked out. Use `.editorial-label` class.
-* Serif (Cormorant Garamond) is ONLY for project names in work listings and select editorial moments. It is never used for body text, buttons, or labels.
-* Only weights 400 (regular) and 500 (medium) for Inter. 600 sparingly for emphasis.
-* Max body text width: 680px to 740px. Never run prose full width.
-* Max headline width: 900px.
-* Use `clamp()` for all responsive type sizing. No breakpoint-based font size changes.
+Font: Inter (--sans). Everywhere. No exceptions.
+Weights: 400 (regular) and 500 (medium) only.
+Headlines: Tight negative letter-spacing (-0.02em to -0.03em). This is the editorial signature.
+Body: 1.6 line height. Max width 680px.
+Labels: 11px, uppercase, letter-spacing 0.1em to 0.12em, --text-muted color.
 
 ### Spacing
 
-8px base grid. All responsive spacing uses `clamp()`.
+8px base grid. Section padding uses clamp() for responsive scaling.
+Page horizontal padding: var(--page-px) = max(40px, 8vw).
+Generous whitespace is non-negotiable. When in doubt, add more space.
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| sm | `24px` | Tight internal gaps |
-| md | `clamp(40px, 5vw, 64px)` | Standard spacing |
-| lg | `clamp(64px, 8vw, 120px)` | Section vertical padding |
-| xl | `clamp(80px, 10vw, 160px)` | Major section breaks |
+### Anti-Patterns
 
-Page horizontal padding: `var(--page-px)` = `max(40px, 8vw)`. Drops to `24px` below 900px.
+Zero border-radius. Zero box-shadow. Zero gradients. Zero colored accent buttons.
+Zero serif fonts. Zero animation libraries. Zero generic component defaults.
+Left-aligned by default. Maximum 2 font weights per page.
 
-### Layout Principles
+---
 
-* 12 column CSS Grid with gaps between 20px and 60px depending on context.
-* Asymmetric splits ALWAYS preferred: 55/45, 60/40, or 70/30. Never 50/50 without reason.
-* Full bleed images on portfolio and case study pages.
-* Text blocks offset from center. Left alignment is the default everywhere.
-* Content max width: 1280px for wide layouts, 900px for text-heavy sections.
-* No box shadows. Ever.
-* No border-radius. Ever. Enforced globally via CSS.
-* Borders and dividers: `1px solid var(--border)` or `rgba(26, 26, 26, 0.08)` for subtle.
+## EVOLVED INTERACTION SYSTEM
 
-## INTERACTION DESIGN SYSTEM
+Inspired by Dash Digital's interaction philosophy, adapted to our editorial language.
 
-This site uses a layered interaction system. Each layer operates independently and degrades gracefully.
+### Layer 1: Navigation
 
-### Layer 0: Custom Cursor (6 States)
+Philosophy: Minimal. The nav should almost disappear. Content is king.
 
-The cursor system replaces the default cursor on mouse (`pointer: fine`) devices and is hidden on touch devices. It consists of a dot (8px, precision indicator) and a ring (36px, trailing context indicator).
+CURRENT BEHAVIOR — Sticky header with wordmark left, text links right. Collapses from crest to wordmark on scroll.
 
-| State | Trigger | Dot Behavior | Ring Behavior |
-|-------|---------|-------------|---------------|
-| Default | Normal browsing | 8px solid, full opacity | 36px border, 40% opacity |
-| Hover | Links, buttons, interactive | 4px, 60% opacity | 56px, 55% opacity |
-| View | Project cards, case studies | Hidden (opacity 0) | 80px, frosted glass bg, "View" label |
-| Distort | Project images | 6px | 40px, dashed border, slow spin animation |
-| Pause | Testimonial carousel | Hidden | 48px with pause icon (two vertical bars) |
-| Drag | Available for future use | Reserved | Reserved |
+EVOLVED BEHAVIOR:
+- Header shrinks to a thin bar (48px height) on scroll with wordmark left and a single "Menu +" trigger right
+- The full navigation lives in a full-screen overlay triggered by "Menu +"
+- The overlay uses --bg background with large navigation links (Inter 500, clamp(32px, 4vw, 48px)) stacked vertically, left-aligned
+- Each nav link has a small count or descriptor next to it where relevant (e.g. "Work 04" showing project count, "Case Studies 08")
+- The overlay opens with a smooth opacity + translateY reveal (0.4s ease)
+- Close trigger labeled "Close" replaces "Menu +"
+- On desktop, the individual nav links can remain visible in the header alongside Menu +. The overlay is an enhancement, not a replacement.
+- On mobile, only the wordmark and Menu + are visible. All navigation moves to the overlay.
 
-Rules: The cursor ring uses `will-change: transform`. Transitions are 0.3s ease-out. The "View" label uses the editorial-label style (10px, uppercase, 0.12em tracking).
+WHY: This removes visual clutter from the content area. The user's attention stays on the work, not the chrome. Dash Digital does this and it makes the content feel larger.
 
-### Layer 1: Scroll-Driven Reveals (CSS animation-timeline)
+IMPLEMENTATION: Modify Header.tsx to add an overlay nav component. Use React state for open/close. CSS transitions for the overlay. No animation libraries.
 
-All scroll animations use native CSS `animation-timeline: view()`. This runs on the GPU compositor thread with zero JavaScript overhead in Chrome/Edge. Safari/Firefox get IntersectionObserver fallback via the ScrollObserver component.
+### Layer 2: Page Transitions
 
-Core animation keyframes:
-* `revealFadeUp`: opacity 0 + translateY(30px) → opacity 1 + translateY(0)
-* `revealFade`: opacity 0 → opacity 1
+CURRENT BEHAVIOR — View Transitions API with simple crossfade (0.4s).
 
-Animation range pattern:
-```css
-animation-range: entry 0% entry 30%;
-```
+EVOLVED BEHAVIOR:
+- Keep the View Transitions API as the foundation
+- Outgoing page: fade out + slight upward shift (-12px) over 0.3s
+- Incoming page: fade in + slight downward origin (+16px) over 0.5s with 0.1s delay
+- For project-to-case-study transitions: the project image or title should morph between pages using viewTransitionName (already partially implemented)
+- Page transitions should feel like turning a page, not teleporting
 
-This means the animation plays as the element enters the viewport, from 0% entry to 30% entry. Staggered siblings offset by 3-5% increments.
+WHY: Smooth page transitions are one of the highest-impact Awwwards criteria. They make the site feel like a native app, not a website.
 
-Where scroll reveals apply:
-* `.css-reveal`: Standard sections, content blocks
-* `.css-reveal-late`: Elements that should reveal slightly after their siblings
-* `.css-fade`: Opacity-only reveals for subtle elements
-* Staggered section children: Argument steps, process rows, package tiers, deliverable rows
+IMPLEMENTATION: Update the View Transition keyframes in globals.css. No new libraries needed.
 
-Safari/Firefox fallback:
-Inside `@supports not (animation-timeline: view())`, the same elements use:
-* `opacity 0` + `translateY(30px)` as initial state
-* `.in-view` class triggers transition to visible state
-* Stagger via `transition-delay` on `nth-child` selectors
+### Layer 3: Scroll Storytelling
 
-### Layer 2: View Transitions API
+CURRENT BEHAVIOR — css-reveal class triggers fade-up on viewport entry.
 
-Page-to-page transitions use the View Transitions API via `next-view-transitions`.
+EVOLVED BEHAVIOR:
+- Every section still uses scroll-triggered reveals but with MORE variety in how elements enter
+- Standard reveal: opacity 0 + translateY(30px) → visible (the current pattern, keep it)
+- Stagger reveal: Children of a section enter sequentially with 80-100ms delays between siblings
+- Text reveal: Headlines use the TextReveal mask-up animation for major section headings
+- Image reveal: Images use clip-path wipe (inset(0 100% 0 0) → inset(0)) for a curtain effect
+- Counter reveal: Stats count up from 0 on viewport entry (already implemented)
+- The scroll progress indicator (1px line at top) remains as a subtle orientation device
 
-* Root transition: 0.4s crossfade with `cubic-bezier(0.23, 1, 0.32, 1)`
-* Named transitions: `service-title` morphs between list and detail pages
-* Old view: fades out with slight upward movement (-8px)
-* New view: fades in with slight downward origin (+8px)
+REVEAL TIMING:
+- Stagger base delay: 80ms between siblings
+- Reveal duration: 0.6s to 0.8s depending on element size
+- Easing: cubic-bezier(0.23, 1, 0.32, 1) for all reveals
+- Elements reveal once. Never re-animate.
 
-### Layer 3: Page Load Entrance
+WHY: Variety in entrance animations prevents the page from feeling monotonous. One single fade-up for everything gets boring after 3 sections. Different elements deserve different entrances.
 
-On every page load, hero elements animate in with staggered timing using data attributes:
-* `[data-hero-label]`: 0s delay
-* `[data-hero-heading]`: 0.1s delay
-* `[data-hero-body]`, `[data-hero-sub]`, `[data-desc]`: 0.2s delay
-* Animation: 0.6s `cubic-bezier(0.23, 1, 0.32, 1)`, opacity + translateY(20px)
+IMPLEMENTATION: Add new CSS classes: .reveal-clip (clip-path wipe), .reveal-stagger-parent (applies stagger delays to children). Extend ScrollObserver to handle these. All pure CSS with IntersectionObserver fallback.
 
-### Layer 4: Hover Micro-Interactions
+### Layer 4: Hover Interactions
 
-**Navigation Links**
-* Header links: `::after` pseudo-element, 1px underline, `scaleX(0)` to `scaleX(1)`
-* Transform-origin switches: right on rest, left on hover (creates directional wipe effect)
-* Footer links: Same pattern but at 30% opacity for subtlety
-
-**Buttons**
-* Primary: Light sweep overlay (`rgba` white 10%) slides in from left via `translateX`
-* Secondary: Dark fill sweep (solid dark) slides in from left, text color inverts via CSS
-* Primary-inverted: Subtle dark sweep (`rgba` black 5%)
-* All sweeps: 0.4s `cubic-bezier(0.23, 1, 0.32, 1)`
-* Magnetic hover: Button element subtly pulls toward cursor (0.15 strength, `translate3d`)
+CURRENT BEHAVIOR — Various hover effects across components.
 
-**Project Row (Work Page)**
-* Background: `::before` pseudo with bg-shift color fades in (opacity 0.5s)
-* Title: letter-spacing transitions from `-0.01em` to `0.015em` (0.5s ease)
-* Metadata: color transitions from faint to muted (0.3s ease)
+EVOLVED BEHAVIOR — Standardize to a consistent interaction vocabulary:
 
-**Project Cards (Homepage)**
-* Card lifts: `translateY(-4px)` on hover (0.3s ease)
-* Image zooms: `scale(1.03)` with 0.6s `cubic-bezier(0.23, 1, 0.32, 1)`
-* Description reveals: max-height 0 to 60px with opacity fade (0.4s ease)
+ACCORDION ROWS (services, brands, work list):
+- Background: ::before pseudo with --bg-shift, opacity 0 → 1 over 0.5s, extends full bleed
+- Title: letter-spacing loosens from -0.02em to +0.01em over 0.5s
+- Metadata: color shifts from --text-muted to --text-secondary over 0.3s
+- Description (if hover-reveal): max-height 0 → content over 0.6s, opacity 0 → 1
+- Arrow: fades in with 0.15s delay, translateX(-4px) → 0
 
-**Post Cards (Insights)**
-* Title: opacity drops to 0.7 on hover (0.3s ease)
-* Image: `scale(1.02)` zoom (0.6s ease)
+IMAGE CARDS (work grid, case studies, homepage featured):
+- Image: scale(1.03) over 0.7s cubic-bezier(0.23, 1, 0.32, 1)
+- Custom cursor: switches to VIEW state (80px frosted glass circle with "View" label)
+- Title: opacity shifts to 0.7 over 0.3s
 
-**Service Blocks**
-* Background: `brightness(0.95)` filter on hover
-* Title: border-bottom reveals from transparent to text-primary (0.3s ease)
-* Description: opacity 0 to 1 fade in (0.3s ease)
+TEXT LINKS:
+- Underline wipe: scaleX(0) → scaleX(1) via ::after pseudo, transform-origin switches from right (rest) to left (hover)
 
-**Arrow Links**
-* Arrow icon: `translateX(6px)` on hover (0.25s ease)
+BUTTONS:
+- Primary: light sweep overlay via ::before translateX(-100% → 0) over 0.4s
+- Secondary: dark fill sweep via ::before, text color inverts
+- Magnetic hover: button follows cursor at 0.15 strength via translate3d
 
-**Read More Links**
-* `translateX(4px)` on hover (0.3s ease)
-
-**Next Project Link**
-* Title letter-spacing expands to `0.03em` on hover
-
-### Layer 5: Form Interactions
-
-**Focus States**
-* Input fields: bottom border darkens from 15% to 50-60% opacity
-* Textarea: full border darkens from 10% to 30% opacity
-* Focus line: Animated `scaleX(0)` to `scaleX(1)` bar appears below focused inputs
-* Transform-origin: center, 0.3s `cubic-bezier(0.23, 1, 0.32, 1)`
-
-**Select Fields**
-* Custom SVG chevron via `background-image` (no default browser arrow)
-* Same bottom-border focus behavior as inputs
-
-### Layer 6: Structural Animations
-
-**Accordion (Careers Page)**
-* `max-height: 0` to `2000px` with overflow hidden (0.5s ease)
-* Toggle icon rotates 45 degrees when expanded (0.3s ease)
-
-**Filter Transitions**
-* Active filter: opacity goes from 0.35/0.5 to 0.9/1 with underline
-* Project rows: opacity + transform transition on filter change (0.3s ease)
-
-**Sticky Elements**
-* Insights filter bar: sticky at `top 80px` with `backdrop-filter blur(8px)`
-
-**Work Page Split Screen**
-* Left column: scrollable content
-* Right column: sticky at `top 80px`, height `calc(100vh - 80px)`
-* Image panel: absolute positioned items with `will-change: opacity, transform`
-
-### Layer 7: Advanced CSS Scroll Animations
-
-These only activate in Chrome/Edge via `@supports (animation-timeline: view())`:
-* Ghost number parallax: Service block numbers move at different scroll speed
-* Image parallax: Project images translate from -5% to +5% Y across viewport
-* Founder photo iris reveal: `clip-path inset` animates from 50% to 0%
-* AI stage active indicator: `border-left-color` pulses as section crosses viewport center
-
-## INTERACTION PATTERNS TO ADD (AWWWARDS ELEVATION)
-
-The following interactions are NOT yet implemented but should be added to reach Site of the Day level. Each one is designed to work within the existing pure CSS + minimal JS architecture.
-
-### 1. Horizontal Scroll Progress Indicator
-
-A 1px line at the very top of the viewport that fills from left to right as the user scrolls. Uses `scroll()` timeline, zero JavaScript.
-
-```css
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--text-primary);
-  transform-origin: left;
-  transform: scaleX(0);
-  z-index: 9999;
-  animation: scrollProgress linear;
-  animation-timeline: scroll();
-}
-@keyframes scrollProgress {
-  to { transform: scaleX(1); }
-}
-```
-
-### 2. Smooth Number Counter (Stats Section)
-
-Stats like "150+" should count up from 0 when they scroll into view. Use CSS `@property` for animating a custom property, or a tiny IntersectionObserver + requestAnimationFrame if CSS counter animation is not sufficient.
-
-### 3. Text Reveal on Headlines (TextReveal Component)
-
-Already built in the component system. Lines mask in from below with stagger. Use on all major section headings for consistency. Currently available via the `TextReveal` component.
-
-### 4. Staggered Card Entrance
-
-When a grid of cards enters the viewport, each card should fade in with a 100ms offset from the previous one. Already partially implemented via `nth-child` transition-delay pattern. Extend to all card grids site-wide.
-
-### 5. Image Reveal Wipe
-
-For portfolio images, instead of simple fade-in, use a clip-path wipe: `inset(0 100% 0 0)` to `inset(0 0 0 0)`. This creates a curtain-reveal effect. 0.8s `cubic-bezier(0.77, 0, 0.175, 1)`.
-
-### 6. Footer Parallax Peek
-
-The footer should feel like it is "behind" the last section. The last section gets a slight negative margin-bottom, and the footer uses a subtle `translateY` that resolves as you scroll to the bottom. This creates a layered paper-stack effect.
-
-### 7. Link Hover with Character Stagger
-
-For the primary navigation links, on hover, each character shifts up slightly (`translateY -2px`) with a stagger delay per character. Requires splitting text into spans (can be done in the Header component). Very subtle but an Awwwards signature detail.
-
-### 8. Scroll Velocity Aware Cursor Ring
-
-The cursor ring size could subtly increase when the user scrolls fast and return to normal when they stop. This requires a tiny scroll velocity tracker (`requestAnimationFrame` + delta comparison). Optional but distinctive.
-
-### 9. Dark Mode Section Transition
-
-When scrolling from a light section into the obsidian dark CTA section, the transition should feel like a "dip" — the background color change could animate via a `clip-path` or a gradient edge rather than a hard color boundary.
-
-### 10. Loading State: Skeleton Pulse
-
-For any Sanity-fetched content that might load slowly, use a skeleton screen with a subtle horizontal shimmer animation rather than spinners or blank space.
-
-## COMPONENT REFERENCE
-
-### Base Components (src/components/ui/)
-
-**Button**
-* Variants: `primary`, `secondary`, `primary-inverted`, `text`
-* Magnetic hover effect via `translate3d` (0.15 strength)
-* Fill sweep animations via CSS `::before` pseudo-elements
-* Uses `next-view-transitions` Link for href navigation
-* Supports `onClick` for non-navigation actions
-* Never create inline-styled buttons anywhere
-
-**Container**
-* Wraps all page content with consistent margins
-* Uses `var(--page-px)` for horizontal padding
-* Max width: 1280px (default) or 680px (narrow)
-* Server component, no client-side code
-
-**Divider**
-* 1px solid `var(--border)` hairline
-* Spacing: `sm` (24px), `md` (clamp 40-64px), `lg` (clamp 64-120px)
-
-**SectionWrapper**
-* Auto-alternating backgrounds: even index = mist, odd = cloudy
-* Override via `bg` prop: `"mist"` | `"cloudy"` | `"obsidian"` | `"white"`
-* Uses `.css-reveal` class for scroll animation
-* Spacing: `sm`, `md`, `lg` via section-wrapper CSS classes
-
-**TextReveal**
-* Headline mask-in animation on scroll entry
-* Single text: wraps in overflow-hidden span, translates up
-* Multi-line via `lines` prop: each line staggers by 0.12s
-* Uses IntersectionObserver (threshold 0.1, rootMargin -40px)
-* CSS classes: `.text-reveal-line`, `.text-reveal-inner`, `.revealed`
-
-**EditorialLabel**
-* Small uppercase metadata text
-* Uses `.editorial-label` CSS class (11px, uppercase, 0.12em tracking, `--text-faint` color)
-
-## PERFORMANCE RULES
-
-* No animation libraries. CSS handles everything.
-* All scroll animations use `will-change` sparingly. Only on elements that actually animate.
-* Images use Next.js `Image` component with proper width/height/priority.
-* Fonts: Inter loaded via `next/font/google` with `display: swap`.
-* Custom cursor uses `requestAnimationFrame` for smooth 60fps tracking.
-* `animation-timeline: view()` runs on compositor thread. Zero main thread cost.
-* Page transitions via View Transitions API. Native browser, zero bundle cost.
-* Target: Lighthouse Performance 95+, Accessibility 95+.
-
-## ANTI PATTERNS (NEVER DO THESE)
-
-* Never use `border-radius` on any element
-* Never use `box-shadow` on any element
-* Never use gradient backgrounds
-* Never use colored accent buttons (blue, green, red CTAs)
-* Never center all text on a page. Left align is default.
-* Never use more than 2 font weights on a single page
-* Never stack more than 3 cards in a row
-* Never install Framer Motion, GSAP, or any animation library
-* Never use pure white (`#FFFFFF`) as a page background
-* Never use generic component library defaults (shadcn, MUI defaults)
-* Never add floating action buttons, toast notifications, or back-to-top buttons
-* Never use placeholder images or generic stock photography
-* Never add sticky headers taller than 80px
-* Never create competing animation systems. Everything goes through the existing CSS layers.
-* Never use `setTimeout` or `setInterval` for animations. Use CSS transitions, `requestAnimationFrame`, or `animation-timeline`.
-* Never hardcode pixel breakpoints for font sizes. Use `clamp()`.
-* Never skip the reduced-motion media query. All motion MUST respect `prefers-reduced-motion`.
-* Never use `transform: scale()` values above 1.05 on hover. Keep it subtle.
-* Never add loading spinners. Use skeleton states with shimmer.
+NAVIGATION LINKS:
+- Same underline wipe as text links
+
+### Layer 5: Section Composition
+
+EVOLVED PATTERNS for how sections are structured:
+
+NUMBERED SECTIONS:
+- Major sections get a number label: "(01) Featured Work", "(02) The Argument", etc.
+- The number is rendered as part of the editorial label, not as a decorative element
+- Numbers create narrative progression and help the user orient within the page
+
+SECTION ANNOUNCEMENTS:
+- Each section begins with: editorial label (number + title) → section heading → optional supporting text → content
+- This is consistent across all pages. The label-heading-content pattern is the signature structural rhythm.
+
+DARK SECTIONS:
+- Used sparingly. Maximum 2 per page (typically the argument/problem section and the CTA)
+- --text-primary background, --bg text
+- Creates narrative emphasis. "This is the important part."
+
+DIVIDERS:
+- 1px solid var(--border) between all major content blocks within a section
+- Full-bleed dividers between sections
+- Dividers are structural, not decorative. They create rhythm like bar lines in music.
+
+ASYMMETRIC LAYOUTS:
+- Default split for two-column sections: 55/45 or 60/40
+- Never 50/50 unless both columns have identical content types
+- The wider column contains the primary content (heading, description)
+- The narrower column contains secondary content (steps, metadata, image)
+
+### Layer 6: Image Presentation
+
+EVOLVED APPROACH:
+
+- Images are DOMINANT. They should be the largest visual element in any section that contains them.
+- Minimum image height on desktop: 400px for inline images, 500px for hero/featured images
+- Aspect ratios: 3:4 portrait for project cards, 4:3 landscape for case study heroes, 16:9 for full-width banners
+- Images enter viewport with clip-path reveal: inset(0 100% 0 0) → inset(0 0 0 0) over 0.8s
+- On hover (when image is a link): scale(1.03) zoom
+- All images use Next.js Image component with proper sizes, alt, and priority attributes
+- Placeholder state (before real images): --bg-shift background, no text, no labels
+
+### Layer 7: Loading and Empty States
+
+- No spinning loaders anywhere
+- Page loads: content enters via the staggered reveal system. The page appears to "build" itself.
+- Form submissions: button text changes to "Sending..." with reduced opacity
+- Empty content states: a quiet centered message in --text-muted, no decorative elements
+- Skeleton loading: if Sanity content takes time to load, show thin horizontal bars (8px height, --bg-shift fill, subtle pulse animation) in place of text blocks
+
+---
+
+## PAGE-SPECIFIC INTERACTION MAPS
+
+### Homepage
+Flow: Hero → (01) Featured Work → (02) The Argument → (03) Services → (04) About Preview → (05) Brands → (06) Testimonials → Stats → CTA
+
+- Hero: page load entrance with staggered data attributes. Headline, supporting text, buttons stagger in 0.1s apart.
+- Featured Work: 4-column card grid. Portrait images. Stagger reveal with 100ms offset per card.
+- Argument: Two-column. Dark section option. Steps stagger on right column.
+- Services: Accordion rows with hover reveal.
+- About Preview: Two-column on --bg-shift. Compact.
+- Brands: Accordion list with hover expand.
+- Testimonials: Asymmetric carousel with auto-rotate and pause.
+- Stats: Compact data bar with animated counters.
+- CTA: Dark inverted. Asymmetric. The close.
+
+### Work Page
+- Default view: LIST (text rows with dividers, hover background shift)
+- Toggle: LIST / GRID switch in top right
+- Grid view: 2-column staggered cards with images
+- Filter bar: horizontal pill buttons
+- Heading: large with superscript project count
+
+### Services Overview
+- Compact hero (~60vh) with full-width image below
+- Service blocks: alternating image/text layout
+- Services Unpacked: multi-column capability grid (not accordion)
+- Dark CTA at bottom
+
+### Service Detail
+- Compact hero (~50vh) with viewTransitionName
+- Deliverables: two-column grid
+- Business Impact: asymmetric 40/60 layout on --bg-shift
+- Process: two-column grid
+- Dark CTA at bottom
+
+### Case Study
+- Compact hero (~50vh) with viewTransitionName
+- Full-width hero image with clip-path reveal
+- Content sections: Business, Challenge (two-column), Approach, Deliverables (numbered grid), Result
+- Image gallery
+- Next Project link with letter-spacing hover
+- Dark CTA
+
+### About
+- Compact hero
+- Numbered sections: (01) Capabilities, (02) Process, (03) Network, (04) Founder, (05) Stats
+- Founder section: two-column with photo and bio
+- Dark CTA
+
+### Contact
+- Compact hero
+- Two-column: form left, booking CTA right
+- Contact details grid below form
+- No bottom CTA (the form IS the CTA)
+
+### AI Lab
+- Compact hero
+- Three content sections: The Argument (why creative direction matters), How AI Powers the Process (stage list), Brand Pulse Check (interactive tool)
+- Each section uses the standard label-heading-content pattern
+- Brand Pulse Check: interactive multi-step flow, self-contained
+- Dark CTA
+
+### Packages
+- Compact hero
+- Three-column pricing grid with dividers between tiers
+- Recommended tier gets subtle --bg-shift background
+- Flexibility disclaimer below
+- Dark CTA
+
+### Insights
+- Compact hero
+- Filter bar (sticky below header)
+- Two-column post grid with images
+- Dark CTA
+
+### Insight Article
+- Compact hero with back link, metadata, reading time
+- Full-width featured image
+- Body content at max-width 740px
+- Previous/Next navigation
+- Related posts grid
+- Dark CTA
+
+---
+
+## MOBILE STRATEGY
+
+Mobile gets a simplified experience prioritizing speed and readability.
+
+- All hover interactions disabled (CSS @media(hover: hover) wrapper)
+- Accordion sections: all content visible by default, no hover-reveal
+- Custom cursor: hidden on touch devices
+- Navigation: wordmark + Menu trigger only. Full-screen overlay for nav.
+- Image sizes reduced for performance
+- Stagger delays reduced or removed
+- Column layouts collapse to single column
+- Scroll-driven animations: simplified to basic fade-in via IntersectionObserver
+- Stats: 2x2 grid below 600px
+- Work page: single column grid, no list/grid toggle
+
+---
+
+## PERFORMANCE BUDGET
+
+Target: Lighthouse 80+ across all metrics. Experience takes priority over perfect scores.
+
+- No animation libraries (GSAP, Framer Motion, etc.)
+- All animations: pure CSS + IntersectionObserver
+- Images: Next.js Image with proper sizes and priority
+- Fonts: Inter loaded via next/font with display swap
+- Cursor: requestAnimationFrame for 60fps tracking
+- Page transitions: View Transitions API (native, zero bundle cost)
+- Scroll animations: animation-timeline: view() in Chrome (GPU compositor, zero main thread), IntersectionObserver fallback in Safari
+
+---
 
 ## EASING REFERENCE
 
-| Purpose | Easing | Duration |
-|---------|--------|----------|
-| Hover transitions | `ease` or `cubic-bezier(0.23, 1, 0.32, 1)` | 0.2s to 0.3s |
-| Fill sweeps | `cubic-bezier(0.23, 1, 0.32, 1)` | 0.4s |
-| Scroll reveals | `linear` (scroll-driven) | Tied to scroll |
-| IntersectionObserver | `cubic-bezier(0.23, 1, 0.32, 1)` | 0.5s to 0.7s |
-| Text reveals | `cubic-bezier(0.22, 1, 0.36, 1)` | 0.8s |
-| Image zoom | `cubic-bezier(0.23, 1, 0.32, 1)` | 0.6s to 0.7s |
-| Page load entrance | `cubic-bezier(0.23, 1, 0.32, 1)` | 0.6s |
-| View transitions | `cubic-bezier(0.23, 1, 0.32, 1)` | 0.4s to 0.5s |
-| Cursor movement | none (follows mouse via rAF) | Instant |
-| Cursor state changes | `ease-out` | 0.3s |
-| Clip-path reveals | `cubic-bezier(0.77, 0, 0.175, 1)` | 0.8s |
-| Letter-spacing hover | `ease` | 0.5s |
-| Accordion open/close | `ease` | 0.5s |
+| Purpose                  | Easing                              | Duration    |
+|--------------------------|-------------------------------------|-------------|
+| Hover transitions        | cubic-bezier(0.23, 1, 0.32, 1)     | 0.2s - 0.3s |
+| Fill sweeps              | cubic-bezier(0.23, 1, 0.32, 1)     | 0.4s        |
+| Scroll reveals           | cubic-bezier(0.23, 1, 0.32, 1)     | 0.6s - 0.8s |
+| Text reveals             | cubic-bezier(0.22, 1, 0.36, 1)     | 0.8s        |
+| Image clip reveals       | cubic-bezier(0.77, 0, 0.175, 1)    | 0.8s        |
+| Page transitions         | cubic-bezier(0.23, 1, 0.32, 1)     | 0.3s - 0.5s |
+| Accordion expand         | cubic-bezier(0.23, 1, 0.32, 1)     | 0.6s        |
+| Letter-spacing hover     | ease                                | 0.5s        |
+| Cursor state changes     | ease-out                            | 0.3s        |
+| Stagger offset           | —                                   | 80 - 100ms  |
 
-The primary easing for this project is `cubic-bezier(0.23, 1, 0.32, 1)`. This is a fast-start, gentle-settle curve that feels confident and premium. Use it as the default for any new interaction unless there is a specific reason to choose something else.
+Primary easing: cubic-bezier(0.23, 1, 0.32, 1). Fast start, gentle settle. Confident and premium.
 
-## AWWWARDS JUDGING CRITERIA ALIGNMENT
+---
 
-For reference, Awwwards judges score on four dimensions. Here is how this site addresses each:
+## IMPLEMENTATION PRIORITY
 
-**Design (40%):** Editorial modernist aesthetic, custom color system, typographic hierarchy with tight letter-spacing on headlines, asymmetric layouts, warm neutral palette, serif/sans pairing for contrast, zero generic patterns.
-
-**Usability (20%):** Clear navigation, logical page hierarchy, responsive from 375px to 2560px+, accessible form patterns, sticky filter bars for long lists, readable body text at 15-16px with 1.65 line height.
-
-**Creativity (20%):** Custom 6-state cursor system, scroll-driven CSS animations (cutting edge API), text mask reveals, button fill sweeps, project row letter-spacing hover, image parallax via scroll timeline, iris reveal on photos.
-
-**Content (20%):** Sanity CMS for dynamic content, structured case studies with deliverables and process documentation, insights/blog with reading time, filterable work portfolio, clear service offerings.
+Phase 1 (immediate): Navigation overlay, page transitions, scroll reveal variety
+Phase 2 (next): Image clip-path reveals, hover interaction standardization
+Phase 3 (polish): Loading states, mobile optimization, performance audit
