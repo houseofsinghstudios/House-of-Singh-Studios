@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, FormEvent } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
@@ -33,6 +34,7 @@ interface RelatedPost {
   publishedAt?: string;
   excerpt?: string;
   category?: string;
+  featuredImage?: PostImage;
 }
 
 interface Post {
@@ -144,6 +146,184 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
+function ShareButtons({ title }: { title: string }) {
+  const [copied, setCopied] = useState(false);
+
+  function getUrl() {
+    return typeof window !== "undefined" ? window.location.href : "";
+  }
+
+  function shareLinkedIn() {
+    const url = getUrl();
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  function shareX() {
+    const url = getUrl();
+    window.open(
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  async function copyLink() {
+    const url = getUrl();
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // Fallback: silently fail
+    }
+  }
+
+  const btnStyle: React.CSSProperties = {
+    fontFamily: "var(--sans)",
+    fontSize: 13,
+    textTransform: "uppercase",
+    letterSpacing: "0.1em",
+    color: "var(--text-secondary)",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    padding: 0,
+    transition: "color 0.2s ease",
+  };
+
+  return (
+    <div className="css-reveal" style={{ marginTop: 60, maxWidth: 740 }}>
+      <p
+        style={{
+          fontFamily: "var(--sans)",
+          fontSize: 11,
+          textTransform: "uppercase",
+          letterSpacing: "0.12em",
+          color: "var(--text-muted)",
+          marginBottom: 16,
+        }}
+      >
+        (Share)
+      </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
+        <button type="button" onClick={shareLinkedIn} style={btnStyle}>
+          LinkedIn
+        </button>
+        <span style={{ margin: "0 12px", color: "var(--text-muted)", fontSize: 13 }}>&middot;</span>
+        <button type="button" onClick={shareX} style={btnStyle}>
+          X
+        </button>
+        <span style={{ margin: "0 12px", color: "var(--text-muted)", fontSize: 13 }}>&middot;</span>
+        <button type="button" onClick={copyLink} style={btnStyle}>
+          {copied ? "Copied" : "Copy Link"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InlineNewsletter() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!email) return;
+    setStatus("submitting");
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  if (status === "success") {
+    return (
+      <div className="css-reveal" style={{ marginTop: 40, maxWidth: 740 }}>
+        <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--text-secondary)" }}>
+          Thank you. You&rsquo;re on the list.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="css-reveal" style={{ marginTop: 40, maxWidth: 740 }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}
+      >
+        <span
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: 14,
+            color: "var(--text-secondary)",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Get studio insights in your inbox.
+        </span>
+        <input
+          type="email"
+          placeholder="your@email.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          disabled={status === "submitting"}
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: 14,
+            color: "var(--text-primary)",
+            background: "transparent",
+            border: "none",
+            borderBottom: "1px solid var(--border)",
+            padding: "6px 0",
+            outline: "none",
+            flex: "1 1 180px",
+            minWidth: 160,
+            transition: "border-color 0.3s ease",
+          }}
+        />
+        <button
+          type="submit"
+          disabled={status === "submitting"}
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: 13,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            color: "var(--text-primary)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+            opacity: status === "submitting" ? 0.4 : 0.6,
+            transition: "opacity 0.3s ease",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Subscribe&nbsp;&rarr;
+        </button>
+      </form>
+      {status === "error" && (
+        <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
+          Something went wrong. Try again.
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function InsightArticleClient({ post }: { post: Post }) {
   const readTime = calculateReadTime(post.body);
 
@@ -219,6 +399,12 @@ export default function InsightArticleClient({ post }: { post: Post }) {
               Back to Insights
             </Link>
           </div>
+
+          {/* ── SHARE BUTTONS ── */}
+          <ShareButtons title={post.title} />
+
+          {/* ── INLINE NEWSLETTER CTA ── */}
+          <InlineNewsletter />
         </div>
       </section>
 
@@ -261,10 +447,21 @@ export default function InsightArticleClient({ post }: { post: Post }) {
           <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", marginBottom: 32 }}>(Related)</p>
           <div className="related-grid reveal-stagger-parent">
             {post.relatedPosts.map((rp) => (
-              <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="post-nav-link scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+              <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="post-card post-nav-link scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+                {rp.featuredImage?.asset && (
+                  <div className="post-card-image" style={{ aspectRatio: "16/9", position: "relative", overflow: "hidden", marginBottom: 16 }}>
+                    <Image
+                      src={urlFor(rp.featuredImage).width(600).height(338).url()}
+                      alt={rp.featuredImage.alt || rp.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      style={{ objectFit: "cover", transition: "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)" }}
+                    />
+                  </div>
+                )}
                 {rp.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{rp.category}</p>}
                 <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{rp.title}</p>
-                {rp.publishedAt && <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>{rp.publishedAt ? formatDateShort(rp.publishedAt) : ""}</p>}
+                {rp.publishedAt && <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>{formatDateShort(rp.publishedAt)}</p>}
               </Link>
             ))}
           </div>

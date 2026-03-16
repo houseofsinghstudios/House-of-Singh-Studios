@@ -20,13 +20,28 @@ export default function HeroSection() {
     if (secondaryEl && !secondaryEl.dataset.initialized) {
       secondaryEl.dataset.initialized = "1";
       secondaryEl.innerHTML = "";
-      for (let i = 0; i < HERO.secondary.length; i++) {
-        const span = document.createElement("span");
-        span.textContent = HERO.secondary[i] === " " ? "\u00A0" : HERO.secondary[i];
-        span.style.cssText = "opacity:0;filter:blur(6px);transform:translateY(8px);display:inline-block";
-        span.dataset.charIdx = String(i);
-        secondaryEl.appendChild(span);
-      }
+      const words = HERO.secondary.split(" ");
+      let charIndex = 0;
+      words.forEach((word, wi) => {
+        const wordWrap = document.createElement("span");
+        wordWrap.style.cssText = "white-space:nowrap;display:inline";
+        for (let j = 0; j < word.length; j++) {
+          const span = document.createElement("span");
+          span.textContent = word[j];
+          span.style.cssText = "opacity:0;filter:blur(6px);transform:translateY(8px);display:inline-block";
+          span.dataset.charIdx = String(charIndex++);
+          wordWrap.appendChild(span);
+        }
+        secondaryEl.appendChild(wordWrap);
+        // Add a space span between words
+        if (wi < words.length - 1) {
+          const space = document.createElement("span");
+          space.textContent = "\u00A0";
+          space.style.cssText = "opacity:0;filter:blur(6px);transform:translateY(8px);display:inline-block";
+          space.dataset.charIdx = String(charIndex++);
+          secondaryEl.appendChild(space);
+        }
+      });
     }
 
     // Scroll-driven char-by-char blur reveal via scroll listener
