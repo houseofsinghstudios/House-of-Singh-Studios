@@ -114,7 +114,8 @@ export default function Header() {
             <img
               src="/hos-studios-logo.svg"
               alt=""
-              style={{ height: 115, width: "auto", display: "block" }}
+              className="header-crest"
+              style={{ width: "auto", display: "block" }}
             />
           </Link>
         </div>
@@ -287,15 +288,15 @@ export default function Header() {
         .mobile-menu-trigger { display: none !important; }
         .mobile-nav-overlay { display: none; }
 
+        /* Crest logo responsive sizing */
+        .header-crest { height: 115px; }
+
         /* Mobile: hide desktop nav, show mobile elements */
         @media (max-width: 899px) {
           .header-desktop-nav { display: none !important; }
           .mobile-menu-trigger { display: flex !important; }
           .mobile-nav-overlay { display: flex !important; }
-          .header-wordmark {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-          }
+          .header-crest { height: 72px; }
         }
       `}</style>
     </>
