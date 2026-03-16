@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
 import "@/styles/scroll-animations.css";
-import "lenis/dist/lenis.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";

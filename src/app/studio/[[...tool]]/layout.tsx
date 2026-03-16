@@ -10,6 +10,12 @@ export default function StudioLayout({
         body > header,
         body > footer { display: none !important; }
         body > main { padding-top: 0 !important; }
+        /* Hide custom cursor in the Studio */
+        .custom-cursor-dot,
+        .custom-cursor-ring {
+          display: none !important;
+          pointer-events: none !important;
+        }
       `}</style>
       {children}
     </>
