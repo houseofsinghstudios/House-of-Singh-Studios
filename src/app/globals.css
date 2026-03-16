@@ -1646,6 +1646,22 @@ a.footer-contact-value:hover {
   border-bottom-color: var(--text-primary);
 }
 
+/* ── Featured post layout ── */
+.featured-post-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 48px;
+  align-items: start;
+}
+.featured-post-image { min-width: 0; }
+.featured-post-info { min-width: 0; }
+@media (max-width: 767px) {
+  .featured-post-layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
 /* ── Posts grid ── */
 .insights-grid {
   display: grid;

@@ -101,6 +101,7 @@ export async function getAllPosts() {
       },
       category,
       tags,
+      body,
       publishedAt
     }`
   );
@@ -155,7 +156,15 @@ export async function getPostBySlug(slug: string) {
         slug,
         publishedAt,
         excerpt,
-        category
+        category,
+        featuredImage {
+          ...,
+          asset-> {
+            _id,
+            url,
+            metadata { dimensions, lqip }
+          }
+        }
       }
     }`,
     { slug }
