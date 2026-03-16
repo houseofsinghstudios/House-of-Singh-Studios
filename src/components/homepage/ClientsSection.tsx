@@ -61,7 +61,7 @@ export default function ClientsSection() {
         Brands we&rsquo;ve worked with.
       </h2>
 
-      <div className="clients-accordion">
+      <div className="clients-accordion reveal-stagger-parent">
         {clients.map((client, i) => {
           const isOpen = openIndex === i;
           return (

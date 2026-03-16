@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const navLinks = [
   { label: "Services", href: "/services" },
@@ -11,33 +11,30 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-const mobileLinks = [
+const overlayLinks = [
   { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
+  { label: "Work", href: "/work", count: "06" },
   { label: "AI", href: "/ai" },
   { label: "Journal", href: "/insights" },
-  { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
     function onScroll() {
       const y = window.scrollY;
 
-      // State 2 activates at 80px
       setScrolled(y >= 80);
 
-      // Hide/show after 400px
       if (y > 400 && y > lastScrollY.current) {
         setHidden(true);
-        setMenuOpen(false);
       } else if (y < lastScrollY.current) {
         setHidden(false);
       }
@@ -49,47 +46,69 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body scroll when overlay is open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    document.body.style.overflow = overlayOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [overlayOpen]);
+
+  // Close on Escape key
+  useEffect(() => {
+    if (!overlayOpen) return;
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOverlayOpen(false);
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [overlayOpen]);
+
+  const closeOverlay = useCallback(() => setOverlayOpen(false), []);
 
   return (
     <>
       <header
+        className="site-header"
         style={{
           position: "fixed",
           top: 0,
           left: 0,
           right: 0,
           zIndex: 100,
-          height: 64,
+          height: scrolled ? 48 : 64,
           display: "flex",
           alignItems: "center",
           padding: "0 var(--page-px)",
-          backgroundColor: scrolled ? "var(--bg)" : "transparent",
-          borderBottom: scrolled
-            ? "1px solid var(--border)"
-            : "1px solid transparent",
+          backgroundColor:
+            scrolled || overlayOpen ? "var(--bg)" : "transparent",
+          backdropFilter: scrolled ? "blur(8px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(8px)" : "none",
+          borderBottom:
+            scrolled && !overlayOpen
+              ? "1px solid var(--border)"
+              : "1px solid transparent",
           transform:
-            hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
+            hidden && !overlayOpen ? "translateY(-100%)" : "translateY(0)",
           transition:
-            "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease",
+            "transform 0.35s ease, background-color 0.5s ease, border-color 0.5s ease, height 0.35s ease",
         }}
       >
-        {/* Crest Logo — visible in State 1 (top of page), positioned with breathing room */}
+        {/* Crest Logo — visible at top of page only */}
         <div
           style={{
             position: "fixed",
             left: "var(--page-px)",
             top: 48,
-            opacity: scrolled ? 0 : 1,
-            transform: scrolled ? "translateY(-20px)" : "translateY(0)",
+            opacity: scrolled || overlayOpen ? 0 : 1,
+            transform:
+              scrolled || overlayOpen ? "translateY(-20px)" : "translateY(0)",
             transition: "opacity 0.5s ease, transform 0.5s ease",
-            pointerEvents: scrolled ? "none" : "auto",
+            pointerEvents: scrolled || overlayOpen ? "none" : "auto",
             zIndex: 100,
           }}
         >
@@ -103,16 +122,17 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Text Logotype — fades in for State 2 (scrolled) */}
+        {/* Text Wordmark — visible when scrolled or overlay open */}
         <div
           style={{
-            opacity: scrolled ? 1 : 0,
+            opacity: scrolled || overlayOpen ? 1 : 0,
             transition: "opacity 0.5s ease",
-            pointerEvents: scrolled ? "auto" : "none",
+            pointerEvents: scrolled || overlayOpen ? "auto" : "none",
           }}
         >
           <Link
             href="/"
+            onClick={overlayOpen ? closeOverlay : undefined}
             style={{
               fontFamily: "var(--sans)",
               fontSize: 11,
@@ -131,16 +151,16 @@ export default function Header() {
         {/* Spacer */}
         <div style={{ flex: 1 }} />
 
-        {/* Desktop Nav Links — fade in for State 2 */}
+        {/* Desktop Nav Links — visible when scrolled, hidden on mobile */}
         <nav
           className="header-desktop-nav"
           style={{
             display: "flex",
             alignItems: "center",
             gap: 32,
-            opacity: scrolled ? 1 : 0,
+            opacity: scrolled && !overlayOpen ? 1 : 0,
             transition: "opacity 0.5s ease",
-            pointerEvents: scrolled ? "auto" : "none",
+            pointerEvents: scrolled && !overlayOpen ? "auto" : "none",
           }}
         >
           {navLinks.map((link) => (
@@ -164,136 +184,130 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Mobile Hamburger — State 2 only, below 900px */}
+        {/* Menu + / Close trigger */}
         <button
-          className="header-hamburger"
-          onClick={() => setMenuOpen(true)}
-          aria-label="Open menu"
+          className="header-menu-trigger"
+          onClick={() => setOverlayOpen((prev) => !prev)}
+          aria-label={overlayOpen ? "Close menu" : "Open menu"}
+          aria-expanded={overlayOpen}
           style={{
-            display: "none",
-            flexDirection: "column",
-            gap: 5,
-            padding: 10,
-            minWidth: 44,
-            minHeight: 44,
-            alignItems: "center",
-            justifyContent: "center",
             background: "none",
             border: "none",
             cursor: "pointer",
-            opacity: scrolled ? 1 : 0,
-            pointerEvents: scrolled ? "auto" : "none",
-            transition: "opacity 0.5s ease",
+            padding: "8px 0 8px 24px",
+            minWidth: 44,
+            minHeight: 44,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "var(--sans)",
+            fontSize: 11,
+            fontWeight: 500,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: "var(--text-primary)",
+            opacity: scrolled || overlayOpen ? 1 : 0,
+            pointerEvents: scrolled || overlayOpen ? "auto" : "none",
+            transition: "opacity 0.5s ease, color 0.2s ease",
           }}
         >
-          <span
-            style={{
-              display: "block",
-              width: 24,
-              height: 1.5,
-              background: "var(--text-primary)",
-            }}
-          />
-          <span
-            style={{
-              display: "block",
-              width: 24,
-              height: 1.5,
-              background: "var(--text-primary)",
-            }}
-          />
-          <span
-            style={{
-              display: "block",
-              width: 24,
-              height: 1.5,
-              background: "var(--text-primary)",
-            }}
-          />
+          {overlayOpen ? "Close" : "Menu +"}
         </button>
       </header>
 
-      {/* Mobile Full-Screen Overlay */}
-      {menuOpen && (
-        <div
+      {/* Full-screen Navigation Overlay */}
+      <div
+        className="nav-overlay"
+        aria-hidden={!overlayOpen}
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 99,
+          background: "var(--bg)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "0 var(--page-px)",
+          opacity: overlayOpen ? 1 : 0,
+          pointerEvents: overlayOpen ? "auto" : "none",
+          transition: "opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1)",
+        }}
+      >
+        <nav
           style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 101,
-            background: "var(--bg)",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
+            gap: 4,
           }}
         >
-          {/* Close X */}
-          <button
-            onClick={() => setMenuOpen(false)}
-            aria-label="Close menu"
-            style={{
-              position: "absolute",
-              top: 18,
-              right: "var(--page-px)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 10,
-              minWidth: 44,
-              minHeight: 44,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="var(--text-primary)"
-              strokeWidth="1.5"
-            >
-              <line x1="4" y1="4" x2="20" y2="20" />
-              <line x1="20" y1="4" x2="4" y2="20" />
-            </svg>
-          </button>
-
-          {/* Overlay Links */}
-          {mobileLinks.map((link) => (
-            <Link
+          {overlayLinks.map((link, i) => (
+            <div
               key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="header-mobile-link"
+              className="nav-overlay-item"
               style={{
-                fontFamily: "var(--sans)",
-                fontSize: 36,
-                fontWeight: 400,
-                color: "var(--text-primary)",
-                textDecoration: "none",
-                lineHeight: 1.6,
-                minHeight: 44,
-                transition: "color 0.2s ease",
+                opacity: overlayOpen ? 1 : 0,
+                transform: overlayOpen ? "translateY(0)" : "translateY(20px)",
+                transition: `opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1) ${i * 80}ms, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1) ${i * 80}ms`,
               }}
             >
-              {link.label}
-            </Link>
+              <Link
+                href={link.href}
+                onClick={closeOverlay}
+                className="nav-overlay-link"
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: "clamp(32px, 4vw, 48px)",
+                  fontWeight: 500,
+                  letterSpacing: "-0.025em",
+                  lineHeight: 1.3,
+                  color: "var(--text-primary)",
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "baseline",
+                  gap: 8,
+                  padding: "6px 0",
+                  transition: "color 0.2s ease",
+                }}
+              >
+                {link.label}
+                {link.count && (
+                  <span
+                    style={{
+                      fontFamily: "var(--sans)",
+                      fontSize: 11,
+                      fontWeight: 400,
+                      letterSpacing: "0.06em",
+                      color: "var(--text-muted)",
+                      position: "relative",
+                      top: "-0.8em",
+                    }}
+                  >
+                    {link.count}
+                  </span>
+                )}
+              </Link>
+            </div>
           ))}
-        </div>
-      )}
+        </nav>
+      </div>
 
       <style>{`
         .header-nav-link:hover {
           color: var(--text-primary) !important;
         }
-        .header-mobile-link:hover {
+        .nav-overlay-link:hover {
           color: var(--text-muted) !important;
         }
+        /* Mobile: hide desktop nav, show only wordmark + menu trigger */
         @media (max-width: 899px) {
           .header-desktop-nav { display: none !important; }
-          .header-hamburger { display: flex !important; }
+        }
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .nav-overlay,
+          .nav-overlay-item {
+            transition: none !important;
+          }
         }
       `}</style>
     </>

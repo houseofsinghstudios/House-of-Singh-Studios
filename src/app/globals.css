@@ -1143,17 +1143,17 @@ a.footer-contact-value:hover {
    View Transitions API
    ═══════════════════════════════════════════════════════ */
 @keyframes vt-fade-out {
-  to { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 0; transform: translateY(-12px); }
 }
 @keyframes vt-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(16px); }
 }
 
 ::view-transition-old(root) {
-  animation: 0.3s ease-out both vt-fade-out;
+  animation: 0.3s ease both vt-fade-out;
 }
 ::view-transition-new(root) {
-  animation: 0.4s ease-in both vt-fade-in;
+  animation: 0.5s 0.1s ease both vt-fade-in;
 }
 
 ::view-transition-old(service-title) {
@@ -1585,7 +1585,7 @@ a.footer-contact-value:hover {
 }
 
 .package-tier--recommended {
-  background: rgba(26, 26, 26, 0.02);
+  background: var(--bg-shift);
 }
 
 @media (max-width: 1100px) {
@@ -1672,7 +1672,7 @@ a.footer-contact-value:hover {
   opacity: 0.7;
 }
 .post-card:hover .post-card-image img {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .post-card-image {
@@ -1743,6 +1743,15 @@ a.footer-contact-value:hover {
   transition: opacity 0.3s ease;
 }
 
+/* ── Article back link ── */
+.article-back-link:hover {
+  color: var(--text-primary);
+  opacity: 0.7;
+}
+.article-back-link:hover span {
+  transform: translateX(-4px);
+}
+
 /* ── Related posts grid ── */
 .related-grid {
   display: grid;
@@ -1761,11 +1770,11 @@ a.footer-contact-value:hover {
 
 /* ── Role cards ── */
 .role-card {
-  border-top: 1px solid rgba(26, 26, 26, 0.1);
+  border-top: 1px solid var(--border);
   cursor: pointer;
 }
 .role-card:last-child {
-  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+  border-bottom: 1px solid var(--border);
 }
 
 .role-card-header {
@@ -1837,7 +1846,7 @@ a.footer-contact-value:hover {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+  border-bottom: 1px solid var(--border);
   font-family: var(--sans);
   font-size: 16px;
   color: var(--text-primary);
@@ -1851,7 +1860,7 @@ a.footer-contact-value:hover {
 .careers-form-input:focus,
 .careers-form-select:focus,
 .careers-form-textarea:focus {
-  border-bottom-color: rgba(26, 26, 26, 0.6);
+  border-bottom-color: var(--text-secondary);
 }
 
 .careers-form-input::placeholder,
@@ -2005,6 +2014,10 @@ a.footer-contact-value:hover {
 }
 
 @media (max-width: 767px) {
+  .ai-argument-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
   .ai-process-row {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -2248,6 +2261,16 @@ a.footer-contact-value:hover {
   to   { opacity: 1; }
 }
 
+@keyframes revealCurtainWipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes revealTextSlideUp {
+  from { transform: translateY(110%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
     .css-reveal {
@@ -2275,6 +2298,33 @@ a.footer-contact-value:hover {
       animation-timeline: view();
       animation-range: entry 0% entry 25%;
     }
+
+    /* ── reveal-clip: image curtain wipe ── */
+    .reveal-clip {
+      animation: revealCurtainWipe 0.8s cubic-bezier(0.77, 0, 0.175, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+
+    /* ── reveal-stagger-parent: staggered children ── */
+    .reveal-stagger-parent > :nth-child(1) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; }
+    .reveal-stagger-parent > :nth-child(2) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 2% entry 32%; }
+    .reveal-stagger-parent > :nth-child(3) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 4% entry 34%; }
+    .reveal-stagger-parent > :nth-child(4) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 6% entry 36%; }
+    .reveal-stagger-parent > :nth-child(5) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 8% entry 38%; }
+    .reveal-stagger-parent > :nth-child(6) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 10% entry 40%; }
+    .reveal-stagger-parent > :nth-child(7) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 12% entry 42%; }
+    .reveal-stagger-parent > :nth-child(8) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 14% entry 44%; }
+
+    /* ── reveal-text: headline mask slide-up ── */
+    .reveal-text {
+      overflow: hidden;
+    }
+    .reveal-text > * {
+      animation: revealTextSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
   }
 }
 
@@ -2282,10 +2332,14 @@ a.footer-contact-value:hover {
    Layer 2: View Transitions API — crossfade & morph timing
    ═══════════════════════════════════════════════════════ */
 
-::view-transition-old(root),
+::view-transition-old(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease;
+}
 ::view-transition-new(root) {
-  animation-duration: 0.4s;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 0.5s;
+  animation-delay: 0.1s;
+  animation-timing-function: ease;
 }
 
 ::view-transition-group(*) {
@@ -3355,6 +3409,46 @@ td a:hover,
     .testimonials-section.in-view {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    /* ── reveal-clip: image curtain wipe (fallback) ── */
+    .reveal-clip {
+      clip-path: inset(0 100% 0 0);
+      transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    .reveal-clip.in-view {
+      clip-path: inset(0 0 0 0);
+    }
+
+    /* ── reveal-stagger-parent: staggered children (fallback) ── */
+    .reveal-stagger-parent > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .reveal-stagger-parent.in-view > * { opacity: 1; transform: translateY(0); }
+    .reveal-stagger-parent.in-view > :nth-child(2) { transition-delay: 0.08s; }
+    .reveal-stagger-parent.in-view > :nth-child(3) { transition-delay: 0.16s; }
+    .reveal-stagger-parent.in-view > :nth-child(4) { transition-delay: 0.24s; }
+    .reveal-stagger-parent.in-view > :nth-child(5) { transition-delay: 0.32s; }
+    .reveal-stagger-parent.in-view > :nth-child(6) { transition-delay: 0.40s; }
+    .reveal-stagger-parent.in-view > :nth-child(7) { transition-delay: 0.48s; }
+    .reveal-stagger-parent.in-view > :nth-child(8) { transition-delay: 0.56s; }
+
+    /* ── reveal-text: headline mask slide-up (fallback) ── */
+    .reveal-text {
+      overflow: hidden;
+    }
+    .reveal-text > * {
+      transform: translateY(110%);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-text.in-view > * {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
 }

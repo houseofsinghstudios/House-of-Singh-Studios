@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Button from "@/components/ui/Button";
+import EditorialLabel from "@/components/ui/EditorialLabel";
+import BrandPulseCheck from "@/components/ai/BrandPulseCheck";
 
 const PROCESS_STAGES = [
   {
@@ -27,34 +28,12 @@ const PROCESS_STAGES = [
 ];
 
 export default function AILabClient() {
-  const [pulseEmail, setPulseEmail] = useState("");
-  const [pulseSubmitted, setPulseSubmitted] = useState(false);
-  const [pulseSubmitting, setPulseSubmitting] = useState(false);
-
-  async function handlePulseEmail(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!pulseEmail.trim()) return;
-    setPulseSubmitting(true);
-    try {
-      await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: pulseEmail, source: "brand-pulse-waitlist" }),
-      });
-      setPulseSubmitted(true);
-    } catch {
-      // Silent fail
-    } finally {
-      setPulseSubmitting(false);
-    }
-  }
-
   return (
     <>
       {/* ── HERO ── */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "100vh", paddingBottom: 100 }}
+        style={{ minHeight: "50vh", paddingBottom: 80 }}
       >
         <p
           data-hero-label
@@ -66,7 +45,11 @@ export default function AILabClient() {
         <h1
           data-hero-heading
           className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
-          style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15, margin: 0 }}
+          style={{
+            fontSize: "clamp(32px, 4vw, 56px)",
+            lineHeight: 1.15,
+            margin: 0,
+          }}
         >
           AI is built into how we work.
         </h1>
@@ -75,58 +58,109 @@ export default function AILabClient() {
           className="font-[var(--sans)] font-normal text-[16px] text-[color:var(--text-primary)] max-w-[640px] mt-6"
           style={{ lineHeight: 1.75, opacity: 0.7 }}
         >
-          Every project benefits from AI at the production layer. Research acceleration. Asset generation. Quality control. Workflow automation. The result is faster delivery, sharper consistency, and fewer revisions.
-          <br /><br />
-          But creative direction is always human. AI does not make brand decisions. We do.
+          Every project benefits from AI at the production layer. Research
+          acceleration. Asset generation. Quality control. Workflow automation.
+          The result is faster delivery, sharper consistency, and fewer
+          revisions.
+          <br />
+          <br />
+          But creative direction is always human. AI does not make brand
+          decisions. We do.
         </p>
       </section>
 
-      {/* ── SECTION 1: THE CREATIVE DIRECTION ARGUMENT ── */}
-      <section style={{ padding: "120px var(--page-px)" }}>
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
+      {/* ── SECTION (01): THE CREATIVE DIRECTION ARGUMENT ── */}
+      <hr className="hos-divider" />
+      <section
+        className="css-reveal"
+        style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
+      >
+        <EditorialLabel text="01 — The Argument" className="mb-6" />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "55% 45%",
+            gap: "clamp(32px, 4vw, 64px)",
+            alignItems: "start",
+          }}
+          className="ai-argument-grid"
         >
-          (Why It Matters)
-        </p>
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0 }}
-        >
-          AI can generate assets. It cannot build a brand.
-        </h2>
-        <div className="max-w-[640px] mt-8">
-          <p
-            className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
-            style={{ lineHeight: 1.75, opacity: 0.7 }}
+          {/* Left column */}
+          <div className="css-reveal">
+            <h2
+              className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+              style={{
+                fontSize: "clamp(28px, 3.5vw, 48px)",
+                lineHeight: 1.1,
+                margin: 0,
+              }}
+            >
+              AI can generate assets. It cannot build a brand.
+            </h2>
+            <p
+              className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)] max-w-[640px] mt-8"
+              style={{ lineHeight: 1.75, opacity: 0.7 }}
+            >
+              A brand requires judgment, taste, cultural context, and a system.
+              AI cannot determine what your brand should stand for. It cannot
+              read a room or understand why a particular typeface feels right for
+              your industry.
+              <br />
+              <br />
+              That is creative direction. That is what we provide.
+            </p>
+          </div>
+
+          {/* Right column — pull quote */}
+          <div
+            className="css-reveal"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              minHeight: "100%",
+            }}
           >
-            A brand requires judgment, taste, cultural context, and a system. AI cannot determine what your brand should stand for. It cannot read a room or understand why a particular typeface feels right for your industry.
-            <br /><br />
-            That is creative direction. That is what we provide.
-            <br /><br />
-            AI handles production. We handle meaning.
-          </p>
+            <p
+              className="font-[var(--sans)] font-medium"
+              style={{
+                fontSize: 24,
+                lineHeight: 1.4,
+                color: "var(--text-secondary)",
+                opacity: 0.5,
+                margin: 0,
+              }}
+            >
+              AI handles production. We handle meaning.
+            </p>
+          </div>
         </div>
       </section>
+      <hr className="hos-divider" />
 
-      {/* ── SECTION 2: HOW AI POWERS THE PROCESS ── */}
-      <section style={{ padding: "120px var(--page-px)", background: "var(--bg-shift)" }}>
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          (How It Works)
-        </p>
+      {/* ── SECTION (02): HOW AI POWERS THE PROCESS ── */}
+      <section
+        className="css-reveal"
+        style={{
+          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
+          background: "var(--bg-shift)",
+        }}
+      >
+        <EditorialLabel text="02 — How AI Powers the Process" className="mb-6" />
         <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mb-12"
-          style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0, marginBottom: 48 }}
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+          style={{
+            fontSize: "clamp(28px, 3.5vw, 48px)",
+            lineHeight: 1.1,
+            margin: 0,
+            marginBottom: 48,
+          }}
         >
           What AI does at each stage.
         </h2>
 
-        <div className="ai-process-list">
+        <div className="ai-process-list reveal-stagger-parent">
           {PROCESS_STAGES.map((stage) => (
-            <div key={stage.name} className="ai-process-row scroll-reveal-up">
+            <div key={stage.name} className="ai-process-row">
               <div className="ai-process-name">{stage.name}</div>
               <div className="ai-process-role">{stage.role}</div>
             </div>
@@ -134,17 +168,19 @@ export default function AILabClient() {
         </div>
       </section>
 
-      {/* ── SECTION 3: BRAND PULSE CHECK PLACEHOLDER ── */}
-      <section style={{ padding: "120px var(--page-px)" }}>
-        <p
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em] text-[color:var(--text-primary)] mb-6"
-          style={{ opacity: 0.4 }}
-        >
-          (Brand Pulse Check)
-        </p>
+      {/* ── SECTION (03): BRAND PULSE CHECK ── */}
+      <section
+        className="css-reveal"
+        style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
+      >
+        <EditorialLabel text="03 — Brand Pulse Check" className="mb-6" />
         <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(28px, 3.5vw, 48px)", lineHeight: 1.1, margin: 0 }}
+          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+          style={{
+            fontSize: "clamp(28px, 3.5vw, 48px)",
+            lineHeight: 1.1,
+            margin: 0,
+          }}
         >
           How strong is your brand?
         </h2>
@@ -152,107 +188,120 @@ export default function AILabClient() {
           className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)] max-w-[640px] mt-4"
           style={{ opacity: 0.6, lineHeight: 1.75 }}
         >
-          Our AI analyzes your brand&apos;s visual consistency, messaging clarity, and digital presence. Enter your URL. Get your results.
+          Our AI analyzes your brand&apos;s visual consistency, messaging
+          clarity, and digital presence. Answer five questions. Get your results.
         </p>
-
-        {/* Placeholder container */}
-        <div
-          className="mt-8"
-          style={{
-            border: "1px solid var(--border)",
-            padding: 48,
-            textAlign: "center",
-            maxWidth: 640,
-          }}
-        >
-          <p
-            className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)]"
-            style={{ opacity: 0.4, margin: 0 }}
-          >
-            Brand Pulse Check is launching soon.
-          </p>
-          <p
-            className="font-[var(--sans)] text-[14px] text-[color:var(--text-primary)] mt-2"
-            style={{ opacity: 0.35 }}
-          >
-            Leave your email to be first in line.
-          </p>
-
-          {pulseSubmitted ? (
-            <p
-              className="font-[var(--sans)] text-[14px] text-[color:var(--text-primary)] mt-6"
-              style={{ opacity: 0.5 }}
-            >
-              You&apos;re on the list. We&apos;ll be in touch.
-            </p>
-          ) : (
-            <form onSubmit={handlePulseEmail} className="pulse-waitlist-form mt-6">
-              <div className="pulse-input-wrap">
-                <input
-                  type="email"
-                  required
-                  placeholder="your@email.com"
-                  value={pulseEmail}
-                  onChange={(e) => setPulseEmail(e.target.value)}
-                  className="pulse-waitlist-input"
-                />
-                <span className="focus-line" />
-              </div>
-              <button
-                type="submit"
-                disabled={pulseSubmitting}
-                className="pulse-waitlist-btn"
-              >
-                {pulseSubmitting ? "..." : "Notify Me"}
-              </button>
-            </form>
-          )}
+        <div className="mt-12">
+          <BrandPulseCheck />
         </div>
       </section>
 
-      {/* ── SECTION 4: STUDIO GUIDE TEASER ── */}
-      <section style={{ padding: "0 var(--page-px) 80px" }}>
+      {/* ── SECTION (04): STUDIO GUIDE TEASER ── */}
+      <section
+        className="css-reveal"
+        style={{ padding: "0 var(--page-px) 80px" }}
+      >
         <p
-          className="font-[var(--sans)] text-[14px] text-[color:var(--text-primary)]"
-          style={{ opacity: 0.4 }}
+          className="font-[var(--sans)] text-[14px]"
+          style={{ color: "var(--text-muted)", margin: 0 }}
         >
           Looking for answers about our services, process, or pricing?
         </p>
         <p
-          className="font-[var(--sans)] text-[14px] text-[color:var(--text-primary)] mt-1"
-          style={{ opacity: 0.4 }}
+          className="font-[var(--sans)] text-[14px] mt-1"
+          style={{ color: "var(--text-muted)", margin: 0, marginTop: 4 }}
         >
-          The Studio Guide is an AI assistant trained on everything we do. Coming soon.
+          The Studio Guide is an AI assistant trained on everything we do.
+          Coming soon.
         </p>
       </section>
 
-      {/* ── CTA ── */}
+      {/* ── CTA (dark inverted) ── */}
       <section
+        className="cta-section-mobile css-reveal"
         style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
           padding: "120px var(--page-px)",
-          background: "var(--bg-shift)",
-          textAlign: "center",
         }}
       >
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, margin: 0 }}
+        <div className="cta-dark-grid">
+          <div className="css-reveal">
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Next Step)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Start a project.
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+          <div className="cta-dark-buttons css-reveal">
+            <Button
+              href="/contact"
+              variant="primary-inverted"
+              data-cursor="link"
+            >
+              Book a Discovery Call
+            </Button>
+            <Button
+              href="/contact"
+              variant="secondary-inverted"
+              data-cursor="link"
+            >
+              Start a Project
+            </Button>
+          </div>
+        </div>
+        <div
+          className="css-reveal"
+          style={{
+            borderTop: "1px solid rgba(247, 246, 245, 0.12)",
+            marginTop: 80,
+            paddingTop: 24,
+            textAlign: "center",
+          }}
         >
-          Start a project.
-        </h2>
-        <p
-          className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)] mt-4"
-          style={{ opacity: 0.6 }}
-        >
-          We respond within 24 hours.
-        </p>
-        <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-          <Button href="/contact" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/contact" variant="secondary" data-cursor="link">
-            Start a Project
-          </Button>
+          <p
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 13,
+              fontWeight: 400,
+              color: "var(--bg)",
+              opacity: 0.3,
+              margin: 0,
+            }}
+          >
+            50+ projects delivered across 8 industries in 12+ years.
+          </p>
         </div>
       </section>
     </>

@@ -222,11 +222,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
       {/* ── SECTION 1: HERO ── */}
       <section
         style={{
-          minHeight: "100vh",
+          minHeight: "50vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          padding: "0 var(--page-px) 100px",
+          padding: "0 var(--page-px) 60px",
         }}
       >
         <p
@@ -304,13 +304,13 @@ export default function CareersClient({ roles }: CareersClientProps) {
         )}
 
         {roles.length > 0 ? (
-          <div>
+          <div className="reveal-stagger-parent">
             {roles.map((role) => {
               const isExpanded = expandedRole === role.slug.current;
               return (
                 <div
                   key={role._id}
-                  className="role-card scroll-reveal-up"
+                  className="role-card"
                 >
                   <div
                     className="role-card-header"
@@ -791,31 +791,64 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </div>
       </section>
 
-      {/* ── SECTION 5: CTA BAND ── */}
+      {/* ── SECTION 5: DARK CTA ── */}
       <section
+        className="css-reveal"
         style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
           padding: "120px var(--page-px)",
-          background: "var(--bg-shift)",
-          textAlign: "center",
         }}
       >
-        <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4, marginBottom: 20 }}>
-          (Start a project)
-        </p>
-        <h2
-          className="scroll-reveal-up"
-          style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(32px, 4.5vw, 60px)", lineHeight: 1.1, letterSpacing: "-0.02em", color: "var(--text-primary)", margin: 0 }}
-        >
-          Ready to build a brand that works?
-        </h2>
-        <Button
-          href="/contact"
-          variant="text"
-          className="scroll-reveal-up"
-          data-cursor="link"
-        >
-          Get in touch
-        </Button>
+        <div className="cta-dark-grid">
+          <div>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Start a project)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Ready to build a brand that works?
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+
+          <div className="cta-dark-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Book a Discovery Call
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Start a Project
+            </Button>
+          </div>
+        </div>
       </section>
     </>
   );
