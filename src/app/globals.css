@@ -2203,6 +2203,7 @@ a.footer-contact-value:hover {
   background: rgba(247, 246, 245, 0.88);
 }
 .cursor-label {
+  display: none;
   font-family: var(--sans);
   font-size: 10px;
   font-weight: 500;
@@ -2212,6 +2213,9 @@ a.footer-contact-value:hover {
   pointer-events: none;
   position: absolute;
   white-space: nowrap;
+}
+.custom-cursor-ring.cursor-view .cursor-label {
+  display: block;
 }
 
 /* ── State 5: Distort (project images) ── */
@@ -2239,10 +2243,13 @@ a.footer-contact-value:hover {
   justify-content: center;
 }
 .cursor-pause-icon {
-  display: flex;
+  display: none;
   gap: 6px;
   pointer-events: none;
   position: absolute;
+}
+.custom-cursor-ring.cursor-pause .cursor-pause-icon {
+  display: flex;
 }
 .cursor-pause-icon span {
   display: block;

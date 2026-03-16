@@ -5,7 +5,7 @@ import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-import CursorWrapper from "@/components/CursorWrapper";
+import CustomCursor from "@/components/CustomCursor";
 import PageTransition from "@/components/PageTransition";
 import ScrollObserver from "@/components/ScrollObserver";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
         <body>
           <div className="scroll-progress" />
           <SmoothScroll />
-          <CursorWrapper />
+          <CustomCursor />
           <PageTransition />
           <Header />
           <main>{children}</main>
