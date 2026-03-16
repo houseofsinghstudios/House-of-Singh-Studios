@@ -23,7 +23,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
         <EditorialLabel data-hero-label text="Services" className="mb-5" />
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
+          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{
             fontSize: "clamp(36px, 5vw, 64px)",
             lineHeight: 1.1,
@@ -58,7 +58,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           What you get.
         </h2>
 
-        <div className="svc-deliverables-list">
+        <div className="svc-deliverables-list reveal-stagger-parent">
           {service.deliverables.map((d) => (
             <div key={d.name} className="svc-deliverable-row scroll-reveal-up">
               <div className="svc-deliverable-name">{d.name}</div>
@@ -113,7 +113,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           How we work.
         </h2>
 
-        <div className="svc-process-list">
+        <div className="svc-process-list reveal-stagger-parent">
           {service.process.map((step) => (
             <div
               key={step.step}
@@ -143,7 +143,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 data-cursor="expand"
               >
                 <div
-                  className="svc-related-img"
+                  className="svc-related-img reveal-clip"
                   style={{ position: "relative", overflow: "hidden" }}
                 >
                   <Image

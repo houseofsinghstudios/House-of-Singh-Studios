@@ -44,7 +44,7 @@ export default function AILabClient() {
         </p>
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
+          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
           style={{
             fontSize: "clamp(32px, 4vw, 56px)",
             lineHeight: 1.15,
