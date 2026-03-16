@@ -6,7 +6,7 @@ import "lenis/dist/lenis.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import SmoothScroll from "@/components/SmoothScroll";
-import ClientCursor from "@/components/ClientCursor";
+import CursorWrapper from "@/components/CursorWrapper";
 import PageTransition from "@/components/PageTransition";
 import ScrollObserver from "@/components/ScrollObserver";
 
@@ -34,7 +34,7 @@ export default function RootLayout({
         <body>
           <div className="scroll-progress" />
           <SmoothScroll />
-          <ClientCursor />
+          <CursorWrapper />
           <PageTransition />
           <Header />
           <main>{children}</main>

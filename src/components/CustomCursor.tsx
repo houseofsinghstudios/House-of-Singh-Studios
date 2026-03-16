@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { usePathname } from "next/navigation";
 
 function lerp(a: number, b: number, n: number) {
   return a + (b - a) * n;
@@ -13,8 +12,6 @@ const DATA_CURSOR_SELECTOR = "[data-cursor]";
 type CursorState = "default" | "hover" | "view" | "distort" | "pause";
 
 export default function CustomCursor() {
-  const pathname = usePathname();
-  const isStudio = pathname?.startsWith('/studio');
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const mouse = useRef({ x: -100, y: -100 });
@@ -70,7 +67,6 @@ export default function CustomCursor() {
   }, []);
 
   useEffect(() => {
-    if (isStudio) return;
     if (window.matchMedia("(pointer: coarse)").matches) return;
 
     const dot = dotRef.current;
@@ -217,9 +213,7 @@ export default function CustomCursor() {
       observer.disconnect();
       detachListeners(document);
     };
-  }, [setState, isStudio]);
-
-  if (isStudio) return null;
+  }, [setState]);
 
   return (
     <>
