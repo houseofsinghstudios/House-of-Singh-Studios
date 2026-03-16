@@ -18,7 +18,7 @@ export default function ServicesSection() {
         {SERVICES_SECTION.heading}
       </h2>
 
-      <div className="svc-accordion">
+      <div className="svc-accordion reveal-stagger-parent">
         {SERVICES_SECTION.items.map((service, i) => (
           <Link
             key={service.href}
