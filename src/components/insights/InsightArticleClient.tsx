@@ -174,6 +174,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
 
         <h1
           data-hero-heading
+          className="reveal-text"
           style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(36px, 5.5vw, 80px)", lineHeight: 1.05, letterSpacing: "-0.02em", maxWidth: 1000, color: "var(--text-primary)", marginTop: 16, overflow: "hidden" }}
         >
           {post.title}
@@ -258,7 +259,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
       {post.relatedPosts && post.relatedPosts.length > 0 && (
         <section style={{ padding: "80px var(--page-px) 120px" }}>
           <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", marginBottom: 32 }}>(Related)</p>
-          <div className="related-grid">
+          <div className="related-grid reveal-stagger-parent">
             {post.relatedPosts.map((rp) => (
               <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="post-nav-link scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
                 {rp.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{rp.category}</p>}

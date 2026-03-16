@@ -120,7 +120,7 @@ export default function ServicesOverviewClient() {
 
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 overflow-hidden"
+          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 overflow-hidden"
           style={{ fontSize: "clamp(44px, 6vw, 84px)", lineHeight: 1.05 }}
         >
           Every service solves a business problem.
@@ -137,7 +137,7 @@ export default function ServicesOverviewClient() {
 
       {/* ── Hero image ── */}
       <div
-        className="css-reveal"
+        className="css-reveal reveal-clip"
         style={{
           margin: "0 var(--page-px)",
           aspectRatio: "16/9",
@@ -207,7 +207,7 @@ export default function ServicesOverviewClient() {
               {/* Image side — larger, portrait */}
               <div className="svc-overview-image-wrap">
                 <div
-                  className="svc-overview-image svc-overview-image-large"
+                  className="svc-overview-image svc-overview-image-large reveal-clip"
                   style={{
                     position: "relative",
                     overflow: "hidden",
@@ -252,7 +252,7 @@ export default function ServicesOverviewClient() {
           Detailed capabilities.
         </h2>
 
-        <div className="capabilities-grid">
+        <div className="capabilities-grid reveal-stagger-parent">
           {capabilityCategories.map((cat) => (
             <div key={cat.heading} className="capabilities-column">
               <h3

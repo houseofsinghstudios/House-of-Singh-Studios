@@ -121,7 +121,7 @@ export default function AboutClient() {
 
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 max-w-[800px] overflow-hidden"
+          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4 max-w-[800px] overflow-hidden"
           style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1.15 }}
         >
           Design should be structured, intentional, and commercially effective.
@@ -208,26 +208,28 @@ export default function AboutClient() {
           Every project moves through the same structured process regardless of scope. This is not a rigid formula. It is a framework that protects your investment and ensures nothing gets lost between strategy and execution.
         </p>
 
-        {STEPS.map((step) => (
-          <div
-            key={step.name}
-            className="about-process-step scroll-reveal-up"
-          >
-            <div>
-              <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)]">
-                {step.name}
-              </p>
+        <div className="reveal-stagger-parent">
+          {STEPS.map((step) => (
+            <div
+              key={step.name}
+              className="about-process-step scroll-reveal-up"
+            >
+              <div>
+                <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)]">
+                  {step.name}
+                </p>
+              </div>
+              <div>
+                <p
+                  className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)]"
+                  style={{ opacity: 0.6 }}
+                >
+                  {step.desc}
+                </p>
+              </div>
             </div>
-            <div>
-              <p
-                className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)]"
-                style={{ opacity: 0.6 }}
-              >
-                {step.desc}
-              </p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
 
       {/* ═══ SECTION 03: NETWORK ═══ */}
@@ -262,7 +264,7 @@ export default function AboutClient() {
           {/* Founder photo */}
           <div>
             <div
-              className="scroll-clip-reveal founder-photo-reveal"
+              className="scroll-clip-reveal founder-photo-reveal reveal-clip"
               style={{
                 aspectRatio: "3/4",
                 overflow: "hidden",

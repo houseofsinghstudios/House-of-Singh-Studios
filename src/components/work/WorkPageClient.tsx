@@ -47,7 +47,7 @@ export default function WorkPageClient() {
         <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
           <h1
             data-hero-heading
-            className="font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0"
+            className="reveal-text font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0"
             style={{
               fontSize: "clamp(48px, 6vw, 80px)",
               lineHeight: 1.05,
@@ -117,7 +117,7 @@ export default function WorkPageClient() {
 
       {/* LIST VIEW */}
       <div
-        className="work-list-view"
+        className="work-list-view reveal-stagger-parent"
         style={{
           padding: "40px var(--page-px) 0",
           display: viewMode === "list" ? "block" : "none",
@@ -168,7 +168,7 @@ export default function WorkPageClient() {
             className={`work-card css-reveal no-underline${i % 2 !== 0 ? " work-card-offset" : ""}`}
             data-cursor="view"
           >
-            <div className="work-card-image-wrap">
+            <div className="work-card-image-wrap reveal-clip">
               <div className="work-card-image-inner relative">
                 <Image
                   src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
@@ -216,7 +216,7 @@ export default function WorkPageClient() {
             className="work-card css-reveal no-underline"
             data-cursor="view"
           >
-            <div className="work-card-image-wrap">
+            <div className="work-card-image-wrap reveal-clip">
               <div className="work-card-image-inner relative">
                 <Image
                   src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}

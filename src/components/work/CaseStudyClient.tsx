@@ -23,7 +23,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
       >
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0 overflow-hidden"
+          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] m-0 overflow-hidden"
           style={{
             fontSize: "clamp(36px, 5vw, 64px)",
             lineHeight: 1.1,
@@ -50,7 +50,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
 
       {/* ═══ SECTION 2: HERO IMAGE ═══ */}
       <div
-        className="scroll-clip-reveal"
+        className="scroll-clip-reveal reveal-clip"
         style={{
           margin: "0 var(--page-px)",
           aspectRatio: "16/9",
@@ -173,7 +173,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         }}
       >
         <EditorialLabel text={project.sections.deliverables.label} className="mb-6" />
-        <div className="case-deliverables-grid">
+        <div className="case-deliverables-grid reveal-stagger-parent">
           {project.deliverablesList.map((item, i) => (
             <div key={i} className="case-deliverable-item">
               <span
@@ -236,7 +236,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
           }}
         >
           <div
-            className="gallery-pair-item"
+            className="gallery-pair-item reveal-clip"
             style={{ aspectRatio: "4/3", overflow: "hidden", position: "relative" }}
           >
             <Image
@@ -248,7 +248,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
             />
           </div>
           <div
-            className="gallery-pair-item"
+            className="gallery-pair-item reveal-clip"
             style={{ aspectRatio: "4/3", overflow: "hidden", position: "relative" }}
           >
             <Image
@@ -262,7 +262,7 @@ export default function CaseStudyClient({ project }: CaseStudyClientProps) {
         </div>
 
         <div
-          className="gallery-full"
+          className="gallery-full reveal-clip"
           style={{ aspectRatio: "16/9", overflow: "hidden", position: "relative" }}
         >
           <Image

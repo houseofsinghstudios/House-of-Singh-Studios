@@ -244,6 +244,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </p>
         <h1
           data-hero-heading
+          className="reveal-text"
           style={{
             fontFamily: "var(--sans)",
             fontWeight: 500,
