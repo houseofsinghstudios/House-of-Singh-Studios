@@ -801,13 +801,11 @@ body {
 .footer-next-page {
   padding: clamp(64px, 8vw, 120px) 0;
   border-bottom: 1px solid var(--border);
-  margin-bottom: clamp(48px, 6vw, 80px);
 }
 .footer-next-page-inner {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: clamp(48px, 6vw, 80px);
 }
 .footer-next-page-label {
   font-family: var(--sans);
@@ -840,8 +838,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border);
-  padding-top: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--border);
 }
 .footer-cta-text {
   font-family: var(--sans);
@@ -867,8 +865,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(40px, 6vw, 80px);
-  margin-bottom: 64px;
-  padding-bottom: 64px;
+  padding: clamp(48px, 6vw, 80px) 0;
   border-bottom: 1px solid var(--border);
 }
 .footer-cta-left {
@@ -936,7 +933,8 @@ a.footer-contact-value:hover {
 
 /* ROW 2: Subscribe */
 .footer-subscribe-section {
-  margin-bottom: 64px;
+  padding: clamp(48px, 6vw, 80px) 0;
+  border-bottom: 1px solid var(--border);
 }
 .footer-subscribe-heading {
   font-family: var(--sans);
@@ -1019,7 +1017,7 @@ a.footer-contact-value:hover {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 48px;
-  margin-bottom: 48px;
+  padding: clamp(48px, 6vw, 80px) 0;
 }
 .footer-heading {
   font-family: var(--sans);

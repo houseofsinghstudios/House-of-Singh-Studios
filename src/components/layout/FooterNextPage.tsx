@@ -44,22 +44,6 @@ export default function FooterNextPage() {
           {nextPage.label} <span className="footer-next-page-arrow">&rarr;</span>
         </Link>
       </div>
-
-      {/* CTA line */}
-      <div className="footer-cta-line">
-        <p className="footer-cta-text">
-          We would love to hear from you. Let&apos;s work — together.
-        </p>
-        <Link
-          href="/contact"
-          className="arrow-link no-underline"
-          data-cursor="link"
-        >
-          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-            Get in touch <span className="arrow-icon">&rarr;</span>
-          </span>
-        </Link>
-      </div>
     </div>
   );
 }

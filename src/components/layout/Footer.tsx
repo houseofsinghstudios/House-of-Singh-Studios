@@ -21,6 +21,20 @@ const serviceLinks = [
   { label: "Creative Strategy", href: "/services/creative-strategy" },
 ];
 
+const connectLinks = [
+  {
+    label: "Instagram",
+    href: "https://instagram.com/houseofsingh",
+    external: true,
+  },
+  {
+    label: "LinkedIn",
+    href: "https://linkedin.com/company/houseofsingh",
+    external: true,
+  },
+  { label: "Email", href: "mailto:studio@houseofsingh.com", external: false },
+];
+
 const socialLinks = [
   {
     label: "Instagram",
@@ -38,10 +52,30 @@ const socialLinks = [
 export default function Footer() {
   return (
     <footer className="footer-root css-fade px-[var(--page-px)] pt-0 pb-0">
-      {/* Next Page navigation */}
+      {/* 1. Next Page navigation */}
       <FooterNextPage />
 
-      {/* ROW 1: CTA + Contact Details */}
+      {/* 2. Divider is border-bottom on .footer-next-page */}
+
+      {/* 3. CTA row */}
+      <div className="footer-cta-line">
+        <p className="footer-cta-text">
+          We would love to hear from you. Let&apos;s work &mdash; together.
+        </p>
+        <Link
+          href="/contact"
+          className="arrow-link no-underline"
+          data-cursor="link"
+        >
+          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
+            Get in touch <span className="arrow-icon">&rarr;</span>
+          </span>
+        </Link>
+      </div>
+
+      {/* 4. Divider is border-bottom on .footer-cta-line */}
+
+      {/* 5. Footer main content: CTA left + Contact details right */}
       <div className="footer-cta-section">
         <div className="footer-cta-left">
           <h2
@@ -88,7 +122,9 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* ROW 2: Subscribe */}
+      {/* 6. Divider is border-bottom on .footer-cta-section */}
+
+      {/* 7. Subscribe section */}
       <div className="footer-subscribe-section">
         <h2 className="footer-subscribe-heading">Stay in the loop.</h2>
         <p className="footer-subscribe-sub">
@@ -98,7 +134,9 @@ export default function Footer() {
         <SubscribeForm />
       </div>
 
-      {/* ROW 3: Navigation columns */}
+      {/* 8. Divider is border-bottom on .footer-subscribe-section */}
+
+      {/* 9. Navigation columns (Pages, Services, Connect) */}
       <div className="footer-nav-grid">
         {/* Pages */}
         <div>
@@ -123,9 +161,35 @@ export default function Footer() {
             ))}
           </div>
         </div>
+
+        {/* Connect */}
+        <div>
+          <p className="footer-heading">Connect</p>
+          <div className="flex flex-col">
+            {connectLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="footer-link"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <a key={link.href} href={link.href} className="footer-link">
+                  {link.label}
+                </a>
+              )
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* ROW 4: Copyright bar with social links */}
+      {/* 10. Divider is border-top on .footer-copyright-bar */}
+
+      {/* 11. Copyright bar with social links */}
       <div className="footer-copyright-bar">
         <span className="footer-copy-text">
           &copy; 2026 House of Singh Studios Inc.
