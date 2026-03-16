@@ -7,7 +7,7 @@ const pageLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
-  { label: "Journal", href: "/insights" },
+  { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
   { label: "Packages", href: "/packages" },
