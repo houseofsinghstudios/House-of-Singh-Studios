@@ -1143,17 +1143,17 @@ a.footer-contact-value:hover {
    View Transitions API
    ═══════════════════════════════════════════════════════ */
 @keyframes vt-fade-out {
-  to { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 0; transform: translateY(-12px); }
 }
 @keyframes vt-fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(16px); }
 }
 
 ::view-transition-old(root) {
-  animation: 0.3s ease-out both vt-fade-out;
+  animation: 0.3s ease both vt-fade-out;
 }
 ::view-transition-new(root) {
-  animation: 0.4s ease-in both vt-fade-in;
+  animation: 0.5s 0.1s ease both vt-fade-in;
 }
 
 ::view-transition-old(service-title) {
@@ -2319,10 +2319,14 @@ a.footer-contact-value:hover {
    Layer 2: View Transitions API — crossfade & morph timing
    ═══════════════════════════════════════════════════════ */
 
-::view-transition-old(root),
+::view-transition-old(root) {
+  animation-duration: 0.3s;
+  animation-timing-function: ease;
+}
 ::view-transition-new(root) {
-  animation-duration: 0.4s;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  animation-duration: 0.5s;
+  animation-delay: 0.1s;
+  animation-timing-function: ease;
 }
 
 ::view-transition-group(*) {
