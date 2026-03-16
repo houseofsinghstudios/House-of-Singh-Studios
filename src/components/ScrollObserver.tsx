@@ -53,7 +53,7 @@ export default function ScrollObserver() {
       ".cta-section-mobile > div:last-child, " +
       ".testimonials-section, " +
       ".svc-accordion-row, " +
-      ".work-section-mobile .project-card, " +
+      ".featured-work-item, " +
       ".case-content-section, " +
       ".gallery-full, .gallery-pair-item"
     );
