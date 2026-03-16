@@ -312,6 +312,7 @@ Target: Lighthouse 80+ across all metrics. Experience takes priority over perfec
 - Cursor: requestAnimationFrame for 60fps tracking
 - Page transitions: View Transitions API (native, zero bundle cost)
 - Scroll animations: animation-timeline: view() in Chrome (GPU compositor, zero main thread), IntersectionObserver fallback in Safari
+- Exception: Lenis (smooth scroll) is the only approved third-party animation dependency. It provides the decelerated scroll feel that CSS cannot replicate. No other animation libraries are permitted.
 
 ---
 
