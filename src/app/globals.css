@@ -2005,6 +2005,10 @@ a.footer-contact-value:hover {
 }
 
 @media (max-width: 767px) {
+  .ai-argument-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
   .ai-process-row {
     grid-template-columns: 1fr;
     gap: 8px;
