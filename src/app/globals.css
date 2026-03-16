@@ -2791,6 +2791,22 @@ td a:hover,
   }
 }
 
+/* ── Interaction 18b: Gallery Clip Reveals (case study) ── */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .gallery-full {
+      animation: revealClipIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    .gallery-pair-item {
+      animation: revealClipIn linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
 /* ═══════════════════════════════════════════════════════
    UI/UX D: Small Details
    ═══════════════════════════════════════════════════════ */
@@ -3317,14 +3333,14 @@ td a:hover,
     .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.12s; }
     .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.18s; }
 
-    /* ── Work section project cards ── */
-    .work-section-mobile .project-card {
+    /* ── Featured work cards (homepage) ── */
+    .featured-work-item {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .work-section-mobile .project-card.in-view {
+    .featured-work-item.in-view {
       opacity: 1;
       transform: translateY(0);
     }

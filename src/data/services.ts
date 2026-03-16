@@ -9,6 +9,7 @@ export interface ServiceRelatedWork {
   client: string;
   result: string;
   gradient: string;
+  image: string;
 }
 
 export interface ServiceProcessStep {
@@ -123,6 +124,7 @@ export const services: ServiceData[] = [
         client: "TEDx",
         result: "Complete visual identity system across 14 touchpoints",
         gradient: "linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%)",
+        image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
       },
       {
         slug: "meridian",
@@ -130,6 +132,7 @@ export const services: ServiceData[] = [
         client: "Meridian Financial",
         result: "40% improvement in brand recall across digital channels",
         gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
+        image: "/images/projects/meridian/meridian.jpg",
       },
     ],
   },

@@ -7,10 +7,10 @@ import { projects, getWorkTypeFilters } from "@/data/projects";
 import Button from "@/components/ui/Button";
 
 const PROJECT_IMAGES: Record<string, string> = {
-  tedxtoronto: "/images/blank-stationery-concept-with-tablet-brochure.jpg",
-  meridian: "/images/office-desk-table-with-supplies-freelance-business-workplace-objects.jpg",
-  soulbound: "/images/photography-ideas-creative-occupation-design-studio-concept.jpg",
-  "nomad-kitchen": "/images/white-laptop-cylinders-boxes-white-surface.jpg",
+  tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
+  meridian: "/images/projects/meridian/meridian.jpg",
+  soulbound: "/images/projects/soulbound/soulbound.jpg",
+  "nomad-kitchen": "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
 };
 
 type ViewMode = "list" | "grid";
@@ -171,7 +171,7 @@ export default function WorkPageClient() {
             <div className="work-card-image-wrap">
               <div className="work-card-image-inner relative">
                 <Image
-                  src={PROJECT_IMAGES[project.slug] || "/images/blank-stationery-concept-with-tablet-brochure.jpg"}
+                  src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
                   alt={project.name}
                   fill
                   sizes="(max-width: 899px) 100vw, 50vw"
@@ -219,7 +219,7 @@ export default function WorkPageClient() {
             <div className="work-card-image-wrap">
               <div className="work-card-image-inner relative">
                 <Image
-                  src={PROJECT_IMAGES[project.slug] || "/images/blank-stationery-concept-with-tablet-brochure.jpg"}
+                  src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
                   alt={project.name}
                   fill
                   sizes="100vw"

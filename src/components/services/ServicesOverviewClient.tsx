@@ -1,8 +1,16 @@
 "use client";
 
 import { Link } from "next-view-transitions";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+
+const SERVICE_PROJECT_IMAGES: Record<string, string> = {
+  "TEDxToronto Visual Identity": "/images/projects/tedxtoronto/tedxtoronto.jpg",
+  "Meridian Financial Group": "/images/projects/meridian/meridian.jpg",
+  "Soulbound Publication": "/images/projects/soulbound/soulbound.jpg",
+  "Nomad Kitchen": "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
+};
 
 const serviceBlocks = [
   {
@@ -127,21 +135,24 @@ export default function ServicesOverviewClient() {
         </p>
       </section>
 
-      {/* ── Hero image placeholder ── */}
+      {/* ── Hero image ── */}
       <div
         className="css-reveal"
         style={{
           margin: "0 var(--page-px)",
           aspectRatio: "16/9",
-          background: "var(--bg-shift)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <span className="editorial-label" style={{ color: "var(--text-muted)" }}>
-          Services Overview
-        </span>
+        <Image
+          src="/images/studio/studio.jpg"
+          alt="House of Singh Studios workspace"
+          fill
+          sizes="100vw"
+          style={{ objectFit: "cover" }}
+          priority
+        />
       </div>
 
       {/* ── SERVICE BLOCKS (alternating layout, larger images) ── */}
@@ -198,18 +209,17 @@ export default function ServicesOverviewClient() {
                 <div
                   className="svc-overview-image svc-overview-image-large"
                   style={{
-                    background: "var(--bg-shift)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    position: "relative",
+                    overflow: "hidden",
                   }}
                 >
-                  <span
-                    className="font-[var(--sans)] text-[13px] text-[color:var(--text-muted)]"
-                    style={{ opacity: 0.6 }}
-                  >
-                    {service.relatedProject}
-                  </span>
+                  <Image
+                    src={SERVICE_PROJECT_IMAGES[service.relatedProject] || "/images/studio/studio.jpg"}
+                    alt={service.relatedProject}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    style={{ objectFit: "cover" }}
+                  />
                 </div>
                 <div style={{ marginTop: 12 }}>
                   <p

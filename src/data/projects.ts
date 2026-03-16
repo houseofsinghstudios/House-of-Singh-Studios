@@ -14,6 +14,7 @@ export interface Project {
   seoTitle: string;
   seoDescription: string;
   gradient: string;
+  image: string;
   sections: {
     business: ProjectSection;
     challenge: ProjectSection;
@@ -40,6 +41,7 @@ export const projects: Project[] = [
     origin: "Client Project",
     year: "2024",
     gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
+    image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
     description:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
     seoTitle: "TEDxToronto Visual Identity \u2014 House of Singh Studios",
@@ -92,6 +94,7 @@ export const projects: Project[] = [
     origin: "Studio Exploration",
     year: "2024",
     gradient: "linear-gradient(155deg, #CAD2D8, #B4BFC8)",
+    image: "/images/projects/meridian/meridian.jpg",
     description:
       "Brand identity system for a mid-market financial services firm.",
     seoTitle: "Meridian Financial Group \u2014 House of Singh Studios",
@@ -144,6 +147,7 @@ export const projects: Project[] = [
     origin: "Independent Project",
     year: "2023",
     gradient: "linear-gradient(155deg, #D2D8CA, #BFC8B4)",
+    image: "/images/projects/soulbound/soulbound.jpg",
     description:
       "Publication cover design and art direction for a leadership book.",
     seoTitle: "Soulbound Publication \u2014 House of Singh Studios",
@@ -195,6 +199,7 @@ export const projects: Project[] = [
     origin: "Independent Project",
     year: "2023",
     gradient: "linear-gradient(155deg, #D8CAD2, #C8B4BF)",
+    image: "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
     description:
       "Brand identity and packaging for a modern South Asian food brand.",
     seoTitle: "Nomad Kitchen \u2014 House of Singh Studios",

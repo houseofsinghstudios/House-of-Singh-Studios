@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
+import Image from "next/image";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
@@ -258,7 +259,7 @@ export default function AboutClient() {
         <EditorialLabel text="04 — Founder" className="scroll-reveal-up mb-6" />
 
         <div className="about-founder-grid">
-          {/* Photo placeholder */}
+          {/* Founder photo */}
           <div>
             <div
               className="scroll-clip-reveal founder-photo-reveal"
@@ -266,9 +267,17 @@ export default function AboutClient() {
                 aspectRatio: "3/4",
                 overflow: "hidden",
                 maxWidth: 480,
-                background: "linear-gradient(180deg, #E8E5E0 0%, #D5D0CB 100%)",
+                position: "relative",
               }}
-            />
+            >
+              <Image
+                src="/images/studio/studio.jpg"
+                alt="Maninder Singh — Founder and Creative Director"
+                fill
+                sizes="(max-width: 768px) 100vw, 480px"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
           </div>
 
           {/* Bio */}
