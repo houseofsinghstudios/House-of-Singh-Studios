@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/sanity/queries";
 import InsightsClient from "@/components/insights/InsightsClient";
 
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: "Insights — House of Singh Studios",
   description:

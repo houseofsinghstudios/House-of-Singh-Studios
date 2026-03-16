@@ -85,26 +85,33 @@ export async function getCaseStudyBySlug(slug: string) {
 }
 
 export async function getAllPosts() {
-  return client.fetch(
-    `*[_type == "post"] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      excerpt,
-      featuredImage {
-        ...,
-        asset-> {
-          _id,
-          url,
-          metadata { dimensions, lqip }
-        }
-      },
-      category,
-      tags,
-      body,
-      publishedAt
-    }`
-  );
+  try {
+    const posts = await client.fetch(
+      `*[_type == "post"] | order(publishedAt desc) {
+        _id,
+        title,
+        slug,
+        excerpt,
+        featuredImage {
+          ...,
+          asset-> {
+            _id,
+            url,
+            metadata { dimensions, lqip }
+          }
+        },
+        category,
+        tags,
+        body,
+        publishedAt
+      }`
+    );
+    console.log('Sanity posts fetched:', posts?.length || 0);
+    return posts;
+  } catch (error) {
+    console.error('Sanity fetch error:', error);
+    return [];
+  }
 }
 
 export async function getPostBySlug(slug: string) {
