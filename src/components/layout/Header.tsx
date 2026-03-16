@@ -172,7 +172,7 @@ export default function Header() {
                 fontWeight: 500,
                 textTransform: "uppercase",
                 letterSpacing: "0.14em",
-                color: "var(--text-muted)",
+                color: "var(--text-secondary)",
                 textDecoration: "none",
                 transition: "color 0.2s ease",
               }}
