@@ -3,24 +3,13 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
-import "lenis/dist/lenis.css";
 
 export default function SmoothScroll() {
   const pathname = usePathname();
   const isStudio = pathname?.startsWith("/studio");
 
   useEffect(() => {
-    console.log('SmoothScroll pathname:', pathname);
-
-    if (isStudio) {
-      // Override any Lenis CSS (overflow: hidden) that was applied globally
-      document.documentElement.style.overflow = 'auto';
-      document.body.style.overflow = 'auto';
-      return () => {
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-      };
-    }
+    if (isStudio) return;
 
     const lenis = new Lenis({
       duration: 1.2,
@@ -28,6 +17,12 @@ export default function SmoothScroll() {
       orientation: "vertical",
       smoothWheel: true,
     });
+
+    const style = document.createElement("style");
+    style.id = "lenis-styles";
+    style.textContent =
+      "html.lenis,html.lenis body{height:auto;overflow:visible}";
+    document.head.appendChild(style);
 
     let rafId: number;
     function raf(time: number) {
@@ -41,6 +36,7 @@ export default function SmoothScroll() {
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      document.getElementById("lenis-styles")?.remove();
     };
   }, [isStudio]);
 
