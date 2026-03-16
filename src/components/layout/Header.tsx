@@ -114,7 +114,7 @@ export default function Header() {
             <img
               src="/hos-studios-logo.svg"
               alt=""
-              style={{ height: 106, width: "auto", display: "block" }}
+              style={{ height: 115, width: "auto", display: "block" }}
             />
           </Link>
         </div>
