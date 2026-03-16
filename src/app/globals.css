@@ -1585,7 +1585,7 @@ a.footer-contact-value:hover {
 }
 
 .package-tier--recommended {
-  background: rgba(26, 26, 26, 0.02);
+  background: var(--bg-shift);
 }
 
 @media (max-width: 1100px) {

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const tiers = [
   {
@@ -67,8 +68,8 @@ export default function PackagesClient() {
     <>
       {/* ── HERO ── */}
       <section
-        className="flex flex-col justify-center px-[var(--page-px)]"
-        style={{ minHeight: "100vh" }}
+        className="flex flex-col justify-end px-[var(--page-px)]"
+        style={{ minHeight: "50vh", paddingBottom: 80 }}
       >
         <p
           data-hero-label
@@ -91,139 +92,220 @@ export default function PackagesClient() {
           className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[600px] mt-6"
           style={{ opacity: 0.6 }}
         >
-          Every engagement starts with a discovery conversation. These packages reflect typical starting points for the most common project types.
+          Every engagement starts with a discovery conversation. These packages
+          reflect typical starting points for the most common project types.
         </p>
       </section>
 
-      {/* ── TIERS ── */}
-      <div className="packages-grid px-[var(--page-px)]">
-        {tiers.map((tier) => (
-          <div
-            key={tier.number}
-            className={`package-tier css-reveal${tier.recommended ? " package-tier--recommended" : ""}`}
-          >
-            <div className="package-tier-inner">
-              <p
-                className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
-                style={{ opacity: 0.4 }}
-              >
-                {tier.number}
-              </p>
-
-              {tier.recommended && (
+      {/* ── PRICING GRID ── */}
+      <section
+        className="css-reveal"
+        style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px) 0" }}
+      >
+        <EditorialLabel text="Pricing" className="mb-10" />
+        <div className="packages-grid">
+          {tiers.map((tier) => (
+            <div
+              key={tier.number}
+              className={`package-tier css-reveal${tier.recommended ? " package-tier--recommended" : ""}`}
+            >
+              <div className="package-tier-inner">
                 <p
-                  className="recommended-tag font-[var(--sans)] text-[10px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mt-3"
-                >
-                  Recommended
-                </p>
-              )}
-
-              <h2
-                className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4"
-                style={{ fontSize: "clamp(24px, 2.5vw, 28px)", lineHeight: 1.2 }}
-              >
-                {tier.title}
-              </h2>
-
-              <div className="mt-5">
-                <p
-                  className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
-                  style={{ opacity: 0.5 }}
-                >
-                  Starting at
-                </p>
-                <p
-                  className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-                  style={{ fontSize: "clamp(20px, 2vw, 24px)" }}
-                >
-                  {tier.price}
-                </p>
-              </div>
-
-              <p
-                className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-5"
-                style={{ opacity: 0.6 }}
-              >
-                {tier.description}
-              </p>
-
-              <div className="mt-6">
-                <p
-                  className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] mb-3"
+                  className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
                   style={{ opacity: 0.4 }}
                 >
-                  What is included
+                  {tier.number}
                 </p>
-                <div className="flex flex-col gap-2">
-                  {tier.includes.map((item) => (
-                    <p
-                      key={item}
-                      className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
-                      style={{ opacity: 0.6 }}
-                    >
-                      {item}
-                    </p>
-                  ))}
+
+                {tier.recommended && (
+                  <p className="recommended-tag font-[var(--sans)] text-[10px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mt-3">
+                    Recommended
+                  </p>
+                )}
+
+                <h2
+                  className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] mt-4"
+                  style={{
+                    fontSize: "clamp(24px, 2.5vw, 28px)",
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {tier.title}
+                </h2>
+
+                <div className="mt-5">
+                  <p
+                    className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
+                    style={{ opacity: 0.5 }}
+                  >
+                    Starting at
+                  </p>
+                  <p
+                    className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+                    style={{ fontSize: "clamp(20px, 2vw, 24px)" }}
+                  >
+                    {tier.price}
+                  </p>
+                </div>
+
+                <p
+                  className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-5"
+                  style={{ opacity: 0.6 }}
+                >
+                  {tier.description}
+                </p>
+
+                <div className="mt-6">
+                  <p
+                    className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] mb-3"
+                    style={{ opacity: 0.4 }}
+                  >
+                    What is included
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {tier.includes.map((item) => (
+                      <p
+                        key={item}
+                        className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
+                        style={{ opacity: 0.6 }}
+                      >
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                <p
+                  className="font-[var(--sans)] font-normal text-[13px] text-[color:var(--text-primary)] mt-6"
+                  style={{ opacity: 0.4 }}
+                >
+                  {tier.timeline}
+                </p>
+
+                <p
+                  className="font-[var(--sans)] font-normal italic text-[13px] text-[color:var(--text-primary)] mt-2"
+                  style={{ opacity: 0.4 }}
+                >
+                  {tier.bestFor}
+                </p>
+
+                <div className="mt-8">
+                  <Button
+                    href={tier.cta.href}
+                    variant={tier.cta.variant}
+                    className="w-full text-center"
+                    data-cursor="link"
+                  >
+                    {tier.cta.text}
+                  </Button>
                 </div>
               </div>
-
-              <p
-                className="font-[var(--sans)] font-normal text-[13px] text-[color:var(--text-primary)] mt-6"
-                style={{ opacity: 0.4 }}
-              >
-                {tier.timeline}
-              </p>
-
-              <p
-                className="font-[var(--sans)] font-normal italic text-[13px] text-[color:var(--text-primary)] mt-2"
-                style={{ opacity: 0.4 }}
-              >
-                {tier.bestFor}
-              </p>
-
-              <div className="mt-8">
-                <Button
-                  href={tier.cta.href}
-                  variant={tier.cta.variant}
-                  className="w-full text-center"
-                  data-cursor="link"
-                >
-                  {tier.cta.text}
-                </Button>
-              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
-      {/* ── FLEXIBILITY LINE ── */}
-      <div className="px-[var(--page-px)] mt-16 mb-20">
+      {/* ── FLEXIBILITY NOTE ── */}
+      <div
+        className="css-reveal px-[var(--page-px)]"
+        style={{ paddingTop: 64, paddingBottom: 80 }}
+      >
         <p
-          className="font-[var(--sans)] font-normal text-[14px] leading-[1.75] text-[color:var(--text-primary)] max-w-[600px] mx-auto text-center"
-          style={{ opacity: 0.4 }}
+          className="font-[var(--sans)] font-normal text-[14px] leading-[1.75] max-w-[600px] mx-auto text-center"
+          style={{ color: "var(--text-muted)" }}
         >
-          Every project is scoped through a discovery conversation. These starting points reflect typical engagements. Your investment depends on scope, timeline, and complexity.
+          Every project is scoped through a discovery conversation. These
+          starting points reflect typical engagements. Your investment depends on
+          scope, timeline, and complexity.
         </p>
       </div>
 
-      {/* ── CTA ── */}
+      {/* ── CTA (dark inverted) ── */}
       <section
-        className="css-reveal text-center"
-        style={{ padding: "80px var(--page-px) 160px" }}
+        className="cta-section-mobile css-reveal"
+        style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
+          padding: "120px var(--page-px)",
+        }}
       >
-        <h2
-          className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
-          style={{ fontSize: "clamp(28px, 3vw, 36px)", lineHeight: 1.15 }}
+        <div className="cta-dark-grid">
+          <div className="css-reveal">
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                textTransform: "uppercase",
+                letterSpacing: "0.15em",
+                opacity: 0.4,
+                marginBottom: 24,
+              }}
+            >
+              (Next Step)
+            </p>
+            <h2
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 500,
+                fontSize: "clamp(48px, 6vw, 80px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+                color: "var(--bg)",
+                margin: 0,
+              }}
+            >
+              Not sure which package fits?
+            </h2>
+            <p
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: 16,
+                lineHeight: 1.6,
+                opacity: 0.5,
+                marginTop: 20,
+              }}
+            >
+              We respond within 24 hours.
+            </p>
+          </div>
+          <div className="cta-dark-buttons css-reveal">
+            <Button
+              href="/contact"
+              variant="primary-inverted"
+              data-cursor="link"
+            >
+              Book a Discovery Call
+            </Button>
+            <Button
+              href="/contact"
+              variant="secondary-inverted"
+              data-cursor="link"
+            >
+              Start a Project
+            </Button>
+          </div>
+        </div>
+        <div
+          className="css-reveal"
+          style={{
+            borderTop: "1px solid rgba(247, 246, 245, 0.12)",
+            marginTop: 80,
+            paddingTop: 24,
+            textAlign: "center",
+          }}
         >
-          Not sure which package fits?
-        </h2>
-        <div className="css-reveal flex flex-wrap justify-center gap-3 mt-10">
-          <Button href="/contact" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/contact" variant="secondary" data-cursor="link">
-            Start a Project
-          </Button>
+          <p
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: 13,
+              fontWeight: 400,
+              color: "var(--bg)",
+              opacity: 0.3,
+              margin: 0,
+            }}
+          >
+            50+ projects delivered across 8 industries in 12+ years.
+          </p>
         </div>
       </section>
     </>
