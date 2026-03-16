@@ -296,7 +296,7 @@ export default function Header() {
           .header-desktop-nav { display: none !important; }
           .mobile-menu-trigger { display: flex !important; }
           .mobile-nav-overlay { display: flex !important; }
-          .header-crest { height: 72px; }
+          .header-crest { height: 96px; }
         }
       `}</style>
     </>
