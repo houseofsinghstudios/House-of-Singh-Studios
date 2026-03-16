@@ -2184,10 +2184,7 @@ a.footer-contact-value:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(247, 246, 245, 0.5);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  will-change: auto;
+  background: rgba(247, 246, 245, 0.75);
 }
 .cursor-label {
   font-family: var(--sans);
