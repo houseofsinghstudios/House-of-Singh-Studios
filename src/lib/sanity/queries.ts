@@ -87,7 +87,7 @@ export async function getCaseStudyBySlug(slug: string) {
 export async function getAllPosts() {
   try {
     const posts = await client.fetch(
-      `*[_type == "post"] | order(publishedAt desc) {
+      `*[_type == "post"] | order(featured desc, publishedAt desc) {
         _id,
         title,
         slug,
@@ -103,6 +103,8 @@ export async function getAllPosts() {
         category,
         tags,
         body,
+        featured,
+        "readingTime": round(length(pt::text(body)) / 5 / 200),
         publishedAt
       }`
     );

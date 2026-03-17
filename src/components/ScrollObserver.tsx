@@ -56,7 +56,8 @@ export default function ScrollObserver() {
       ".featured-work-item, " +
       ".case-content-section, " +
       ".gallery-full, .gallery-pair-item, " +
-      ".reveal-clip, .reveal-stagger-parent, .reveal-text"
+      ".reveal-clip, .reveal-stagger-parent, .reveal-text, " +
+      ".insights-card"
     );
 
     targets.forEach((el) => observer.observe(el));
