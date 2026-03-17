@@ -146,82 +146,41 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
-function ShareButtons({ title }: { title: string }) {
+function ShareRow({ title }: { title: string }) {
   const [copied, setCopied] = useState(false);
 
-  function getUrl() {
-    return typeof window !== "undefined" ? window.location.href : "";
-  }
-
-  function shareLinkedIn() {
-    const url = getUrl();
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }
-
-  function shareX() {
-    const url = getUrl();
-    window.open(
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
-  }
-
-  async function copyLink() {
-    const url = getUrl();
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback: silently fail
-    }
-  }
-
-  const btnStyle: React.CSSProperties = {
-    fontFamily: "var(--sans)",
-    fontSize: 13,
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    color: "var(--text-secondary)",
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-    padding: 0,
-    transition: "color 0.2s ease",
-  };
-
   return (
-    <div className="css-reveal" style={{ marginTop: 60, maxWidth: 740 }}>
-      <p
-        style={{
-          fontFamily: "var(--sans)",
-          fontSize: 11,
-          textTransform: "uppercase",
-          letterSpacing: "0.12em",
-          color: "var(--text-muted)",
-          marginBottom: 16,
-        }}
+    <div className="insights-share-row">
+      <span className="insights-share-label">Share</span>
+      <button
+        type="button"
+        onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
+        className="insights-share-btn"
       >
-        (Share)
-      </p>
-      <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
-        <button type="button" onClick={shareLinkedIn} style={btnStyle}>
-          LinkedIn
-        </button>
-        <span style={{ margin: "0 12px", color: "var(--text-muted)", fontSize: 13 }}>&middot;</span>
-        <button type="button" onClick={shareX} style={btnStyle}>
-          X
-        </button>
-        <span style={{ margin: "0 12px", color: "var(--text-muted)", fontSize: 13 }}>&middot;</span>
-        <button type="button" onClick={copyLink} style={btnStyle}>
-          {copied ? "Copied" : "Copy Link"}
-        </button>
-      </div>
+        LinkedIn
+      </button>
+      <button
+        type="button"
+        onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(title)}`, '_blank')}
+        className="insights-share-btn"
+      >
+        X
+      </button>
+      <button
+        type="button"
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          } catch {
+            // Fallback: silently fail
+          }
+        }}
+        className="insights-share-btn"
+      >
+        {copied ? "Copied" : "Copy link"}
+      </button>
     </div>
   );
 }
@@ -400,8 +359,8 @@ export default function InsightArticleClient({ post }: { post: Post }) {
             </Link>
           </div>
 
-          {/* ── SHARE BUTTONS ── */}
-          <ShareButtons title={post.title} />
+          {/* ── SHARE ROW ── */}
+          <ShareRow title={post.title} />
 
           {/* ── INLINE NEWSLETTER CTA ── */}
           <InlineNewsletter />

@@ -3,366 +3,192 @@
 import { useState } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import Button from "@/components/ui/Button";
-import EditorialLabel from "@/components/ui/EditorialLabel";
-import SubscribeForm from "@/components/layout/SubscribeForm";
 import { urlFor } from "@/lib/sanity/image";
-import { calculateReadTime } from "@/lib/read-time";
+import EditorialLabel from "@/components/ui/EditorialLabel";
+import Button from "@/components/ui/Button";
 
 interface Post {
   _id: string;
   title: string;
   slug: { current: string };
-  publishedAt?: string;
   excerpt?: string;
+  featuredImage?: any;
   category?: string;
-  featuredImage?: {
-    asset?: {
-      _id: string;
-      url: string;
-      metadata?: { dimensions?: { width: number; height: number }; lqip?: string };
-    };
-    alt?: string;
-  };
-  body?: Array<{ _type: string; children?: Array<{ text?: string }> }>;
+  publishedAt?: string;
+  readingTime?: number;
+  featured?: boolean;
+  tags?: string[];
 }
 
 interface InsightsClientProps {
   posts: Post[];
-  categories: string[];
+  categories?: string[];
 }
 
-function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date(dateString));
+const POSTS_PER_PAGE = 6;
+
+function formatDate(dateString?: string): string {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
-function NewsletterBanner() {
+function PostMeta({ category, date, readingTime }: { category?: string; date?: string; readingTime?: number }) {
+  const parts: string[] = [];
+  if (category) parts.push(category);
+  if (date) parts.push(formatDate(date));
+  if (readingTime) parts.push(`${readingTime} min read`);
   return (
-    <div
-      className="insights-newsletter-banner css-reveal"
-      style={{
-        gridColumn: "1 / -1",
-        background: "var(--bg-shift)",
-        padding: "48px 40px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 40,
-        flexWrap: "wrap",
-      }}
-    >
-      <div style={{ flex: "1 1 280px", minWidth: 200 }}>
-        <h3
-          className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(24px, 2.5vw, 32px)", lineHeight: 1.2, margin: 0 }}
-        >
-          Stay sharp.
-        </h3>
-        <p
-          className="font-[var(--sans)] text-[14px]"
-          style={{ color: "var(--text-secondary)", lineHeight: 1.6, marginTop: 8 }}
-        >
-          Frameworks, perspectives, and studio updates. No spam.
-        </p>
-      </div>
-      <div style={{ flex: "1 1 320px", maxWidth: 440 }}>
-        <SubscribeForm />
-      </div>
-    </div>
-  );
-}
-
-function PostCardWithCTA({
-  post,
-  readTime,
-  showNewsletterAfter,
-}: {
-  post: Post;
-  readTime: number;
-  showNewsletterAfter: boolean;
-}) {
-  return (
-    <>
-      <Link
-        href={`/insights/${post.slug.current}`}
-        className="post-card no-underline"
-        data-cursor="view"
-      >
-        {post.featuredImage?.asset && (
-          <div className="post-card-image reveal-clip">
-            <Image
-              src={urlFor(post.featuredImage).width(800).height(450).url()}
-              alt={post.featuredImage.alt || post.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              style={{ objectFit: "cover" }}
-              {...(post.featuredImage.asset.metadata?.lqip
-                ? { placeholder: "blur", blurDataURL: post.featuredImage.asset.metadata.lqip }
-                : {})}
-            />
-          </div>
-        )}
-
-        <div style={{ marginTop: 20, display: "flex", alignItems: "center", gap: 0 }}>
-          {post.category && (
-            <span className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em]" style={{ opacity: 0.5 }}>
-              {post.category}
-            </span>
-          )}
-          {post.category && post.publishedAt && (
-            <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.3, margin: "0 8px" }}>—</span>
-          )}
-          {post.publishedAt && (
-            <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.5 }}>
-              {formatDate(post.publishedAt)}
-            </span>
-          )}
-          {readTime > 0 && (
-            <>
-              <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.3, margin: "0 8px" }}>—</span>
-              <span className="read-time">{readTime} min read</span>
-            </>
-          )}
-        </div>
-
-        <h2
-          className="post-card-title font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{ fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2, marginTop: 12 }}
-        >
-          {post.title}
-        </h2>
-
-        {post.excerpt && (
-          <p
-            className="font-[var(--sans)] text-[14px]"
-            style={{
-              lineHeight: 1.6,
-              color: "var(--text-secondary)",
-              marginTop: 10,
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-            }}
-          >
-            {post.excerpt}
-          </p>
-        )}
-
-        <span
-          className="read-link font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-          style={{ marginTop: 16, opacity: 0.5 }}
-        >
-          Read
+    <p className="insights-post-meta">
+      {parts.map((part, i) => (
+        <span key={i}>
+          {i > 0 && <span className="insights-meta-dot">&middot;</span>}
+          {part}
         </span>
-      </Link>
-      {showNewsletterAfter && <NewsletterBanner />}
-    </>
+      ))}
+    </p>
   );
 }
 
-export default function InsightsClient({
-  posts,
-  categories,
-}: InsightsClientProps) {
-  const [activeCategory, setActiveCategory] = useState("all");
+export default function InsightsClient({ posts }: InsightsClientProps) {
+  const [visibleCount, setVisibleCount] = useState(POSTS_PER_PAGE);
 
-  const filteredPosts =
-    activeCategory === "all"
-      ? posts
-      : posts.filter((p) => p.category === activeCategory);
+  // Separate featured post from the rest
+  const featuredPost = posts.find((p) => p.featured) || posts[0];
+  const gridPosts = posts.filter((p) => p._id !== featuredPost?._id);
+  const visiblePosts = gridPosts.slice(0, visibleCount);
+  const hasMore = visibleCount < gridPosts.length;
+
+  const loadMore = () => {
+    setVisibleCount((prev) => prev + POSTS_PER_PAGE);
+  };
+
+  if (!posts || posts.length === 0) {
+    return (
+      <div className="insights-page">
+        <div className="insights-hero" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+          <EditorialLabel text="Insights" className="mb-4" />
+          <h1 className="insights-hero-heading" data-hero-heading>
+            Thinking, frameworks, and perspective on brand, design, and creative systems.
+          </h1>
+        </div>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "clamp(80px, 10vw, 140px) var(--page-px)", textAlign: "center" }}>
+          <p style={{ fontFamily: "var(--sans)", fontSize: 16, color: "var(--text-muted)" }}>
+            No insights published yet. Check back soon.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <>
-      {/* ── HERO ── */}
-      <section
-        className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "50vh", paddingBottom: 80 }}
-      >
-        <p
-          data-hero-label
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)] mb-5"
-          style={{ opacity: 0.4 }}
-        >
-          (Insights)
-        </p>
-        <h1
-          data-hero-heading
-          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
-          style={{
-            fontSize: "clamp(32px, 4vw, 56px)",
-            lineHeight: 1.15,
-            maxWidth: 900,
-            margin: 0,
-          }}
-        >
-          Thinking, frameworks, and perspective on brand, design, and creative
-          systems.
+    <div className="insights-page">
+      {/* Hero */}
+      <div className="insights-hero" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+        <EditorialLabel text="Insights" className="mb-4" />
+        <h1 className="insights-hero-heading" data-hero-heading>
+          Thinking, frameworks, and perspective on brand, design, and creative systems.
         </h1>
-      </section>
-
-      {/* ── FILTER BAR ── */}
-      <div
-        className="insights-filter-bar css-reveal"
-        style={{ padding: "0 var(--page-px)", marginTop: 80, marginBottom: 60 }}
-      >
-        <button
-          className={`filter-pill${activeCategory === "all" ? " active" : ""}`}
-          onClick={() => setActiveCategory("all")}
-        >
-          All
-        </button>
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={`filter-pill${activeCategory === cat ? " active" : ""}`}
-            onClick={() => setActiveCategory(cat)}
-          >
-            {cat}
-          </button>
-        ))}
       </div>
 
-      {/* ── POSTS ── */}
-      <section
-        className="css-reveal"
-        style={{ padding: "0 var(--page-px) 120px" }}
-      >
-        {filteredPosts.length > 0 ? (
-          <>
-            {/* ── FEATURED POST (first post) ── */}
-            {(() => {
-              const featured = filteredPosts[0];
-              const featuredReadTime = calculateReadTime(featured.body);
-              return (
-                <div className="css-reveal" style={{ marginBottom: 80 }}>
-                  <EditorialLabel text="Featured" className="mb-6" />
-                  <Link
-                    href={`/insights/${featured.slug.current}`}
-                    className="post-card no-underline featured-post-card"
-                    data-cursor="view"
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <div className="featured-post-layout">
-                      {/* Image — 60% */}
-                      <div className="featured-post-image">
-                        {featured.featuredImage?.asset && (
-                          <div className="post-card-image reveal-clip" style={{ aspectRatio: "16/9", position: "relative", overflow: "hidden", width: "100%" }}>
-                            <Image
-                              src={urlFor(featured.featuredImage).width(1200).height(675).url()}
-                              alt={featured.featuredImage.alt || featured.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw, 60vw"
-                              style={{ objectFit: "cover" }}
-                              priority
-                              {...(featured.featuredImage.asset.metadata?.lqip
-                                ? { placeholder: "blur", blurDataURL: featured.featuredImage.asset.metadata.lqip }
-                                : {})}
-                            />
-                          </div>
-                        )}
-                      </div>
-                      {/* Info — 40% */}
-                      <div className="featured-post-info">
-                        <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 0 }}>
-                          {featured.category && (
-                            <span className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em]" style={{ opacity: 0.5 }}>
-                              {featured.category}
-                            </span>
-                          )}
-                          {featured.category && featured.publishedAt && (
-                            <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.3, margin: "0 8px" }}>—</span>
-                          )}
-                          {featured.publishedAt && (
-                            <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.5 }}>
-                              {formatDate(featured.publishedAt)}
-                            </span>
-                          )}
-                          {featuredReadTime > 0 && (
-                            <>
-                              <span className="font-[var(--sans)] text-[11px]" style={{ opacity: 0.3, margin: "0 8px" }}>—</span>
-                              <span className="read-time">{featuredReadTime} min read</span>
-                            </>
-                          )}
-                        </div>
-                        <h2
-                          className="post-card-title font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-                          style={{
-                            fontSize: "clamp(28px, 3vw, 36px)",
-                            lineHeight: 1.2,
-                            marginTop: 16,
-                          }}
-                        >
-                          {featured.title}
-                        </h2>
-                        {featured.excerpt && (
-                          <p
-                            className="font-[var(--sans)] text-[14px]"
-                            style={{ lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 14 }}
-                          >
-                            {featured.excerpt}
-                          </p>
-                        )}
-                        <span
-                          className="read-link font-[var(--sans)] text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)]"
-                          style={{ marginTop: 20, opacity: 0.5, display: "inline-block" }}
-                        >
-                          Read
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </div>
-              );
-            })()}
+      {/* Divider */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+        <div className="insights-divider" />
+      </div>
 
-            {/* ── GRID POSTS (remaining) ── */}
-            {filteredPosts.length > 1 && (
-              <div className="insights-grid reveal-stagger-parent">
-                {filteredPosts.slice(1).map((post, idx) => {
-                  const readTime = calculateReadTime(post.body);
-                  const gridIdx = idx; // 0-based index within grid posts
-                  // Insert newsletter CTA after 2 grid posts (featured + 2 grid = 3 total)
-                  const showNewsletterAfter = gridIdx === 1;
-                  return (
-                    <PostCardWithCTA
-                      key={post._id}
-                      post={post}
-                      readTime={readTime}
-                      showNewsletterAfter={showNewsletterAfter}
-                    />
-                  );
-                })}
+      {/* Featured Post */}
+      {featuredPost && (
+        <div className="insights-featured css-reveal" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+          <Link
+            href={`/insights/${featuredPost.slug?.current}`}
+            className="insights-featured-link"
+            data-cursor="view"
+          >
+            {featuredPost.featuredImage && (
+              <div className="insights-featured-image reveal-clip">
+                <Image
+                  src={urlFor(featuredPost.featuredImage).width(1200).height(675).url()}
+                  alt={featuredPost.featuredImage?.alt || featuredPost.title}
+                  fill
+                  style={{ objectFit: "cover" }}
+                  sizes="(max-width: 768px) 100vw, 1200px"
+                  priority
+                />
               </div>
             )}
-          </>
-        ) : (
-          <div style={{ textAlign: "center", padding: "80px 0" }}>
-            <p
-              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.12em]"
-              style={{ color: "var(--text-muted)", marginBottom: 16 }}
-            >
-              (No posts yet)
-            </p>
-            <p
-              className="font-[var(--sans)] font-medium tracking-[-0.02em]"
-              style={{
-                fontSize: "clamp(28px, 4vw, 48px)",
-                lineHeight: 1.2,
-                color: "var(--text-muted)",
-              }}
-            >
-              Content is on its way.
-            </p>
-          </div>
-        )}
-      </section>
+            <div className="insights-featured-content">
+              <PostMeta
+                category={featuredPost.category}
+                date={featuredPost.publishedAt}
+                readingTime={featuredPost.readingTime}
+              />
+              <h2 className="insights-featured-title">
+                {featuredPost.title}
+              </h2>
+              {featuredPost.excerpt && (
+                <p className="insights-featured-excerpt">{featuredPost.excerpt}</p>
+              )}
+            </div>
+          </Link>
+        </div>
+      )}
 
-      {/* ── CTA (dark inverted) ── */}
+      {/* Divider */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+        <div className="insights-divider" />
+      </div>
+
+      {/* Post Grid */}
+      {visiblePosts.length > 0 && (
+        <div className="insights-grid-section" style={{ maxWidth: 1280, margin: "0 auto", padding: "0 var(--page-px)" }}>
+          <div className="insights-grid reveal-stagger-parent">
+            {visiblePosts.map((post) => (
+              <Link
+                key={post._id}
+                href={`/insights/${post.slug?.current}`}
+                className="insights-card"
+                data-cursor="view"
+              >
+                {post.featuredImage && (
+                  <div className="insights-card-image">
+                    <div className="insights-card-image-inner">
+                      <Image
+                        src={urlFor(post.featuredImage).width(600).height(375).url()}
+                        alt={post.featuredImage?.alt || post.title}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    </div>
+                  </div>
+                )}
+                <PostMeta
+                  category={post.category}
+                  date={post.publishedAt}
+                  readingTime={post.readingTime}
+                />
+                <h3 className="insights-card-title">
+                  {post.title}
+                </h3>
+              </Link>
+            ))}
+          </div>
+
+          {/* Load More */}
+          {hasMore && (
+            <div className="insights-load-more">
+              <button
+                onClick={loadMore}
+                className="insights-load-more-btn"
+              >
+                Load more
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Dark CTA */}
       <section
         className="cta-section-mobile css-reveal"
         style={{
@@ -396,7 +222,7 @@ export default function InsightsClient({
                 margin: 0,
               }}
             >
-              Ready to build a brand that works?
+              Start a project.
             </h2>
             <p
               style={{
@@ -416,14 +242,14 @@ export default function InsightsClient({
               variant="primary-inverted"
               data-cursor="link"
             >
-              Book a Discovery Call
+              Start a Project
             </Button>
             <Button
               href="/contact"
               variant="secondary-inverted"
               data-cursor="link"
             >
-              Start a Project
+              Book a Discovery Call
             </Button>
           </div>
         </div>
@@ -446,10 +272,10 @@ export default function InsightsClient({
               margin: 0,
             }}
           >
-            50+ projects delivered across 8 industries in 12+ years.
+            Toronto, Canada &middot; studio@houseofsingh.com &middot; Mon — Fri, 9am — 6pm EST
           </p>
         </div>
       </section>
-    </>
+    </div>
   );
 }

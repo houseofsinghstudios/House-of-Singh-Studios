@@ -13,15 +13,6 @@ export const metadata: Metadata = {
 export default async function InsightsPage() {
   const posts = await getAllPosts();
 
-  // Extract unique categories from posts
-  const categorySet = new Set<string>();
-  (posts || []).forEach(
-    (post: { category?: string }) => {
-      if (post.category) categorySet.add(post.category);
-    }
-  );
-  const categories = Array.from(categorySet).sort();
-
   return (
     <>
       <script
@@ -47,7 +38,7 @@ export default async function InsightsPage() {
           }),
         }}
       />
-      <InsightsClient posts={posts || []} categories={categories} />
+      <InsightsClient posts={posts || []} />
     </>
   );
 }
