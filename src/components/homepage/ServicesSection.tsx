@@ -26,7 +26,8 @@ export default function ServicesSection() {
             className="svc-accordion-row"
             data-cursor="view"
           >
-            <div className="svc-accordion-header">
+            <span className="svc-accordion-num">{NUMBERS[i]}</span>
+            <div className="svc-accordion-content">
               <h3
                 className="svc-accordion-title"
                 style={{
@@ -35,11 +36,10 @@ export default function ServicesSection() {
               >
                 {service.title}
               </h3>
-              <span className="svc-accordion-num">{NUMBERS[i]}</span>
-            </div>
-            <div className="svc-accordion-body">
-              <p className="svc-accordion-desc">{service.sentence}</p>
-              <span className="svc-accordion-arrow">→</span>
+              <div className="svc-accordion-body">
+                <p className="svc-accordion-desc">{service.description}</p>
+                <span className="svc-accordion-arrow">→</span>
+              </div>
             </div>
           </Link>
         ))}
