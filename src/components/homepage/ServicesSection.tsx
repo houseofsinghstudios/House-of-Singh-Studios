@@ -43,16 +43,17 @@ export default function ServicesSection() {
             <div className="svc-accordion-arrow-col">
               <svg
                 className="svc-accordion-arrow-icon"
-                width="40"
-                height="16"
-                viewBox="0 0 40 16"
+                width="32"
+                height="32"
+                viewBox="0 0 32 32"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth="1"
+                strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M0 8 L32 8 M26 2 L32 8 L26 14" />
+                <line x1="6" y1="26" x2="26" y2="6" />
+                <polyline points="16,6 26,6 26,16" />
               </svg>
             </div>
           </Link>
