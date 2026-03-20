@@ -822,7 +822,8 @@ body {
    ═══════════════════════════════════════════════════════ */
 .footer-root {
   background: #E0DEDA;
-  width: 100%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
   border-top: 1px solid var(--border);
 }
 
