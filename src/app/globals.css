@@ -821,7 +821,7 @@ body {
    Footer
    ═══════════════════════════════════════════════════════ */
 .footer-root {
-  background: var(--bg);
+  background: var(--bg-shift);
   width: 100%;
 }
 
