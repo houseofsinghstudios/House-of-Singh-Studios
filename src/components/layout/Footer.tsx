@@ -50,7 +50,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="footer-root css-fade px-[var(--page-px)] pt-0 pb-0">
+    <footer className="footer-root css-fade pt-0 pb-0">
       {/* 1. Next Page navigation */}
       <FooterNextPage />
 
