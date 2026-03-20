@@ -42,9 +42,12 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background: var(--bg);
   color: var(--text-primary);
   font-family: var(--sans);
