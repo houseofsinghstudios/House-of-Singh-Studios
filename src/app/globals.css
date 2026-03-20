@@ -821,23 +821,25 @@ body {
    Footer
    ═══════════════════════════════════════════════════════ */
 .footer-root {
-  background: var(--bg-shift);
-  width: 100%;
+  background: #E0DEDA;
+  border-top: 1px solid var(--border);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  overflow-x: clip;
 }
 
 /* ── Footer Divider ── */
 .footer-divider {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 var(--page-px);
+  width: 100%;
   border-bottom: 1px solid var(--border);
+  padding: 0;
 }
 
-/* ── Footer Next Page (two-column redesign) ── */
+/* ── Section 1: Next Page ── */
 .footer-next-page {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 24px;
   align-items: end;
   max-width: 1280px;
   margin: 0 auto;
@@ -846,21 +848,23 @@ body {
   color: inherit;
   position: relative;
 }
-/* Full-bleed hover background */
 .footer-next-page::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
   left: 50%;
-  right: 50%;
   margin-left: -50vw;
-  margin-right: -50vw;
   width: 100vw;
   background: var(--bg-shift);
   opacity: 0;
   transition: opacity 0.4s ease;
-  z-index: -1;
+  z-index: 0;
+}
+.footer-next-left,
+.footer-next-right {
+  position: relative;
+  z-index: 1;
 }
 @media (hover: hover) {
   .footer-next-page:hover::before {
@@ -889,7 +893,7 @@ body {
 }
 .footer-next-desc {
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -900,7 +904,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 20px;
+  gap: 16px;
 }
 .footer-next-name {
   font-family: var(--sans);
@@ -918,10 +922,9 @@ body {
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   flex-shrink: 0;
 }
-
 @media (max-width: 899px) and (min-width: 600px) {
   .footer-next-page {
-    gap: 24px;
+    gap: 20px;
   }
 }
 @media (max-width: 599px) {
@@ -938,151 +941,149 @@ body {
   }
 }
 
-/* ── Footer CTA Row + Contact Details ── */
-.footer-cta-row {
+/* ── Section 2: City Clocks ── */
+.footer-cities-grid {
   display: grid;
-  grid-template-columns: 40% 1fr;
-  gap: clamp(40px, 6vw, 80px);
-  align-items: start;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
   max-width: 1280px;
   margin: 0 auto;
   padding: clamp(48px, 6vw, 72px) var(--page-px);
 }
-.footer-cta-left {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.footer-contact-grid {
-  display: flex;
-  gap: 48px;
-}
-.footer-contact-block {
+.footer-cities-col {
   display: flex;
   flex-direction: column;
 }
-.footer-contact-label {
+.footer-cities-col:first-child {
+  padding-right: 24px;
+}
+.footer-cities-col-mid {
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.footer-cities-col:last-child {
+  padding-left: 24px;
+}
+.footer-cities-name {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--text-muted);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
-.footer-contact-value {
+.footer-cities-time {
   font-family: var(--sans);
-  font-size: 14px;
+  font-weight: 500;
+  font-size: clamp(24px, 3.5vw, 32px);
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 10px;
+}
+@keyframes colon-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.footer-clock-colon {
+  animation: colon-blink 2s ease-in-out infinite;
+}
+.footer-cities-contact {
+  font-family: var(--sans);
+  font-size: 12px;
   color: var(--text-secondary);
-  line-height: 1.6;
-  margin: 0;
   text-decoration: none;
+  margin: 0;
   transition: color 0.2s ease;
 }
-a.footer-contact-value:hover {
-  color: var(--text-primary);
+.footer-cities-soon {
+  color: var(--text-muted);
+  font-style: italic;
 }
-
-@media (max-width: 899px) {
-  .footer-cta-row {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-  .footer-contact-grid {
-    display: flex;
-    gap: 48px;
+@media (hover: hover) {
+  a.footer-cities-contact:hover {
+    color: var(--text-primary);
   }
 }
 @media (max-width: 599px) {
-  .footer-contact-grid {
-    flex-direction: column;
-    gap: 24px;
+  .footer-cities-grid {
+    grid-template-columns: 1fr;
+  }
+  .footer-cities-col:first-child,
+  .footer-cities-col:last-child {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .footer-cities-col-mid {
+    border-left: none;
+    border-right: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .footer-cities-col:first-child,
+  .footer-cities-col-mid {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 24px;
   }
 }
 
-/* ── Footer social links ── */
-.footer-social-links {
+/* ── Section 3: Nav Row ── */
+.footer-nav-row {
   display: flex;
-  gap: 24px;
-}
-.footer-social-link {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--text-muted);
-  text-decoration: none;
-  position: relative;
-  transition: color 0.2s ease;
-}
-.footer-social-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--text-primary);
-  opacity: 0.3;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-@media (hover: hover) {
-  .footer-social-link:hover {
-    color: var(--text-primary);
-  }
-  .footer-social-link:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
-/* ── Navigation columns ── */
-.footer-nav-grid {
-  display: grid;
-  grid-template-columns: 40% 1fr 1fr 1fr;
-  gap: 48px;
+  flex-wrap: wrap;
+  gap: 8px 24px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 64px) var(--page-px);
+  padding: 24px var(--page-px);
 }
-.footer-nav-grid::before {
-  content: '';
-  display: block;
-}
-.footer-heading {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-faint);
-  margin: 0 0 20px;
-}
-.footer-link {
+.footer-nav-link {
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--text-muted);
+  font-weight: 400;
+  color: var(--text-secondary);
   text-decoration: none;
-  line-height: 2;
   transition: color 0.2s ease;
 }
-.footer-link:hover {
-  color: var(--text-primary);
+@media (hover: hover) {
+  .footer-nav-link:hover {
+    color: var(--text-primary);
+  }
 }
 
-/* ── Copyright bar ── */
-.footer-copyright-bar {
+/* ── Section 4: Copyright Bar ── */
+.footer-copy-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 24px var(--page-px);
+  padding: 20px var(--page-px);
 }
 .footer-copy-text {
   font-family: var(--sans);
   font-size: 12px;
   color: var(--text-muted);
+}
+.footer-copy-social {
+  display: flex;
+  gap: 20px;
+}
+.footer-copy-social-link {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+@media (hover: hover) {
+  .footer-copy-social-link:hover {
+    color: var(--text-primary);
+  }
 }
 
 @media (max-width: 600px) {
@@ -1141,24 +1142,6 @@ a.footer-contact-value:hover {
     padding-bottom: 100px !important;
   }
 
-  /* ── Footer mobile ── */
-  .footer-nav-grid {
-    grid-template-columns: 1fr !important;
-    gap: 32px;
-  }
-  .footer-nav-grid::before {
-    display: none;
-  }
-  .footer-link {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-  }
-  .footer-copyright-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -2852,27 +2835,6 @@ a.footer-contact-value:hover {
   transform-origin: left;
 }
 
-/* Footer nav links — same effect, subtler */
-.footer-link {
-  position: relative;
-}
-.footer-link::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--text-primary);
-  opacity: 0.3;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.footer-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
 
 /* ── Interaction 2: Button Hover Fill Sweep ── */
 
@@ -3110,7 +3072,7 @@ td a:hover {
 
 /* Exclude nav links and buttons from body link effect */
 .header-nav-link:hover,
-.footer-link:hover,
+.footer-nav-link:hover,
 .btn-primary:hover,
 .btn-secondary:hover,
 .btn-primary-inverted:hover {
