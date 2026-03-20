@@ -822,12 +822,14 @@ body {
    ═══════════════════════════════════════════════════════ */
 .footer-root {
   background: var(--bg);
+  width: 100%;
 }
 
 /* ── Footer Divider ── */
 .footer-divider {
   max-width: 1280px;
   margin: 0 auto;
+  padding: 0 var(--page-px);
   border-bottom: 1px solid var(--border);
 }
 
@@ -839,14 +841,30 @@ body {
   align-items: end;
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 72px) 0;
+  padding: clamp(48px, 6vw, 72px) var(--page-px);
   text-decoration: none;
   color: inherit;
-  transition: background 0.4s ease;
+  position: relative;
+}
+/* Full-bleed hover background */
+.footer-next-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  width: 100vw;
+  background: var(--bg-shift);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
 }
 @media (hover: hover) {
-  .footer-next-page:hover {
-    background: var(--bg-shift);
+  .footer-next-page:hover::before {
+    opacity: 1;
   }
   .footer-next-page:hover .footer-next-name {
     letter-spacing: -0.01em;
@@ -928,7 +946,7 @@ body {
   gap: clamp(40px, 6vw, 80px);
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 72px) 0;
+  padding: clamp(48px, 6vw, 72px) var(--page-px);
 }
 .footer-cta-left {
   display: flex;
@@ -1025,7 +1043,7 @@ a.footer-contact-value:hover {
   gap: 48px;
   max-width: 1280px;
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 64px) 0;
+  padding: clamp(48px, 6vw, 64px) var(--page-px);
 }
 .footer-heading {
   font-family: var(--sans);
@@ -1055,7 +1073,7 @@ a.footer-contact-value:hover {
   align-items: center;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 24px 0;
+  padding: 24px var(--page-px);
 }
 .footer-copy-text {
   font-family: var(--sans);
