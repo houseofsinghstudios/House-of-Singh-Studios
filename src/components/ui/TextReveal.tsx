@@ -48,7 +48,7 @@ export default function TextReveal({
   if (lines && lines.length > 0) {
     return (
       <Component
-        ref={ref as React.RefObject<any>}
+        ref={ref as React.RefObject<never>}
         className={className}
         aria-label={lines.join(" ")}
       >
@@ -67,7 +67,7 @@ export default function TextReveal({
   }
 
   return (
-    <Component ref={ref as React.RefObject<any>} className={className}>
+    <Component ref={ref as React.RefObject<never>} className={className}>
       <span className="text-reveal-line">
         <span className={`text-reveal-inner${revealed ? " revealed" : ""}`}>
           {children}

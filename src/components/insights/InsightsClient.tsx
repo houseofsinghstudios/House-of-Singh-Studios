@@ -12,7 +12,7 @@ interface Post {
   title: string;
   slug: { current: string };
   excerpt?: string;
-  featuredImage?: any;
+  featuredImage?: { asset?: { _ref?: string }; alt?: string };
   category?: string;
   publishedAt?: string;
   readingTime?: number;

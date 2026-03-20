@@ -7,13 +7,9 @@ export default function PageTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const isFirst = useRef(true);
-  const [supportsVT, setSupportsVT] = useState(false);
-
-  useEffect(() => {
-    setSupportsVT(
-      typeof document !== "undefined" && "startViewTransition" in document
-    );
-  }, []);
+  const [supportsVT] = useState(
+    () => typeof document !== "undefined" && "startViewTransition" in document
+  );
 
   useEffect(() => {
     if (isFirst.current) {
