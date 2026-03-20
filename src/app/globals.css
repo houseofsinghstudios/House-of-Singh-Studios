@@ -823,6 +823,9 @@ body {
 .footer-root {
   background: #E0DEDA;
   border-top: 1px solid var(--border);
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  overflow-x: clip;
 }
 
 /* ── Footer Divider ── */
