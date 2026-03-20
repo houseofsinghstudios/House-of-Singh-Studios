@@ -164,7 +164,6 @@ interface CareersClientProps {
 
 export default function CareersClient({ roles }: CareersClientProps) {
   const [expandedRole, setExpandedRole] = useState<string | null>(null);
-  const [applicationRole, setApplicationRole] = useState("");
   const [formState, setFormState] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
@@ -183,7 +182,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
   }
 
   function handleApplyClick(roleTitle: string) {
-    setApplicationRole(roleTitle);
     setFormData((prev) => ({ ...prev, role: roleTitle }));
     if (formSectionRef.current) {
       formSectionRef.current.scrollIntoView({ behavior: "smooth" });

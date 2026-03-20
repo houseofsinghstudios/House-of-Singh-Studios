@@ -15,7 +15,7 @@ export default function CustomCursor() {
 
   const isStudio = pathname?.startsWith("/studio");
 
-  const updateCursor = useCallback(() => {
+  const updateCursor = useCallback(function loop() {
     // Dot follows mouse exactly
     dot.current.x = mouse.current.x;
     dot.current.y = mouse.current.y;
@@ -31,7 +31,7 @@ export default function CustomCursor() {
       ringRef.current.style.transform = `translate3d(${ring.current.x}px, ${ring.current.y}px, 0) translate(-50%, -50%)`;
     }
 
-    rafRef.current = requestAnimationFrame(updateCursor);
+    rafRef.current = requestAnimationFrame(loop);
   }, []);
 
   useEffect(() => {

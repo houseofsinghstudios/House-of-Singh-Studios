@@ -118,7 +118,6 @@ export default function AboutClient() {
   const [clockTime, setClockTime] = useState(() => getTorontoTime());
 
   useEffect(() => {
-    setClockTime(getTorontoTime());
     const id = setInterval(() => setClockTime(getTorontoTime()), 60000);
     return () => clearInterval(id);
   }, []);
