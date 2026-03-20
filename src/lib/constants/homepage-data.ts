@@ -32,6 +32,7 @@ export const STATS = {
 export interface ServiceBlock {
   title: string;
   sentence: string;
+  description: string;
   href: string;
 }
 
@@ -42,21 +43,25 @@ export const SERVICES_SECTION = {
     {
       title: "Brand Identity and Visual Design",
       sentence: "Your brand identity is the first thing your market judges you on. We build complete visual systems that give your business a consistent, professional presence across every touchpoint.",
+      description: "Logo systems, color, typography, brand guidelines, and visual language that holds across every touchpoint.",
       href: "/services/brand-identity",
     },
     {
       title: "Visual Media and Content Production",
       sentence: "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent.",
+      description: "Brand photography, campaign films, social content systems, and visual storytelling with strategic intent.",
       href: "/services/visual-media",
     },
     {
       title: "Digital Design and Experience",
       sentence: "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
+      description: "Website design direction, interface systems, content architecture, and ongoing digital design support.",
       href: "/services/digital-design",
     },
     {
       title: "Creative Strategy and Systems",
       sentence: "Most brand problems are strategy problems disguised as design problems. We run positioning workshops and build creative direction frameworks that give your team structure.",
+      description: "Brand positioning workshops, creative direction frameworks, and AI workflow integration consulting.",
       href: "/services/creative-strategy",
     },
   ] satisfies ServiceBlock[],

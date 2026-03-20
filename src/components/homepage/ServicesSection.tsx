@@ -26,7 +26,8 @@ export default function ServicesSection() {
             className="svc-accordion-row"
             data-cursor="view"
           >
-            <div className="svc-accordion-header">
+            <span className="svc-accordion-num">{NUMBERS[i]}</span>
+            <div className="svc-accordion-content">
               <h3
                 className="svc-accordion-title"
                 style={{
@@ -35,11 +36,25 @@ export default function ServicesSection() {
               >
                 {service.title}
               </h3>
-              <span className="svc-accordion-num">{NUMBERS[i]}</span>
+              <div className="svc-accordion-body">
+                <p className="svc-accordion-desc">{service.description}</p>
+              </div>
             </div>
-            <div className="svc-accordion-body">
-              <p className="svc-accordion-desc">{service.sentence}</p>
-              <span className="svc-accordion-arrow">→</span>
+            <div className="svc-accordion-arrow-col">
+              <svg
+                className="svc-accordion-arrow-icon"
+                width="48"
+                height="48"
+                viewBox="0 0 48 48"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="8" y1="40" x2="40" y2="8" />
+                <polyline points="24,8 40,8 40,24" />
+              </svg>
             </div>
           </Link>
         ))}

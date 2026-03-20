@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -22,17 +22,159 @@ const STEPS = [
   { name: "Delivery", desc: "You receive a complete brand system with guidelines, files, and the structure to maintain it without us." },
 ];
 
-const SERVICE_CATEGORIES = [
-  "Brand Identity",
-  "Visual Media",
-  "Digital Design",
-  "Creative Strategy",
+/* ── Capabilities tab data ── */
+const CAPABILITIES = [
+  {
+    label: "Brand Identity",
+    description: "Your brand identity is the first thing your market judges you on. We build complete visual systems.",
+    deliverables: [
+      "Naming and brand strategy",
+      "Logo systems and brand marks",
+      "Color and typography systems",
+      "Brand guidelines and documentation",
+      "Packaging and collateral design",
+      "Art direction",
+    ],
+  },
+  {
+    label: "Visual Media",
+    description: "Content without a visual strategy is noise. We direct and produce with strategic intent.",
+    deliverables: [
+      "Brand photography",
+      "Campaign films and short form video",
+      "Social content systems",
+      "Script development",
+      "Photography and art direction",
+      "Visual storytelling",
+    ],
+  },
+  {
+    label: "Digital Design",
+    description: "Your website is your highest traffic brand touchpoint. We design the systems that make it work.",
+    deliverables: [
+      "Website design direction",
+      "Interface and layout systems",
+      "Content architecture",
+      "Interactive brand experiences",
+      "Digital design support",
+      "Performance optimization",
+    ],
+  },
+  {
+    label: "Creative Strategy",
+    description: "Most brand problems are strategy problems disguised as design problems.",
+    deliverables: [
+      "Brand positioning workshops",
+      "Creative direction frameworks",
+      "Communication strategy",
+      "Visual consistency systems",
+      "AI workflow integration",
+      "Content strategy",
+    ],
+  },
 ];
+
+/* ── Contrast columns ── */
+const WHAT_WE_ARE = [
+  "A structured studio with defined processes and senior-level thinking on every brief.",
+  "AI-powered workflow that delivers faster, with fewer revisions, at lower overhead.",
+  "A curated network that assembles the right specialists for every scope.",
+  "Direct access to decision makers. No account managers. No layers.",
+];
+
+const WHAT_WE_ARE_NOT = [
+  "Not a traditional agency with bloated teams and six-month timelines.",
+  "Not an AI tool company. We are a design studio that uses AI internally.",
+  "Not a freelancer. We operate as a structured studio, not a solo practitioner.",
+  "Not a template shop. Every engagement is built from strategic thinking.",
+];
+
+/* ── Team roles ── */
+const TEAM_ROLES = [
+  "Brand Strategist",
+  "Visual Designer",
+  "Developer",
+  "Photographer",
+  "Content Strategist",
+  "Motion Designer",
+];
+
+/* ── Toronto clock helper ── */
+function getTorontoTime(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(new Date());
+}
 
 export default function AboutClient() {
   const statsRef = useRef<HTMLElement>(null);
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  /* ── Clock state ── */
+  const [clockTime, setClockTime] = useState(() => getTorontoTime());
+
+  useEffect(() => {
+    setClockTime(getTorontoTime());
+    const id = setInterval(() => setClockTime(getTorontoTime()), 60000);
+    return () => clearInterval(id);
+  }, []);
+
+  /* ── Capabilities tab state ── */
+  const [activeTab, setActiveTab] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const tabBarRef = useRef<HTMLDivElement>(null);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
+
+  const measureIndicator = useCallback(() => {
+    const btn = tabRefs.current[activeTab];
+    if (btn) {
+      setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth });
+    }
+  }, [activeTab]);
+
+  useLayoutEffect(() => {
+    measureIndicator();
+  }, [measureIndicator]);
+
+  useEffect(() => {
+    window.addEventListener("resize", measureIndicator);
+    return () => window.removeEventListener("resize", measureIndicator);
+  }, [measureIndicator]);
+
+  const handleTabClick = (index: number) => {
+    if (index === activeTab || transitioning) return;
+    setTransitioning(true);
+    setTimeout(() => {
+      setActiveTab(index);
+      setTransitioning(false);
+    }, 150);
+  };
+
+  const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
+    let newIndex = index;
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      newIndex = (index + 1) % CAPABILITIES.length;
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      newIndex = (index - 1 + CAPABILITIES.length) % CAPABILITIES.length;
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === "End") {
+      e.preventDefault();
+      newIndex = CAPABILITIES.length - 1;
+    } else {
+      return;
+    }
+    handleTabClick(newIndex);
+    tabRefs.current[newIndex]?.focus();
+  };
 
   // ── Stats count-up ──
   useEffect(() => {
@@ -100,6 +242,8 @@ export default function AboutClient() {
     };
   }, []);
 
+  const [hours, minutes] = clockTime.split(":");
+
   return (
     <>
       {/* ═══ HERO (~50vh) ═══ */}
@@ -109,7 +253,7 @@ export default function AboutClient() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          padding: "140px var(--page-px) 80px",
+          padding: "140px var(--page-px) 64px",
         }}
       >
         <p
@@ -134,56 +278,120 @@ export default function AboutClient() {
         >
           House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for established businesses. The studio was founded on a direct premise: design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human.
         </p>
-      </section>
 
-      {/* ═══ SECTION 01: WHAT WE DO ═══ */}
-      <section
-        className="css-reveal"
-        style={{
-          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
-          borderTop: "1px solid var(--border)",
-        }}
-      >
-        <EditorialLabel text="01 — What We Do" className="mb-10" />
-
+        {/* Location + Live Clock */}
         <div
-          className="about-capabilities-row css-reveal"
           style={{
+            borderTop: "1px solid var(--border)",
+            marginTop: 24,
+            paddingTop: 24,
             display: "flex",
-            flexWrap: "wrap",
-            gap: "clamp(16px, 2vw, 32px)",
-            marginBottom: "clamp(32px, 4vw, 48px)",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {SERVICE_CATEGORIES.map((cat, i) => (
-            <span
-              key={cat}
-              className="font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-              style={{ fontSize: "clamp(24px, 3vw, 40px)" }}
-            >
-              {cat}{i < SERVICE_CATEGORIES.length - 1 && (
-                <span className="text-[color:var(--text-muted)]" style={{ margin: "0 clamp(8px, 1vw, 16px)" }}>/</span>
-              )}
-            </span>
-          ))}
-        </div>
-
-        <p
-          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px]"
-          style={{ opacity: 0.7, marginBottom: 24 }}
-        >
-          Four capabilities. One studio. Every service connects to measurable business outcomes — from identity systems to content production to digital experiences.
-        </p>
-
-        <Link
-          href="/services"
-          className="arrow-link no-underline"
-          data-cursor="link"
-        >
-          <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-            View our services <span className="arrow-icon">&rarr;</span>
+          <span className="about-clock-location">Toronto, Canada</span>
+          <span className="about-clock-time">
+            EST {hours}<span className="about-clock-colon">:</span>{minutes}
           </span>
-        </Link>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 01: CAPABILITIES (Interactive Tabs) ═══ */}
+      <section
+        className="about-capabilities-section css-reveal"
+        style={{
+          background: "var(--bg-shift)",
+          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
+        }}
+      >
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <EditorialLabel text="01 — What We Do" className="mb-10" />
+
+          <h2
+            className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+            style={{
+              fontSize: "clamp(28px, 3.5vw, 40px)",
+              letterSpacing: "-0.025em",
+              lineHeight: 1.15,
+              maxWidth: 560,
+              marginBottom: 48,
+            }}
+          >
+            Four capabilities. One studio.
+          </h2>
+
+          {/* Tab bar */}
+          <div
+            ref={tabBarRef}
+            className="about-capabilities-tabbar"
+            role="tablist"
+            aria-label="Capabilities"
+          >
+            {CAPABILITIES.map((cap, i) => (
+              <button
+                key={cap.label}
+                ref={(el) => { tabRefs.current[i] = el; }}
+                role="tab"
+                aria-selected={activeTab === i}
+                tabIndex={activeTab === i ? 0 : -1}
+                className={`about-capabilities-tab${activeTab === i ? " active" : ""}`}
+                onClick={() => handleTabClick(i)}
+                onKeyDown={(e) => handleTabKeyDown(e, i)}
+              >
+                {cap.label}
+              </button>
+            ))}
+            {/* Track line */}
+            <div className="about-capabilities-track" />
+            {/* Sliding indicator */}
+            <div
+              className="about-capabilities-indicator"
+              style={{
+                left: indicatorStyle.left,
+                width: indicatorStyle.width,
+              }}
+            />
+          </div>
+
+          {/* Tab content */}
+          <div
+            role="tabpanel"
+            aria-labelledby={`tab-${activeTab}`}
+            className={`about-capabilities-content${transitioning ? " fading" : ""}`}
+            style={{ marginTop: 40 }}
+          >
+            <div className="about-capabilities-grid">
+              <div>
+                <p
+                  className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)]"
+                  style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 400 }}
+                >
+                  {CAPABILITIES[activeTab].description}
+                </p>
+              </div>
+              <div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  {CAPABILITIES[activeTab].deliverables.map((d) => (
+                    <span
+                      key={d}
+                      className="about-capabilities-deliverable"
+                    >
+                      {d}
+                    </span>
+                  ))}
+                </div>
+                <Link
+                  href="/services"
+                  className="about-capabilities-link"
+                  data-cursor="link"
+                >
+                  View our services <span className="about-capabilities-link-arrow">&rarr;</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* ═══ SECTION 02: PROCESS ═══ */}
@@ -230,11 +438,85 @@ export default function AboutClient() {
             </div>
           ))}
         </div>
+
+        {/* AI differentiator line */}
+        <div
+          className="css-reveal"
+          style={{
+            borderTop: "1px solid var(--border)",
+            paddingTop: 32,
+            marginTop: 0,
+          }}
+        >
+          <p
+            className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)]"
+            style={{ fontSize: 14, lineHeight: 1.6, maxWidth: 560 }}
+          >
+            AI handles research, asset generation, and workflow management at every stage. Creative direction stays human.
+          </p>
+        </div>
       </section>
 
-      {/* ═══ SECTION 03: NETWORK ═══ */}
+      {/* ═══ SECTION 04: "WHO THIS IS FOR" INTERSTITIAL ═══ */}
+      <section
+        className="about-qualifier css-reveal"
+        style={{
+          borderTop: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
+        <p className="about-qualifier-text">
+          We work with established businesses doing $1M to $20M in revenue that are ready to invest in how they show up.
+        </p>
+      </section>
+
+      {/* ═══ SECTION 05: "NOT AN AGENCY" POSITIONING ═══ */}
+      <section
+        className="css-reveal"
+        style={{
+          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
+        }}
+      >
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <EditorialLabel text="03 — How We Are Different" className="scroll-reveal-up mb-6" />
+
+          <h2
+            className="css-reveal font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+            style={{
+              fontSize: "clamp(24px, 3vw, 36px)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15,
+              marginBottom: 48,
+            }}
+          >
+            A studio, not an agency.
+          </h2>
+
+          <div className="about-contrast-grid">
+            {/* Left: What we are */}
+            <div className="about-contrast-col-left reveal-stagger-parent">
+              <p className="about-contrast-heading">What we are</p>
+              {WHAT_WE_ARE.map((s) => (
+                <p key={s} className="about-contrast-statement scroll-reveal-up">{s}</p>
+              ))}
+            </div>
+
+            {/* Right: What we are not */}
+            <div className="about-contrast-col-right reveal-stagger-parent">
+              <p className="about-contrast-heading">What we are not</p>
+              {WHAT_WE_ARE_NOT.map((s) => (
+                <p key={s} className="about-contrast-statement scroll-reveal-up">{s}</p>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile divider is handled via CSS */}
+        </div>
+      </section>
+
+      {/* ═══ SECTION 06: NETWORK ═══ */}
       <section style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
-        <EditorialLabel text="03 — Network" className="scroll-reveal-up mb-6" />
+        <EditorialLabel text="04 — Network" className="scroll-reveal-up mb-6" />
 
         <h2
           className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
@@ -251,14 +533,34 @@ export default function AboutClient() {
         </p>
       </section>
 
-      {/* ═══ SECTION 04: FOUNDER ═══ */}
+      {/* ═══ SECTION 07: FULL-WIDTH IMAGE BREAK ═══ */}
+      <div
+        className="about-image-break reveal-clip"
+        style={{
+          maxWidth: 1280,
+          margin: "0 auto",
+          padding: "0 var(--page-px)",
+        }}
+      >
+        <div className="about-image-break-inner">
+          <Image
+            src="/images/studio/studio.jpg"
+            alt="House of Singh Studios workspace"
+            fill
+            sizes="(max-width: 768px) 100vw, 1200px"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+      </div>
+
+      {/* ═══ SECTION 08: FOUNDER ═══ */}
       <section
         style={{
           padding: "clamp(80px, 10vw, 140px) var(--page-px)",
           borderTop: "1px solid var(--border)",
         }}
       >
-        <EditorialLabel text="04 — Founder" className="scroll-reveal-up mb-6" />
+        <EditorialLabel text="05 — Founder" className="scroll-reveal-up mb-6" />
 
         <div className="about-founder-grid">
           {/* Founder photo */}
@@ -344,7 +646,48 @@ export default function AboutClient() {
         </div>
       </section>
 
-      {/* ═══ SECTION 05: STATS ═══ */}
+      {/* ═══ SECTION 09: TEAM/NETWORK PLACEHOLDER ═══ */}
+      <section
+        className="css-reveal"
+        style={{
+          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
+        }}
+      >
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <EditorialLabel text="06 — Collaborators" className="scroll-reveal-up mb-6" />
+
+          <h2
+            className="css-reveal font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
+            style={{
+              fontSize: "clamp(24px, 3vw, 36px)",
+              letterSpacing: "-0.02em",
+              lineHeight: 1.15,
+              marginBottom: 16,
+            }}
+          >
+            The right people for every brief.
+          </h2>
+
+          <p
+            className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)] scroll-reveal-up"
+            style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 560, marginBottom: 48 }}
+          >
+            The studio works with a curated network of specialists across brand strategy, visual design, video production, photography, development, and content. Each engagement assembles the right team for the scope.
+          </p>
+
+          <div className="about-team-grid reveal-stagger-parent">
+            {TEAM_ROLES.map((role) => (
+              <div key={role} className="about-team-card scroll-reveal-up">
+                <div className="about-team-card-square" />
+                <p className="about-team-card-role">{role}</p>
+                <p className="about-team-card-label">Network</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ SECTION 10: STATS ═══ */}
       <section
         ref={statsRef}
         className="css-reveal"
@@ -353,7 +696,7 @@ export default function AboutClient() {
           borderTop: "1px solid var(--border)",
         }}
       >
-        <EditorialLabel text="05 — Results" className="mb-10" />
+        <EditorialLabel text="07 — Studio" className="mb-10" />
 
         <div className="about-stats-grid">
           {STATS.map((stat, i) => (
