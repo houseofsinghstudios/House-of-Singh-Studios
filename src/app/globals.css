@@ -47,7 +47,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: var(--bg);
+  background: blue;
   color: var(--text-primary);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
