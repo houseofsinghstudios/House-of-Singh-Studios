@@ -132,10 +132,7 @@ export default function SliderDiagnostic() {
             >
               {i > 0 && <div className="diag-column-border" />}
               <div style={i === 1 ? { paddingLeft: 12 } : undefined}>
-                <div
-                  className="diag-number"
-                  style={{ fontFamily: "var(--serif)" }}
-                >
+                <div className="diag-number">
                   {val}
                 </div>
                 <p className="diag-status">{slider.labels[val - 1]}</p>
@@ -211,7 +208,7 @@ export default function SliderDiagnostic() {
 
       {/* ── SECTION C: BOTTOM CTA ── */}
       <div className="diag-bottom-cta">
-        <p className="diag-bottom-heading" style={{ fontFamily: "var(--serif)" }}>
+        <p className="diag-bottom-heading">
           Not sure? Let us figure it out.
         </p>
         <div className="diag-bottom-buttons">
