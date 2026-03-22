@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 
@@ -89,19 +88,10 @@ function getNextPage(pathname: string) {
 }
 
 const CITIES = [
-  { name: "Toronto, Canada", tz: "America/Toronto", email: "studio@houseofsingh.com" },
-  { name: "Delhi, India", tz: "Asia/Kolkata", email: "studio@houseofsingh.com" },
-  { name: "London, UK", tz: "Europe/London", email: null },
+  { name: "Toronto, Canada", abbr: "EST", email: "studio@houseofsingh.com" },
+  { name: "Delhi, India", abbr: "IST", email: "studio@houseofsingh.com" },
+  { name: "London, UK", abbr: "GMT", email: null },
 ];
-
-function formatTime(tz: string) {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-    timeZone: tz,
-  }).format(new Date());
-}
 
 const NAV_LINKS = [
   { label: "Services", href: "/services" },
@@ -110,23 +100,11 @@ const NAV_LINKS = [
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
-  { label: "Careers", href: "/careers" },
 ];
 
 export default function Footer() {
   const pathname = usePathname();
   const nextPage = getNextPage(pathname);
-
-  const [times, setTimes] = useState(() =>
-    CITIES.map((c) => formatTime(c.tz))
-  );
-
-  useEffect(() => {
-    const update = () => setTimes(CITIES.map((c) => formatTime(c.tz)));
-    update();
-    const id = setInterval(update, 60000);
-    return () => clearInterval(id);
-  }, []);
 
   return (
     <footer style={{ background: "#E0DEDA", borderTop: "1px solid #A9A6A2" }}>
@@ -173,31 +151,24 @@ export default function Footer() {
         <div className="footer-divider" />
       </div>
 
-      {/* Section 2: City Clocks */}
-      <div className="footer-container footer-cities-section">
-        <div className="footer-cities-grid">
-          {CITIES.map((city, i) => {
-            const [hours, minutes] = times[i].split(":");
-            return (
-              <div key={city.name} className="footer-city">
-                <p className="footer-city-name">{city.name}</p>
-                <p className="footer-city-time">
-                  {hours}
-                  <span className="footer-clock-colon">:</span>
-                  {minutes}
+      {/* Section 2: Timezone Row */}
+      <div className="footer-container footer-tz-section">
+        <div className="footer-tz-grid">
+          {CITIES.map((city) => (
+            <div key={city.name} className="footer-tz-col">
+              <p className="footer-tz-label">{city.name}</p>
+              {city.email ? (
+                <p className="footer-tz-detail">
+                  {city.abbr} &middot;{" "}
+                  <a href={`mailto:${city.email}`}>{city.email}</a>
                 </p>
-                {city.email ? (
-                  <p className="footer-city-detail">
-                    <a href={`mailto:${city.email}`}>{city.email}</a>
-                  </p>
-                ) : (
-                  <p className="footer-city-detail" style={{ fontStyle: "italic", color: "#A9A6A2" }}>
-                    Coming soon
-                  </p>
-                )}
-              </div>
-            );
-          })}
+              ) : (
+                <p className="footer-tz-detail footer-tz-coming-soon">
+                  Coming soon
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -210,39 +181,25 @@ export default function Footer() {
       <div className="footer-container footer-nav-section">
         <nav className="footer-nav-row">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href}>
+            <Link key={link.href} href={link.href} className="footer-nav-link">
               {link.label}
             </Link>
           ))}
         </nav>
       </div>
 
-      {/* Divider */}
-      <div className="footer-container">
-        <div className="footer-divider" />
-      </div>
-
-      {/* Section 4: Copyright */}
-      <div className="footer-container footer-copyright-section">
+      {/* Section 4: Bottom Row — no divider above */}
+      <div className="footer-container footer-bottom-section">
         <span className="footer-copyright-text">
-          &copy; 2025 House of Singh Studios Inc.
+          &copy; 2026 House of Singh Studios Inc.
         </span>
-        <div className="footer-social-links">
-          <a
-            href="https://instagram.com/houseofsinghstudios"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Instagram
-          </a>
-          <a
-            href="https://linkedin.com/company/houseofsinghstudios"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            LinkedIn
-          </a>
-        </div>
+        <button
+          className="footer-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          type="button"
+        >
+          Top &uarr;
+        </button>
       </div>
     </footer>
   );
