@@ -1,44 +1,46 @@
 import type { Metadata } from "next";
-import SliderDiagnostic from "@/components/SliderDiagnostic";
+import { Link } from "next-view-transitions";
+import ServiceRows from "@/components/ServiceRows";
+import DiagnosticTrigger from "@/components/DiagnosticTrigger";
 
 export const metadata: Metadata = {
   title: "Services — House of Singh Studios",
   description:
-    "Brand identity, visual media, digital design, and creative strategy for established businesses. Find out where your brand stands.",
+    "Brand identity, visual media, digital design, and creative strategy for established businesses ready to invest in how they show up.",
 };
 
 export default function ServicesPage() {
   return (
-    <section style={{ padding: "160px var(--page-px) 0" }}>
-      <p
-        className="editorial-label"
-        data-hero-label
-        style={{ marginBottom: 16 }}
+    <>
+      <section
+        className="svc-hero"
+        style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px) clamp(32px, 4vw, 48px)" }}
       >
-        (Services)
-      </p>
-      <h1
-        data-hero-heading
-        className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-        style={{
-          fontSize: "clamp(32px, 4vw, 48px)",
-          letterSpacing: "-0.03em",
-          lineHeight: 1.1,
-          margin: 0,
-        }}
-      >
-        Where does your brand stand?
-      </h1>
-      <p
-        data-hero-sub
-        className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)]"
-        style={{ fontSize: 14, lineHeight: 1.6, marginTop: 12 }}
-      >
-        Move the sliders. Be honest.
-      </p>
-      <div style={{ marginTop: 40 }}>
-        <SliderDiagnostic />
-      </div>
-    </section>
+        <p className="svc-hero-label" data-hero-label>
+          (Services)
+        </p>
+        <h1 className="svc-hero-heading" data-hero-heading>
+          We solve brand problems for established businesses.
+        </h1>
+        <p className="svc-hero-sub" data-hero-sub>
+          Four situations. Four solutions. Find the one that sounds like yours.
+        </p>
+        <DiagnosticTrigger />
+      </section>
+
+      <ServiceRows />
+
+      <section className="svc-dark-cta">
+        <p className="svc-dark-cta-text">Ready to start a conversation?</p>
+        <div className="svc-dark-cta-btns">
+          <Link href="/contact" className="svc-btn-light" data-cursor="link">
+            Discovery Call
+          </Link>
+          <Link href="/packages" className="svc-btn-outline" data-cursor="link">
+            Packages
+          </Link>
+        </div>
+      </section>
+    </>
   );
 }
