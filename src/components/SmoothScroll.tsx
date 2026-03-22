@@ -21,7 +21,7 @@ export default function SmoothScroll() {
     const style = document.createElement("style");
     style.id = "lenis-styles";
     style.textContent =
-      "html.lenis,html.lenis body{height:auto;overflow:visible}";
+      "html.lenis,html.lenis body{height:auto;overflow-y:visible}";
     document.head.appendChild(style);
 
     let rafId: number;
