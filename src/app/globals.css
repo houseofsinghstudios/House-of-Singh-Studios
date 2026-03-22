@@ -2334,109 +2334,264 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
-   AI Lab page
+   AI page
    ═══════════════════════════════════════════════════════ */
 
-/* ── Process stages list ── */
-.ai-process-list {
-  max-width: 900px;
-}
-.ai-process-row {
+/* ── Comparison table ── */
+.ai-compare-row {
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 40px;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  grid-template-columns: 180px 1fr 1fr;
+  transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              margin 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+              padding 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.ai-process-row:first-child {
-  border-top: 1px solid rgba(26, 26, 26, 0.08);
+.ai-compare-data {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
 }
-.ai-process-name {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
+.ai-compare-data:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.ai-compare-data:hover {
+  background: var(--bg-shift);
+  margin: 0 -20px;
+  padding: 16px 20px;
+}
+.ai-compare-header {
+  padding: 0 0 12px;
+}
+.ai-compare-label {
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-primary);
 }
-.ai-process-role {
-  font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 400;
+.ai-compare-header .ai-compare-trad,
+.ai-compare-header .ai-compare-us {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.ai-compare-trad {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding-right: 24px;
+}
+.ai-compare-us {
+  font-size: 13px;
   color: var(--text-primary);
-  opacity: 0.6;
-  line-height: 1.65;
+  line-height: 1.5;
+  padding-left: 24px;
+  border-left: 2px solid var(--text-primary);
+}
+.ai-compare-header .ai-compare-us {
+  border-left: 2px solid transparent;
 }
 
-/* ── Brand Pulse Waitlist ── */
-.pulse-waitlist-form {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  justify-content: center;
+/* ── Argument grid (dark section) ── */
+.ai-argument-grid {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
 }
-.pulse-waitlist-input {
+
+/* ── Proof bar grid ── */
+.ai-proof-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.ai-proof-col {
+  padding: 24px 20px;
+  border-left: 1px solid var(--border);
+}
+.ai-proof-col:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+.ai-proof-col:last-child {
+  padding-right: 0;
+}
+.ai-proof-num {
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1;
+}
+.ai-proof-bar {
+  height: 3px;
+  background: var(--border);
+  margin: 8px 0 12px;
+  position: relative;
+}
+.ai-proof-bar-fill {
+  height: 100%;
+  background: var(--text-primary);
+}
+.ai-proof-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0 0 4px;
+}
+.ai-proof-source {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Outcome grid ── */
+.ai-outcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+.ai-outcome-col {
+  padding: 24px 20px;
+  border-left: 1px solid var(--border);
+}
+.ai-outcome-col:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+.ai-outcome-col:last-child {
+  padding-right: 0;
+}
+.ai-outcome-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+.ai-outcome-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Brand Pulse Check ── */
+.ai-pulse-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+}
+.ai-pulse-form {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.ai-pulse-input {
+  flex: 1;
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.2);
+  border-bottom: 1px solid var(--border);
   font-family: var(--sans);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-primary);
   padding: 10px 0;
   outline: none;
-  width: 220px;
-  transition: border-color 0.3s ease;
   border-radius: 0;
   -webkit-appearance: none;
+  transition: border-color 0.3s;
 }
-.pulse-waitlist-input:focus {
-  border-bottom-color: rgba(26, 26, 26, 0.5);
+.ai-pulse-input:focus {
+  border-bottom-color: var(--text-primary);
 }
-.pulse-waitlist-input::placeholder {
-  color: var(--text-primary);
-  opacity: 0.45;
+.ai-pulse-input::placeholder {
+  color: var(--text-muted);
 }
-.pulse-waitlist-btn {
+.ai-pulse-btn {
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  font-weight: 500;
   background: var(--text-primary);
   color: var(--bg);
-  padding: 12px 24px;
+  padding: 10px 20px;
   border: none;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
   border-radius: 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
 }
-.pulse-waitlist-btn:hover {
+.ai-pulse-btn:hover {
   opacity: 0.85;
 }
-
-.pulse-loading-bar-animated {
-  height: 2px;
-  background: var(--text-primary);
-  margin-top: 24px;
-  animation: pulseBarOscillate 1s ease-in-out infinite alternate;
+.ai-pulse-mockup {
+  background: var(--bg-shift);
+  padding: 28px;
 }
-@keyframes pulseBarOscillate {
-  from { width: 0; }
-  to { width: 60px; }
+.ai-pulse-mockup-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+.ai-pulse-bar-track {
+  height: 4px;
+  background: var(--border);
+  width: 100%;
+}
+.ai-pulse-bar-fill {
+  height: 100%;
 }
 
-@media (max-width: 767px) {
-  .ai-argument-grid {
-    grid-template-columns: 1fr !important;
-    gap: 32px !important;
-  }
-  .ai-process-row {
-    grid-template-columns: 1fr;
+/* ── AI page mobile ── */
+@media (max-width: 768px) {
+  .ai-compare-row {
+    display: flex;
+    flex-direction: column;
     gap: 8px;
   }
-  .pulse-waitlist-form {
-    flex-direction: column;
-    gap: 12px;
+  .ai-compare-data {
+    padding: 16px 0;
   }
-  .pulse-waitlist-input {
-    width: 100%;
+  .ai-compare-data:hover {
+    margin: 0;
+    padding: 16px 0;
+  }
+  .ai-compare-us {
+    border-left: 2px solid var(--text-primary);
+    padding-left: 12px;
+  }
+  .ai-compare-trad {
+    padding-right: 0;
+    padding-left: 12px;
+  }
+  .ai-compare-header {
+    display: none;
+  }
+  .ai-argument-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .ai-proof-grid,
+  .ai-outcome-grid {
+    grid-template-columns: 1fr;
+  }
+  .ai-proof-col,
+  .ai-outcome-col {
+    border-left: none;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ai-proof-col:last-child,
+  .ai-outcome-col:last-child {
+    border-bottom: none;
+  }
+  .ai-pulse-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
 
@@ -3175,30 +3330,6 @@ td a:hover {
   }
 }
 
-/* ── Interaction 17: AI Process Stage Active Indicator ── */
-@keyframes stageHighlight {
-  0% { border-left-color: transparent; }
-  30% { border-left-color: rgba(26, 26, 26, 0.2); }
-  70% { border-left-color: rgba(26, 26, 26, 0.2); }
-  100% { border-left-color: transparent; }
-}
-
-.ai-process-row {
-  border-left: 3px solid transparent;
-  padding-left: 16px;
-  transition: border-left-color 0.3s ease;
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .ai-process-row {
-      animation: stageHighlight linear both;
-      animation-timeline: view();
-      animation-range: entry 30% exit 70%;
-    }
-  }
-}
-
 /* ── Interaction 18b: Gallery Clip Reveals (case study) ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -3236,19 +3367,16 @@ td a:hover {
 
 .contact-input:focus + .focus-line,
 .contact-textarea:focus + .focus-line,
-.subscribe-input:focus + .focus-line,
-.pulse-waitlist-input:focus + .focus-line {
+.subscribe-input:focus + .focus-line {
   transform: scaleX(1);
 }
 
-/* Wrapper divs for subscribe/pulse inputs inside flex rows */
-.subscribe-input-wrap,
-.pulse-input-wrap {
+/* Wrapper divs for subscribe inputs inside flex rows */
+.subscribe-input-wrap {
   flex: 1;
   max-width: 360px;
 }
-.subscribe-input-wrap .subscribe-input,
-.pulse-input-wrap .pulse-waitlist-input {
+.subscribe-input-wrap .subscribe-input {
   max-width: 100%;
   width: 100%;
 }
@@ -3682,15 +3810,6 @@ td a:hover {
     }
     .founder-photo-reveal.in-view {
       clip-path: inset(0% 0% 0% 0%);
-    }
-
-    /* ── AI stage highlight ── */
-    .ai-process-row {
-      border-left: 3px solid transparent;
-      transition: border-left-color 0.3s ease;
-    }
-    .ai-process-row.in-view {
-      border-left-color: rgba(26, 26, 26, 0.15);
     }
 
     /* ── Case study content sections ── */

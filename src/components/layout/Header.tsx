@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
-  { label: "AI Lab", href: "/ai" },
+  { label: "AI", href: "/ai" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
 ];
@@ -14,7 +14,7 @@ const navLinks = [
 const mobileNavLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
-  { label: "AI Lab", href: "/ai" },
+  { label: "AI", href: "/ai" },
   { label: "Insights", href: "/insights" },
   { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },

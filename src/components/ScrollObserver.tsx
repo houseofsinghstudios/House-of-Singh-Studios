@@ -42,7 +42,6 @@ export default function ScrollObserver() {
       ".about-process-step, .svc-process-step, " +
       ".project-image-inner img, " +
       ".founder-photo-reveal, " +
-      ".ai-process-row, " +
       ".packages-grid .package-tier, " +
       ".argument-section .argument-step-row, " +
       ".argument-section .argument-left, " +
