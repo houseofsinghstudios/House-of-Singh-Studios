@@ -1173,79 +1173,47 @@ body {
    Services pages
    ═══════════════════════════════════════════════════════ */
 
-/* ── Full-width stacked service blocks ── */
-.service-block {
-  display: grid;
-  grid-template-columns: 60% 40%;
-  gap: 40px;
-  padding: 80px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-  text-decoration: none;
-  color: inherit;
-  transition: background-color 0.3s ease;
-  position: relative;
-}
-.service-block:first-child {
-  border-top: 1px solid rgba(26, 26, 26, 0.1);
-}
-.service-block:hover {
-  background-color: rgba(26, 26, 26, 0.02);
-}
-
-.service-block-content {
-  position: relative;
-}
-
-.service-block-number {
-  font-size: clamp(80px, 8vw, 100px);
-  color: rgba(26, 26, 26, 0.06);
-  line-height: 1;
-  position: absolute;
-  top: -20px;
-  left: 0;
-  pointer-events: none;
-}
-
-.service-block-color {
-  min-height: 280px;
-  align-self: center;
-}
 
 /* ── Service detail: deliverables list ── */
 .svc-deliverables-list {
-  max-width: 900px;
+  /* container */
 }
 .svc-deliverable-row {
   display: grid;
   grid-template-columns: 220px 1fr;
   gap: 40px;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              padding 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .svc-deliverable-row:first-child {
-  border-top: 1px solid rgba(26, 26, 26, 0.08);
+  border-top: 1px solid var(--border);
+}
+.svc-deliverable-row:hover {
+  background: var(--bg-shift);
+  padding-left: 16px;
+  padding-right: 16px;
 }
 .svc-deliverable-name {
   font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--text-primary);
 }
 .svc-deliverable-desc {
   font-family: var(--sans);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 400;
-  color: var(--text-primary);
-  opacity: 0.6;
-  line-height: 1.65;
+  color: var(--text-secondary);
+  line-height: 1.55;
 }
 
-/* ── Service detail: impact grid (asymmetric) ── */
+/* ── Service detail: impact grid (asymmetric 2fr/3fr) ── */
 .svc-impact-grid {
   display: grid;
-  grid-template-columns: 40% 60%;
+  grid-template-columns: 2fr 3fr;
   gap: clamp(40px, 6vw, 80px);
-  max-width: 1000px;
 }
 @media (max-width: 768px) {
   .svc-impact-grid {
@@ -1254,135 +1222,126 @@ body {
   }
 }
 
-/* ── Service detail: process list ── */
-.svc-process-list {
-  max-width: 900px;
-}
-.svc-process-row {
+/* ── Service detail: process grid (5-column) ── */
+.svc-process-grid {
   display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 40px;
-  padding: 24px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
-.svc-process-row:first-child {
-  border-top: 1px solid rgba(26, 26, 26, 0.08);
+.svc-process-step {
+  padding: 24px 20px;
+  border-left: 1px solid var(--border);
 }
-.svc-process-name {
+.svc-process-step:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+.svc-process-step:last-child {
+  padding-right: 0;
+}
+.svc-process-step-num {
   font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--border);
+  margin: 0 0 16px;
+  line-height: 1;
 }
-.svc-process-desc {
+.svc-process-step-name {
   font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-primary);
-  opacity: 0.6;
-  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.svc-process-step-desc {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
 }
 
 /* ── Service detail: related work ── */
 .svc-related-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 40px;
+  gap: 20px;
 }
 .svc-related-card {
   text-decoration: none;
   color: inherit;
   display: block;
-  transition: opacity 0.2s ease;
+  background: var(--bg-shift);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .svc-related-card:hover {
-  opacity: 0.85;
+  transform: scale(0.985);
 }
 .svc-related-img {
   width: 100%;
   aspect-ratio: 4 / 3;
 }
 .svc-related-text {
-  margin-top: 16px;
+  padding: 16px 20px 20px;
 }
 .svc-related-label {
   font-family: var(--sans);
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-primary);
-  opacity: 0.4;
+  color: var(--text-muted);
   margin: 0;
 }
 .svc-related-title {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 24px;
-  color: var(--text-primary);
-  margin: 8px 0 0;
-}
-.svc-related-result {
   font-family: var(--sans);
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
-  opacity: 0.5;
-  margin: 8px 0 0;
-  line-height: 1.5;
+  margin: 6px 0 0;
 }
 
-/* ── Services responsive ── */
+/* ── Services detail responsive ── */
 @media (max-width: 768px) {
-  .service-block {
+  .svc-deliverable-row {
     grid-template-columns: 1fr;
-    padding: 60px 0;
+    gap: 6px;
   }
-  .service-block-color {
-    display: none;
+  .svc-process-grid {
+    grid-template-columns: 1fr 1fr;
   }
-  .service-block-number {
-    font-size: 64px;
-    top: -12px;
+  .svc-process-step {
+    padding: 20px 16px;
   }
-  .svc-deliverable-row,
-  .svc-process-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
+  .svc-process-step:nth-child(odd) {
+    border-left: none;
+    padding-left: 0;
+  }
+  .svc-process-step:nth-child(even) {
+    padding-right: 0;
+  }
+  .svc-process-step:nth-child(n+3) {
+    border-top: 1px solid var(--border);
   }
   .svc-related-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 20px;
   }
 }
-
-/* ── Services overview: alternating blocks ── */
-.svc-overview-block {
-  display: grid;
-  grid-template-columns: 55% 45%;
-  gap: clamp(40px, 6vw, 80px);
-  padding-bottom: clamp(80px, 10vw, 120px);
-  align-items: start;
-}
-.svc-overview-block[data-reverse="true"] {
-  direction: rtl;
-}
-.svc-overview-block[data-reverse="true"] > * {
-  direction: ltr;
-}
-.svc-overview-text {
-  padding-top: 24px;
-}
-.svc-overview-image-wrap {
-  position: relative;
-}
-.svc-overview-image {
-  overflow: hidden;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-/* ── Service overview image: large portrait ── */
-.svc-overview-image-large {
-  aspect-ratio: 4/5;
-  min-height: 400px;
+@media (max-width: 480px) {
+  .svc-process-grid {
+    grid-template-columns: 1fr;
+  }
+  .svc-process-step {
+    border-left: none;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+  .svc-process-step:first-child {
+    border-top: none;
+  }
 }
 
 /* ── Capabilities grid (replaces accordion) ── */
@@ -1405,15 +1364,6 @@ body {
   .capabilities-grid {
     grid-template-columns: 1fr;
     gap: 40px;
-  }
-}
-
-@media (max-width: 899px) {
-  .svc-overview-block {
-    grid-template-columns: 1fr;
-  }
-  .svc-overview-block[data-reverse="true"] {
-    direction: ltr;
   }
 }
 
@@ -2985,12 +2935,12 @@ body {
       animation-timeline: view();
       animation-range: entry 5% entry 35%;
     }
-    .svc-process-row:nth-child(odd) {
+    .svc-process-step:nth-child(odd) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 30%;
     }
-    .svc-process-row:nth-child(even) {
+    .svc-process-step:nth-child(even) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 5% entry 35%;
@@ -3106,42 +3056,6 @@ td a:hover {
    ═══════════════════════════════════════════════════════ */
 
 /* ── Interaction 10: Ghost Number Parallax (/services) ── */
-@keyframes parallaxSlow {
-  from { transform: translateY(40px); }
-  to { transform: translateY(-40px); }
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .service-block-number {
-      animation: parallaxSlow linear both;
-      animation-timeline: view();
-      animation-range: cover 0% cover 100%;
-      will-change: transform;
-    }
-  }
-}
-
-/* ── Interaction 11: Service Block Hover (/services) ── */
-.service-block {
-  transition: background-color 0.3s ease;
-}
-.service-block:hover {
-  background-color: rgba(26, 26, 26, 0.015);
-}
-.service-block-number {
-  transition: color 0.3s ease;
-}
-.service-block:hover .service-block-number {
-  color: rgba(26, 26, 26, 0.1);
-}
-.service-block [data-block-link] svg {
-  transition: transform 0.3s ease;
-}
-.service-block:hover [data-block-link] svg {
-  transform: translateX(8px);
-}
-
 /* ── Interaction 12: Deliverable Rows Cascade (service detail) ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -3182,31 +3096,31 @@ td a:hover {
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .about-process-step:nth-child(1),
-    .svc-process-row:nth-child(1) {
+    .svc-process-step:nth-child(1) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 30%;
     }
     .about-process-step:nth-child(2),
-    .svc-process-row:nth-child(2) {
+    .svc-process-step:nth-child(2) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 4% entry 34%;
     }
     .about-process-step:nth-child(3),
-    .svc-process-row:nth-child(3) {
+    .svc-process-step:nth-child(3) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 8% entry 38%;
     }
     .about-process-step:nth-child(4),
-    .svc-process-row:nth-child(4) {
+    .svc-process-step:nth-child(4) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 12% entry 42%;
     }
     .about-process-step:nth-child(5),
-    .svc-process-row:nth-child(5) {
+    .svc-process-step:nth-child(5) {
       animation: revealFadeUp linear both;
       animation-timeline: view();
       animation-range: entry 16% entry 46%;
@@ -3705,11 +3619,6 @@ td a:hover {
       transform: translateY(0);
     }
 
-    /* ── Ghost number parallax: static display in Safari ── */
-    .service-block-number {
-      opacity: 0.06;
-    }
-
     /* ── Deliverable row cascade ── */
     .svc-deliverable-row {
       opacity: 0;
@@ -3728,24 +3637,24 @@ td a:hover {
 
     /* ── Process stage cascade ── */
     .about-process-step,
-    .svc-process-row {
+    .svc-process-step {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
     .about-process-step.in-view,
-    .svc-process-row.in-view {
+    .svc-process-step.in-view {
       opacity: 1;
       transform: translateY(0);
     }
     .about-process-step:nth-child(2).in-view,
-    .svc-process-row:nth-child(2).in-view { transition-delay: 0.08s; }
+    .svc-process-step:nth-child(2).in-view { transition-delay: 0.08s; }
     .about-process-step:nth-child(3).in-view,
-    .svc-process-row:nth-child(3).in-view { transition-delay: 0.16s; }
+    .svc-process-step:nth-child(3).in-view { transition-delay: 0.16s; }
     .about-process-step:nth-child(4).in-view,
-    .svc-process-row:nth-child(4).in-view { transition-delay: 0.24s; }
+    .svc-process-step:nth-child(4).in-view { transition-delay: 0.24s; }
     .about-process-step:nth-child(5).in-view,
-    .svc-process-row:nth-child(5).in-view { transition-delay: 0.32s; }
+    .svc-process-step:nth-child(5).in-view { transition-delay: 0.32s; }
 
     /* ── Package tier cards stagger ── */
     .packages-grid .package-tier {
