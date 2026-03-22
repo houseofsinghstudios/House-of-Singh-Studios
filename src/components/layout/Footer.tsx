@@ -129,7 +129,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer style={{ background: "#E0DEDA", borderTop: "1px solid #E5E3E0" }}>
+    <footer style={{ background: "#E0DEDA", borderTop: "1px solid #A9A6A2" }}>
       {/* Section 1: Next Page */}
       <div className="footer-container footer-next-section">
         <Link href={nextPage.href} className="footer-next-link" data-cursor="link">

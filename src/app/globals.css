@@ -829,7 +829,7 @@ body {
 
 .footer-divider {
   height: 1px;
-  background: #E5E3E0;
+  background: var(--text-muted);
 }
 
 .footer-next-section {
@@ -841,9 +841,20 @@ body {
   display: block;
   text-decoration: none;
   color: inherit;
-  padding: 16px;
-  margin: -16px;
-  transition: background 0.4s ease;
+  position: relative;
+}
+
+.footer-next-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--page-px));
+  right: calc(-1 * var(--page-px));
+  background: var(--bg-shift);
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
 }
 
 .footer-next-grid {
@@ -851,6 +862,8 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   align-items: end;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-next-left {
@@ -889,7 +902,7 @@ body {
   font-family: var(--sans);
   font-size: clamp(36px, 5vw, 56px);
   font-weight: 500;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.02em;
   color: #22211F;
   line-height: 1;
   transition: letter-spacing 0.5s ease;
@@ -922,8 +935,8 @@ body {
 
 .footer-city:nth-child(2) {
   padding: 0 24px;
-  border-left: 1px solid #E5E3E0;
-  border-right: 1px solid #E5E3E0;
+  border-left: 1px solid var(--text-muted);
+  border-right: 1px solid var(--text-muted);
 }
 
 .footer-city:last-child {
@@ -1021,15 +1034,15 @@ body {
 
 /* Footer hover effects */
 @media (hover: hover) {
-  .footer-next-link:hover {
-    background: #D8D5D0;
+  .footer-next-link:hover::before {
+    opacity: 0.5;
   }
   .footer-next-link:hover .footer-next-name {
-    letter-spacing: -0.01em;
+    letter-spacing: 0em;
   }
   .footer-next-link:hover .footer-next-arrow {
     opacity: 1;
-    transform: rotate(45deg);
+    transform: translateX(4px);
   }
   .footer-city-detail a:hover {
     color: #22211F;
