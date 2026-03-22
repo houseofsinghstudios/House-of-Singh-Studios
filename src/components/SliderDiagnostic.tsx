@@ -179,7 +179,7 @@ export default function SliderDiagnostic() {
           return (
             <div
               key={card.num}
-              className={`service-card css-reveal${stateClass}`}
+              className={`service-card${stateClass}`}
               style={{ transitionDelay: `${i * 0.06}s` }}
               onClick={() => handleCardClick(i)}
               data-cursor="link"
