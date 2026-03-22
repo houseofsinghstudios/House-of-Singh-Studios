@@ -14,7 +14,7 @@ export default function ServicesPage() {
     <>
       <section
         className="svc-hero"
-        style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px) clamp(32px, 4vw, 48px)" }}
+        style={{ padding: "140px var(--page-px) 64px" }}
       >
         <p className="svc-hero-label" data-hero-label>
           (Services)
@@ -28,9 +28,17 @@ export default function ServicesPage() {
         <DiagnosticTrigger />
       </section>
 
-      <ServiceRows />
+      <section style={{ padding: "0 var(--page-px) clamp(64px, 8vw, 120px)" }}>
+        <ServiceRows />
+      </section>
 
-      <section className="svc-dark-cta">
+      <section
+        className="svc-dark-cta"
+        style={{
+          background: "var(--text-primary)",
+          padding: "80px var(--page-px)",
+        }}
+      >
         <p className="svc-dark-cta-text">Ready to start a conversation?</p>
         <div className="svc-dark-cta-btns">
           <Link href="/contact" className="svc-btn-light" data-cursor="link">

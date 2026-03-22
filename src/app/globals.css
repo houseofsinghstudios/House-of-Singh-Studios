@@ -4254,11 +4254,6 @@ td a:hover {
 
 /* Dark CTA */
 .svc-dark-cta {
-  background: var(--text-primary, #22211F);
-  margin-top: 0;
-  margin-left: calc(-1 * max(40px, 8vw));
-  margin-right: calc(-1 * max(40px, 8vw));
-  padding: 48px max(40px, 8vw);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -4617,9 +4612,6 @@ td a:hover {
   .svc-dark-cta {
     flex-direction: column;
     align-items: flex-start;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding: 40px 24px;
   }
 
   .svc-dark-cta-btns {
