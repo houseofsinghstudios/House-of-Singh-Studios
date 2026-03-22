@@ -4,7 +4,6 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
-import EditorialLabel from "@/components/ui/EditorialLabel";
 
 export default function ServiceDetailClient({ slug }: { slug: string }) {
   const service = getServiceBySlug(slug);
@@ -15,52 +14,102 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
 
   return (
     <>
-      {/* ═══ SECTION 1: HERO (~50vh) ═══ */}
+      {/* ═══ SECTION 1: HERO ═══ */}
       <section
-        className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "50vh", paddingBottom: 80, paddingTop: 140 }}
+        className="css-reveal"
+        style={{
+          padding: "140px var(--page-px) clamp(48px, 6vw, 80px)",
+          borderBottom: "1px solid var(--border)",
+        }}
       >
-        <EditorialLabel data-hero-label text="Services" className="mb-5" />
-        <h1
-          data-hero-heading
-          className="reveal-text font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden"
+        <p
           style={{
-            fontSize: "clamp(36px, 5vw, 64px)",
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+            margin: "0 0 24px",
+          }}
+        >
+          (Services)
+        </p>
+        <p
+          style={{
+            fontSize: 12,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            color: "var(--text-muted)",
+            margin: "0 0 16px",
+          }}
+        >
+          {service.subtitle}
+        </p>
+        <h1
+          className="font-[var(--sans)]"
+          style={{
+            fontSize: "clamp(28px, 4.5vw, 48px)",
+            fontWeight: 500,
+            letterSpacing: "-0.03em",
             lineHeight: 1.1,
-            margin: 0,
-            maxWidth: 900,
+            color: "var(--text-primary)",
+            margin: "0 0 20px",
+            maxWidth: 700,
             viewTransitionName: `service-${service.slug}`,
           }}
         >
-          {service.name}
+          {service.headline}
         </h1>
         <p
-          data-desc
-          className="font-[var(--sans)] font-normal text-[color:var(--text-primary)] max-w-[640px] mt-6"
-          style={{ fontSize: 16, lineHeight: 1.75, opacity: 0.7 }}
+          style={{
+            fontSize: 15,
+            color: "var(--text-secondary)",
+            lineHeight: 1.7,
+            maxWidth: 500,
+            margin: 0,
+          }}
         >
-          {service.tagline}
+          {service.description}
         </p>
       </section>
 
-      {/* ═══ SECTION 2: WHAT YOU GET ═══ */}
-      <section style={{ padding: "120px var(--page-px)" }}>
-        <EditorialLabel text="Deliverables" className="mb-6" />
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+      {/* ═══ SECTION 2: DELIVERABLES ═══ */}
+      <section style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}>
+        <div
+          className="css-reveal"
           style={{
-            fontSize: "clamp(28px, 3vw, 32px)",
-            lineHeight: 1.2,
-            margin: 0,
-            marginBottom: 48,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "baseline",
+            marginBottom: 40,
           }}
         >
-          What you get.
-        </h2>
+          <p
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--text-muted)",
+              margin: 0,
+            }}
+          >
+            (What you get)
+          </p>
+          <p
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "var(--text-muted)",
+              margin: 0,
+            }}
+          >
+            {String(service.deliverables.length).padStart(2, "0")} deliverables
+          </p>
+        </div>
 
         <div className="svc-deliverables-list reveal-stagger-parent">
           {service.deliverables.map((d) => (
-            <div key={d.name} className="svc-deliverable-row scroll-reveal-up">
+            <div key={d.name} className="svc-deliverable-row css-reveal">
               <div className="svc-deliverable-name">{d.name}</div>
               <div className="svc-deliverable-desc">{d.description}</div>
             </div>
@@ -68,19 +117,35 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* ═══ SECTION 3: BUSINESS IMPACT (asymmetric two-column) ═══ */}
+      {/* ═══ SECTION 3: BUSINESS IMPACT (full-bleed bg-shift) ═══ */}
       <section
-        className="bg-[var(--bg-shift)]"
-        style={{ padding: "120px var(--page-px)" }}
+        className="css-reveal"
+        style={{
+          background: "var(--bg-shift)",
+          padding: "clamp(48px, 8vw, 96px) var(--page-px)",
+        }}
       >
-        <EditorialLabel text="Business Impact" className="mb-6" />
+        <p
+          style={{
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.12em",
+            color: "var(--text-muted)",
+            margin: "0 0 32px",
+          }}
+        >
+          (Why it matters)
+        </p>
         <div className="svc-impact-grid">
           <div>
             <h2
-              className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
+              className="font-[var(--sans)]"
               style={{
-                fontSize: "clamp(28px, 3vw, 32px)",
+                fontSize: "clamp(22px, 3vw, 36px)",
+                fontWeight: 500,
+                letterSpacing: "-0.025em",
                 lineHeight: 1.2,
+                color: "var(--text-primary)",
                 margin: 0,
               }}
             >
@@ -89,8 +154,12 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           </div>
           <div>
             <p
-              className="font-[var(--sans)] text-[16px] text-[color:var(--text-primary)]"
-              style={{ lineHeight: 1.75, opacity: 0.7 }}
+              style={{
+                fontSize: 15,
+                color: "var(--text-secondary)",
+                lineHeight: 1.7,
+                margin: 0,
+              }}
             >
               {service.impact.body}
             </p>
@@ -98,29 +167,14 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
         </div>
       </section>
 
-      {/* ═══ SECTION 4: HOW WE DO IT ═══ */}
-      <section style={{ padding: "120px var(--page-px)" }}>
-        <EditorialLabel text="Process" className="mb-6" />
-        <h2
-          className="scroll-reveal-up font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)]"
-          style={{
-            fontSize: "clamp(28px, 3vw, 32px)",
-            lineHeight: 1.2,
-            margin: 0,
-            marginBottom: 48,
-          }}
-        >
-          How we work.
-        </h2>
-
-        <div className="svc-process-list reveal-stagger-parent">
+      {/* ═══ SECTION 4: PROCESS (5-column grid) ═══ */}
+      <section style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}>
+        <div className="svc-process-grid css-reveal">
           {service.process.map((step) => (
-            <div
-              key={step.step}
-              className="svc-process-row scroll-reveal-up"
-            >
-              <div className="svc-process-name">{step.name}</div>
-              <div className="svc-process-desc">{step.description}</div>
+            <div key={step.step} className="svc-process-step">
+              <p className="svc-process-step-num">{step.step}</p>
+              <p className="svc-process-step-name">{step.name}</p>
+              <p className="svc-process-step-desc">{step.description}</p>
             </div>
           ))}
         </div>
@@ -129,21 +183,34 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
       {/* ═══ SECTION 5: RELATED WORK ═══ */}
       {hasRelatedWork && (
         <section
-          className="bg-[var(--bg-shift)]"
-          style={{ padding: "120px var(--page-px)" }}
+          style={{
+            background: "var(--bg-shift)",
+            padding: "clamp(48px, 6vw, 80px) var(--page-px)",
+          }}
         >
-          <EditorialLabel text="Related Work" className="mb-10" />
+          <p
+            className="css-reveal"
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--text-muted)",
+              margin: "0 0 40px",
+            }}
+          >
+            (Related work)
+          </p>
 
           <div className="svc-related-grid">
             {service.relatedWork.slice(0, 2).map((work) => (
               <Link
                 key={work.slug}
                 href={`/work/${work.slug}`}
-                className="svc-related-card"
-                data-cursor="expand"
+                className="svc-related-card css-reveal"
+                data-cursor="view"
               >
                 <div
-                  className="svc-related-img reveal-clip"
+                  className="svc-related-img"
                   style={{ position: "relative", overflow: "hidden" }}
                 >
                   <Image
@@ -156,8 +223,9 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 </div>
                 <div className="svc-related-text">
                   <p className="svc-related-label">{work.client}</p>
-                  <h3 className="svc-related-title font-[var(--sans)] font-medium">{work.name}</h3>
-                  <p className="svc-related-result">{work.result}</p>
+                  <h3 className="svc-related-title font-[var(--sans)] font-medium">
+                    {work.name}
+                  </h3>
                 </div>
               </Link>
             ))}
@@ -199,7 +267,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 margin: 0,
               }}
             >
-              Ready to start?
+              {service.ctaHeading}
             </h2>
             <p
               style={{
@@ -210,16 +278,25 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 marginTop: 20,
               }}
             >
-              Book a discovery call. We will scope your project and recommend the right approach.
+              Book a discovery call. We will scope your project and recommend
+              the right approach.
             </p>
           </div>
 
           <div className="cta-dark-buttons">
-            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+            <Button
+              href="/contact"
+              variant="primary-inverted"
+              data-cursor="link"
+            >
               Book a Discovery Call
             </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
-              Start a Project
+            <Button
+              href="/packages"
+              variant="secondary-inverted"
+              data-cursor="link"
+            >
+              View Packages
             </Button>
           </div>
         </div>

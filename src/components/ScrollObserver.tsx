@@ -38,9 +38,8 @@ export default function ScrollObserver() {
     const targets = document.querySelectorAll(
       ".css-reveal, .css-reveal-late, .css-fade, " +
       ".scroll-reveal-up, .scroll-clip-reveal, " +
-      ".service-block-number, " +
       ".svc-deliverable-row, " +
-      ".about-process-step, .svc-process-row, " +
+      ".about-process-step, .svc-process-step, " +
       ".project-image-inner img, " +
       ".founder-photo-reveal, " +
       ".ai-process-row, " +

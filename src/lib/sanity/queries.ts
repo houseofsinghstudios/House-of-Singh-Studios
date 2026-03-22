@@ -108,7 +108,6 @@ export async function getAllPosts() {
         publishedAt
       }`
     );
-    console.log('Sanity posts fetched:', posts?.length || 0);
     return posts;
   } catch (error) {
     console.error('Sanity fetch error:', error);
