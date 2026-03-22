@@ -112,7 +112,7 @@ export default function SliderDiagnostic() {
   }
 
   return (
-    <>
+    <div className="slider-diagnostic">
       {/* ── SECTION A: SLIDER DASHBOARD ── */}
       <div className="diag-dashboard">
         {SLIDERS.map((slider, i) => {
@@ -145,21 +145,17 @@ export default function SliderDiagnostic() {
                     }}
                   />
                 </div>
-                <div className="diag-slider-wrap">
-                  <input
-                    type="range"
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={val}
-                    onChange={(e) =>
-                      handleSliderChange(slider.id, parseInt(e.target.value, 10))
-                    }
-                    className="diag-range"
-                    aria-label={slider.name}
-                    style={{ "--slider-pct": `${pct}%` } as React.CSSProperties}
-                  />
-                </div>
+                <input
+                  type="range"
+                  min={1}
+                  max={5}
+                  step={1}
+                  value={val}
+                  onChange={(e) =>
+                    handleSliderChange(slider.id, parseInt(e.target.value, 10))
+                  }
+                  aria-label={slider.name}
+                />
                 <p className="diag-slider-name">{slider.name}</p>
               </div>
             </div>
@@ -168,7 +164,7 @@ export default function SliderDiagnostic() {
       </div>
 
       {/* ── SECTION B: SERVICE CARDS ── */}
-      <div className="diag-cards" style={{ marginTop: "4rem" }}>
+      <div className="diag-cards" style={{ marginTop: 48 }}>
         {CARDS.map((card, i) => {
           const state = getCardState(i);
           const stateClass =
@@ -220,6 +216,6 @@ export default function SliderDiagnostic() {
           </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 }

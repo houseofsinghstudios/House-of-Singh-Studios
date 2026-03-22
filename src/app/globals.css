@@ -4162,83 +4162,78 @@ td a:hover {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
-  margin: 16px 0 20px;
+  margin: 6px 0 24px;
 }
 
 .diag-bar-container {
   position: relative;
   height: 64px;
-  width: 100%;
-  margin-bottom: 16px;
+  width: 24px;
+  margin: 0 auto 16px;
 }
 
 .diag-bar-fill {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 24px;
   transition: height 0.4s ease, background 0.4s ease;
 }
 
 /* ── Range input ── */
-.diag-slider-wrap {
-  padding: 8px 0;
-}
-
-.diag-range {
+.slider-diagnostic input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
   background: transparent;
   cursor: pointer;
-  padding: 8px 0;
+  padding: 12px 0;
   margin: 0;
   outline: none;
 }
 
-.diag-range::-webkit-slider-runnable-track {
+.slider-diagnostic input[type="range"]::-webkit-slider-runnable-track {
   height: 1px;
   background: var(--text-muted);
   border: none;
 }
 
-.diag-range::-webkit-slider-thumb {
+.slider-diagnostic input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--text-primary);
   border: none;
   cursor: grab;
-  margin-top: -6px;
+  margin-top: -7px;
   transition: transform 0.2s ease;
 }
-.diag-range::-webkit-slider-thumb:hover {
-  transform: scale(1.3);
+.slider-diagnostic input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.25);
 }
-.diag-range:active::-webkit-slider-thumb {
+.slider-diagnostic input[type="range"]::-webkit-slider-thumb:active {
   cursor: grabbing;
 }
 
-.diag-range::-moz-range-track {
+.slider-diagnostic input[type="range"]::-moz-range-track {
   height: 1px;
   background: var(--text-muted);
   border: none;
 }
-.diag-range::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+.slider-diagnostic input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--text-primary);
   border: none;
   cursor: grab;
-  transition: transform 0.2s ease;
 }
-.diag-range::-moz-range-thumb:hover {
-  transform: scale(1.3);
+.slider-diagnostic input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.25);
 }
-.diag-range:active::-moz-range-thumb {
+.slider-diagnostic input[type="range"]::-moz-range-thumb:active {
   cursor: grabbing;
 }
 
@@ -4251,13 +4246,9 @@ td a:hover {
 }
 
 /* ── Service cards ── */
-.diag-cards {
-  /* wrapper */
-}
-
 .service-card {
   position: relative;
-  padding: 48px 0;
+  padding: 32px 0;
   border-top: 0.5px solid var(--text-muted);
   overflow: hidden;
   cursor: pointer;
@@ -4269,12 +4260,12 @@ td a:hover {
 
 .service-card-ghost {
   font-family: var(--sans);
-  font-size: 200px;
+  font-size: 160px;
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 0.75;
   position: absolute;
-  right: 0;
+  right: -10px;
   top: 24px;
   color: var(--text-muted);
   opacity: 0.4;
@@ -4284,10 +4275,10 @@ td a:hover {
 
 .service-card-service {
   font-family: var(--sans);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   color: var(--text-muted);
   margin: 0 0 8px;
 }
@@ -4340,7 +4331,7 @@ td a:hover {
   padding: 56px 0;
 }
 .service-card.active .service-card-ghost {
-  font-size: 280px;
+  font-size: 200px;
   opacity: 0.08;
   top: 0;
 }
@@ -4412,6 +4403,7 @@ td a:hover {
   letter-spacing: 0.1em;
   text-decoration: none;
   border: none;
+  border-radius: 0;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -4426,6 +4418,7 @@ td a:hover {
   padding: 12px 24px;
   background: transparent;
   border: 0.5px solid var(--text-primary);
+  border-radius: 0;
   color: var(--text-primary);
   font-family: var(--sans);
   font-size: 10px;
@@ -4456,11 +4449,14 @@ td a:hover {
   .diag-column-border {
     display: none;
   }
+  .diag-bar-container {
+    margin: 0 0 16px;
+  }
   .service-card-ghost {
-    font-size: 120px;
+    font-size: 100px;
   }
   .service-card.active .service-card-ghost {
-    font-size: 160px;
+    font-size: 140px;
   }
   .diag-bottom-cta {
     flex-direction: column;
@@ -4492,10 +4488,10 @@ td a:hover {
     font-size: 24px;
   }
   .service-card {
-    padding: 40px 0;
+    padding: 28px 0;
   }
   .service-card.active {
-    padding: 48px 0;
+    padding: 40px 0;
   }
   .diag-bottom-buttons {
     flex-direction: column;

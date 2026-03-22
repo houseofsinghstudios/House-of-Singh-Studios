@@ -13,7 +13,7 @@ export default function ServicesPage() {
       <p
         className="editorial-label"
         data-hero-label
-        style={{ marginBottom: 48, letterSpacing: "0.18em", fontSize: 10 }}
+        style={{ marginBottom: 32, letterSpacing: "0.18em", fontSize: 10 }}
       >
         (Services)
       </p>
