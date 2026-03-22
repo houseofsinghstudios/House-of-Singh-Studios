@@ -47,7 +47,7 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background: blue;
+  background: var(--bg);
   color: var(--text-primary);
   font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
@@ -823,8 +823,6 @@ body {
    Footer
    ═══════════════════════════════════════════════════════ */
 .footer-container {
-  max-width: 1280px;
-  margin: 0 auto;
   padding-left: var(--page-px);
   padding-right: var(--page-px);
 }
