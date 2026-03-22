@@ -32,34 +32,25 @@
   }
 }
 
-/* Base animation classes (for non-supporting browsers, GSAP fallback applied via JavaScript) */
-.scroll-reveal-up {
-  animation: fadeRevealUp 1s ease both;
-}
-
-.scroll-clip-reveal {
-  animation: clipReveal 0.8s ease both;
-}
-
-.scroll-clip-reveal > img,
-.scroll-clip-reveal > canvas {
-  animation: imageScale 1s ease both;
-}
-
-/* Native CSS Scroll-Driven Animations for supported browsers */
+/* Native CSS Scroll-Driven Animations for supported browsers only.
+   In Safari/Firefox, the @supports not fallback in globals.css handles
+   visibility via IntersectionObserver + .in-view class. */
 @supports (animation-timeline: view()) {
   .scroll-reveal-up {
+    animation: fadeRevealUp 1s ease both;
     animation-timeline: view();
     animation-range: entry 0% entry 35%;
   }
 
   .scroll-clip-reveal {
+    animation: clipReveal 0.8s ease both;
     animation-timeline: view();
     animation-range: entry 0% entry 40%;
   }
 
   .scroll-clip-reveal > img,
   .scroll-clip-reveal > canvas {
+    animation: imageScale 1s ease both;
     animation-timeline: view();
     animation-range: entry 0% entry 50%;
   }
