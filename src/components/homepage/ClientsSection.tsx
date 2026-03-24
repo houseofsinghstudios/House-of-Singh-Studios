@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const clients = [
@@ -44,6 +44,15 @@ const clients = [
 
 export default function ClientsSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   return (
     <section
@@ -63,12 +72,12 @@ export default function ClientsSection() {
 
       <div className="clients-accordion reveal-stagger-parent">
         {clients.map((client, i) => {
-          const isOpen = openIndex === i;
+          const isOpen = isMobile || openIndex === i;
           return (
-            <div key={client.name} className="clients-accordion-row">
+            <div key={client.name} className="clients-accordion-row" data-cursor="link">
               <button
                 className="clients-accordion-header"
-                onClick={() => setOpenIndex(isOpen ? null : i)}
+                onClick={() => { if (!isMobile) setOpenIndex(isOpen ? null : i); }}
                 aria-expanded={isOpen}
               >
                 <span className="clients-accordion-name">{client.name}</span>

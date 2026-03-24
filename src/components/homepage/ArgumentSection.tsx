@@ -9,7 +9,7 @@ export default function ArgumentSection() {
       <div className="argument-grid">
         {/* Left column: label, heading, snap */}
         <div className="argument-left">
-          <EditorialLabel text="02 — The Argument" className="mb-6" />
+          <EditorialLabel text="(02) The Argument" className="mb-6" />
 
           <h2
             className="css-reveal font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0 overflow-hidden"

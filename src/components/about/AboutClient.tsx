@@ -223,10 +223,13 @@ export default function AboutClient() {
           }, delay);
         });
 
-        descRefs.current.forEach((el) => {
+        descRefs.current.forEach((el, i) => {
           if (el) {
-            el.style.opacity = "0.6";
-            el.style.transform = "translateY(0)";
+            const labelDelay = i * 150 + 200;
+            setTimeout(() => {
+              el.style.opacity = "0.6";
+              el.style.transform = "translateY(0)";
+            }, labelDelay);
           }
         });
       },
@@ -280,8 +283,9 @@ export default function AboutClient() {
 
         {/* Location + Live Clock */}
         <div
+          data-hero-clock
           style={{
-            borderTop: "1px solid var(--border)",
+            borderTop: "1px solid var(--text-muted)",
             marginTop: 24,
             paddingTop: 24,
             display: "flex",
@@ -416,13 +420,14 @@ export default function AboutClient() {
         </p>
 
         <div className="reveal-stagger-parent">
-          {STEPS.map((step) => (
+          {STEPS.map((step, i) => (
             <div
               key={step.name}
               className="about-process-step scroll-reveal-up"
             >
-              <div>
-                <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)]">
+              <div className="about-process-step-left">
+                <span className="about-process-ghost">{String(i + 1).padStart(2, "0")}</span>
+                <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)] about-process-name">
                   {step.name}
                 </p>
               </div>
@@ -442,7 +447,7 @@ export default function AboutClient() {
         <div
           className="css-reveal"
           style={{
-            borderTop: "1px solid var(--border)",
+            borderTop: "1px solid var(--text-muted)",
             paddingTop: 32,
             marginTop: 0,
           }}
@@ -460,8 +465,8 @@ export default function AboutClient() {
       <section
         className="about-qualifier css-reveal"
         style={{
-          borderTop: "1px solid var(--border)",
-          borderBottom: "1px solid var(--border)",
+          borderTop: "1px solid var(--text-muted)",
+          borderBottom: "1px solid var(--text-muted)",
         }}
       >
         <p className="about-qualifier-text">
@@ -556,18 +561,19 @@ export default function AboutClient() {
       <section
         style={{
           padding: "clamp(80px, 10vw, 140px) var(--page-px)",
-          borderTop: "1px solid var(--border)",
+          borderTop: "1px solid var(--text-muted)",
         }}
       >
         <EditorialLabel text="05 — Founder" className="scroll-reveal-up mb-6" />
 
         <div className="about-founder-grid">
           {/* Founder photo */}
+          {/* TODO: Replace /images/studio/studio.jpg with actual founder portrait */}
           <div>
             <div
               className="scroll-clip-reveal founder-photo-reveal reveal-clip"
               style={{
-                aspectRatio: "3/4",
+                aspectRatio: "4/5",
                 overflow: "hidden",
                 maxWidth: 480,
                 position: "relative",
@@ -692,7 +698,7 @@ export default function AboutClient() {
         className="css-reveal"
         style={{
           padding: "clamp(80px, 10vw, 140px) var(--page-px)",
-          borderTop: "1px solid var(--border)",
+          borderTop: "1px solid var(--text-muted)",
         }}
       >
         <EditorialLabel text="07 — Studio" className="mb-10" />

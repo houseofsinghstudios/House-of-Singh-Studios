@@ -38,8 +38,7 @@ export default function ScrollObserver() {
     const targets = document.querySelectorAll(
       ".css-reveal, .css-reveal-late, .css-fade, " +
       ".scroll-reveal-up, .scroll-clip-reveal, " +
-      ".svc-deliverable-row, " +
-      ".about-process-step, .svc-process-step, " +
+      ".about-process-step, " +
       ".project-image-inner img, " +
       ".founder-photo-reveal, " +
       ".packages-grid .package-tier, " +
@@ -52,10 +51,11 @@ export default function ScrollObserver() {
       ".testimonials-section, " +
       ".svc-accordion-row, " +
       ".featured-work-item, " +
+      ".clients-accordion-row, " +
       ".case-content-section, " +
-      ".gallery-full, .gallery-pair-item, " +
       ".reveal-clip, .reveal-stagger-parent, .reveal-text, " +
-      ".insights-card"
+      ".ins-card, .ins-featured, " +
+      ".about-team-card"
     );
 
     targets.forEach((el) => observer.observe(el));

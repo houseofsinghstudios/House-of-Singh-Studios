@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Link } from "next-view-transitions";
 
 type Variant = "primary" | "secondary" | "primary-inverted" | "secondary-inverted" | "text";
@@ -38,10 +38,15 @@ export default function Button({
 }: ButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("translate3d(0,0,0)");
+  const isTouch = useRef(false);
+
+  useEffect(() => {
+    isTouch.current = !window.matchMedia("(pointer: fine)").matches;
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!magnetic || !ref.current) return;
+      if (!magnetic || !ref.current || isTouch.current) return;
       const rect = ref.current.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
@@ -53,6 +58,7 @@ export default function Button({
   );
 
   const handleMouseLeave = useCallback(() => {
+    if (isTouch.current) return;
     setTransform("translate3d(0,0,0)");
   }, []);
 

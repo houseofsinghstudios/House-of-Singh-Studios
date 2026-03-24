@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { projects, getWorkTypeFilters } from "@/data/projects";
@@ -18,6 +18,7 @@ type ViewMode = "list" | "grid";
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewTransition, setViewTransition] = useState(false);
 
   const filterCategories = useMemo(
     () => ["All", ...getWorkTypeFilters()],
@@ -34,190 +35,167 @@ export default function WorkPageClient() {
     );
   }, [activeFilter]);
 
+  const switchView = useCallback(
+    (mode: ViewMode) => {
+      if (mode === viewMode) return;
+      setViewTransition(true);
+      setTimeout(() => {
+        setViewMode(mode);
+        setTimeout(() => setViewTransition(false), 50);
+      }, 200);
+    },
+    [viewMode]
+  );
+
   return (
     <div>
-      {/* Hero */}
-      <section
-        style={{ padding: "180px var(--page-px) 40px", minHeight: "50vh" }}
-        className="flex flex-col justify-end"
-      >
-        <p data-hero-label className="editorial-label mb-6">
+      {/* ═══ HERO ═══ */}
+      <section className="wp-hero">
+        <p
+          className="editorial-label css-reveal"
+          style={{ margin: "0 0 16px", transitionDelay: "0ms" }}
+        >
           (Portfolio)
         </p>
-        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
-          <h1
-            data-hero-heading
-            className="reveal-text font-[var(--sans)] font-medium tracking-[-0.03em] text-[color:var(--text-primary)] m-0"
-            style={{
-              fontSize: "clamp(48px, 6vw, 80px)",
-              lineHeight: 1.05,
-            }}
-          >
-            Work
-          </h1>
-          <span
-            className="font-[var(--sans)] text-[color:var(--text-muted)]"
-            style={{
-              fontSize: 12,
-              verticalAlign: "super",
-              position: "relative",
-              top: "-0.6em",
-            }}
-          >
-            ({projects.length})
-          </span>
-        </div>
+
+        <h1 className="wp-heading css-reveal" style={{ transitionDelay: "100ms" }}>
+          Work
+          <span className="wp-count">({projects.length})</span>
+        </h1>
+
         <p
-          data-hero-sub
-          className="font-[var(--sans)] font-normal text-[17px] text-[color:var(--text-muted)] m-0"
-          style={{ maxWidth: 480, lineHeight: 1.6, marginTop: 16 }}
+          className="wp-sub css-reveal"
+          style={{ transitionDelay: "200ms" }}
         >
           Brand identities, visual narratives, and digital experiences for
           businesses ready to show up differently.
         </p>
       </section>
 
-      {/* Filters + View Toggle */}
-      <div
-        style={{
-          padding: "40px var(--page-px) 0",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div className="work-filter-row" style={{ padding: 0 }}>
+      {/* ═══ FILTER BAR + VIEW TOGGLE ═══ */}
+      <div className="wp-filter-bar">
+        <div className="wp-filter-pills">
           {filterCategories.map((f) => (
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`work-filter-btn${activeFilter === f ? " active" : ""}`}
+              className={`wp-pill${activeFilter === f ? " wp-pill--active" : ""}`}
             >
               {f}
             </button>
           ))}
         </div>
 
-        {/* View toggle - desktop only */}
-        <div className="work-view-toggle">
+        <div className="wp-view-toggle">
           <button
-            onClick={() => setViewMode("list")}
-            className={`work-view-btn${viewMode === "list" ? " active" : ""}`}
+            onClick={() => switchView("list")}
+            className={`wp-toggle-btn${viewMode === "list" ? " wp-toggle-btn--active" : ""}`}
           >
             LIST
           </button>
+          <span className="wp-toggle-sep">/</span>
           <button
-            onClick={() => setViewMode("grid")}
-            className={`work-view-btn${viewMode === "grid" ? " active" : ""}`}
+            onClick={() => switchView("grid")}
+            className={`wp-toggle-btn${viewMode === "grid" ? " wp-toggle-btn--active" : ""}`}
           >
             GRID
           </button>
         </div>
       </div>
 
-      {/* LIST VIEW */}
+      {/* ═══ PROJECT CONTENT ═══ */}
       <div
-        className="work-list-view reveal-stagger-parent"
-        style={{
-          padding: "40px var(--page-px) 0",
-          display: viewMode === "list" ? "block" : "none",
-          opacity: viewMode === "list" ? 1 : 0,
-          transition: "opacity 0.3s ease",
-        }}
+        className={`wp-content${viewTransition ? " wp-content--exiting" : ""}`}
+        style={{ padding: "0 var(--page-px)" }}
       >
-        {filteredProjects.map((project) => (
-          <Link
-            key={project.slug}
-            href={`/work/${project.slug}`}
-            className="work-list-row css-reveal no-underline"
-            data-cursor="view"
-          >
-            <span
-              className="work-list-name"
-              style={{
-                viewTransitionName: `project-${project.slug}`,
-              }}
-            >
-              {project.name}
-            </span>
-            <span className="work-list-tags">
-              {project.workType
-                .split(",")
-                .map((t) => t.trim())
-                .join(" — ")}
-            </span>
-            <span className="work-list-year">{project.year}</span>
-          </Link>
-        ))}
+        {filteredProjects.length === 0 ? (
+          <p className="wp-empty">No projects in this category yet.</p>
+        ) : viewMode === "list" ? (
+          /* ── LIST VIEW ── */
+          <div className="wp-list">
+            {filteredProjects.map((project, i) => (
+              <Link
+                key={project.slug}
+                href={`/work/${project.slug}`}
+                className="wp-list-row no-underline"
+                data-cursor="view"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <span
+                  className="wp-list-name"
+                  style={{
+                    viewTransitionName: `project-${project.slug}`,
+                  }}
+                >
+                  {project.name}
+                </span>
+                <span className="wp-list-cat">
+                  {project.workType
+                    .split(",")
+                    .map((t) => t.trim())
+                    .join(" — ")}
+                </span>
+                <span className="wp-list-year">{project.year}</span>
+                <span className="wp-list-arrow" aria-hidden="true">
+                  &rarr;
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          /* ── GRID VIEW ── */
+          <div className="wp-grid">
+            {filteredProjects.map((project, i) => (
+              <Link
+                key={project.slug}
+                href={`/work/${project.slug}`}
+                className={`wp-grid-card no-underline${i % 2 !== 0 ? " wp-grid-card--offset" : ""}`}
+                data-cursor="view"
+                style={{ transitionDelay: `${i * 100}ms` }}
+              >
+                <div
+                  className="wp-grid-img-wrap reveal-clip"
+                  style={{ viewTransitionName: `project-image-${project.slug}` }}
+                >
+                  <div className="wp-grid-img-inner relative">
+                    <Image
+                      src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
+                      alt={project.name}
+                      fill
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                      style={{ objectFit: "cover", pointerEvents: "none" }}
+                    />
+                  </div>
+                </div>
+                <p className="wp-grid-cat">
+                  {project.workType
+                    .split(",")
+                    .map((t) => t.trim())
+                    .join(" — ")}
+                </p>
+                <h3
+                  className="wp-grid-name"
+                  style={{ viewTransitionName: `project-${project.slug}` }}
+                >
+                  {project.name}
+                </h3>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* GRID VIEW */}
-      <div
-        className="work-card-grid"
-        style={{
-          padding: "60px var(--page-px) 0",
-          display: viewMode === "grid" ? "grid" : "none",
-          opacity: viewMode === "grid" ? 1 : 0,
-          transition: "opacity 0.3s ease",
-        }}
-      >
+      {/* ═══ MOBILE GRID (always visible on mobile) ═══ */}
+      <div className="wp-mobile-grid" style={{ padding: "32px var(--page-px) 0" }}>
         {filteredProjects.map((project, i) => (
           <Link
             key={project.slug}
             href={`/work/${project.slug}`}
-            className={`work-card css-reveal no-underline${i % 2 !== 0 ? " work-card-offset" : ""}`}
+            className="wp-grid-card no-underline"
             data-cursor="view"
           >
-            <div className="work-card-image-wrap reveal-clip">
-              <div className="work-card-image-inner relative">
-                <Image
-                  src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
-                  alt={project.name}
-                  fill
-                  sizes="(max-width: 899px) 100vw, 50vw"
-                  style={{ objectFit: "cover", pointerEvents: "none" }}
-                />
-              </div>
-            </div>
-            <div style={{ marginTop: 16 }}>
-              <p
-                className="font-[var(--sans)] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-muted)] m-0"
-              >
-                {project.workType
-                  .split(",")
-                  .map((t) => t.trim())
-                  .join(" — ")}
-              </p>
-              <h3
-                className="font-[var(--sans)] font-medium text-[16px] tracking-[-0.01em] text-[color:var(--text-primary)] m-0 mt-2"
-              >
-                {project.name}
-              </h3>
-              <p
-                className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)] m-0 mt-2"
-                style={{ lineHeight: 1.6 }}
-              >
-                {project.description}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Mobile grid (always shown on mobile, replaces toggle) */}
-      <div
-        className="work-mobile-grid"
-        style={{ padding: "40px var(--page-px) 0" }}
-      >
-        {filteredProjects.map((project) => (
-          <Link
-            key={project.slug}
-            href={`/work/${project.slug}`}
-            className="work-card css-reveal no-underline"
-            data-cursor="view"
-          >
-            <div className="work-card-image-wrap reveal-clip">
-              <div className="work-card-image-inner relative">
+            <div className="wp-grid-img-wrap reveal-clip">
+              <div className="wp-grid-img-inner relative">
                 <Image
                   src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
                   alt={project.name}
@@ -227,26 +205,18 @@ export default function WorkPageClient() {
                 />
               </div>
             </div>
-            <div style={{ marginTop: 16 }}>
-              <p
-                className="font-[var(--sans)] text-[11px] uppercase tracking-[0.08em] text-[color:var(--text-muted)] m-0"
-              >
-                {project.workType
-                  .split(",")
-                  .map((t) => t.trim())
-                  .join(" — ")}
-              </p>
-              <h3
-                className="font-[var(--sans)] font-medium text-[16px] tracking-[-0.01em] text-[color:var(--text-primary)] m-0 mt-2"
-              >
-                {project.name}
-              </h3>
-            </div>
+            <p className="wp-grid-cat">
+              {project.workType
+                .split(",")
+                .map((t) => t.trim())
+                .join(" — ")}
+            </p>
+            <h3 className="wp-grid-name">{project.name}</h3>
           </Link>
         ))}
       </div>
 
-      {/* Dark CTA */}
+      {/* ═══ DARK CTA ═══ */}
       <section
         className="css-reveal"
         style={{

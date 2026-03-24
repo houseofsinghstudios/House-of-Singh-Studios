@@ -132,7 +132,7 @@ export default function HeroSection() {
       {/* Scroll indicator — bottom right */}
       <div
         ref={scrollRef}
-        className="absolute bottom-10 right-[var(--page-px)] flex flex-col items-end gap-3"
+        className="scroll-indicator-pulse absolute bottom-10 right-[var(--page-px)] flex flex-col items-end gap-3"
       >
         <EditorialLabel text="Scroll" />
         <div className="scroll-track">
@@ -143,7 +143,7 @@ export default function HeroSection() {
       {/* Horizontal divider at section bottom */}
       <div
         className="absolute left-0 right-0 bottom-0"
-        style={{ height: 1, background: "var(--border)" }}
+        style={{ height: 1, background: "var(--text-muted)", opacity: 0.3 }}
       />
     </section>
   );
