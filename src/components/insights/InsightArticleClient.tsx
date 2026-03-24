@@ -61,8 +61,7 @@ function formatDateLong(dateString: string): string {
 
 function formatDateShort(dateString: string): string {
   return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
+    month: "long",
     year: "numeric",
   }).format(new Date(dateString));
 }
@@ -71,47 +70,39 @@ function formatDateShort(dateString: string): string {
 const portableTextComponents: Partial<PortableTextReactComponents> = {
   block: {
     normal: ({ children }: any) => (
-      <p className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.7, color: "var(--text-primary)", opacity: 0.85, marginBottom: 28 }}>
-        {children}
-      </p>
+      <p className="art-p">{children}</p>
     ),
     h2: ({ children }: any) => (
-      <h2 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, letterSpacing: "-0.02em", marginTop: 64, marginBottom: 24 }}>
-        {children}
-      </h2>
+      <h2 className="art-h2">{children}</h2>
     ),
     h3: ({ children }: any) => (
-      <h3 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 2vw, 22px)", lineHeight: 1.3, marginTop: 48, marginBottom: 16, letterSpacing: "-0.01em" }}>
-        {children}
-      </h3>
+      <h3 className="art-h3">{children}</h3>
     ),
     h4: ({ children }: any) => (
-      <h4 className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: 16, textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 40, marginBottom: 12, opacity: 0.7 }}>
-        {children}
-      </h4>
+      <h4 className="art-h4">{children}</h4>
     ),
     blockquote: ({ children }: any) => (
-      <blockquote className="scroll-reveal-up" style={{ fontFamily: "var(--sans)", fontStyle: "italic", fontSize: "clamp(22px, 3vw, 32px)", lineHeight: 1.4, borderLeft: "2px solid var(--border)", paddingLeft: 32, margin: "48px 0" }}>
-        {children}
-      </blockquote>
+      <blockquote className="art-bq">{children}</blockquote>
     ),
   },
   marks: {
-    strong: ({ children }: any) => <strong style={{ fontWeight: 500 }}>{children}</strong>,
-    em: ({ children }: any) => <em style={{ fontStyle: "italic" }}>{children}</em>,
-    code: ({ children }: any) => (
-      <code style={{ background: "var(--bg-shift)", padding: "2px 6px", fontFamily: "monospace", fontSize: 15 }}>
-        {children}
-      </code>
+    strong: ({ children }: any) => (
+      <strong style={{ fontWeight: 500 }}>{children}</strong>
     ),
+    em: ({ children }: any) => (
+      <em style={{ fontStyle: "italic" }}>{children}</em>
+    ),
+    code: ({ children }: any) => <code className="art-code">{children}</code>,
     link: ({ children, value }: any) => {
       const href = value?.href || "";
       const isExternal = href.startsWith("http");
       return (
         <a
           href={href}
-          style={{ color: "var(--text-primary)", borderBottom: "1px solid var(--border)", transition: "border-color 0.3s ease", textDecoration: "none" }}
-          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className="art-link"
+          {...(isExternal
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
         >
           {children}
         </a>
@@ -119,25 +110,28 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
     },
   },
   list: {
-    bullet: ({ children }: any) => <ul style={{ listStyleType: "disc", paddingLeft: 24, marginBottom: 28 }}>{children}</ul>,
-    number: ({ children }: any) => <ol style={{ listStyleType: "decimal", paddingLeft: 24, marginBottom: 28 }}>{children}</ol>,
+    bullet: ({ children }: any) => <ul className="art-ul">{children}</ul>,
+    number: ({ children }: any) => <ol className="art-ol">{children}</ol>,
   },
   listItem: {
-    bullet: ({ children }: any) => <li style={{ fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.7, opacity: 0.85, marginBottom: 8 }}>{children}</li>,
-    number: ({ children }: any) => <li style={{ fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.7, opacity: 0.85, marginBottom: 8 }}>{children}</li>,
+    bullet: ({ children }: any) => <li className="art-li">{children}</li>,
+    number: ({ children }: any) => <li className="art-li">{children}</li>,
   },
   types: {
     image: ({ value }: any) => {
       if (!value?.asset) return null;
       return (
-        <figure className="scroll-clip-reveal" style={{ margin: "40px 0 8px" }}>
-          <div style={{ position: "relative", width: "100%", aspectRatio: "16/9", overflow: "hidden" }}>
-            <Image src={urlFor(value).width(1200).height(675).url()} alt={value.alt || "Project image"} fill style={{ objectFit: "cover" }} />
+        <figure className="art-figure reveal-clip">
+          <div className="art-figure-inner">
+            <Image
+              src={urlFor(value).width(1200).height(675).url()}
+              alt={value.alt || "Article image"}
+              fill
+              style={{ objectFit: "cover" }}
+            />
           </div>
           {value.alt && (
-            <figcaption style={{ fontFamily: "var(--sans)", fontSize: 12, opacity: 0.4, marginTop: 8 }}>
-              {value.alt}
-            </figcaption>
+            <figcaption className="art-caption">{value.alt}</figcaption>
           )}
         </figure>
       );
@@ -150,19 +144,29 @@ function ShareRow({ title }: { title: string }) {
   const [copied, setCopied] = useState(false);
 
   return (
-    <div className="insights-share-row">
-      <span className="insights-share-label">Share</span>
+    <div className="art-share">
+      <span className="art-share-label">Share</span>
       <button
         type="button"
-        onClick={() => window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank')}
-        className="insights-share-btn"
+        onClick={() =>
+          window.open(
+            `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`,
+            "_blank"
+          )
+        }
+        className="art-share-btn"
       >
         LinkedIn
       </button>
       <button
         type="button"
-        onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(title)}`, '_blank')}
-        className="insights-share-btn"
+        onClick={() =>
+          window.open(
+            `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(title)}`,
+            "_blank"
+          )
+        }
+        className="art-share-btn"
       >
         X
       </button>
@@ -177,7 +181,7 @@ function ShareRow({ title }: { title: string }) {
             // Fallback: silently fail
           }
         }}
-        className="insights-share-btn"
+        className="art-share-btn"
       >
         {copied ? "Copied" : "Copy link"}
       </button>
@@ -187,7 +191,9 @@ function ShareRow({ title }: { title: string }) {
 
 function InlineNewsletter() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -208,8 +214,8 @@ function InlineNewsletter() {
 
   if (status === "success") {
     return (
-      <div className="css-reveal" style={{ marginTop: 40, maxWidth: 740 }}>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--text-secondary)" }}>
+      <div style={{ marginTop: 32 }}>
+        <p className="art-newsletter-success">
           Thank you. You&rsquo;re on the list.
         </p>
       </div>
@@ -217,19 +223,9 @@ function InlineNewsletter() {
   }
 
   return (
-    <div className="css-reveal" style={{ marginTop: 40, maxWidth: 740 }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 14,
-            color: "var(--text-secondary)",
-            whiteSpace: "nowrap",
-          }}
-        >
+    <div style={{ marginTop: 32 }}>
+      <form onSubmit={handleSubmit} className="art-newsletter-form">
+        <span className="art-newsletter-label">
           Get studio insights in your inbox.
         </span>
         <input
@@ -239,45 +235,19 @@ function InlineNewsletter() {
           onChange={(e) => setEmail(e.target.value)}
           required
           disabled={status === "submitting"}
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 14,
-            color: "var(--text-primary)",
-            background: "transparent",
-            border: "none",
-            borderBottom: "1px solid var(--border)",
-            padding: "6px 0",
-            outline: "none",
-            flex: "1 1 180px",
-            minWidth: 160,
-            transition: "border-color 0.3s ease",
-          }}
+          className="art-newsletter-input"
         />
         <button
           type="submit"
           disabled={status === "submitting"}
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: 13,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "var(--text-primary)",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            padding: 0,
-            opacity: status === "submitting" ? 0.4 : 0.6,
-            transition: "opacity 0.3s ease",
-            whiteSpace: "nowrap",
-          }}
+          className="art-newsletter-submit"
+          style={{ opacity: status === "submitting" ? 0.4 : 0.6 }}
         >
           Subscribe&nbsp;&rarr;
         </button>
       </form>
       {status === "error" && (
-        <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginTop: 8 }}>
-          Something went wrong. Try again.
-        </p>
+        <p className="art-newsletter-error">Something went wrong. Try again.</p>
       )}
     </div>
   );
@@ -286,148 +256,197 @@ function InlineNewsletter() {
 export default function InsightArticleClient({ post }: { post: Post }) {
   const readTime = calculateReadTime(post.body);
 
+  // Filter related posts to same category, max 2
+  const relatedPosts = (post.relatedPosts || [])
+    .filter((rp) => rp.category === post.category)
+    .slice(0, 2);
+  // Fallback: if fewer than 2 same-category, fill from all related
+  const finalRelated =
+    relatedPosts.length >= 2
+      ? relatedPosts
+      : [
+          ...relatedPosts,
+          ...(post.relatedPosts || [])
+            .filter(
+              (rp) => !relatedPosts.find((r) => r._id === rp._id)
+            )
+            .slice(0, 2 - relatedPosts.length),
+        ];
+
   return (
     <>
-      {/* ── ARTICLE HERO (compact ~50vh) ── */}
-      <section style={{ minHeight: "50vh", display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 var(--page-px) 60px", position: "relative" }}>
-        <Link
-          href="/insights"
-          className="article-back-link"
-          style={{ position: "absolute", top: 120, left: "var(--page-px)", fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, transition: "color 0.3s ease" }}
-        >
-          <span style={{ transition: "transform 0.3s ease" }}>&#8592;</span>
-          Back to Insights
+      {/* ═══ HERO ═══ */}
+      <section className="art-hero">
+        <Link href="/insights" className="art-back" data-cursor="link">
+          <span className="art-back-arrow">&#8592;</span>
+          All Insights
         </Link>
 
-        <div data-hero-label style={{ display: "flex", alignItems: "center", gap: 0 }}>
-          {post.category && <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{post.category}</span>}
-          {post.category && post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", margin: "0 8px" }}>—</span>}
-          {post.publishedAt && <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)" }}>{formatDateLong(post.publishedAt)}</span>}
-          {readTime > 0 && (
-            <>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", margin: "0 8px" }}>—</span>
-              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)" }}>{readTime} min read</span>
-            </>
-          )}
-        </div>
+        <div className="art-hero-content css-reveal">
+          <div className="ins-meta" style={{ marginTop: 24 }}>
+            {post.category && <span>{post.category}</span>}
+            {post.category && post.publishedAt && (
+              <span className="ins-meta-dot">&middot;</span>
+            )}
+            {post.publishedAt && (
+              <span>{formatDateLong(post.publishedAt)}</span>
+            )}
+            {readTime > 0 && (
+              <>
+                <span className="ins-meta-dot">&middot;</span>
+                <span>{readTime} min read</span>
+              </>
+            )}
+          </div>
 
-        <h1
-          data-hero-heading
-          className="reveal-text"
-          style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(36px, 5.5vw, 80px)", lineHeight: 1.05, letterSpacing: "-0.02em", maxWidth: 1000, color: "var(--text-primary)", marginTop: 16, overflow: "hidden" }}
-        >
-          {post.title}
-        </h1>
+          <h1 className="art-title">{post.title}</h1>
+
+          {post.excerpt && <p className="art-excerpt">{post.excerpt}</p>}
+        </div>
       </section>
 
-      {/* ── FEATURED IMAGE ── */}
+      {/* ═══ FEATURED IMAGE ═══ */}
       {post.featuredImage?.asset && (
-        <section style={{ padding: "0 var(--page-px)", marginTop: 40 }}>
-          <div className="reveal-clip" style={{ width: "100%", aspectRatio: "16/9", overflow: "hidden", position: "relative" }}>
+        <section className="art-hero-img-section">
+          <div
+            className="art-hero-img reveal-clip"
+            style={{
+              animationDuration: "1s",
+              transitionDuration: "1s",
+            }}
+          >
             <Image
               src={urlFor(post.featuredImage).width(1600).height(900).url()}
               alt={post.featuredImage.alt || post.title}
               fill
               style={{ objectFit: "cover" }}
               priority
-              {...(post.featuredImage.asset.metadata?.lqip ? { placeholder: "blur", blurDataURL: post.featuredImage.asset.metadata.lqip } : {})}
+              sizes="100vw"
+              {...(post.featuredImage.asset.metadata?.lqip
+                ? {
+                    placeholder: "blur",
+                    blurDataURL: post.featuredImage.asset.metadata.lqip,
+                  }
+                : {})}
             />
           </div>
         </section>
       )}
 
-      {/* ── BODY CONTENT ── */}
+      {/* ═══ BODY ═══ */}
       {post.body && (
-        <section style={{ padding: "80px var(--page-px) 120px" }}>
-          <div className="article-body" style={{ maxWidth: 740 }}>
+        <section className="art-body-section">
+          <div className="art-body">
             <PortableText value={post.body} components={portableTextComponents} />
           </div>
         </section>
       )}
 
-      {/* ── ARTICLE FOOTER ── */}
+      {/* ═══ FOOTER (back + share + newsletter) ═══ */}
       <section style={{ padding: "0 var(--page-px)" }}>
-        <div style={{ maxWidth: 740 }}>
-          <div style={{ borderTop: "1px solid var(--border)", paddingTop: 40 }}>
-            <Link
-              href="/insights"
-              className="article-back-link"
-              style={{ fontFamily: "var(--sans)", fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-primary)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 8, transition: "opacity 0.3s ease" }}
-            >
-              <span style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8592;</span>
-              Back to Insights
-            </Link>
-          </div>
-
-          {/* ── SHARE ROW ── */}
+        <div className="art-body">
+          <div className="art-footer-divider" />
+          <Link href="/insights" className="art-back art-back--inline">
+            <span className="art-back-arrow">&#8592;</span>
+            Back to Insights
+          </Link>
           <ShareRow title={post.title} />
-
-          {/* ── INLINE NEWSLETTER CTA ── */}
           <InlineNewsletter />
         </div>
       </section>
 
-      {/* ── NEXT / PREVIOUS ── */}
+      {/* ═══ PREV / NEXT ═══ */}
       {(post.previousPost || post.nextPost) && (
-        <section className="scroll-reveal-up" style={{ padding: "0 var(--page-px)", marginTop: 60 }}>
-          <div className="post-nav">
+        <section className="art-nav-section">
+          <div className="art-nav-divider" />
+          <div className="art-nav">
             <div>
               {post.previousPost && (
-                <Link href={`/insights/${post.previousPost.slug.current}`} className="post-nav-link" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8592;</span>
-                    <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4 }}>Previous</span>
-                  </div>
-                  {post.previousPost.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", opacity: 0.4, marginTop: 8 }}>{post.previousPost.category}</p>}
-                  <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{post.previousPost.title}</p>
+                <Link
+                  href={`/insights/${post.previousPost.slug.current}`}
+                  className="art-nav-link no-underline"
+                >
+                  <p className="art-nav-label">
+                    <span className="art-nav-arrow art-nav-arrow--prev">
+                      &#8592;
+                    </span>{" "}
+                    Previous
+                  </p>
+                  <p className="art-nav-title">
+                    {post.previousPost.title}
+                  </p>
                 </Link>
               )}
             </div>
             <div style={{ textAlign: "right" }}>
               {post.nextPost && (
-                <Link href={`/insights/${post.nextPost.slug.current}`} className="post-nav-link next" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 6 }}>
-                    <span style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.4 }}>Next</span>
-                    <span className="post-nav-arrow" style={{ display: "inline-block", transition: "transform 0.3s ease" }}>&#8594;</span>
-                  </div>
-                  {post.nextPost.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", opacity: 0.4, marginTop: 8 }}>{post.nextPost.category}</p>}
-                  <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{post.nextPost.title}</p>
+                <Link
+                  href={`/insights/${post.nextPost.slug.current}`}
+                  className="art-nav-link art-nav-link--next no-underline"
+                >
+                  <p className="art-nav-label">
+                    Next{" "}
+                    <span className="art-nav-arrow art-nav-arrow--next">
+                      &#8594;
+                    </span>
+                  </p>
+                  <p className="art-nav-title">{post.nextPost.title}</p>
                 </Link>
               )}
             </div>
           </div>
-          <div style={{ borderTop: "1px solid var(--border)", marginTop: 60 }} />
+          <div className="art-nav-divider" />
         </section>
       )}
 
-      {/* ── RELATED POSTS ── */}
-      {post.relatedPosts && post.relatedPosts.length > 0 && (
-        <section style={{ padding: "80px var(--page-px) 120px" }}>
-          <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)", marginBottom: 32 }}>(Related)</p>
-          <div className="related-grid reveal-stagger-parent">
-            {post.relatedPosts.map((rp) => (
-              <Link key={rp._id} href={`/insights/${rp.slug.current}`} className="post-card post-nav-link scroll-reveal-up" style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+      {/* ═══ RELATED POSTS ═══ */}
+      {finalRelated.length > 0 && (
+        <section className="art-related-section">
+          <p className="editorial-label" style={{ margin: "0 0 12px" }}>
+            (Related)
+          </p>
+          <h2 className="art-related-heading">More from the studio.</h2>
+          <div className="art-related-grid">
+            {finalRelated.map((rp) => (
+              <Link
+                key={rp._id}
+                href={`/insights/${rp.slug.current}`}
+                className="ins-card no-underline"
+                data-cursor="view"
+              >
                 {rp.featuredImage?.asset && (
-                  <div className="post-card-image" style={{ aspectRatio: "16/9", position: "relative", overflow: "hidden", marginBottom: 16 }}>
-                    <Image
-                      src={urlFor(rp.featuredImage).width(600).height(338).url()}
-                      alt={rp.featuredImage.alt || rp.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      style={{ objectFit: "cover", transition: "transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)" }}
-                    />
+                  <div className="ins-card-img">
+                    <div className="ins-card-img-inner relative">
+                      <Image
+                        src={urlFor(rp.featuredImage)
+                          .width(600)
+                          .height(338)
+                          .url()}
+                        alt={rp.featuredImage.alt || rp.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
                   </div>
                 )}
-                {rp.category && <p style={{ fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>{rp.category}</p>}
-                <p className="post-nav-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(20px, 2.5vw, 28px)", lineHeight: 1.2, letterSpacing: "-0.02em", marginTop: 8, transition: "opacity 0.3s ease" }}>{rp.title}</p>
-                {rp.publishedAt && <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "var(--text-muted)", marginTop: 8 }}>{formatDateShort(rp.publishedAt)}</p>}
+                <div className="ins-meta">
+                  {rp.category && <span>{rp.category}</span>}
+                  {rp.category && rp.publishedAt && (
+                    <span className="ins-meta-dot">&middot;</span>
+                  )}
+                  {rp.publishedAt && (
+                    <span>{formatDateShort(rp.publishedAt)}</span>
+                  )}
+                </div>
+                <h3 className="ins-card-title">{rp.title}</h3>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ── DARK CTA ── */}
+      {/* ═══ DARK CTA ═══ */}
       <section
         className="css-reveal"
         style={{
@@ -448,7 +467,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
                 marginBottom: 24,
               }}
             >
-              (Start a project)
+              (Next Step)
             </p>
             <h2
               style={{
@@ -475,12 +494,19 @@ export default function InsightArticleClient({ post }: { post: Post }) {
               We respond within 24 hours.
             </p>
           </div>
-
           <div className="cta-dark-buttons">
-            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+            <Button
+              href="/contact"
+              variant="primary-inverted"
+              data-cursor="link"
+            >
               Book a Discovery Call
             </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+            <Button
+              href="/contact"
+              variant="secondary-inverted"
+              data-cursor="link"
+            >
               Start a Project
             </Button>
           </div>
