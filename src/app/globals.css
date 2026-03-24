@@ -3851,9 +3851,117 @@ body {
    UI/UX A: Global Micro-Interactions
    ═══════════════════════════════════════════════════════ */
 
+/* ── V2 Header System ── */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--page-px);
+  background-color: transparent;
+  border-bottom: 1px solid transparent;
+  transition: transform 0.35s ease,
+              background-color 0.3s ease,
+              border-color 0.3s ease,
+              height 0.3s ease;
+}
+
+.site-header--scrolled {
+  height: 56px;
+  background-color: rgba(247, 246, 245, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+/* Firefox fallback: no backdrop-filter support */
+@supports not (backdrop-filter: blur(1px)) {
+  .site-header--scrolled {
+    background-color: rgba(247, 246, 245, 0.95);
+  }
+}
+
+/* ── Crest logo (page top, desktop) ── */
+.header-crest-wrap {
+  position: fixed;
+  left: var(--page-px);
+  top: 48px;
+  z-index: 100;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: auto;
+}
+.site-header--scrolled ~ .header-crest-wrap,
+.site-header--scrolled .header-crest-wrap {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+/* Crest is inside header, so use the class directly */
+.site-header--scrolled .header-crest-wrap {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+.header-crest {
+  height: 115px;
+  width: auto;
+  display: block;
+}
+
+/* ── Wordmark ── */
+.header-wordmark-wrap {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.site-header--scrolled .header-wordmark-wrap {
+  opacity: 1;
+  pointer-events: auto;
+}
+.header-wordmark {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-primary);
+  text-decoration: none;
+  view-transition-name: site-logo;
+}
+
+/* ── Desktop nav links ── */
+.header-desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
+  margin-right: 32px;
+}
+.site-header--scrolled .header-desktop-nav {
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ── Interaction 1: Nav Link Hover Underline ── */
 .header-nav-link {
   position: relative;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 .header-nav-link::after {
   content: '';
@@ -3867,9 +3975,247 @@ body {
   transform-origin: right;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.header-nav-link:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
+@media (hover: hover) {
+  .header-nav-link:hover {
+    color: var(--text-primary);
+  }
+  .header-nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* ── Menu + trigger ── */
+.header-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  position: relative;
+  z-index: 110;
+  font-family: var(--sans);
+}
+.header-menu-trigger-text {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+.header-menu-trigger-plus {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-primary);
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  line-height: 1;
+}
+/* Hover underline on trigger text */
+.header-menu-trigger::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  width: calc(100% - 20px);
+  height: 1px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .header-menu-trigger:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* ── Full-screen overlay ── */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.nav-overlay--open {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.4s ease;
+}
+
+/* Overlay header bar */
+.nav-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--page-px);
+  height: 80px;
+  flex-shrink: 0;
+}
+.nav-overlay-wordmark {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.nav-overlay-close {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+/* Overlay links */
+.nav-overlay-links {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--page-px);
+  margin-top: 40px;
+  flex: 1;
+}
+.nav-overlay-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 8px 0;
+  position: relative;
+  /* Stagger entrance */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              letter-spacing 0.4s ease;
+  transition-delay: calc(150ms + var(--link-index, 0) * 80ms);
+}
+.nav-overlay:not(.nav-overlay--open) .nav-overlay-link {
+  transition-delay: 0ms;
+}
+.nav-overlay--open .nav-overlay-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+.nav-overlay-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .nav-overlay-link:hover {
+    letter-spacing: 0em;
+  }
+  .nav-overlay-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+.nav-overlay-link-label {
+  flex: 1;
+}
+.nav-overlay-link-count {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-left: 16px;
+}
+
+/* Overlay footer */
+.nav-overlay-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 var(--page-px) 48px;
+  margin-top: auto;
+}
+.nav-overlay-footer-item {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+/* ── Responsive: Desktop 1024+ ── */
+@media (min-width: 1024px) {
+  .header-desktop-nav {
+    display: flex;
+  }
+}
+
+/* ── Responsive: Tablet 768–1023 ── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .header-desktop-nav {
+    display: flex;
+    gap: 24px;
+  }
+  /* Hide desktop links slightly earlier on tablet */
+  .site-header--scrolled .header-desktop-nav {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* ── Responsive: Mobile below 768px ── */
+@media (max-width: 767px) {
+  .site-header {
+    height: 64px;
+  }
+  .site-header--scrolled {
+    height: 64px;
+  }
+  .header-crest-wrap {
+    top: 32px;
+  }
+  .header-crest {
+    height: 96px;
+  }
+  .header-desktop-nav {
+    display: none !important;
+  }
+  .header-wordmark-wrap {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav-overlay-header {
+    height: 64px;
+  }
+  .nav-overlay-link {
+    font-size: clamp(24px, 5vw, 36px);
+    /* Halved stagger on mobile (40ms instead of 80ms) */
+    transition-delay: calc(150ms + var(--link-index, 0) * 40ms);
+  }
+  .nav-overlay-links {
+    margin-top: 20px;
+  }
 }
 
 
