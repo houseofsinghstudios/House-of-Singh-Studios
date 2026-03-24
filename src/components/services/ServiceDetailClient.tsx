@@ -4,6 +4,19 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
+import ServiceDeliverableRow from "./ServiceDeliverableRow";
+import ServiceDetailAccordion from "./ServiceDetailAccordion";
+
+const CLIENT_QUALIFIER: Record<string, string> = {
+  "brand-identity":
+    "This service is for established businesses doing $1M+ in revenue that have outgrown their original branding. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
+  "visual-media":
+    "This service is for businesses that have a brand identity but no visual content strategy. Your photography is inconsistent, your video content is ad-hoc, and your social presence does not match your brand positioning. You need a system, not a one-off shoot.",
+  "digital-design":
+    "This service is for businesses whose website is their highest-traffic touchpoint but does not convert like it should. The design feels dated, the content architecture is unclear, and visitors leave without understanding what you do. You need design direction, not just a developer.",
+  "creative-strategy":
+    "This service is for businesses where the brand problem is actually a strategy problem. Your team makes inconsistent creative decisions because there is no framework. You need positioning clarity, creative direction systems, and operational structure before you need more design.",
+};
 
 export default function ServiceDetailClient({ slug }: { slug: string }) {
   const service = getServiceBySlug(slug);
@@ -11,279 +24,176 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
   if (!service) return null;
 
   const hasRelatedWork = service.relatedWork.length > 0;
+  const qualifierText = CLIENT_QUALIFIER[slug] || "";
 
   return (
     <>
-      {/* ═══ SECTION 1: HERO ═══ */}
+      {/* ═══ HERO ═══ */}
       <section
-        className="css-reveal"
-        style={{
-          padding: "140px var(--page-px) clamp(48px, 6vw, 80px)",
-          borderBottom: "1px solid var(--border)",
-        }}
+        className="svcd-hero"
+        style={{ padding: "clamp(120px, 15vh, 180px) var(--page-px) clamp(48px, 6vh, 80px)" }}
       >
-        <p
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-muted)",
-            margin: "0 0 24px",
-          }}
-        >
+        <Link href="/services" className="svcd-back css-reveal">
+          <span className="svcd-back-arrow">←</span> Services
+        </Link>
+        <p className="editorial-label css-reveal" style={{ transitionDelay: "0ms", margin: "24px 0 12px" }}>
           (Services)
         </p>
-        <p
-          style={{
-            fontSize: 12,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "var(--text-muted)",
-            margin: "0 0 16px",
-          }}
-        >
+        <p className="svcd-service-name css-reveal" style={{ transitionDelay: "60ms" }}>
           {service.subtitle}
         </p>
         <h1
-          className="font-[var(--sans)]"
+          className="svcd-headline css-reveal"
           style={{
-            fontSize: "clamp(28px, 4.5vw, 48px)",
-            fontWeight: 500,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            color: "var(--text-primary)",
-            margin: "0 0 20px",
-            maxWidth: 700,
+            transitionDelay: "120ms",
             viewTransitionName: `service-${service.slug}`,
           }}
         >
           {service.headline}
         </h1>
-        <p
-          style={{
-            fontSize: 15,
-            color: "var(--text-secondary)",
-            lineHeight: 1.7,
-            maxWidth: 500,
-            margin: 0,
-          }}
-        >
+        <p className="svcd-hero-body css-reveal" style={{ transitionDelay: "200ms" }}>
           {service.description}
         </p>
       </section>
 
-      {/* ═══ SECTION 2: DELIVERABLES ═══ */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}>
-        <div
-          className="css-reveal"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            marginBottom: 40,
-          }}
-        >
-          <p
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              color: "var(--text-muted)",
-              margin: 0,
-            }}
-          >
-            (What you get)
-          </p>
-          <p
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.1em",
-              color: "var(--text-muted)",
-              margin: 0,
-            }}
-          >
-            {String(service.deliverables.length).padStart(2, "0")} deliverables
-          </p>
-        </div>
-
-        <div className="svc-deliverables-list reveal-stagger-parent">
-          {service.deliverables.map((d) => (
-            <div key={d.name} className="svc-deliverable-row css-reveal">
-              <div className="svc-deliverable-name">{d.name}</div>
-              <div className="svc-deliverable-desc">{d.description}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ═══ SECTION 3: BUSINESS IMPACT (full-bleed bg-shift) ═══ */}
+      {/* ═══ (01) WHAT YOU GET — Deliverables ═══ */}
       <section
-        className="css-reveal"
+        className="svcd-deliverables"
         style={{
           background: "var(--bg-shift)",
           padding: "clamp(48px, 8vw, 96px) var(--page-px)",
         }}
       >
-        <p
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-muted)",
-            margin: "0 0 32px",
-          }}
-        >
-          (Why it matters)
-        </p>
-        <div className="svc-impact-grid">
-          <div>
-            <h2
-              className="font-[var(--sans)]"
-              style={{
-                fontSize: "clamp(22px, 3vw, 36px)",
-                fontWeight: 500,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.2,
-                color: "var(--text-primary)",
-                margin: 0,
-              }}
-            >
-              {service.impact.heading}
-            </h2>
+        <div className="svcd-del-header css-reveal">
+          <p className="editorial-label" style={{ margin: 0 }}>
+            (01) What you get
+          </p>
+          <span className="svcd-del-badge">
+            {String(service.deliverables.length).padStart(2, "0")} deliverables
+          </span>
+        </div>
+        <div className="svcd-del-grid">
+          <div className="svcd-del-list">
+            {service.deliverables.map((d, i) => (
+              <div key={d.name} className="css-reveal" style={{ transitionDelay: `${i * 60}ms` }}>
+                <ServiceDeliverableRow
+                  number={String(i + 1).padStart(2, "0")}
+                  name={d.name}
+                  description={d.description}
+                />
+              </div>
+            ))}
           </div>
-          <div>
-            <p
-              style={{
-                fontSize: 15,
-                color: "var(--text-secondary)",
-                lineHeight: 1.7,
-                margin: 0,
-              }}
-            >
-              {service.impact.body}
+          <div className="svcd-del-spacer" />
+        </div>
+      </section>
+
+      {/* ═══ (02) WHY IT MATTERS — Business Impact ═══ */}
+      <section
+        style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px)" }}
+      >
+        <div className="svcd-impact-grid">
+          <div className="svcd-impact-left css-reveal">
+            <p className="editorial-label" style={{ margin: "0 0 32px" }}>
+              (02) Why it matters
             </p>
           </div>
+          <div className="svcd-impact-right css-reveal" style={{ transitionDelay: "120ms" }}>
+            <h2 className="svcd-impact-heading">{service.impact.heading}</h2>
+            <p className="svcd-impact-body">{service.impact.body}</p>
+          </div>
         </div>
       </section>
 
-      {/* ═══ SECTION 4: PROCESS (5-column grid) ═══ */}
-      <section style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}>
-        <div className="svc-process-grid css-reveal">
-          {service.process.map((step) => (
-            <div key={step.step} className="svc-process-step">
-              <p className="svc-process-step-num">{step.step}</p>
-              <p className="svc-process-step-name">{step.name}</p>
-              <p className="svc-process-step-desc">{step.description}</p>
-            </div>
-          ))}
+      {/* ═══ (03) WHO THIS IS FOR — Client Qualifier ═══ */}
+      <section
+        className="svcd-qualifier"
+        style={{
+          background: "var(--bg-shift)",
+          padding: "clamp(48px, 8vw, 96px) var(--page-px)",
+        }}
+      >
+        <div className="svcd-qualifier-inner">
+          <h2 className="svcd-qualifier-heading css-reveal">
+            Is this for you?
+          </h2>
+          <p className="svcd-qualifier-body css-reveal" style={{ transitionDelay: "100ms" }}>
+            {qualifierText}
+          </p>
         </div>
       </section>
 
-      {/* ═══ SECTION 5: RELATED WORK ═══ */}
+      {/* ═══ (04) HOW WE DO IT — Process Accordion ═══ */}
+      <section
+        style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px)" }}
+      >
+        <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
+          (04) How we do it
+        </p>
+        <h2 className="svcd-process-heading css-reveal" style={{ transitionDelay: "80ms" }}>
+          Five stages. One system.
+        </h2>
+        <div className="css-reveal" style={{ transitionDelay: "160ms" }}>
+          <ServiceDetailAccordion steps={service.process} />
+        </div>
+      </section>
+
+      {/* ═══ (05) RELATED WORK ═══ */}
       {hasRelatedWork && (
         <section
           style={{
             background: "var(--bg-shift)",
-            padding: "clamp(48px, 6vw, 80px) var(--page-px)",
+            padding: "clamp(48px, 8vw, 96px) var(--page-px)",
           }}
         >
-          <p
-            className="css-reveal"
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              color: "var(--text-muted)",
-              margin: "0 0 40px",
-            }}
-          >
-            (Related work)
+          <p className="editorial-label css-reveal" style={{ margin: "0 0 40px" }}>
+            (05) Related work
           </p>
-
-          <div className="svc-related-grid">
-            {service.relatedWork.slice(0, 2).map((work) => (
+          <div className="svcd-work-grid">
+            {service.relatedWork.slice(0, 2).map((work, i) => (
               <Link
                 key={work.slug}
                 href={`/work/${work.slug}`}
-                className="svc-related-card css-reveal"
+                className="svcd-work-card css-reveal"
                 data-cursor="view"
+                style={{ transitionDelay: `${i * 100}ms` }}
               >
-                <div
-                  className="svc-related-img"
-                  style={{ position: "relative", overflow: "hidden" }}
-                >
+                <div className="svcd-work-img reveal-clip">
                   <Image
                     src={work.image}
                     alt={work.name}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
+                    sizes="(max-width: 767px) 100vw, 50vw"
                     style={{ objectFit: "cover" }}
                   />
                 </div>
-                <div className="svc-related-text">
-                  <p className="svc-related-label">{work.client}</p>
-                  <h3 className="svc-related-title font-[var(--sans)] font-medium">
-                    {work.name}
-                  </h3>
-                </div>
+                <p className="svcd-work-name">{work.name}</p>
+                <p className="svcd-work-cat">{work.client}</p>
               </Link>
             ))}
           </div>
         </section>
       )}
 
-      {/* ═══ SECTION 6: DARK CTA ═══ */}
+      {/* ═══ CTA — Dark Section ═══ */}
       <section
         className="css-reveal"
         style={{
           background: "var(--text-primary)",
           color: "var(--bg)",
-          padding: "120px var(--page-px)",
+          padding: "clamp(80px, 10vw, 120px) var(--page-px)",
         }}
       >
-        <div className="cta-dark-grid">
+        <div className="svcd-cta-grid">
           <div>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                opacity: 0.4,
-                marginBottom: 24,
-              }}
-            >
-              (Next Step)
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--sans)",
-                fontWeight: 500,
-                fontSize: "clamp(48px, 6vw, 80px)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.03em",
-                color: "var(--bg)",
-                margin: 0,
-              }}
-            >
-              {service.ctaHeading}
-            </h2>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.5,
-                marginTop: 20,
-              }}
-            >
+            <p className="svcd-cta-label">(Next step)</p>
+            <h2 className="svcd-cta-heading">{service.ctaHeading}</h2>
+            <p className="svcd-cta-sub">
               Book a discovery call. We will scope your project and recommend
               the right approach.
             </p>
           </div>
-
-          <div className="cta-dark-buttons">
+          <div className="svcd-cta-buttons">
             <Button
               href="/contact"
               variant="primary-inverted"
@@ -293,7 +203,8 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
             </Button>
             <Button
               href="/packages"
-              variant="secondary-inverted"
+              variant="text"
+              className="svcd-cta-text-btn"
               data-cursor="link"
             >
               View Packages
