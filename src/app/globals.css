@@ -2010,7 +2010,7 @@ body {
 /* ── Stats grid ── */
 .about-stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 40px;
 }
 
@@ -2020,7 +2020,46 @@ body {
   grid-template-columns: 200px 1fr;
   gap: 40px;
   padding: 24px 0;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.08);
+  border-bottom: 1px solid var(--text-muted);
+  position: relative;
+}
+.about-process-step::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: calc(-1 * var(--page-px));
+  right: calc(-1 * var(--page-px));
+  background: var(--bg-shift);
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+.about-process-step-left {
+  position: relative;
+}
+.about-process-ghost {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: -0.03em;
+  color: var(--text-muted);
+  opacity: 0.3;
+  line-height: 1;
+  display: block;
+  margin-bottom: 8px;
+}
+.about-process-name {
+  letter-spacing: -0.02em;
+  transition: letter-spacing 0.5s ease;
+}
+@media (hover: hover) {
+  .about-process-step:hover::before {
+    opacity: 1;
+  }
+  .about-process-step:hover .about-process-name {
+    letter-spacing: 0.01em;
+  }
 }
 
 /* ── Founder ── */
@@ -2039,6 +2078,10 @@ body {
   .about-process-step {
     grid-template-columns: 1fr;
     gap: 8px;
+  }
+  .about-process-ghost {
+    font-size: 24px;
+    margin-bottom: 4px;
   }
   .about-founder-grid {
     grid-template-columns: 1fr;
@@ -2066,7 +2109,7 @@ body {
 
 /* ── Capabilities tabs ── */
 .about-capabilities-section {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--text-muted);
 }
 .about-capabilities-tabbar {
   display: flex;
@@ -2103,7 +2146,7 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--border);
+  background: var(--text-muted);
 }
 .about-capabilities-indicator {
   position: absolute;
@@ -2215,7 +2258,7 @@ body {
   gap: 48px;
 }
 .about-contrast-col-left {
-  border-right: 1px solid var(--border);
+  border-right: 1px solid var(--text-muted);
   padding-right: 48px;
 }
 .about-contrast-heading {
@@ -2265,7 +2308,7 @@ body {
     padding-right: 0;
     padding-bottom: 32px;
     margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--text-muted);
   }
 }
 
@@ -2299,12 +2342,18 @@ body {
   overflow: hidden;
   transition: filter 0.3s ease;
 }
+.about-team-card {
+  transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
 @media (hover: hover) {
+  .about-team-card:hover {
+    background: var(--bg-shift);
+  }
   .about-team-card:hover .about-team-card-square {
     filter: brightness(0.96);
   }
   .about-team-card:hover .about-team-card-role {
-    opacity: 0.8;
+    letter-spacing: 0.01em;
   }
 }
 .about-team-card-role {
@@ -2313,7 +2362,8 @@ body {
   font-size: 14px;
   color: var(--text-primary);
   margin-top: 16px;
-  transition: opacity 0.3s ease;
+  letter-spacing: -0.02em;
+  transition: letter-spacing 0.5s ease, opacity 0.3s ease;
 }
 .about-team-card-label {
   font-family: var(--sans);
@@ -4040,6 +4090,10 @@ body {
     animation: pageEnter 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
     animation-delay: 0.2s;
   }
+  [data-hero-clock] {
+    animation: pageEnter 0.6s cubic-bezier(0.23, 1, 0.32, 1) both;
+    animation-delay: 0.3s;
+  }
 }
 
 /* ── Interaction 5: Body Link Hover Opacity ── */
@@ -4595,6 +4649,23 @@ td a:hover {
     .about-process-step:nth-child(3).in-view { transition-delay: 0.16s; }
     .about-process-step:nth-child(4).in-view { transition-delay: 0.24s; }
     .about-process-step:nth-child(5).in-view { transition-delay: 0.32s; }
+
+    /* ── Collaborator cards stagger (about page) ── */
+    .about-team-card {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                  transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .about-team-card.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .about-team-card:nth-child(2).in-view { transition-delay: 0.06s; }
+    .about-team-card:nth-child(3).in-view { transition-delay: 0.12s; }
+    .about-team-card:nth-child(4).in-view { transition-delay: 0.18s; }
+    .about-team-card:nth-child(5).in-view { transition-delay: 0.24s; }
+    .about-team-card:nth-child(6).in-view { transition-delay: 0.3s; }
 
     /* ── Package tier cards stagger ── */
     .packages-grid .package-tier {

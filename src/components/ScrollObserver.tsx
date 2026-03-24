@@ -54,7 +54,8 @@ export default function ScrollObserver() {
       ".clients-accordion-row, " +
       ".case-content-section, " +
       ".reveal-clip, .reveal-stagger-parent, .reveal-text, " +
-      ".ins-card, .ins-featured"
+      ".ins-card, .ins-featured, " +
+      ".about-team-card"
     );
 
     targets.forEach((el) => observer.observe(el));
