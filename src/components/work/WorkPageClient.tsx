@@ -153,7 +153,10 @@ export default function WorkPageClient() {
                 data-cursor="view"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
-                <div className="wp-grid-img-wrap reveal-clip">
+                <div
+                  className="wp-grid-img-wrap reveal-clip"
+                  style={{ viewTransitionName: `project-image-${project.slug}` }}
+                >
                   <div className="wp-grid-img-inner relative">
                     <Image
                       src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
@@ -170,7 +173,12 @@ export default function WorkPageClient() {
                     .map((t) => t.trim())
                     .join(" — ")}
                 </p>
-                <h3 className="wp-grid-name">{project.name}</h3>
+                <h3
+                  className="wp-grid-name"
+                  style={{ viewTransitionName: `project-${project.slug}` }}
+                >
+                  {project.name}
+                </h3>
               </Link>
             ))}
           </div>

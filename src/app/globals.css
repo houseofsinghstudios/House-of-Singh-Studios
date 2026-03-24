@@ -1516,28 +1516,55 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
-   View Transitions API
+   View Transitions API — V2 Directional Page Turn
    ═══════════════════════════════════════════════════════ */
-@keyframes vt-fade-out {
-  to { opacity: 0; transform: translateY(-12px); }
-}
-@keyframes vt-fade-in {
-  from { opacity: 0; transform: translateY(16px); }
+
+/* Outgoing page: fade + shift up */
+@keyframes pageOut {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
 }
 
+/* Incoming page: fade + shift down */
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Root transitions — directional fade with vertical shift */
 ::view-transition-old(root) {
-  animation: 0.3s ease both vt-fade-out;
+  animation: pageOut 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 ::view-transition-new(root) {
-  animation: 0.5s 0.1s ease both vt-fade-in;
+  animation: pageIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0.1s both;
 }
 
-::view-transition-old(service-title) {
-  animation: 0.35s ease-out both vt-fade-out;
+/* Named element morphs — smooth group animation */
+::view-transition-group(*) {
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
-::view-transition-new(service-title) {
-  animation: 0.4s 0.1s ease-in both vt-fade-in;
-}
+
+/*
+ * Service title morph (service-{slug}) is handled by the
+ * ::view-transition-group(*) wildcard rule above.
+ */
+
+/*
+ * Named transitions for project titles (project-{slug}) and
+ * project images (project-image-{slug}) are handled by the
+ * ::view-transition-group(*) wildcard rule above.
+ * The browser morphs matching viewTransitionName elements
+ * automatically between pages.
+ */
 
 /* ═══════════════════════════════════════════════════════
    Services pages
@@ -3826,25 +3853,6 @@ body {
       animation-range: entry 0% entry 35%;
     }
   }
-}
-
-/* ═══════════════════════════════════════════════════════
-   Layer 2: View Transitions API — crossfade & morph timing
-   ═══════════════════════════════════════════════════════ */
-
-::view-transition-old(root) {
-  animation-duration: 0.3s;
-  animation-timing-function: ease;
-}
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-  animation-delay: 0.1s;
-  animation-timing-function: ease;
-}
-
-::view-transition-group(*) {
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 /* ═══════════════════════════════════════════════════════

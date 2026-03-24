@@ -52,7 +52,7 @@ export default function CaseStudyTemplate({
           className="cs-hero-heading css-reveal"
           style={{
             transitionDelay: "160ms",
-            viewTransitionName: "project-title",
+            viewTransitionName: `project-${project.slug}`,
           }}
         >
           {project.name}
@@ -66,7 +66,10 @@ export default function CaseStudyTemplate({
       </section>
 
       {/* ═══ SECTION 2: HERO IMAGE ═══ */}
-      <div className="cs-hero-image reveal-clip cs-hero-image-reveal">
+      <div
+        className="cs-hero-image reveal-clip cs-hero-image-reveal"
+        style={{ viewTransitionName: `project-image-${project.slug}` }}
+      >
         <Image
           src={project.heroImage.src}
           alt={project.heroImage.alt}
