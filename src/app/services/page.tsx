@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Link } from "next-view-transitions";
 import DiagnosticTrigger from "@/components/DiagnosticTrigger";
 import ServiceScrollSection from "@/components/services/ServiceScrollSection";
+import ServicesUnpackedAccordion from "@/components/services/ServicesUnpackedAccordion";
+import Button from "@/components/ui/Button";
 import { services } from "@/data/services";
 
 export const metadata: Metadata = {
@@ -51,22 +52,42 @@ const SERVICE_IMAGES: Record<
 export default function ServicesPage() {
   return (
     <>
+      {/* ═══ HERO ═══ */}
       <section
-        className="svc-hero"
-        style={{ padding: "140px var(--page-px) 64px" }}
+        style={{
+          padding:
+            "clamp(120px, 15vw, 200px) var(--page-px) clamp(64px, 8vw, 100px)",
+        }}
       >
-        <p className="svc-hero-label" data-hero-label>
+        <p
+          className="editorial-label css-reveal"
+          style={{ margin: "0 0 16px", transitionDelay: "0ms" }}
+        >
           (Services)
         </p>
-        <h1 className="svc-hero-heading" data-hero-heading>
-          We solve brand problems for established businesses.
+        <h1
+          className="svc-v2-heading css-reveal"
+          style={{ transitionDelay: "100ms" }}
+        >
+          Every service solves a business problem.
         </h1>
-        <p className="svc-hero-sub" data-hero-sub>
-          Four situations. Four solutions. Find the one that sounds like yours.
+        <p
+          className="svc-v2-sub css-reveal"
+          style={{ transitionDelay: "200ms" }}
+        >
+          Four capabilities. One studio. Every service connects to measurable
+          business outcomes.
+        </p>
+        <p
+          className="svc-v2-scroll css-reveal"
+          style={{ transitionDelay: "300ms" }}
+        >
+          (Scroll)
         </p>
         <DiagnosticTrigger />
       </section>
 
+      {/* ═══ SERVICE BLOCKS (sticky scroll theater — do not modify) ═══ */}
       <section
         className="svc-theater-container"
         style={{ padding: "0 var(--page-px) clamp(64px, 8vw, 120px)" }}
@@ -88,21 +109,54 @@ export default function ServicesPage() {
         ))}
       </section>
 
+      {/* ═══ SERVICES UNPACKED ═══ */}
       <section
-        className="svc-dark-cta"
+        className="css-reveal"
         style={{
-          background: "var(--text-primary)",
-          padding: "80px var(--page-px)",
+          background: "var(--bg-shift)",
+          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
         }}
       >
-        <p className="svc-dark-cta-text">Ready to start a conversation?</p>
-        <div className="svc-dark-cta-btns">
-          <Link href="/contact" className="svc-btn-light" data-cursor="link">
-            Discovery Call
-          </Link>
-          <Link href="/packages" className="svc-btn-outline" data-cursor="link">
-            Packages
-          </Link>
+        <p className="editorial-label" style={{ margin: "0 0 12px" }}>
+          (Services unpacked)
+        </p>
+        <h2 className="su-heading">Detailed capabilities.</h2>
+        <ServicesUnpackedAccordion />
+      </section>
+
+      {/* ═══ CTA ═══ */}
+      <section
+        className="svc-v2-cta css-reveal"
+        style={{
+          background: "var(--text-primary)",
+          color: "var(--bg)",
+          padding: "clamp(80px, 10vw, 160px) var(--page-px)",
+        }}
+      >
+        <div className="svc-v2-cta-grid">
+          <div>
+            <p className="svc-v2-cta-label">(Next step)</p>
+            <h2 className="svc-v2-cta-heading">
+              Ready to see which service fits your business?
+            </h2>
+            <p className="svc-v2-cta-sub">We respond within 24 hours.</p>
+          </div>
+          <div className="svc-v2-cta-buttons">
+            <Button
+              href="/contact"
+              variant="primary-inverted"
+              data-cursor="link"
+            >
+              Book a Discovery Call
+            </Button>
+            <Button
+              href="/contact"
+              variant="secondary-inverted"
+              data-cursor="link"
+            >
+              Start a Project
+            </Button>
+          </div>
         </div>
       </section>
     </>
