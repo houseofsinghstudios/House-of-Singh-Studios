@@ -8,7 +8,7 @@ export default function ServicesSection() {
   return (
     <section className="css-reveal services-section-mobile" style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
       <div className="css-reveal">
-        <EditorialLabel text="03 — Capabilities" className="mb-6" />
+        <EditorialLabel text="(03) Capabilities" className="mb-6" />
       </div>
 
       <h2

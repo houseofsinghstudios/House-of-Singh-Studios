@@ -92,7 +92,7 @@ export default function TestimonialsSection() {
       <div className="testimonials-inner">
         {/* Left column: quote */}
         <div className="testimonials-left">
-          <EditorialLabel text="05 — Clients" className="mb-7" />
+          <EditorialLabel text="(06) Testimonials" className="mb-7" />
 
           <div className="testimonials-quote-wrap">
             {/* Ghost number */}

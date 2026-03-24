@@ -65,7 +65,7 @@ export default function ClientsSection() {
         {clients.map((client, i) => {
           const isOpen = openIndex === i;
           return (
-            <div key={client.name} className="clients-accordion-row">
+            <div key={client.name} className="clients-accordion-row" data-cursor="link">
               <button
                 className="clients-accordion-header"
                 onClick={() => setOpenIndex(isOpen ? null : i)}

@@ -58,8 +58,10 @@ export default function StatsSection() {
           }, delay);
         });
 
-        descRefs.current.forEach((el) => {
-          if (el) el.classList.add("in-view");
+        descRefs.current.forEach((el, i) => {
+          if (el) {
+            setTimeout(() => el.classList.add("in-view"), i * 150 + 200);
+          }
         });
       },
       { threshold: 0.3 }
@@ -80,7 +82,7 @@ export default function StatsSection() {
       style={{ padding: "clamp(40px, 5vw, 64px) var(--page-px)" }}
     >
       <div className="css-reveal mb-10">
-        <EditorialLabel text="06 — Proof" className="mb-6" />
+        <EditorialLabel text="(07) Proof" className="mb-6" />
       </div>
       <div className="stats-row">
         {STATS.items.map((stat, i) => (

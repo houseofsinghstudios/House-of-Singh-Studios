@@ -51,6 +51,7 @@ export default function ScrollObserver() {
       ".testimonials-section, " +
       ".svc-accordion-row, " +
       ".featured-work-item, " +
+      ".clients-accordion-row, " +
       ".case-content-section, " +
       ".reveal-clip, .reveal-stagger-parent, .reveal-text, " +
       ".insights-card"
