@@ -3695,6 +3695,22 @@ td a:hover {
       clip-path: inset(0 0 0 0);
     }
 
+    /* ── Mobile: simplified reveal — fade-up instead of clip-path ── */
+    @media (max-width: 767px) {
+      .reveal-clip {
+        clip-path: none;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                    transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .reveal-clip.in-view {
+        clip-path: none;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* ── reveal-stagger-parent: staggered children (fallback) ── */
     .reveal-stagger-parent > * {
       opacity: 0;
@@ -4084,6 +4100,201 @@ td a:hover {
 
 .svc-row:hover .svc-row-arrow {
   transform: translateX(4px);
+}
+
+/* ── Sticky Scroll Theater ── */
+.svc-theater-container {
+  /* wrapper — no special styling */
+}
+
+.svc-theater-section {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  gap: clamp(32px, 4vw, 64px);
+  padding: clamp(64px, 8vw, 120px) 0;
+}
+
+.svc-theater-left {
+  position: sticky;
+  top: 120px;
+  align-self: start;
+}
+
+.svc-theater-heading {
+  font-size: clamp(28px, 3.5vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-primary);
+  max-width: 480px;
+  margin: 0 0 16px;
+}
+
+.svc-theater-body {
+  font-size: clamp(14px, 1.5vw, 15px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 440px;
+  margin: 0 0 20px;
+}
+
+.svc-theater-tags {
+  font-size: 12px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  line-height: 1.8;
+  margin: 0 0 24px;
+  max-width: 440px;
+}
+
+.svc-theater-tag {
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+.svc-theater-tag-dot {
+  color: var(--text-muted);
+}
+
+@media (hover: hover) {
+  .service-tag-active {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+}
+
+.svc-theater-link-wrap {
+  margin: 0;
+}
+
+.svc-theater-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.svc-theater-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.svc-theater-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.svc-theater-link-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.svc-theater-link:hover .svc-theater-link-arrow {
+  transform: translateX(4px);
+}
+
+.svc-theater-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.svc-theater-image-block {
+  /* wrapper for image + label */
+}
+
+.svc-theater-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+@media (hover: hover) {
+  .svc-theater-image-wrap img {
+    transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .svc-theater-image-wrap:hover img {
+    transform: scale(1.03);
+  }
+}
+
+.svc-theater-image-label {
+  margin-top: 8px;
+}
+
+.svc-theater-image-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.svc-theater-image-cat {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin: 2px 0 0;
+}
+
+.svc-theater-divider {
+  border: none;
+  border-top: 1px solid var(--text-muted);
+  margin: 0;
+}
+
+/* ── Tablet: 768–1023px ── */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .svc-theater-section {
+    grid-template-columns: 50% 50%;
+    gap: 24px;
+  }
+  .svc-theater-left {
+    top: 100px;
+  }
+  .svc-theater-heading {
+    font-size: clamp(24px, 3vw, 28px);
+  }
+  .svc-theater-body {
+    font-size: 14px;
+  }
+}
+
+/* ── Mobile: below 768px ── */
+@media (max-width: 767px) {
+  .svc-theater-section {
+    grid-template-columns: 1fr;
+    padding: 48px 0;
+  }
+  .svc-theater-left {
+    position: static;
+  }
+  .svc-theater-heading {
+    font-size: clamp(24px, 6vw, 32px);
+  }
+  .svc-theater-image-wrap {
+    aspect-ratio: 4 / 3;
+  }
+  .svc-theater-divider {
+    margin: 0;
+  }
+  /* Simplified reveal on mobile: fade-up instead of clip-path wipe */
+  .svc-theater-image-wrap.reveal-clip {
+    clip-path: none;
+    animation: none;
+  }
 }
 
 /* Dark CTA */
