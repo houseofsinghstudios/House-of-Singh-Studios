@@ -55,7 +55,7 @@ export default function ServicesPage() {
       <section
         style={{
           padding:
-            "clamp(120px, 15vw, 200px) var(--page-px) clamp(64px, 8vw, 100px)",
+            "var(--hero-pt) var(--page-px) clamp(64px, 8vw, 100px)",
         }}
       >
         <p
