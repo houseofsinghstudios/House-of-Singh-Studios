@@ -2,17 +2,15 @@ import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import dynamic from "next/dynamic";
 import "./globals.css";
 import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FooterReveal from "@/components/layout/FooterReveal";
-
-const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: false });
-const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
-const PageTransition = dynamic(() => import("@/components/PageTransition"), { ssr: false });
-const ScrollObserver = dynamic(() => import("@/components/ScrollObserver"), { ssr: false });
+import SmoothScroll from "@/components/SmoothScroll";
+import CustomCursor from "@/components/CustomCursor";
+import PageTransition from "@/components/PageTransition";
+import ScrollObserver from "@/components/ScrollObserver";
 
 const inter = Inter({
   subsets: ["latin"],
