@@ -405,7 +405,7 @@ body {
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin: 0;
-  transition: letter-spacing 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: color 0.3s ease;
 }
 @media (hover: hover) {
   .svc-accordion-row:hover .svc-accordion-title {
@@ -689,7 +689,7 @@ body {
   font-size: clamp(18px, 2.5vw, 24px);
   letter-spacing: -0.015em;
   color: var(--text-primary);
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 .wp-list-cat {
   font-family: var(--sans);
@@ -1166,7 +1166,7 @@ body {
   font-weight: 500;
   letter-spacing: -0.025em;
   color: var(--text-primary);
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
   text-align: right;
 }
 .cs-next-arrow {
@@ -1403,7 +1403,7 @@ body {
   letter-spacing: -0.02em;
   color: #22211F;
   line-height: 1;
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 
 .footer-next-arrow {
@@ -1621,7 +1621,7 @@ body {
   text-align: center;
   margin: 0;
   opacity: 0;
-  transition: opacity 0.8s ease 0.3s, letter-spacing 0.8s ease 0.3s;
+  transition: opacity 0.8s ease 0.3s;
 }
 .footer-reveal-tagline.in-view {
   opacity: 1;
@@ -2030,7 +2030,7 @@ body {
   color: var(--text-primary);
   letter-spacing: -0.01em;
   flex: 1;
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 
 .svc-acc-icon {
@@ -2268,7 +2268,7 @@ body {
 }
 .about-process-name {
   letter-spacing: -0.02em;
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 @media (hover: hover) {
   .about-process-step:hover::before {
@@ -2580,7 +2580,7 @@ body {
   color: var(--text-primary);
   margin-top: 16px;
   letter-spacing: -0.02em;
-  transition: letter-spacing 0.5s ease, opacity 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 .about-team-card-label {
   font-family: var(--sans);
@@ -5479,7 +5479,7 @@ td a {
   font-size: clamp(16px, 1.5vw, 18px);
   letter-spacing: -0.01em;
   flex: 1;
-  transition: letter-spacing 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: color 0.3s ease;
 }
 .clients-accordion-tags {
   font-size: 11px;
@@ -5651,7 +5651,7 @@ td a {
   font-weight: 500;
   letter-spacing: -0.015em;
   color: var(--text-primary);
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 
 .su-row-icon {
@@ -5809,7 +5809,7 @@ td a {
   line-height: 1.2;
   color: var(--text-primary, #22211F);
   margin: 0;
-  transition: letter-spacing 0.5s ease;
+  transition: color 0.3s ease;
 }
 
 @media (hover: hover) {

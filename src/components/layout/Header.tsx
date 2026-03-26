@@ -78,6 +78,8 @@ export default function Header() {
               src="/hos-studios-logo.svg"
               alt=""
               className="header-crest"
+              width={140}
+              height={115}
             />
           </Link>
         </div>
