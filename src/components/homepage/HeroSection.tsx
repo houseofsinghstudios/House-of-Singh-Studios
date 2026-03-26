@@ -50,6 +50,9 @@ export default function HeroSection() {
         >
           <span style={{ display: "block" }}>
             <span className="hero-cycle-inline">
+              <span className="hero-cycle-sizer" aria-hidden="true">
+                {HERO.cycleWords[currentIndex]}
+              </span>
               {HERO.cycleWords.map((word, i) => (
                 <span
                   key={word}
