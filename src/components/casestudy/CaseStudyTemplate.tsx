@@ -36,7 +36,7 @@ export default function CaseStudyTemplate({
         className="cs-hero"
         style={{
           padding:
-            "clamp(120px, 15vh, 180px) var(--page-px) clamp(48px, 6vh, 64px)",
+            "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 64px)",
         }}
       >
         <Link href="/work" className="cs-back css-reveal">

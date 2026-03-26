@@ -39,7 +39,7 @@ export default function ContactClient() {
       {/* ── HERO (~50vh) ── */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "50vh", paddingTop: 140, paddingBottom: 80 }}
+        style={{ minHeight: "50vh", paddingTop: "var(--hero-pt)", paddingBottom: 80 }}
       >
         <p
           data-hero-label

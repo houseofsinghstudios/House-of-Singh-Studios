@@ -31,7 +31,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
       {/* ═══ HERO ═══ */}
       <section
         className="svcd-hero"
-        style={{ padding: "clamp(120px, 15vh, 180px) var(--page-px) clamp(48px, 6vh, 80px)" }}
+        style={{ padding: "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 80px)" }}
       >
         <Link href="/services" className="svcd-back css-reveal">
           <span className="svcd-back-arrow">←</span> Services

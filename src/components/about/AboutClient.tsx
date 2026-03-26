@@ -255,7 +255,7 @@ export default function AboutClient() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          padding: "140px var(--page-px) 64px",
+          padding: "var(--hero-pt) var(--page-px) 64px",
         }}
       >
         <p
