@@ -38,8 +38,10 @@ export default function RootLayout({
           <CustomCursor />
           <PageTransition />
           <Header />
-          <main>{children}</main>
-          <Footer />
+          <div className="site-content-wrap">
+            <main>{children}</main>
+            <Footer />
+          </div>
           <FooterReveal />
           <ScrollObserver />
           <SpeedInsights />
