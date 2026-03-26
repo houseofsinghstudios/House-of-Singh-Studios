@@ -180,39 +180,55 @@ body {
   animation: revealUp 0.8s ease forwards;
 }
 
-/* ── Hero cycling word ── */
-.hero-cycle-wrap {
+/* ── Hero headline ── */
+.hero-headline {
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: clamp(28px, 3.5vw, 48px);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+/* ── Hero cycling word — crossfade ── */
+.hero-cycle-inline {
   display: inline-block;
   position: relative;
-  overflow: hidden;
-  vertical-align: baseline;
-  height: 1.25em;
-  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.hero-cycle-word {
+.hero-cycle-fade {
+  font-style: italic;
+  font-weight: 500;
+  transition: opacity 0.5s ease;
+}
+.hero-cycle-fade:not(.hero-cycle-visible) {
   position: absolute;
   left: 0;
   top: 0;
-  white-space: nowrap;
-  font-style: italic;
-  font-weight: 500;
   opacity: 0;
-  transform: translateY(110%);
+  pointer-events: none;
 }
-.hero-cycle-word.hero-cycle-active {
+.hero-cycle-fade.hero-cycle-visible {
+  position: relative;
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
 }
-.hero-cycle-word.hero-cycle-exit {
-  opacity: 0;
-  transform: translateY(-110%);
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+@media (min-width: 1280px) {
+  .hero-headline {
+    font-size: 48px;
+  }
 }
-/* Responsive: ensure cycling words don't clip on smaller screens */
+@media (min-width: 1440px) {
+  .hero-headline {
+    font-size: 52px;
+  }
+}
+@media (max-width: 1023px) {
+  .hero-headline {
+    font-size: clamp(26px, 3.5vw, 36px);
+  }
+}
 @media (max-width: 767px) {
-  .hero-cycle-wrap {
-    height: 1.3em;
+  .hero-headline {
+    font-size: clamp(24px, 6.5vw, 32px);
   }
 }
 
