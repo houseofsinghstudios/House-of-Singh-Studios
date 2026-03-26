@@ -1,21 +1,22 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import { useState, useEffect, useRef, useCallback } from "react";
-import NavigationOverlay from "./NavigationOverlay";
+import { useState, useEffect, useRef } from "react";
 
 const navLinks = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
+  { label: "About", href: "/about" },
   { label: "Insights", href: "/insights" },
+  { label: "Packages", href: "/packages" },
   { label: "Contact", href: "/contact" },
 ];
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const lastScrollY = useRef(0);
   const rafRef = useRef(0);
 
@@ -51,7 +52,7 @@ export default function Header() {
 
   /* ── Body scroll lock ── */
   useEffect(() => {
-    if (menuOpen) {
+    if (mobileOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -59,17 +60,14 @@ export default function Header() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
-
-  const toggleMenu = useCallback(() => setMenuOpen((prev) => !prev), []);
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  }, [mobileOpen]);
 
   return (
     <>
       <header
-        className={`site-header${scrolled ? " site-header--scrolled" : ""}${menuOpen ? " site-header--menu-open" : ""}`}
+        className={`site-header${scrolled ? " site-header--scrolled" : ""}`}
         style={{
-          transform: hidden && !menuOpen ? "translateY(-100%)" : "translateY(0)",
+          transform: hidden ? "translateY(-100%)" : "translateY(0)",
         }}
       >
         {/* Crest Logo — visible at page top only (desktop) */}
@@ -107,30 +105,38 @@ export default function Header() {
           ))}
         </nav>
 
-        {/* Menu + trigger — always visible on desktop/tablet, only nav on mobile */}
+        {/* Mobile hamburger */}
         <button
-          className="header-menu-trigger"
-          onClick={toggleMenu}
-          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
-          aria-expanded={menuOpen}
-          data-cursor="link"
+          className="header-mobile-hamburger"
+          onClick={() => setMobileOpen(prev => !prev)}
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
         >
-          <span className="header-menu-trigger-text">
-            {menuOpen ? "Close" : "Menu"}
-          </span>
-          <span
-            className="header-menu-trigger-plus"
-            style={{
-              transform: menuOpen ? "rotate(45deg)" : "rotate(0deg)",
-            }}
-          >
-            +
-          </span>
+          <span className={`hamburger-line hamburger-line--top${mobileOpen ? " open" : ""}`} />
+          <span className={`hamburger-line hamburger-line--bottom${mobileOpen ? " open" : ""}`} />
         </button>
       </header>
 
-      {/* Full-screen Navigation Overlay */}
-      <NavigationOverlay open={menuOpen} onClose={closeMenu} />
+      {mobileOpen && (
+        <div className="mobile-nav-panel">
+          <nav className="mobile-nav-links">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="mobile-nav-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="mobile-nav-footer">
+            <span>studio@houseofsingh.com</span>
+            <span>Toronto, Canada</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }
