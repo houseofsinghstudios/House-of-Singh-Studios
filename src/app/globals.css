@@ -1283,6 +1283,7 @@ body {
   color: #22211F;
   opacity: 0.35;
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: center;
   flex-shrink: 0;
 }
 
@@ -1409,7 +1410,7 @@ body {
   }
   .footer-next-link:hover .footer-next-arrow {
     opacity: 1;
-    transform: translateX(4px);
+    transform: rotate(45deg);
   }
   .footer-tz-detail a:hover {
     color: var(--text-primary);
