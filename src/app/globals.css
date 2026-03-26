@@ -1323,8 +1323,8 @@ body {
 
 /* ── Next page section (beige) ── */
 .ft-next-wrap {
-  background: #E0DEDA;
-  border-top: 1px solid #A9A6A2;
+  background: var(--text-primary);
+  border-top: none;
 }
 .ft-next-inner {
   padding: clamp(48px, 6vw, 72px) var(--page-px);
@@ -1342,7 +1342,7 @@ body {
   bottom: -24px;
   left: calc(-1 * var(--page-px));
   right: calc(-1 * var(--page-px));
-  background: var(--bg-shift);
+  background: rgba(247, 246, 245, 0.05);
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   pointer-events: none;
@@ -1365,13 +1365,13 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #A9A6A2;
+  color: rgba(247, 246, 245, 0.35);
   margin-bottom: 8px;
 }
 .footer-next-desc {
   font-family: var(--sans);
   font-size: 13px;
-  color: #5C5B58;
+  color: rgba(247, 246, 245, 0.5);
   line-height: 1.5;
   max-width: 360px;
   margin: 0;
@@ -1387,11 +1387,11 @@ body {
   font-size: clamp(36px, 5vw, 56px);
   font-weight: 500;
   letter-spacing: -0.02em;
-  color: #22211F;
+  color: #F7F6F5;
   line-height: 1;
 }
 .footer-next-arrow {
-  color: #22211F;
+  color: #F7F6F5;
   opacity: 0.35;
   transform-origin: center;
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -1404,16 +1404,16 @@ body {
 
 /* ── Dark footer ── */
 .ft-dark {
-  background: var(--text-primary);
+  background: #E0DEDA;
 }
 .ft-dark-inner {
-  padding: clamp(48px, 6vw, 72px) var(--page-px);
+  padding: clamp(40px, 5vw, 56px) var(--page-px);
 }
 .ft-dark-top {
   display: grid;
   grid-template-columns: 260px 1fr;
   gap: 48px;
-  padding-bottom: clamp(40px, 5vw, 60px);
+  padding-bottom: clamp(32px, 4vw, 48px);
 }
 
 /* Brand column */
@@ -1423,8 +1423,7 @@ body {
   gap: 24px;
 }
 .ft-brand-crest {
-  opacity: 0.15;
-  filter: invert(1);
+  opacity: 0.12;
 }
 .ft-brand-tagline {
   display: flex;
@@ -1434,10 +1433,10 @@ body {
   font-weight: 500;
   letter-spacing: -0.01em;
   line-height: 1.35;
-  color: #F7F6F5;
+  color: var(--text-primary);
 }
 .ft-brand-muted {
-  color: rgba(247, 246, 245, 0.3);
+  color: var(--text-muted);
 }
 
 /* Link columns */
@@ -1456,33 +1455,33 @@ body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(247, 246, 245, 0.25);
+  color: var(--text-muted);
   margin: 0 0 8px;
   font-weight: 400;
 }
 .ft-link {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 246, 245, 0.55);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 @media (hover: hover) {
   .ft-link:hover {
-    color: rgba(247, 246, 245, 0.9);
+    color: var(--text-primary);
   }
 }
 .ft-link-note {
   font-family: var(--sans);
   font-size: 12px;
-  color: rgba(247, 246, 245, 0.2);
+  color: var(--text-muted);
   margin-top: 8px;
 }
 
 /* Locations row */
 .ft-locs {
   padding: clamp(24px, 3vw, 32px) 0;
-  border-top: 1px solid rgba(247, 246, 245, 0.06);
+  border-top: 1px solid var(--border);
 }
 .ft-locs-row {
   display: flex;
@@ -1492,17 +1491,17 @@ body {
 .ft-loc {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 246, 245, 0.45);
+  color: var(--text-secondary);
 }
 .ft-loc-time {
-  color: rgba(247, 246, 245, 0.25);
+  color: var(--text-muted);
   margin-left: 8px;
 }
 
 /* Bottom row */
 .ft-bottom {
   padding-top: clamp(20px, 3vw, 28px);
-  border-top: 1px solid rgba(247, 246, 245, 0.06);
+  border-top: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1510,7 +1509,7 @@ body {
 .ft-email {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 246, 245, 0.55);
+  color: var(--text-secondary);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -1519,24 +1518,24 @@ body {
 }
 @media (hover: hover) {
   .ft-email:hover {
-    color: rgba(247, 246, 245, 0.9);
+    color: var(--text-primary);
   }
 }
 .ft-email-arrow {
   display: inline-block;
   transform: rotate(-45deg);
   font-size: 14px;
-  color: rgba(247, 246, 245, 0.3);
+  color: var(--text-muted);
 }
 .ft-copy {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.2);
+  color: var(--text-muted);
 }
 .ft-top-btn {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.3);
+  color: var(--text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -1545,7 +1544,7 @@ body {
 }
 @media (hover: hover) {
   .ft-top-btn:hover {
-    color: rgba(247, 246, 245, 0.7);
+    color: var(--text-primary);
   }
 }
 
