@@ -115,7 +115,7 @@ export default function AILabClient() {
             margin: "0 0 16px",
           }}
         >
-          (AI)
+          (AI Lab)
         </p>
         <h1
           data-hero-heading
