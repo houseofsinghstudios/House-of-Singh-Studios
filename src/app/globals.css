@@ -567,19 +567,12 @@ body {
     transform-origin: left;
   }
 }
-/* Filter row with sticky behavior */
+/* Filter row container */
 .content-filter-sticky {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 56px;
-  z-index: 10;
-  background: rgba(247, 246, 245, 0.92);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--page-px);
+  padding: 0 var(--page-px) 32px;
 }
 /* View toggle divider (for List | Grid type controls) */
 .content-filter-divider {
@@ -603,9 +596,6 @@ body {
   .content-filter {
     white-space: nowrap;
     font-size: 10px;
-  }
-  .content-filter-sticky {
-    padding: 0 var(--page-px);
   }
 }
 
