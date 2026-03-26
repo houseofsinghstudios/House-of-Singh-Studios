@@ -199,7 +199,6 @@ export default function Footer() {
                 className="ft-brand-crest"
                 width={72}
                 height={60}
-                style={{ filter: "invert(1)" }}
               />
               <p className="ft-brand-tagline">
                 Design studio.<br />
