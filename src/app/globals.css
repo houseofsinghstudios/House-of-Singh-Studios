@@ -865,9 +865,9 @@ body {
 }
 
 /* ── List: mobile layout ── */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .wp-view-toggle-wrap {
-    display: none;
+    display: none !important;
   }
   .wp-content {
     display: none !important;
@@ -4276,6 +4276,10 @@ body {
     display: none !important;
   }
   .header-wordmark-wrap {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .site-header--scrolled .header-wordmark-wrap {
     opacity: 1;
     pointer-events: auto;
   }
