@@ -74,12 +74,12 @@ export default function WorkPageClient() {
 
       {/* ═══ FILTER BAR + VIEW TOGGLE ═══ */}
       <div className="wp-filter-bar">
-        <div className="wp-filter-pills">
+        <div className="wp-filters">
           {filterCategories.map((f) => (
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`wp-pill${activeFilter === f ? " wp-pill--active" : ""}`}
+              className={`wp-filter-tab${activeFilter === f ? " wp-filter-tab--active" : ""}`}
             >
               {f}
             </button>
