@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import DiagnosticTrigger from "@/components/DiagnosticTrigger";
 import ServiceScrollSection from "@/components/services/ServiceScrollSection";
 import ServicesUnpackedAccordion from "@/components/services/ServicesUnpackedAccordion";
 import Button from "@/components/ui/Button";
@@ -84,7 +83,6 @@ export default function ServicesPage() {
         >
           (Scroll)
         </p>
-        <DiagnosticTrigger />
       </section>
 
       {/* ═══ SERVICE BLOCKS (sticky scroll theater — do not modify) ═══ */}
