@@ -1459,6 +1459,48 @@ body {
   }
 }
 
+/* ── Footer crest reveal ── */
+.footer-reveal-outer {
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+.footer-reveal-scroll {
+  min-height: 150vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: var(--bg);
+}
+.footer-reveal-sticky {
+  position: sticky;
+  bottom: 0;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px var(--page-px);
+}
+.footer-reveal-crest {
+  height: clamp(80px, 12vw, 120px);
+  width: auto;
+  opacity: 0.15;
+}
+.footer-reveal-tagline {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+}
+
 @media (max-width: 600px) {
   .stats-row {
     display: grid;
