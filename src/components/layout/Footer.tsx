@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 
@@ -88,18 +89,38 @@ function getNextPage(pathname: string) {
 }
 
 const CITIES = [
-  { name: "Toronto, Canada", abbr: "EST", email: "studio@houseofsingh.com" },
-  { name: "Delhi, India", abbr: "IST", email: "studio@houseofsingh.com" },
-  { name: "London, UK", abbr: "GMT", email: null },
+  { name: "Toronto, Canada", tz: "America/Toronto", email: "studio@houseofsingh.com" },
+  { name: "Delhi, India", tz: "Asia/Kolkata", email: "studio@houseofsingh.com" },
 ];
+
+function LiveClock({ tz }: { tz: string }) {
+  const [time, setTime] = useState("");
+  useEffect(() => {
+    function update() {
+      setTime(
+        new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: tz,
+        }).format(new Date())
+      );
+    }
+    update();
+    const id = setInterval(update, 30000);
+    return () => clearInterval(id);
+  }, [tz]);
+  return <span>{time || "—"}</span>;
+}
 
 const NAV_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
   { label: "About", href: "/about" },
+  { label: "Insights", href: "/insights" },
+  { label: "Packages", href: "/packages" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Footer() {
@@ -157,16 +178,10 @@ export default function Footer() {
           {CITIES.map((city) => (
             <div key={city.name} className="footer-tz-col">
               <p className="footer-tz-label">{city.name}</p>
-              {city.email ? (
-                <p className="footer-tz-detail">
-                  {city.abbr} &middot;{" "}
-                  <a href={`mailto:${city.email}`}>{city.email}</a>
-                </p>
-              ) : (
-                <p className="footer-tz-detail footer-tz-coming-soon">
-                  Coming soon
-                </p>
-              )}
+              <p className="footer-tz-detail">
+                <LiveClock tz={city.tz} /> &middot;{" "}
+                <a href={`mailto:${city.email}`}>{city.email}</a>
+              </p>
             </div>
           ))}
         </div>

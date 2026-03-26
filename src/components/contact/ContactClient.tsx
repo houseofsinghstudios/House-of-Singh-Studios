@@ -17,6 +17,8 @@ export default function ContactClient() {
       name: formData.get("name"),
       email: formData.get("email"),
       company: formData.get("company"),
+      service: formData.get("service"),
+      budget: formData.get("budget"),
       message: formData.get("message"),
     };
     try {
@@ -119,6 +121,38 @@ export default function ContactClient() {
                     name="company"
                     className="contact-input"
                   />
+                  <span className="focus-line" />
+                </div>
+                <div>
+                  <label className="contact-label">Service interest</label>
+                  <select
+                    name="service"
+                    className="contact-input"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select a service</option>
+                    <option value="Brand Identity">Brand Identity and Visual Design</option>
+                    <option value="Visual Media">Visual Media and Content Production</option>
+                    <option value="Digital Design">Digital Design and Experience</option>
+                    <option value="Creative Strategy">Creative Strategy and Systems</option>
+                    <option value="Not sure">Not sure yet</option>
+                  </select>
+                  <span className="focus-line" />
+                </div>
+                <div>
+                  <label className="contact-label">Budget range</label>
+                  <select
+                    name="budget"
+                    className="contact-input"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select a range</option>
+                    <option value="Under $5K">Under $5,000</option>
+                    <option value="$5K-$10K">$5,000 – $10,000</option>
+                    <option value="$10K-$20K">$10,000 – $20,000</option>
+                    <option value="$20K+">$20,000+</option>
+                    <option value="Not sure">Not sure yet</option>
+                  </select>
                   <span className="focus-line" />
                 </div>
                 <div>
