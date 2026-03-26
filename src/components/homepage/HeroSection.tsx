@@ -50,6 +50,9 @@ export default function HeroSection() {
         >
           <span style={{ display: "block" }}>
             <span className="hero-cycle-inline">
+              <span className="hero-cycle-sizer" aria-hidden="true">
+                {HERO.cycleWords[currentIndex]}
+              </span>
               {HERO.cycleWords.map((word, i) => (
                 <span
                   key={word}
@@ -75,13 +78,10 @@ export default function HeroSection() {
 
         <div
           data-hero-sub
-          className="mt-12 flex flex-wrap gap-3 hero-cta-row"
+          className="mt-12"
         >
           <Button href={HERO.cta.primary.href} data-cursor="link">
             {HERO.cta.primary.text}
-          </Button>
-          <Button href={HERO.cta.secondary.href} variant="secondary" data-cursor="link">
-            {HERO.cta.secondary.text}
           </Button>
         </div>
       </div>
