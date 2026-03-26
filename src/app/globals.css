@@ -185,8 +185,8 @@ body {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  vertical-align: bottom;
-  height: 1.12em;
+  vertical-align: baseline;
+  height: 1.25em;
   transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .hero-cycle-word {
@@ -195,6 +195,7 @@ body {
   top: 0;
   white-space: nowrap;
   font-style: italic;
+  font-weight: 500;
   opacity: 0;
   transform: translateY(110%);
 }
@@ -207,6 +208,12 @@ body {
   opacity: 0;
   transform: translateY(-110%);
   transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Responsive: ensure cycling words don't clip on smaller screens */
+@media (max-width: 767px) {
+  .hero-cycle-wrap {
+    height: 1.3em;
+  }
 }
 
 /* ── Global sharp corners — no border-radius anywhere ── */
