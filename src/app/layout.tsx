@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
@@ -39,6 +40,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <ScrollObserver />
+          <SpeedInsights />
         </body>
       </html>
     </ViewTransitions>
