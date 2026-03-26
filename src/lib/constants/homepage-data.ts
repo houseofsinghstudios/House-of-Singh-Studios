@@ -25,7 +25,6 @@ export const STATS = {
     { target: 50, suffix: "+", label: "Projects Delivered" },
     { target: 12, suffix: "+", label: "Years of Practice" },
     { target: 8, suffix: "+", label: "Industries Served" },
-    { target: 40, suffix: "%", label: "Fewer Revisions" },
   ],
 };
 
