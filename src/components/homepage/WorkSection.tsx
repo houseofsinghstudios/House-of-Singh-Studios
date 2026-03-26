@@ -44,6 +44,7 @@ export default function WorkSection() {
                   src={project.image}
                   alt={project.name}
                   fill
+                  priority={project === PROJECTS[0]}
                   sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 25vw"
                   style={{
                     objectFit: "cover",
