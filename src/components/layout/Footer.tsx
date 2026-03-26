@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
 
+/* ── Next-page routing ── */
+
 const NEXT_PAGE_MAP: Record<
   string,
   { name: string; href: string; teaser: string }
@@ -88,10 +90,7 @@ function getNextPage(pathname: string) {
   return DEFAULT_NEXT;
 }
 
-const CITIES = [
-  { name: "Toronto, Canada", tz: "America/Toronto", email: "studio@houseofsingh.com" },
-  { name: "Delhi, India", tz: "Asia/Kolkata", email: "studio@houseofsingh.com" },
-];
+/* ── Live clock ── */
 
 function LiveClock({ tz }: { tz: string }) {
   const [time, setTime] = useState("");
@@ -110,111 +109,192 @@ function LiveClock({ tz }: { tz: string }) {
     const id = setInterval(update, 30000);
     return () => clearInterval(id);
   }, [tz]);
-  return <span>{time || "—"}</span>;
+  return <span className="ft-loc-time">{time || "—"}</span>;
 }
 
-const NAV_LINKS = [
+/* ── Data ── */
+
+const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
+  { label: "Packages", href: "/packages" },
+];
+
+const COMPANY_LINKS = [
   { label: "About", href: "/about" },
   { label: "Insights", href: "/insights" },
-  { label: "Packages", href: "/packages" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
+
+const CONNECT_LINKS = [
+  { label: "Instagram", href: "https://instagram.com/houseofsinghstudios" },
+  { label: "LinkedIn", href: "https://linkedin.com/company/houseofsinghstudios" },
+  { label: "X / Twitter", href: "https://x.com/hosdesignstudio" },
+];
+
+const LOCATIONS = [
+  { city: "Toronto", tz: "America/Toronto" },
+  { city: "Delhi", tz: "Asia/Kolkata" },
+];
+
+/* ── Component ── */
 
 export default function Footer() {
   const pathname = usePathname();
   const nextPage = getNextPage(pathname);
 
   return (
-    <footer style={{ background: "#E0DEDA", borderTop: "1px solid #A9A6A2" }}>
-      {/* Section 1: Next Page */}
-      <div className="footer-container footer-next-section">
-        <Link href={nextPage.href} className="footer-next-link" data-cursor="link">
-          <div className="footer-next-grid">
-            <div className="footer-next-left">
-              <span className="footer-next-label">Next</span>
-              <p className="footer-next-desc">{nextPage.teaser}</p>
+    <footer>
+      {/* ── Beige next-page section ── */}
+      <div className="ft-next-wrap">
+        <div className="ft-next-inner">
+          <Link href={nextPage.href} className="footer-next-link" data-cursor="link">
+            <div className="footer-next-grid">
+              <div className="footer-next-left">
+                <span className="footer-next-label">Next</span>
+                <p className="footer-next-desc">{nextPage.teaser}</p>
+              </div>
+              <div className="footer-next-right">
+                <span className="footer-next-name">{nextPage.name}</span>
+                <svg
+                  className="footer-next-arrow"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 48 48"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 40 L40 8"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M24 8 L40 8 L40 24"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
             </div>
-            <div className="footer-next-right">
-              <span className="footer-next-name">{nextPage.name}</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* ── Dark footer ── */}
+      <div className="ft-dark">
+        <div className="ft-dark-inner">
+          {/* Top: brand + link columns */}
+          <div className="ft-dark-top">
+            <div className="ft-brand">
+              <img
+                src="/hos-studios-logo.svg"
+                alt="House of Singh Studios"
+                className="ft-brand-crest"
+                width={72}
+                height={60}
+                style={{ filter: "invert(1)" }}
+              />
+              <p className="ft-brand-tagline">
+                Design studio.<br />
+                AI powered. Brand focused.
+              </p>
+              <p className="ft-brand-muted">
+                Strategy, identity, digital&nbsp;&amp;&nbsp;motion — delivered through
+                creative direction and artificial intelligence.
+              </p>
+            </div>
+
+            <div className="ft-links">
+              {/* Studio column */}
+              <div className="ft-link-col">
+                <p className="ft-link-head">Studio</p>
+                {STUDIO_LINKS.map((l) => (
+                  <Link key={l.href} href={l.href} className="ft-link">
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Company column */}
+              <div className="ft-link-col">
+                <p className="ft-link-head">Company</p>
+                {COMPANY_LINKS.map((l) => (
+                  <Link key={l.href} href={l.href} className="ft-link">
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Connect column */}
+              <div className="ft-link-col">
+                <p className="ft-link-head">Connect</p>
+                {CONNECT_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    className="ft-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <p className="ft-link-note">Available for new projects</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Locations row */}
+          <div className="ft-locs">
+            <p className="ft-link-head">Locations</p>
+            <div className="ft-locs-row">
+              {LOCATIONS.map((loc) => (
+                <span key={loc.city} className="ft-loc">
+                  {loc.city} — <LiveClock tz={loc.tz} />
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom row */}
+          <div className="ft-bottom">
+            <a href="mailto:studio@houseofsingh.com" className="ft-email">
+              studio@houseofsingh.com
               <svg
-                className="footer-next-arrow"
-                width="40"
-                height="40"
-                viewBox="0 0 48 48"
+                className="ft-email-arrow"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M8 40 L40 8"
+                  d="M7 17L17 7M17 7H7M17 7v10"
                   stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M24 8 L40 8 L40 24"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
               </svg>
-            </div>
+            </a>
+            <span className="ft-copy">
+              &copy; 2026 House of Singh Studios Inc.
+            </span>
+            <button
+              className="ft-top-btn"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              type="button"
+            >
+              Top &uarr;
+            </button>
           </div>
-        </Link>
-      </div>
-
-      {/* Divider */}
-      <div className="footer-container">
-        <div className="footer-divider" />
-      </div>
-
-      {/* Section 2: Timezone Row */}
-      <div className="footer-container footer-tz-section">
-        <div className="footer-tz-grid">
-          {CITIES.map((city) => (
-            <div key={city.name} className="footer-tz-col">
-              <p className="footer-tz-label">{city.name}</p>
-              <p className="footer-tz-detail">
-                <LiveClock tz={city.tz} /> &middot;{" "}
-                <a href={`mailto:${city.email}`}>{city.email}</a>
-              </p>
-            </div>
-          ))}
         </div>
-      </div>
-
-      {/* Divider */}
-      <div className="footer-container">
-        <div className="footer-divider" />
-      </div>
-
-      {/* Section 3: Nav Row */}
-      <div className="footer-container footer-nav-section">
-        <nav className="footer-nav-row">
-          {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="footer-nav-link">
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-      </div>
-
-      {/* Section 4: Bottom Row — no divider above */}
-      <div className="footer-container footer-bottom-section">
-        <span className="footer-copyright-text">
-          &copy; 2026 House of Singh Studios Inc.
-        </span>
-        <button
-          className="footer-top-btn"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          type="button"
-        >
-          Top &uarr;
-        </button>
       </div>
     </footer>
   );
