@@ -106,7 +106,7 @@ export default function WorkPageClient() {
       {/* ═══ PROJECT CONTENT ═══ */}
       <div
         className={`wp-content${viewTransition ? " wp-content--exiting" : ""}`}
-        style={{ padding: "0 var(--page-px)" }}
+        style={{ padding: "32px var(--page-px) 0" }}
       >
         {filteredProjects.length === 0 ? (
           <p className="wp-empty">No projects in this category yet.</p>

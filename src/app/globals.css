@@ -520,16 +520,15 @@ body {
 .wp-filter-bar {
   position: -webkit-sticky;
   position: sticky;
-  top: 48px;
+  top: 56px;
   z-index: 10;
-  background: rgba(247, 246, 245, 0.85);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(247, 246, 245, 0.9);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px var(--page-px);
-  border-bottom: 1px solid var(--text-muted);
+  padding: 16px var(--page-px) 0;
 }
 /* ── Work page filter tabs ── */
 .wp-filters {
