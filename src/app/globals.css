@@ -3968,7 +3968,6 @@ body {
   opacity: 1;
   transition: opacity 0.2s ease;
   pointer-events: auto;
-  margin-right: 32px;
 }
 .site-header--scrolled .header-desktop-nav {
   opacity: 0;
@@ -4021,6 +4020,24 @@ body {
   position: relative;
   z-index: 110;
   font-family: var(--sans);
+  transition: opacity 0.35s ease;
+}
+/* Hide at page top on desktop/tablet — inline nav is visible */
+@media (min-width: 768px) {
+  .header-menu-trigger {
+    opacity: 0;
+    pointer-events: none;
+  }
+  /* Reveal when scrolled (inline nav fades out) */
+  .site-header--scrolled .header-menu-trigger {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  /* Always show when overlay is open (Close state) */
+  .site-header--menu-open .header-menu-trigger {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 .header-menu-trigger-text {
   font-size: 14px;
