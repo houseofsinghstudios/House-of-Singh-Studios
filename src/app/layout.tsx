@@ -9,6 +9,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import CustomCursor from "@/components/CustomCursor";
 import PageTransition from "@/components/PageTransition";
 import ScrollObserver from "@/components/ScrollObserver";
+import FooterReveal from "@/components/layout/FooterReveal";
 
 export const metadata: Metadata = {
   title: "House of Singh Studios",
@@ -37,8 +38,11 @@ export default function RootLayout({
           <CustomCursor />
           <PageTransition />
           <Header />
-          <main>{children}</main>
-          <Footer />
+          <div className="site-content-wrap">
+            <main>{children}</main>
+            <Footer />
+          </div>
+          <FooterReveal />
           <ScrollObserver />
           <SpeedInsights />
         </body>

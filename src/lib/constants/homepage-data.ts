@@ -1,8 +1,9 @@
 export const HERO = {
   label: "Creative Direction Studio",
-  headline: ["AI can generate assets.", "It cannot build a brand."],
-  secondary:
-    "A design studio powered by AI systems and led by creative direction.",
+  cycleWords: ["Your brand", "Your identity", "Your positioning", "Your visual system"],
+  headlineStatic: "is not an AI prompt.",
+  headlineLine2: "It demands direction and context.",
+  secondary: "A design studio for businesses that have outgrown their brand.",
   cta: {
     primary: { text: "View Projects", href: "/work" },
     secondary: { text: "Start a Project", href: "/contact" },
@@ -25,7 +26,6 @@ export const STATS = {
     { target: 50, suffix: "+", label: "Projects Delivered" },
     { target: 12, suffix: "+", label: "Years of Practice" },
     { target: 8, suffix: "+", label: "Industries Served" },
-    { target: 40, suffix: "%", label: "Fewer Revisions" },
   ],
 };
 

@@ -180,6 +180,35 @@ body {
   animation: revealUp 0.8s ease forwards;
 }
 
+/* ── Hero cycling word ── */
+.hero-cycle-wrap {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: bottom;
+  height: 1.12em;
+  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hero-cycle-word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(110%);
+}
+.hero-cycle-word.hero-cycle-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hero-cycle-word.hero-cycle-exit {
+  opacity: 0;
+  transform: translateY(-110%);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 /* ── Global sharp corners — no border-radius anywhere ── */
 *,
 *::before,
@@ -1193,6 +1222,9 @@ body {
 /* ═══════════════════════════════════════════════════════
    Footer
    ═══════════════════════════════════════════════════════ */
+.site-content-wrap {
+  position: relative;
+}
 .footer-container {
   padding-left: var(--page-px);
   padding-right: var(--page-px);
@@ -1283,6 +1315,7 @@ body {
   color: #22211F;
   opacity: 0.35;
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: center;
   flex-shrink: 0;
 }
 
@@ -1409,7 +1442,7 @@ body {
   }
   .footer-next-link:hover .footer-next-arrow {
     opacity: 1;
-    transform: translateX(4px);
+    transform: rotate(45deg);
   }
   .footer-tz-detail a:hover {
     color: var(--text-primary);
@@ -1456,6 +1489,59 @@ body {
   .footer-tz-col:last-child {
     padding-left: 0;
   }
+}
+
+/* ── Footer crest reveal ── */
+.footer-reveal-outer {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px var(--page-px);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.footer-reveal-crest {
+  height: clamp(80px, 12vw, 120px);
+  width: auto;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1),
+              transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.footer-reveal-crest.in-view {
+  opacity: 0.12;
+  transform: scale(1);
+}
+.footer-reveal-tagline {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease 0.3s, letter-spacing 0.8s ease 0.3s;
+}
+.footer-reveal-tagline.in-view {
+  opacity: 1;
+  letter-spacing: 0.14em;
+}
+.footer-reveal-legal {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  opacity: 0;
+  margin-top: 32px;
+  transition: opacity 0.6s ease 0.6s;
+}
+.footer-reveal-legal.in-view {
+  opacity: 0.5;
 }
 
 @media (max-width: 600px) {
