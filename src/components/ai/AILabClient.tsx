@@ -101,7 +101,7 @@ export default function AILabClient() {
       <section
         className="css-reveal"
         style={{
-          padding: "140px var(--page-px) clamp(48px, 6vw, 80px)",
+          padding: "var(--hero-pt) var(--page-px) clamp(48px, 6vw, 80px)",
           borderBottom: "1px solid var(--border)",
         }}
       >
