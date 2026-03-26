@@ -149,7 +149,7 @@ export default function WorkPageClient() {
               <Link
                 key={project.slug}
                 href={`/work/${project.slug}`}
-                className={`wp-grid-card no-underline${i % 2 !== 0 ? " wp-grid-card--offset" : ""}`}
+                className="wp-grid-card no-underline"
                 data-cursor="view"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
@@ -166,13 +166,27 @@ export default function WorkPageClient() {
                       style={{ objectFit: "cover", pointerEvents: "none" }}
                     />
                   </div>
+                  {/* Hover overlay with description */}
+                  <div className="wp-grid-overlay">
+                    <p className="wp-grid-overlay-desc">{project.shortDescription}</p>
+                  </div>
                 </div>
-                <p className="wp-grid-cat">
-                  {project.workType
-                    .split(",")
-                    .map((t) => t.trim())
-                    .join(" — ")}
-                </p>
+                <div className="wp-grid-meta">
+                  {project.workType.split(",").map((cat) => (
+                    <button
+                      key={cat.trim()}
+                      className="wp-grid-cat-tag"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setActiveFilter(cat.trim());
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }}
+                    >
+                      {cat.trim()}
+                    </button>
+                  ))}
+                </div>
                 <h3
                   className="wp-grid-name"
                   style={{ viewTransitionName: `project-${project.slug}` }}
@@ -187,7 +201,7 @@ export default function WorkPageClient() {
 
       {/* ═══ MOBILE GRID (always visible on mobile) ═══ */}
       <div className="wp-mobile-grid" style={{ padding: "32px var(--page-px) 0" }}>
-        {filteredProjects.map((project, i) => (
+        {filteredProjects.map((project) => (
           <Link
             key={project.slug}
             href={`/work/${project.slug}`}
@@ -205,13 +219,24 @@ export default function WorkPageClient() {
                 />
               </div>
             </div>
-            <p className="wp-grid-cat">
-              {project.workType
-                .split(",")
-                .map((t) => t.trim())
-                .join(" — ")}
-            </p>
+            <div className="wp-grid-meta">
+              {project.workType.split(",").map((cat) => (
+                <button
+                  key={cat.trim()}
+                  className="wp-grid-cat-tag"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setActiveFilter(cat.trim());
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                >
+                  {cat.trim()}
+                </button>
+              ))}
+            </div>
             <h3 className="wp-grid-name">{project.name}</h3>
+            <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
           </Link>
         ))}
       </div>

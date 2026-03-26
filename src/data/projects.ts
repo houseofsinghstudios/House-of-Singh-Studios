@@ -11,6 +11,7 @@ export interface Project {
   origin: string;
   year: string;
   description: string;
+  shortDescription: string;
   seoTitle: string;
   seoDescription: string;
   gradient: string;
@@ -44,6 +45,7 @@ export const projects: Project[] = [
     image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
     description:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
+    shortDescription: "Event branding and visual identity system for one of Canada\u2019s largest TEDx events.",
     seoTitle: "TEDxToronto Visual Identity \u2014 House of Singh Studios",
     seoDescription:
       "Brand identity and visual system for TEDxToronto. Event branding, creative direction, and design by House of Singh Studios.",
@@ -97,6 +99,7 @@ export const projects: Project[] = [
     image: "/images/projects/meridian/meridian.jpg",
     description:
       "Brand identity system for a mid-market financial services firm.",
+    shortDescription: "Typography-led identity for a mid-market financial services firm.",
     seoTitle: "Meridian Financial Group \u2014 House of Singh Studios",
     seoDescription:
       "Brand identity system for a mid-market financial services firm. Studio exploration by House of Singh Studios.",
@@ -150,6 +153,7 @@ export const projects: Project[] = [
     image: "/images/projects/soulbound/soulbound.jpg",
     description:
       "Publication cover design and art direction for a leadership book.",
+    shortDescription: "Cover design and art direction for a leadership publication.",
     seoTitle: "Soulbound Publication \u2014 House of Singh Studios",
     seoDescription:
       "Publication cover design and art direction for a leadership book. Independent project by House of Singh Studios.",
@@ -202,6 +206,7 @@ export const projects: Project[] = [
     image: "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
     description:
       "Brand identity and packaging for a modern South Asian food brand.",
+    shortDescription: "Visual identity and packaging connecting cultural authenticity with contemporary design.",
     seoTitle: "Nomad Kitchen \u2014 House of Singh Studios",
     seoDescription:
       "Brand identity and packaging for a modern South Asian food brand. Independent project by House of Singh Studios.",

@@ -8,38 +8,14 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const cycleRef = useRef<HTMLSpanElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [animState, setAnimState] = useState<"idle" | "exiting">("idle");
 
   // Cycle words every 3 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimState("exiting");
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % HERO.cycleWords.length);
-        setAnimState("idle");
-      }, 450);
+      setCurrentIndex((prev) => (prev + 1) % HERO.cycleWords.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Measure and set width of cycle container
-  useEffect(() => {
-    if (!cycleRef.current) return;
-    const inner = cycleRef.current.querySelector(".hero-cycle-word.hero-cycle-active") as HTMLElement;
-    if (inner) {
-      cycleRef.current.style.width = (inner.offsetWidth + 8) + "px";
-    }
-  }, [currentIndex]);
-
-  // Set initial width on mount
-  useEffect(() => {
-    if (!cycleRef.current) return;
-    const first = cycleRef.current.querySelector(".hero-cycle-word") as HTMLElement;
-    if (first) {
-      cycleRef.current.style.width = (first.offsetWidth + 8) + "px";
-    }
   }, []);
 
   // Scroll-driven fade for scroll indicator
@@ -70,22 +46,15 @@ export default function HeroSection() {
       <div>
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-normal text-[color:var(--text-primary)] m-0"
-          style={{
-            fontSize: "clamp(28px, 3.8vw, 52px)",
-            lineHeight: 1.2,
-            letterSpacing: "-0.025em",
-          }}
+          className="hero-headline"
         >
           <span style={{ display: "block" }}>
-            <span
-              ref={cycleRef}
-              className="hero-cycle-wrap"
-            >
+            <span className="hero-cycle-inline">
               {HERO.cycleWords.map((word, i) => (
                 <span
                   key={word}
-                  className={`hero-cycle-word${i === currentIndex ? " hero-cycle-active" : ""}${i === currentIndex && animState === "exiting" ? " hero-cycle-exit" : ""}`}
+                  className={`hero-cycle-fade${i === currentIndex ? " hero-cycle-visible" : ""}`}
+                  aria-hidden={i !== currentIndex}
                 >
                   {word}
                 </span>
