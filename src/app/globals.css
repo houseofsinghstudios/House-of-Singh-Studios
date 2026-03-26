@@ -180,6 +180,35 @@ body {
   animation: revealUp 0.8s ease forwards;
 }
 
+/* ── Hero cycling word ── */
+.hero-cycle-wrap {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  vertical-align: bottom;
+  height: 1.12em;
+  transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hero-cycle-word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: nowrap;
+  font-style: italic;
+  opacity: 0;
+  transform: translateY(110%);
+}
+.hero-cycle-word.hero-cycle-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hero-cycle-word.hero-cycle-exit {
+  opacity: 0;
+  transform: translateY(-110%);
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 /* ── Global sharp corners — no border-radius anywhere ── */
 *,
 *::before,
