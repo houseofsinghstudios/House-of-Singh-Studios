@@ -34,6 +34,8 @@ export default function FooterReveal() {
         src="/hos-studios-logo.svg"
         alt="House of Singh Studios"
         className="footer-reveal-crest"
+        width={120}
+        height={99}
       />
       <p className="footer-reveal-tagline">
         Design studio. AI powered. Brand focused.
