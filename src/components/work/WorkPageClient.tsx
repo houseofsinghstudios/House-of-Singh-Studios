@@ -73,30 +73,30 @@ export default function WorkPageClient() {
       </section>
 
       {/* ═══ FILTER BAR + VIEW TOGGLE ═══ */}
-      <div className="wp-filter-bar">
-        <div className="wp-filter-pills">
+      <div className="content-filter-sticky">
+        <div className="content-filter-row">
           {filterCategories.map((f) => (
             <button
               key={f}
               onClick={() => setActiveFilter(f)}
-              className={`wp-pill${activeFilter === f ? " wp-pill--active" : ""}`}
+              className={`content-filter${activeFilter === f ? " content-filter--active" : ""}`}
             >
               {f}
             </button>
           ))}
         </div>
 
-        <div className="wp-view-toggle">
+        <div className="wp-view-toggle-wrap" style={{ display: "flex", alignItems: "center", gap: 0, flexShrink: 0 }}>
           <button
             onClick={() => switchView("list")}
-            className={`wp-toggle-btn${viewMode === "list" ? " wp-toggle-btn--active" : ""}`}
+            className={`content-filter${viewMode === "list" ? " content-filter--active" : ""}`}
           >
             LIST
           </button>
-          <span className="wp-toggle-sep">/</span>
+          <span className="content-filter-divider" style={{ margin: "0 8px" }} />
           <button
             onClick={() => switchView("grid")}
-            className={`wp-toggle-btn${viewMode === "grid" ? " wp-toggle-btn--active" : ""}`}
+            className={`content-filter${viewMode === "grid" ? " content-filter--active" : ""}`}
           >
             GRID
           </button>
@@ -106,7 +106,7 @@ export default function WorkPageClient() {
       {/* ═══ PROJECT CONTENT ═══ */}
       <div
         className={`wp-content${viewTransition ? " wp-content--exiting" : ""}`}
-        style={{ padding: "0 var(--page-px)" }}
+        style={{ padding: "32px var(--page-px) 0" }}
       >
         {filteredProjects.length === 0 ? (
           <p className="wp-empty">No projects in this category yet.</p>

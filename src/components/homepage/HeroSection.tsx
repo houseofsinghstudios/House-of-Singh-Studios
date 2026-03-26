@@ -29,9 +29,18 @@ export default function HeroSection() {
     if (!cycleRef.current) return;
     const inner = cycleRef.current.querySelector(".hero-cycle-word.hero-cycle-active") as HTMLElement;
     if (inner) {
-      cycleRef.current.style.width = inner.offsetWidth + "px";
+      cycleRef.current.style.width = (inner.offsetWidth + 8) + "px";
     }
   }, [currentIndex]);
+
+  // Set initial width on mount
+  useEffect(() => {
+    if (!cycleRef.current) return;
+    const first = cycleRef.current.querySelector(".hero-cycle-word") as HTMLElement;
+    if (first) {
+      cycleRef.current.style.width = (first.offsetWidth + 8) + "px";
+    }
+  }, []);
 
   // Scroll-driven fade for scroll indicator
   const onScroll = useCallback(() => {
@@ -58,13 +67,13 @@ export default function HeroSection() {
         <EditorialLabel text={HERO.label} className="mb-6" />
       </div>
 
-      <div className="max-w-[900px]">
+      <div>
         <h1
           data-hero-heading
-          className="font-[var(--sans)] font-medium text-[color:var(--text-primary)] m-0"
+          className="font-[var(--sans)] font-normal text-[color:var(--text-primary)] m-0"
           style={{
-            fontSize: "clamp(36px, 5.5vw, 72px)",
-            lineHeight: 1.12,
+            fontSize: "clamp(28px, 3.8vw, 52px)",
+            lineHeight: 1.2,
             letterSpacing: "-0.025em",
           }}
         >
@@ -89,7 +98,7 @@ export default function HeroSection() {
 
         <p
           data-hero-body
-          className="mt-8 font-[var(--sans)] font-normal text-[color:var(--text-secondary)] max-w-[600px]"
+          className="mt-10 font-[var(--sans)] font-normal text-[color:var(--text-secondary)] max-w-[520px]"
           style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.65 }}
         >
           {HERO.secondary}

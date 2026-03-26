@@ -146,13 +146,13 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
       </section>
 
       {/* ═══ FILTER BAR ═══ */}
-      <div className="ins-filter-bar">
-        <div className="ins-filter-pills">
+      <div className="content-filter-sticky">
+        <div className="content-filter-row">
           {categories.map((f) => (
             <button
               key={f}
               onClick={() => handleFilter(f)}
-              className={`wp-pill${activeFilter === f ? " wp-pill--active" : ""}`}
+              className={`content-filter${activeFilter === f ? " content-filter--active" : ""}`}
             >
               {f}
             </button>

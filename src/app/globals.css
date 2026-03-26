@@ -185,8 +185,8 @@ body {
   display: inline-block;
   position: relative;
   overflow: hidden;
-  vertical-align: bottom;
-  height: 1.12em;
+  vertical-align: baseline;
+  height: 1.25em;
   transition: width 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 .hero-cycle-word {
@@ -195,6 +195,7 @@ body {
   top: 0;
   white-space: nowrap;
   font-style: italic;
+  font-weight: 500;
   opacity: 0;
   transform: translateY(110%);
 }
@@ -207,6 +208,12 @@ body {
   opacity: 0;
   transform: translateY(-110%);
   transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Responsive: ensure cycling words don't clip on smaller screens */
+@media (max-width: 767px) {
+  .hero-cycle-wrap {
+    height: 1.3em;
+  }
 }
 
 /* ── Global sharp corners — no border-radius anywhere ── */
@@ -510,84 +517,96 @@ body {
 }
 
 /* ── Sticky filter bar ── */
-.wp-filter-bar {
+/* ── Content filters (global) ── */
+.content-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 16px 0 32px;
+}
+.content-filter {
+  position: relative;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.content-filter::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.content-filter--active {
+  color: var(--text-primary);
+}
+.content-filter--active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+@media (hover: hover) {
+  .content-filter:hover {
+    color: var(--text-primary);
+  }
+  .content-filter:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+/* Filter row with sticky behavior */
+.content-filter-sticky {
   position: -webkit-sticky;
   position: sticky;
-  top: 48px;
+  top: 56px;
   z-index: 10;
-  background: rgba(247, 246, 245, 0.85);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: rgba(247, 246, 245, 0.92);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px var(--page-px);
-  border-bottom: 1px solid var(--text-muted);
+  padding: 0 var(--page-px);
 }
-.wp-filter-pills {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* View toggle divider (for List | Grid type controls) */
+.content-filter-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--text-muted);
+  opacity: 0.3;
 }
-.wp-filter-pills::-webkit-scrollbar {
-  display: none;
-}
-.wp-pill {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  padding: 6px 16px;
-  border: 1px solid var(--border);
-  background: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-.wp-pill--active {
-  background: var(--text-primary);
-  color: var(--bg);
-  border-color: var(--text-primary);
-}
-@media (hover: hover) {
-  .wp-pill:not(.wp-pill--active):hover {
-    background: var(--bg-shift);
+/* Mobile: horizontal scroll if filters overflow */
+@media (max-width: 767px) {
+  .content-filter-row {
+    gap: 20px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 0 24px;
   }
-}
-
-/* ── View toggle ── */
-.wp-view-toggle {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.wp-toggle-btn {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: color 0.2s ease;
-}
-.wp-toggle-btn--active {
-  color: var(--text-primary);
-  font-weight: 500;
-}
-.wp-toggle-sep {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--text-muted);
-  opacity: 0.4;
+  .content-filter-row::-webkit-scrollbar {
+    display: none;
+  }
+  .content-filter {
+    white-space: nowrap;
+    font-size: 10px;
+  }
+  .content-filter-sticky {
+    padding: 0 var(--page-px);
+  }
 }
 
 /* ── Content wrapper (view transition) ── */
@@ -768,7 +787,7 @@ body {
 
 /* ── List: mobile layout ── */
 @media (max-width: 767px) {
-  .wp-view-toggle {
+  .wp-view-toggle-wrap {
     display: none;
   }
   .wp-content {
@@ -796,9 +815,6 @@ body {
   }
   .wp-grid-card--offset {
     margin-top: 0;
-  }
-  .wp-filter-bar {
-    padding: 12px var(--page-px);
   }
 }
 
@@ -2678,29 +2694,6 @@ body {
 }
 
 /* ── Sticky filter bar ── */
-.ins-filter-bar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 48px;
-  z-index: 10;
-  background: rgba(247, 246, 245, 0.85);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  padding: 16px var(--page-px);
-  border-bottom: 1px solid var(--text-muted);
-}
-.ins-filter-pills {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-.ins-filter-pills::-webkit-scrollbar {
-  display: none;
-}
 
 /* ── Post metadata ── */
 .ins-meta {
@@ -2867,9 +2860,6 @@ body {
   }
   .ins-featured-img {
     aspect-ratio: 4/3;
-  }
-  .ins-filter-bar {
-    padding: 12px var(--page-px);
   }
 }
 
