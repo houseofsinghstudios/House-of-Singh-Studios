@@ -6,6 +6,15 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
+interface AboutData {
+  aboutStudioImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
+  aboutFounderImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
+  aboutFounderName?: string;
+  aboutFounderRole?: string;
+  aboutFounderBio?: string;
+  aboutFounderBioSecondary?: string;
+}
+
 /* ── Stat config ── */
 const STATS = [
   { target: 50, suffix: "+", label: "Projects delivered across identity, media, and digital." },
@@ -109,7 +118,7 @@ function getTorontoTime(): string {
   }).format(new Date());
 }
 
-export default function AboutClient() {
+export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
   const statsRef = useRef<HTMLElement>(null);
   const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
   const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -548,11 +557,13 @@ export default function AboutClient() {
       >
         <div className="about-image-break-inner">
           <Image
-            src="/images/studio/studio.jpg"
+            src={aboutData?.aboutStudioImage?.asset?.url || "/images/studio/studio.jpg"}
             alt="House of Singh Studios workspace"
             fill
             sizes="(max-width: 768px) 100vw, 1200px"
             style={{ objectFit: "cover" }}
+            placeholder={aboutData?.aboutStudioImage?.asset?.metadata?.lqip ? "blur" : undefined}
+            blurDataURL={aboutData?.aboutStudioImage?.asset?.metadata?.lqip || undefined}
           />
         </div>
       </div>
@@ -568,7 +579,6 @@ export default function AboutClient() {
 
         <div className="about-founder-grid">
           {/* Founder photo */}
-          {/* TODO: Replace /images/studio/studio.jpg with actual founder portrait */}
           <div>
             <div
               className="scroll-clip-reveal founder-photo-reveal reveal-clip"
@@ -580,11 +590,13 @@ export default function AboutClient() {
               }}
             >
               <Image
-                src="/images/studio/studio.jpg"
-                alt="Maninder Singh — Founder and Creative Director"
+                src={aboutData?.aboutFounderImage?.asset?.url || "/images/studio/studio.jpg"}
+                alt={`${aboutData?.aboutFounderName || "Maninder Singh"} — ${aboutData?.aboutFounderRole || "Founder and Creative Director"}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 480px"
                 style={{ objectFit: "cover" }}
+                placeholder={aboutData?.aboutFounderImage?.asset?.metadata?.lqip ? "blur" : undefined}
+                blurDataURL={aboutData?.aboutFounderImage?.asset?.metadata?.lqip || undefined}
               />
             </div>
           </div>
@@ -604,28 +616,28 @@ export default function AboutClient() {
                 lineHeight: 1.15,
               }}
             >
-              Maninder Singh
+              {aboutData?.aboutFounderName || "Maninder Singh"}
             </h2>
 
             <p
               className="font-[var(--sans)] font-normal text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.5, marginTop: 4, marginBottom: 24 }}
             >
-              Founder and Creative Director
+              {aboutData?.aboutFounderRole || "Founder and Creative Director"}
             </p>
 
             <p
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.7, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
-              Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI-integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto.
+              {aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI-integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."}
             </p>
 
             <p
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.5, marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
-              Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling.
+              {aboutData?.aboutFounderBioSecondary || "Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling."}
             </p>
 
             <p
