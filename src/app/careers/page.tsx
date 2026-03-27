@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { getAllRoles } from "@/lib/sanity/queries";
 import CareersClient from "@/components/careers/CareersClient";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Careers — House of Singh Studios",
   description:

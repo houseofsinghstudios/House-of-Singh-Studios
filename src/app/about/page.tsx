@@ -3,6 +3,8 @@ import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
 import AboutClient from "@/components/about/AboutClient";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "About — House of Singh Studios",
   description:
@@ -10,6 +12,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const aboutData = await client.fetch(aboutPageQuery);
+  const aboutData = await client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } });
   return <AboutClient aboutData={aboutData} />;
 }
