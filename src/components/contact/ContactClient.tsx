@@ -20,6 +20,7 @@ export default function ContactClient() {
       service: formData.get("service"),
       budget: formData.get("budget"),
       message: formData.get("message"),
+      honeypot: formData.get("honeypot"),
     };
     try {
       const res = await fetch("/api/lead", {
@@ -165,6 +166,10 @@ export default function ContactClient() {
                     placeholder="Tell us about your project, your timeline, and what you are looking for."
                   />
                   <span className="focus-line" />
+                </div>
+                <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+                  <label>Do not fill this field</label>
+                  <input type="text" name="honeypot" tabIndex={-1} autoComplete="off" />
                 </div>
                 <div>
                   <Button type="submit" variant="primary" disabled={submitting}>
