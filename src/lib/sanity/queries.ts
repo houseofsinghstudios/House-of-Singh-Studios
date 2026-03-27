@@ -251,6 +251,23 @@ export async function getSiteSettings() {
   );
 }
 
+export const aboutPageQuery = `*[_type == "siteSettings"][0]{
+  aboutStudioImage{
+    asset->{_id, url, metadata{dimensions, lqip}},
+    hotspot,
+    crop
+  },
+  aboutFounderImage{
+    asset->{_id, url, metadata{dimensions, lqip}},
+    hotspot,
+    crop
+  },
+  aboutFounderName,
+  aboutFounderRole,
+  aboutFounderBio,
+  aboutFounderBioSecondary
+}`;
+
 export async function getAllRoles() {
   return client.fetch(
     `*[_type == "role" && isActive == true] | order(order asc, publishedAt desc) {
