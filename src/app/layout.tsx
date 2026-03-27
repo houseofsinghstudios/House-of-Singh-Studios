@@ -41,6 +41,11 @@ export default function RootLayout({
     <ViewTransitions>
       <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
         <head>
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
+          <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
           <link rel="preload" href="/hos-studios-logo.svg" as="image" />
         </head>
         <body>
