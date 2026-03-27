@@ -10,20 +10,23 @@ export default function StudioLayout({
   return (
     <div id="sanity-studio-root">
       <style>{`
-        /* Hide ALL site chrome in Sanity Studio */
+        /* Hide site chrome in Sanity Studio */
         .site-header,
         header,
         footer,
+        .ft-next-wrap,
+        .ft-dark,
         .footer-reveal,
+        .footer-reveal-outer,
         .scroll-progress,
         .custom-cursor-dot,
         .custom-cursor-ring,
-        [data-cursor],
         .page-transition-overlay,
-        .scroll-indicator-pulse {
+        .scroll-indicator-pulse,
+        .site-content-wrap > footer {
           display: none !important;
         }
-        /* Reset body for studio */
+        /* Reset body */
         body {
           overflow: auto !important;
         }
@@ -34,9 +37,13 @@ export default function StudioLayout({
           z-index: 9999;
           background: #101112;
         }
-        /* Hide any main wrapper padding */
+        /* Ensure main is visible for studio */
         main {
-          display: none !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+        .site-content-wrap {
+          display: block !important;
         }
       `}</style>
       {children}
