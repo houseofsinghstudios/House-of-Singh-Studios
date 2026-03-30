@@ -6,6 +6,7 @@ import AboutPreview from "@/components/homepage/AboutPreview";
 import ClientsSection from "@/components/homepage/ClientsSection";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import StatsSection from "@/components/homepage/StatsSection";
+import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <ClientsSection />
       <TestimonialsSection />
       <StatsSection />
+      <NextPageLink />
       <CtaSection />
     </>
   );
