@@ -7,7 +7,6 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -54,16 +53,6 @@ export default function TestimonialsSection() {
     return () => stopTimer();
   }, [startTimer, stopTimer]);
 
-  // Restart timer after manual navigation
-  const handleNav = useCallback(
-    (idx: number) => {
-      stopTimer();
-      goTo(idx);
-      startTimer();
-    },
-    [stopTimer, goTo, startTimer]
-  );
-
   const handlePrev = useCallback(() => {
     stopTimer();
     prev();
@@ -76,18 +65,13 @@ export default function TestimonialsSection() {
     startTimer();
   }, [stopTimer, next, startTimer]);
 
-  // Build preview list (all testimonials except the active one)
-  const previews = TESTIMONIALS.map((t, i) => ({ ...t, originalIndex: i })).filter(
-    (_, i) => i !== active
-  );
-
   return (
     <section
       ref={sectionRef}
       className="testimonials-section css-reveal"
       data-cursor="pause"
-      onMouseEnter={() => { stopTimer(); setIsPaused(true); }}
-      onMouseLeave={() => { startTimer(); setIsPaused(false); }}
+      onMouseEnter={() => { stopTimer(); }}
+      onMouseLeave={() => { startTimer(); }}
     >
       <div className="testimonials-inner">
         {/* Left column: quote */}
@@ -121,7 +105,6 @@ export default function TestimonialsSection() {
 
         {/* Right column: controls */}
         <div className="testimonials-right">
-          {/* Counter */}
           <div className="testimonials-counter-wrap">
             <p className="testimonials-counter">
               {String(active + 1).padStart(2, "0")}
@@ -133,58 +116,26 @@ export default function TestimonialsSection() {
                 style={{ width: `${((active + 1) / total) * 100}%` }}
               />
             </div>
-            {isPaused && <span className="testimonials-paused-label">Paused</span>}
-          </div>
-
-          {/* Navigation arrows */}
-          <div className="testimonials-nav">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous testimonial"
-              className="testimonials-nav-btn"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M19 12H5M5 12L11 6M5 12L11 18" />
-              </svg>
-            </button>
-            <button
-              onClick={handleNext}
-              aria-label="Next testimonial"
-              className="testimonials-nav-btn"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M5 12H19M19 12L13 6M19 12L13 18" />
-              </svg>
-            </button>
-          </div>
-
-          {/* Preview snippets */}
-          <div className="testimonials-previews">
-            {previews.map((t) => (
+            <div className="testimonials-nav">
               <button
-                key={t.originalIndex}
-                onClick={() => handleNav(t.originalIndex)}
-                className="testimonials-preview-btn"
+                onClick={handlePrev}
+                aria-label="Previous testimonial"
+                className="testimonials-nav-btn"
               >
-                {t.quote.length > 80
-                  ? t.quote.substring(0, 80) + "..."
-                  : t.quote}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M19 12H5M5 12L11 6M5 12L11 18" />
+                </svg>
               </button>
-            ))}
+              <button
+                onClick={handleNext}
+                aria-label="Next testimonial"
+                className="testimonials-nav-btn"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12H19M19 12L13 6M19 12L13 18" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
