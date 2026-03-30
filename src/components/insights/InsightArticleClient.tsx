@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
@@ -445,6 +446,8 @@ export default function InsightArticleClient({ post }: { post: Post }) {
           </div>
         </section>
       )}
+
+      <NextPageLink />
 
       {/* ═══ DARK CTA ═══ */}
       <section

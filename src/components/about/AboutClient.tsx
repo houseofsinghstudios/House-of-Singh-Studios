@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 interface AboutData {
   aboutStudioImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
@@ -736,6 +737,8 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           ))}
         </div>
       </section>
+
+      <NextPageLink />
 
       {/* ═══ DARK CTA ═══ */}
       <section

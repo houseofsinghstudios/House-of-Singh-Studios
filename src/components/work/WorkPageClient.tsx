@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { projects, getWorkTypeFilters } from "@/data/projects";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 const PROJECT_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
@@ -240,6 +241,8 @@ export default function WorkPageClient() {
           </Link>
         ))}
       </div>
+
+      <NextPageLink />
 
       {/* ═══ DARK CTA ═══ */}
       <section

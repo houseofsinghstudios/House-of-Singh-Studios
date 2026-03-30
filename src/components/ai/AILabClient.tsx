@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 /* ── Comparison table rows ── */
 const COMPARISON_ROWS = [
@@ -520,6 +521,8 @@ export default function AILabClient() {
           process, and pricing. Coming soon.
         </p>
       </section>
+
+      <NextPageLink />
 
       {/* ═══ SECTION 8: DARK CTA ═══ */}
       <section
