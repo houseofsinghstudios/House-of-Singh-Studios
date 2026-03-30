@@ -311,37 +311,40 @@ body {
 
 
 /* ── Stats row ── */
+/* ── Stats ── */
 .stats-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .stat-cell {
-  flex: 1;
-  padding: 48px clamp(32px, 4vw, 64px);
-  text-align: center;
+  padding: clamp(32px, 4vw, 48px) 0;
   border-right: 1px solid var(--border);
 }
 .stat-cell:last-child {
   border-right: none;
 }
+.stat-cell:not(:first-child) {
+  padding-left: clamp(24px, 3vw, 40px);
+}
 .stat-number {
   font-family: var(--sans);
-  font-weight: 600;
-  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 500;
+  font-size: clamp(48px, 5vw, 72px);
+  letter-spacing: -0.03em;
   line-height: 1;
   color: var(--text-primary);
   margin: 0;
 }
-.stat-label {
-  margin-top: 8px;
+.stat-label-static {
   font-family: var(--sans);
-  font-weight: 400;
   font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin: 12px 0 0;
   line-height: 1.4;
-  color: var(--text-muted);
-}
-.stat-label.in-view {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
 }
 
 /* ── Services accordion ── */
@@ -1305,9 +1308,6 @@ body {
   :root {
     --page-px: 24px;
   }
-  .stat-number {
-    font-size: clamp(32px, 8vw, 44px);
-  }
   /* Case study responsive */
   .gallery-pair-container {
     grid-template-columns: 1fr !important;
@@ -1655,21 +1655,18 @@ body {
   opacity: 0.5;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .stats-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    border-bottom: none;
   }
   .stat-cell {
-    padding: 28px 16px;
     border-right: none;
     border-bottom: 1px solid var(--border);
+    padding: 24px 0;
   }
-  .stat-cell:nth-child(odd) {
-    border-right: 1px solid var(--border);
-  }
-  .stat-cell:nth-last-child(-n+2) {
-    border-bottom: none;
+  .stat-cell:not(:first-child) {
+    padding-left: 0;
   }
 }
 
