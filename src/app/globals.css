@@ -3652,49 +3652,52 @@ select.contact-input option {
   }
 }
 
-/* ── Argument Section Layout ── */
-.argument-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
+/* ═══ Argument section ═══ */
+.argument-section {
+  position: relative;
 }
-.argument-left {
-  max-width: 520px;
+.argument-content {
+  max-width: 780px;
 }
-.argument-steps {
-  display: flex;
-  flex-direction: column;
-}
-.argument-step-row {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 16px;
-  align-items: baseline;
-  padding: 20px 0;
-  border-top: 1px solid var(--border);
-}
-.argument-step-row:last-child {
-  border-bottom: 1px solid var(--border);
-}
-.argument-step-num {
+.argument-headline {
   font-family: var(--sans);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-}
-.argument-step-text {
-  font-family: var(--sans);
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: clamp(36px, 5vw, 64px);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text-primary);
   margin: 0;
 }
+.argument-word {
+  opacity: 0.08;
+  will-change: opacity;
+  transition: opacity 0.1s linear;
+}
+.argument-payoff {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(28px, 3.5vw, 48px);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin: clamp(40px, 5vw, 64px) 0 0;
+}
+.argument-steps {
+  font-family: var(--sans);
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: clamp(40px, 5vw, 56px) 0 0;
+  max-width: 480px;
+}
 
-@media (max-width: 899px) {
-  .argument-grid {
-    grid-template-columns: 1fr;
-    gap: 48px;
+@media (max-width: 767px) {
+  .argument-headline {
+    font-size: clamp(28px, 7vw, 40px);
+  }
+  .argument-payoff {
+    font-size: clamp(22px, 6vw, 32px);
   }
 }
 
@@ -4302,28 +4305,6 @@ select.contact-input option {
 /* ── Interaction 3: Staggered Scroll Reveals ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Argument section stagger */
-    .argument-section .argument-left {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .argument-section .argument-step-row:nth-child(1) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 5% entry 35%;
-    }
-    .argument-section .argument-step-row:nth-child(2) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 9% entry 39%;
-    }
-    .argument-section .argument-step-row:nth-child(3) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 13% entry 43%;
-    }
-
     /* Services accordion stagger */
     .svc-accordion-row:nth-child(1) {
       animation: revealFadeUp linear both;
@@ -4438,20 +4419,6 @@ td a {
 /* ═══════════════════════════════════════════════════════
    UI/UX B: Homepage Micro-Interactions
    ═══════════════════════════════════════════════════════ */
-
-/* ── Interaction 7: "We fix that." Keyword Underline on Scroll ── */
-.we-fix-that::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--text-primary);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
 
 /* ═══════════════════════════════════════════════════════
    UI/UX C: Inner Page Interactions
@@ -4832,30 +4799,6 @@ td a {
     .css-reveal-late.in-view {
       transition-delay: 0.1s;
     }
-
-    /* ── Argument section stagger ── */
-    .argument-section .argument-left {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .argument-section .argument-left.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .argument-section .argument-step-row {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .argument-section .argument-step-row.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .argument-section .argument-step-row:nth-child(2).in-view { transition-delay: 0.08s; }
-    .argument-section .argument-step-row:nth-child(3).in-view { transition-delay: 0.16s; }
 
     /* ── Process stage cascade (about page) ── */
     .about-process-step {
