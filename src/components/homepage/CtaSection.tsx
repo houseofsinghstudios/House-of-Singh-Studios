@@ -57,9 +57,6 @@ export default function CtaSection() {
         {/* Right: stacked buttons */}
         <div className="cta-dark-buttons css-reveal">
           <Button href="/contact" variant="primary-inverted" data-cursor="link">
-            Book a Discovery Call
-          </Button>
-          <Button href="/contact" variant="secondary-inverted" data-cursor="link">
             Start a Project
           </Button>
         </div>
