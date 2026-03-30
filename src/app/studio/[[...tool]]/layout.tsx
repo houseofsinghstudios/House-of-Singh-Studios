@@ -16,6 +16,7 @@ export default function StudioLayout({
         footer,
         .ft-footer,
         .ft-reveal,
+        .next-page-link,
         .scroll-progress,
         .custom-cursor-dot,
         .custom-cursor-ring,

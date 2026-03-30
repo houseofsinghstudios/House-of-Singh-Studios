@@ -1,30 +1,6 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import { usePathname } from "next/navigation";
-
-const NEXT_PAGE_MAP: Record<string, { name: string; href: string }> = {
-  "/": { name: "Services", href: "/services" },
-  "/services": { name: "Work", href: "/work" },
-  "/work": { name: "About", href: "/about" },
-  "/about": { name: "Contact", href: "/contact" },
-  "/contact": { name: "Services", href: "/services" },
-  "/ai": { name: "Packages", href: "/packages" },
-  "/packages": { name: "Contact", href: "/contact" },
-  "/insights": { name: "Services", href: "/services" },
-  "/careers": { name: "About", href: "/about" },
-};
-
-const DEFAULT_NEXT = { name: "Contact", href: "/contact" };
-
-function getNextPage(pathname: string) {
-  const exact = NEXT_PAGE_MAP[pathname];
-  if (exact) return exact;
-  if (pathname.startsWith("/services/")) return { name: "Work", href: "/work" };
-  if (pathname.startsWith("/work/")) return { name: "Contact", href: "/contact" };
-  if (pathname.startsWith("/insights/")) return { name: "Insights", href: "/insights" };
-  return DEFAULT_NEXT;
-}
 
 const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
@@ -47,22 +23,8 @@ const CONNECT_LINKS = [
 ];
 
 export default function Footer() {
-  const pathname = usePathname();
-  const nextPage = getNextPage(pathname);
-
   return (
     <footer className="ft-footer">
-      <div className="ft-next">
-        <span className="ft-next-label">Next</span>
-        <Link href={nextPage.href} className="ft-next-link" data-cursor="link">
-          <span className="ft-next-name">{nextPage.name}</span>
-          <svg className="ft-next-arrow" width="32" height="32" viewBox="0 0 48 48" fill="none">
-            <path d="M8 40 L40 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M24 8 L40 8 L40 24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </Link>
-      </div>
-
       <div className="ft-body">
         <div className="ft-top">
           <div className="ft-tagline-col">
@@ -93,7 +55,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
         <div className="ft-bottom">
           <span className="ft-copyright">&copy; 2026 House of Singh Studios Inc.</span>
           <div className="ft-legal">
