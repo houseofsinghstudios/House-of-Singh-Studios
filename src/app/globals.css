@@ -3640,6 +3640,34 @@ select.contact-input option {
   margin: clamp(40px, 5vw, 56px) 0 0;
   max-width: 480px;
 }
+.argument-about-link {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  margin-top: 20px;
+  position: relative;
+}
+.argument-about-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .argument-about-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
 
 @media (max-width: 767px) {
   .argument-headline {

@@ -88,6 +88,10 @@ export default function ArgumentSection() {
         <p className="argument-steps">
           Discover what your brand should be. Design the system that makes it real. Deliver assets that hold up everywhere.
         </p>
+
+        <a href="/about" className="argument-about-link" data-cursor="link">
+          About the studio <span>→</span>
+        </a>
       </div>
     </section>
   );
