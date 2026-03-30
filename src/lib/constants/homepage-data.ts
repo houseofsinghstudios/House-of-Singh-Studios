@@ -81,7 +81,7 @@ export const PROJECTS: Project[] = [
     name: "TEDxToronto Visual Identity",
     label: "Brand Identity",
     sentence:
-      "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
+      "Event branding and visual system for one of Canada's largest TEDx events.",
     href: "/work/tedxtoronto",
     color: "#2B2B2B",
     accent: "#E62B1E",
@@ -91,7 +91,7 @@ export const PROJECTS: Project[] = [
     name: "Meridian Financial Group",
     label: "Brand Identity",
     sentence:
-      "Brand identity system for a mid-market financial services firm.",
+      "Typography-led identity for a mid-market financial services firm.",
     href: "/work/meridian",
     color: "#1A3A5C",
     accent: "#C9A96E",
@@ -101,7 +101,7 @@ export const PROJECTS: Project[] = [
     name: "Soulbound Publication",
     label: "Publication Design",
     sentence:
-      "Publication cover design and art direction for a leadership book.",
+      "Cover design and art direction for a leadership publication.",
     href: "/work/soulbound",
     color: "#3C2A4A",
     accent: "#D4AF37",
@@ -111,7 +111,7 @@ export const PROJECTS: Project[] = [
     name: "Nomad Kitchen",
     label: "Brand Identity, Packaging",
     sentence:
-      "Brand identity and packaging for a modern South Asian food brand.",
+      "Visual identity and packaging connecting cultural authenticity with contemporary design.",
     href: "/work/nomad-kitchen",
     color: "#4A3728",
     accent: "#E8A848",

@@ -29,7 +29,7 @@ export default function WorkSection() {
         </Link>
       </div>
 
-      {/* 4-column card grid */}
+      {/* 2-column card grid */}
       <div className="featured-work-grid">
         {PROJECTS.map((project) => (
           <Link
@@ -45,12 +45,15 @@ export default function WorkSection() {
                   alt={project.name}
                   fill
                   priority={project === PROJECTS[0]}
-                  sizes="(max-width: 599px) 100vw, (max-width: 899px) 50vw, 25vw"
+                  sizes="(max-width: 767px) 100vw, 50vw"
                   style={{
                     objectFit: "cover",
                     pointerEvents: "none",
                   }}
                 />
+              </div>
+              <div className="featured-work-overlay">
+                <p className="featured-work-overlay-text">{project.sentence}</p>
               </div>
             </div>
             <p className="featured-work-tags">
