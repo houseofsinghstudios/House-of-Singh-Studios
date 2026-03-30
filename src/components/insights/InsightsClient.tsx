@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { urlFor } from "@/lib/sanity/image";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 interface Post {
   _id: string;
@@ -275,6 +276,8 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
           )}
         </div>
       )}
+
+      <NextPageLink />
 
       {/* ═══ DARK CTA ═══ */}
       <section

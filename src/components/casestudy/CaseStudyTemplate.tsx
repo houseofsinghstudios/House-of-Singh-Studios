@@ -6,6 +6,7 @@ import OverviewMeta from "./OverviewMeta";
 import DeliverableGrid from "./DeliverableGrid";
 import ImageGallery from "./ImageGallery";
 import NextProject from "./NextProject";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 export default function CaseStudyTemplate({
   project,
@@ -221,6 +222,8 @@ export default function CaseStudyTemplate({
           name={project.nextProject.name}
         />
       </section>
+
+      <NextPageLink />
 
       <section
         className="css-reveal"

@@ -6,6 +6,7 @@ import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
@@ -174,6 +175,8 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           </div>
         </section>
       )}
+
+      <NextPageLink />
 
       {/* ═══ CTA — Dark Section ═══ */}
       <section

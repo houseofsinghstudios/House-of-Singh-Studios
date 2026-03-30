@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { PortableText } from "@portabletext/react";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 import type { PortableTextReactComponents } from "@portabletext/react";
 
 /* ── Department label map ── */
@@ -789,6 +790,8 @@ export default function CareersClient({ roles }: CareersClientProps) {
           </div>
         </div>
       </section>
+
+      <NextPageLink />
 
       {/* ── SECTION 5: DARK CTA ── */}
       <section

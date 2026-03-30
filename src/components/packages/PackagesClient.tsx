@@ -2,6 +2,7 @@
 
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 const tiers = [
   {
@@ -219,6 +220,8 @@ export default function PackagesClient() {
           scope, timeline, and complexity.
         </p>
       </div>
+
+      <NextPageLink />
 
       {/* ── CTA (dark inverted) ── */}
       <section

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/ui/Button";
+import NextPageLink from "@/components/layout/NextPageLink";
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
@@ -264,6 +265,8 @@ export default function ContactClient() {
           </div>
         </div>
       </section>
+
+      <NextPageLink />
     </>
   );
 }
