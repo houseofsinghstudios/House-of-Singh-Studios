@@ -52,9 +52,6 @@ export default function WorkSection() {
                   }}
                 />
               </div>
-              <div className="featured-work-overlay">
-                <p className="featured-work-overlay-text">{project.sentence}</p>
-              </div>
             </div>
             <p className="featured-work-tags">
               {project.label
@@ -62,14 +59,17 @@ export default function WorkSection() {
                 .map((tag) => tag.trim())
                 .join(" — ")}
             </p>
-            <h3
-              className="featured-work-name"
-              style={{
-                viewTransitionName: `project-${project.href.split("/").pop()}`,
-              }}
-            >
-              {project.name}
-            </h3>
+            <div className="featured-work-text-swap">
+              <h3
+                className="featured-work-name"
+                style={{
+                  viewTransitionName: `project-${project.href.split("/").pop()}`,
+                }}
+              >
+                {project.name}
+              </h3>
+              <p className="featured-work-desc">{project.sentence}</p>
+            </div>
           </Link>
         ))}
       </div>
