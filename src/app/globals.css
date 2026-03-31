@@ -5437,7 +5437,6 @@ td a {
 .svc-block-img {
   width: 100%;
   aspect-ratio: 3 / 4;
-  max-height: 400px;
   overflow: hidden;
   position: relative;
   background: var(--bg-shift, #E5E3E0);
@@ -5459,7 +5458,6 @@ td a {
 .svc-block-img-placeholder {
   width: 100%;
   aspect-ratio: 3 / 4;
-  max-height: 400px;
   background: var(--bg-shift, #E5E3E0);
   display: flex;
   align-items: center;
