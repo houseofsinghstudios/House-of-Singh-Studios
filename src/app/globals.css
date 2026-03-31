@@ -3830,11 +3830,14 @@ select.contact-input option {
   width: 80px;
   height: 80px;
   opacity: 1;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(247, 246, 245, 0.88);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  mix-blend-mode: normal;
 }
 .cursor-label {
   display: none;
@@ -3843,7 +3846,7 @@ select.contact-input option {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: #FFFFFF;
+  color: rgba(255, 255, 255, 0.9);
   pointer-events: none;
   position: absolute;
   white-space: nowrap;
