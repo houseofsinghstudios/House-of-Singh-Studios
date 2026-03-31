@@ -151,11 +151,11 @@ export default function WorkPageClient() {
                 key={project.slug}
                 href={`/work/${project.slug}`}
                 className="wp-grid-card no-underline"
-                data-cursor="view"
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div
                   className="wp-grid-img-wrap reveal-clip"
+                  data-cursor="view"
                   style={{ viewTransitionName: `project-image-${project.slug}` }}
                 >
                   <div className="wp-grid-img-inner relative">
@@ -207,9 +207,8 @@ export default function WorkPageClient() {
             key={project.slug}
             href={`/work/${project.slug}`}
             className="wp-grid-card no-underline"
-            data-cursor="view"
           >
-            <div className="wp-grid-img-wrap reveal-clip">
+            <div className="wp-grid-img-wrap reveal-clip" data-cursor="view">
               <div className="wp-grid-img-inner relative">
                 <Image
                   src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
