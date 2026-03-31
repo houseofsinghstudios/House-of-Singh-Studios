@@ -1470,17 +1470,32 @@ body {
   }
   .ft-columns {
     grid-template-columns: 1fr 1fr;
-    gap: 28px;
+    gap: 24px;
+  }
+  .ft-tagline {
+    font-size: 14px;
+  }
+  .ft-col-link {
+    font-size: 14px;
+    padding: 4px 0;
   }
   .ft-bottom {
-    flex-wrap: wrap;
-    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .ft-legal {
+    order: 0;
+  }
+  .ft-top-btn {
+    align-self: flex-end;
+    margin-top: -28px;
   }
 }
 @media (max-width: 479px) {
   .ft-columns {
-    grid-template-columns: 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
   }
 }
 
