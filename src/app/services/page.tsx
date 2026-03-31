@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServiceScrollSection from "@/components/services/ServiceScrollSection";
-import ServicesUnpackedAccordion from "@/components/services/ServicesUnpackedAccordion";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { services } from "@/data/services";
@@ -78,12 +77,6 @@ export default function ServicesPage() {
           Four capabilities. One studio. Every service connects to measurable
           business outcomes.
         </p>
-        <p
-          className="svc-v2-scroll css-reveal"
-          style={{ transitionDelay: "300ms" }}
-        >
-          (Scroll)
-        </p>
       </section>
 
       {/* ═══ SERVICE BLOCKS (sticky scroll theater — do not modify) ═══ */}
@@ -108,54 +101,27 @@ export default function ServicesPage() {
         ))}
       </section>
 
-      {/* ═══ SERVICES UNPACKED ═══ */}
-      <section
-        className="css-reveal"
-        style={{
-          background: "var(--bg-shift)",
-          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
-        }}
-      >
-        <p className="editorial-label" style={{ margin: "0 0 12px" }}>
-          (Services unpacked)
-        </p>
-        <h2 className="su-heading">Detailed capabilities.</h2>
-        <ServicesUnpackedAccordion />
-      </section>
-
       <NextPageLink />
 
       {/* ═══ CTA ═══ */}
       <section
-        className="svc-v2-cta css-reveal"
+        className="css-reveal"
         style={{
           background: "var(--text-primary)",
           color: "var(--bg)",
-          padding: "clamp(80px, 10vw, 160px) var(--page-px)",
+          padding: "clamp(100px, 12vw, 160px) var(--page-px)",
         }}
       >
-        <div className="svc-v2-cta-grid">
-          <div>
-            <p className="svc-v2-cta-label">(Next step)</p>
-            <h2 className="svc-v2-cta-heading">
-              Ready to see which service fits your business?
-            </h2>
-            <p className="svc-v2-cta-sub">We respond within 24 hours.</p>
-          </div>
-          <div className="svc-v2-cta-buttons">
-            <Button
-              href="/contact"
-              variant="primary-inverted"
-              data-cursor="link"
-            >
-              Book a Discovery Call
-            </Button>
-            <Button
-              href="/contact"
-              variant="secondary-inverted"
-              data-cursor="link"
-            >
+        <div className="cta-centered">
+          <h2 className="cta-heading">
+            Have a project in mind?
+          </h2>
+          <div className="cta-buttons">
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
               Start a Project
+            </Button>
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+              Book a Discovery Call
             </Button>
           </div>
         </div>

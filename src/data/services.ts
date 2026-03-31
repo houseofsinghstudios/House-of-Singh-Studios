@@ -46,10 +46,8 @@ export const services: ServiceData[] = [
     name: "Brand Identity and Visual Design",
     subtitle: "Brand Identity and Visual Design",
     headline: "Your business has grown. Your brand has not kept up.",
-    description:
-      "You started with a logo and some colors. It worked then. But now your business is bigger than your brand. Prospects compare you to competitors with sharper visuals and walk away. Your team applies the brand differently every time because there is no system.",
-    tagline:
-      "Your brand identity is the first thing your market judges you on. We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint.",
+    description: "We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint.",
+    tagline: "The system behind how your business looks.",
     seoTitle: "Brand Identity and Visual Design — House of Singh Studios",
     seoDescription:
       "Complete brand identity systems built for established businesses. Logo, typography, color architecture, and brand guidelines that scale.",
@@ -164,10 +162,8 @@ export const services: ServiceData[] = [
     subtitle: "Visual Media and Content Production",
     headline:
       "Your content looks different on every platform. Nothing connects.",
-    description:
-      "You are producing content regularly. Photos here, videos there, social posts everywhere. But there is no visual thread connecting them. Your Instagram does not look like your website. Your videos feel disconnected from your brand. Every piece is made in isolation without a system behind it.",
-    tagline:
-      "Content without a visual strategy is noise. We direct and produce brand photography, campaign films, and social content systems built on strategic intent.",
+    description: "We direct and produce brand photography, campaign films, and social content systems. Every piece serves a strategic purpose. Nothing is produced without a clear brief and defined outcome.",
+    tagline: "Content with direction, not just production.",
     seoTitle: "Visual Media and Content Production — House of Singh Studios",
     seoDescription:
       "Brand photography, campaign films, and social content systems built on strategic intent. Visual production directed by brand strategy.",
@@ -251,10 +247,8 @@ export const services: ServiceData[] = [
     subtitle: "Digital Design and Experience",
     headline:
       "Your website exists. But it does not work for your business.",
-    description:
-      "You have a website. It loads. It has your information on it. But it does not convert visitors into clients. It does not reflect the quality of your work. People land on it, browse for 30 seconds, and leave because nothing guides them toward a conversation. Your digital presence is a brochure when it should be your hardest-working sales tool.",
-    tagline:
-      "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
+    description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
+    tagline: "Your highest-traffic brand touchpoint, designed.",
     seoTitle: "Digital Design and Experience — House of Singh Studios",
     seoDescription:
       "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
@@ -347,10 +341,8 @@ export const services: ServiceData[] = [
     subtitle: "Creative Strategy and Systems",
     headline:
       "Your team makes brand decisions without a playbook. Every output looks different.",
-    description:
-      "Your marketing team, your agency partners, your freelancers — they all interpret your brand differently because there is no documented system. The logo gets stretched. The colors shift. The messaging changes depending on who writes it. You spend more time correcting brand inconsistencies than building your business.",
-    tagline:
-      "Most brand problems are strategy problems disguised as design problems. We build the strategic layer that gives your team the ability to make brand decisions confidently.",
+    description: "We build the strategic layer that gives your team the ability to make brand decisions confidently. Positioning workshops, creative direction frameworks, and visual consistency systems.",
+    tagline: "Strategy before design. Clarity before everything.",
     seoTitle: "Creative Strategy and Systems — House of Singh Studios",
     seoDescription:
       "Brand positioning workshops, creative direction frameworks, and visual consistency systems. Strategy that makes everything else work.",
