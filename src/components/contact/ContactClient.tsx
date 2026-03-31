@@ -194,51 +194,6 @@ export default function ContactClient() {
         </div>
       </section>
 
-      {/* ── CONTACT DETAILS GRID ── */}
-      <section
-        className="css-reveal px-[var(--page-px)] pb-24"
-        style={{ borderTop: "1px solid var(--border)", paddingTop: 48 }}
-      >
-        <div className="contact-details-grid">
-          <div>
-            <p
-              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
-            >
-              Email
-            </p>
-            <a
-              href="mailto:studio@houseofsingh.com"
-              className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] no-underline hover:underline"
-              data-cursor="link"
-            >
-              studio@houseofsingh.com
-            </a>
-          </div>
-          <div className="contact-details-divider" />
-          <div>
-            <p
-              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
-            >
-              Location
-            </p>
-            <p className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] m-0">
-              Toronto, Canada
-            </p>
-          </div>
-          <div className="contact-details-divider" />
-          <div>
-            <p
-              className="font-[var(--sans)] text-[11px] uppercase tracking-[0.1em] text-[color:var(--text-muted)] m-0 mb-2"
-            >
-              Hours
-            </p>
-            <p className="font-[var(--sans)] text-[15px] text-[color:var(--text-primary)] m-0">
-              Mon — Fri, 9am — 6pm EST
-            </p>
-          </div>
-        </div>
-      </section>
-
       <NextPageLink />
     </>
   );
