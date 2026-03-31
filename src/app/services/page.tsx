@@ -23,13 +23,13 @@ export default function ServicesPage() {
         }}
       >
         <div className="cta-centered">
-          <h2 className="cta-heading">Have a project in mind?</h2>
+          <h2 className="cta-heading">Ready to start a conversation?</h2>
           <div className="cta-buttons">
             <Button href="/contact" variant="primary-inverted" data-cursor="link">
-              Start a Project
-            </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
               Book a Discovery Call
+            </Button>
+            <Button href="/packages" variant="secondary-inverted" data-cursor="link">
+              View Packages
             </Button>
           </div>
         </div>
