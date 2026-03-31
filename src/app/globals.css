@@ -3783,10 +3783,11 @@ select.contact-input option {
   left: 0;
   width: 8px;
   height: 8px;
-  background: var(--text-primary);
+  background: #FFFFFF;
   border-radius: 50% !important;
   pointer-events: none;
   z-index: 99999;
+  mix-blend-mode: difference;
   will-change: transform;
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
 }
@@ -3798,11 +3799,12 @@ select.contact-input option {
   left: 0;
   width: 36px;
   height: 36px;
-  border: 1px solid var(--text-primary);
+  border: 1px solid #FFFFFF;
   border-radius: 50% !important;
   opacity: 0.4;
   pointer-events: none;
   z-index: 99998;
+  mix-blend-mode: difference;
   will-change: transform;
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
 }
@@ -3841,7 +3843,7 @@ select.contact-input option {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(26, 26, 26, 0.8);
+  color: #FFFFFF;
   pointer-events: none;
   position: absolute;
   white-space: nowrap;
