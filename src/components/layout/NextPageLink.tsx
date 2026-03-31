@@ -35,9 +35,9 @@ export default function NextPageLink() {
       <span className="next-page-label">Next</span>
       <Link href={next.href} className="next-page-anchor" data-cursor="link">
         <span className="next-page-name">{next.name}</span>
-        <svg className="next-page-arrow" width="32" height="32" viewBox="0 0 48 48" fill="none">
-          <path d="M8 40 L40 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24 8 L40 8 L40 24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <svg className="next-page-arrow" width="40" height="40" viewBox="0 0 48 48" fill="none">
+          <path d="M8 40 L40 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M24 8 L40 8 L40 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </Link>
     </div>
