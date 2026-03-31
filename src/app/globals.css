@@ -5322,7 +5322,7 @@ td a {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(48px, 6vw, 96px);
-  padding: clamp(72px, 10vw, 140px) 0;
+  padding: clamp(56px, 8vw, 100px) 0;
   border-top: 1px solid var(--border, #E5E3E0);
 }
 
@@ -5436,6 +5436,7 @@ td a {
 .svc-block-img {
   width: 100%;
   aspect-ratio: 3 / 4;
+  max-height: 480px;
   overflow: hidden;
   position: relative;
   background: var(--bg-shift, #E5E3E0);
@@ -5457,6 +5458,7 @@ td a {
 .svc-block-img-placeholder {
   width: 100%;
   aspect-ratio: 3 / 4;
+  max-height: 480px;
   background: var(--bg-shift, #E5E3E0);
   display: flex;
   align-items: center;
