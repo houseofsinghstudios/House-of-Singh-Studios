@@ -154,13 +154,6 @@ export default function ServicesClient() {
               </p>
               <h2 className="svc-block-name">{block.name}</h2>
               <p className="svc-block-desc">{block.description}</p>
-              <Link
-                href={`/services/${block.slug}`}
-                className="svc-block-btn"
-                data-cursor="link"
-              >
-                Learn More
-              </Link>
               <p className="svc-del-label">Deliverables</p>
               <ul className="svc-del-list">
                 {block.deliverables.map((d) => (
@@ -169,6 +162,14 @@ export default function ServicesClient() {
                   </li>
                 ))}
               </ul>
+              <Link
+                href={`/services/${block.slug}`}
+                className="svc-block-btn"
+                style={{ marginTop: 32 }}
+                data-cursor="link"
+              >
+                Learn More
+              </Link>
             </div>
 
             {/* Right column */}

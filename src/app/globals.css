@@ -5321,8 +5321,8 @@ td a {
 .svc-block {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(40px, 5vw, 80px);
-  padding: clamp(64px, 8vw, 120px) 0;
+  gap: clamp(48px, 6vw, 96px);
+  padding: clamp(72px, 10vw, 140px) 0;
   border-top: 1px solid var(--border, #E5E3E0);
 }
 
@@ -5368,7 +5368,7 @@ td a {
   font-size: 15px;
   color: var(--text-secondary, #5C5B58);
   line-height: 1.7;
-  margin: 0 0 32px;
+  margin: 0 0 36px;
   max-width: 420px;
 }
 
@@ -5385,7 +5385,7 @@ td a {
   border: none;
   border-radius: 0;
   cursor: pointer;
-  margin: 0 0 40px;
+  margin: 0;
   transition: opacity 0.3s;
 }
 
@@ -5409,7 +5409,7 @@ td a {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .svc-del-item {
@@ -5435,7 +5435,7 @@ td a {
 
 .svc-block-img {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   position: relative;
   background: var(--bg-shift, #E5E3E0);
@@ -5456,7 +5456,7 @@ td a {
 
 .svc-block-img-placeholder {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   background: var(--bg-shift, #E5E3E0);
   display: flex;
   align-items: center;
