@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { name, email, company, service, budget, message, honeypot } = body;
+    const { name, email, service, message, honeypot } = body;
 
     if (honeypot) {
       return NextResponse.json({ success: true });
@@ -57,9 +57,7 @@ export async function POST(request: Request) {
     const sanitized = {
       name: name ? stripHtml(String(name)) : "",
       email: stripHtml(String(email)),
-      company: company ? stripHtml(String(company)) : "",
       service: service ? stripHtml(String(service)) : "",
-      budget: budget ? stripHtml(String(budget)) : "",
       message: message ? stripHtml(String(message)) : "",
       source: "contact-form",
       submittedAt: new Date().toISOString(),
