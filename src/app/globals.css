@@ -1471,7 +1471,10 @@ body {
 @media (max-width: 1080px) and (min-width: 768px) {
   .ft-top {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 0;
+  }
+  .ft-tagline-col {
+    display: none;
   }
 }
 
@@ -3754,7 +3757,13 @@ select.contact-input option {
   justify-content: center;
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1080px) and (min-width: 600px) {
+  .cta-centered {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+@media (max-width: 599px) {
   .cta-centered {
     align-items: flex-start;
     text-align: left;
@@ -3762,7 +3771,6 @@ select.contact-input option {
   .cta-buttons {
     flex-direction: column;
     width: 100%;
-    max-width: 360px;
   }
   .cta-buttons a {
     width: 100%;
@@ -4218,6 +4226,12 @@ select.contact-input option {
   .header-desktop-nav {
     display: flex;
   }
+}
+
+/* ── Hide crest when mobile nav is open ── */
+body.nav-open .header-crest-wrap {
+  opacity: 0 !important;
+  pointer-events: none;
 }
 
 /* ── Responsive: Nav hamburger at 1080px and below ── */
