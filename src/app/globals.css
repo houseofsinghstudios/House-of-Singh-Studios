@@ -1552,9 +1552,9 @@ body {
   will-change: clip-path, transform;
 }
 .ft-reveal-crest {
-  height: clamp(80px, 12vw, 120px);
+  height: clamp(120px, 16vw, 180px);
   width: auto;
-  opacity: 0.12;
+  opacity: 0.25;
 }
 .ft-reveal-tagline {
   font-family: var(--sans);
