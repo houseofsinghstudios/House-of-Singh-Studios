@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import ServiceScrollSection from "@/components/services/ServiceScrollSection";
-import Button from "@/components/ui/Button";
+import ServicesClient from "@/components/services/ServicesClient";
 import NextPageLink from "@/components/layout/NextPageLink";
-import { services } from "@/data/services";
+import Button from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Services — House of Singh Studios",
@@ -10,100 +9,11 @@ export const metadata: Metadata = {
     "Brand identity, visual media, digital design, and creative strategy for established businesses ready to invest in how they show up.",
 };
 
-const SERVICE_IMAGES: Record<
-  string,
-  { src: string; alt: string; projectName: string; projectCategory: string }[]
-> = {
-  "brand-identity": [
-    {
-      src: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-      alt: "TEDxToronto visual identity system",
-      projectName: "TEDxToronto Visual Identity",
-      projectCategory: "Brand Identity",
-    },
-  ],
-  "visual-media": [
-    {
-      src: "/images/projects/meridian/meridian.jpg",
-      alt: "Meridian Financial Group brand photography",
-      projectName: "Meridian Financial Group",
-      projectCategory: "Brand Identity",
-    },
-  ],
-  "digital-design": [
-    {
-      src: "/images/projects/soulbound/soulbound.jpg",
-      alt: "Soulbound publication design",
-      projectName: "Soulbound Publication",
-      projectCategory: "Publication Design",
-    },
-  ],
-  "creative-strategy": [
-    {
-      src: "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
-      alt: "Nomad Kitchen brand identity and packaging",
-      projectName: "Nomad Kitchen",
-      projectCategory: "Brand Identity · Packaging",
-    },
-  ],
-};
-
 export default function ServicesPage() {
   return (
     <>
-      {/* ═══ HERO ═══ */}
-      <section
-        style={{
-          padding:
-            "var(--hero-pt) var(--page-px) clamp(64px, 8vw, 100px)",
-        }}
-      >
-        <p
-          className="editorial-label css-reveal"
-          style={{ margin: "0 0 16px", transitionDelay: "0ms" }}
-        >
-          (Services)
-        </p>
-        <h1
-          className="svc-v2-heading css-reveal"
-          style={{ transitionDelay: "100ms" }}
-        >
-          Every service solves a business problem.
-        </h1>
-        <p
-          className="svc-v2-sub css-reveal"
-          style={{ transitionDelay: "200ms" }}
-        >
-          Four capabilities. One studio. Every service connects to measurable
-          business outcomes.
-        </p>
-      </section>
-
-      {/* ═══ SERVICE BLOCKS (sticky scroll theater — do not modify) ═══ */}
-      <section
-        className="svc-theater-container"
-        style={{ padding: "0 var(--page-px) clamp(64px, 8vw, 120px)" }}
-      >
-        {services.map((svc, i) => (
-          <div key={svc.slug}>
-            {i > 0 && <hr className="svc-theater-divider" />}
-            <ServiceScrollSection
-              number={svc.number}
-              name={svc.name}
-              headline={svc.tagline}
-              body={svc.description}
-              deliverables={svc.deliverables.map((d) => d.name)}
-              slug={svc.slug}
-              images={SERVICE_IMAGES[svc.slug] || []}
-              isFirst={i === 0}
-            />
-          </div>
-        ))}
-      </section>
-
+      <ServicesClient />
       <NextPageLink />
-
-      {/* ═══ CTA ═══ */}
       <section
         className="css-reveal"
         style={{
@@ -113,9 +23,7 @@ export default function ServicesPage() {
         }}
       >
         <div className="cta-centered">
-          <h2 className="cta-heading">
-            Have a project in mind?
-          </h2>
+          <h2 className="cta-heading">Have a project in mind?</h2>
           <div className="cta-buttons">
             <Button href="/contact" variant="primary-inverted" data-cursor="link">
               Start a Project
