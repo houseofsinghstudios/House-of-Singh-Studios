@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import ServiceScrollSection from "@/components/services/ServiceScrollSection";
-import ServicesUnpackedAccordion from "@/components/services/ServicesUnpackedAccordion";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { services } from "@/data/services";
@@ -100,21 +99,6 @@ export default function ServicesPage() {
             />
           </div>
         ))}
-      </section>
-
-      {/* ═══ SERVICES UNPACKED ═══ */}
-      <section
-        className="css-reveal"
-        style={{
-          background: "var(--bg-shift)",
-          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
-        }}
-      >
-        <p className="editorial-label" style={{ margin: "0 0 12px" }}>
-          (Services unpacked)
-        </p>
-        <h2 className="su-heading">Detailed capabilities.</h2>
-        <ServicesUnpackedAccordion />
       </section>
 
       <NextPageLink />

@@ -5635,13 +5635,13 @@ td a {
 }
 
 .svc-theater-heading {
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: clamp(32px, 4vw, 48px);
   font-weight: 500;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.1;
   color: var(--text-primary);
-  max-width: 520px;
-  margin: 0 0 16px;
+  max-width: 480px;
+  margin: 0 0 20px;
 }
 
 .svc-theater-body {
