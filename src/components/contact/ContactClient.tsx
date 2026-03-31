@@ -147,7 +147,7 @@ export default function ContactClient() {
                 </div>
                 <div>
                   <Button type="submit" variant="primary" disabled={submitting}>
-                    {submitting ? "Sending..." : "Send Brief"}
+                    {submitting ? "Sending..." : "Send Message"}
                   </Button>
                 </div>
               </form>
