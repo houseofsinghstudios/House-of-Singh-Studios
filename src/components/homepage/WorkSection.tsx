@@ -36,9 +36,8 @@ export default function WorkSection() {
             key={project.href}
             href={project.href}
             className="featured-work-item css-reveal no-underline"
-            data-cursor="view"
           >
-            <div className="featured-work-img-wrap reveal-clip">
+            <div className="featured-work-img-wrap reveal-clip" data-cursor="view">
               <div className="featured-work-img-inner relative">
                 <Image
                   src={project.image}

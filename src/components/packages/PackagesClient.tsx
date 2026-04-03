@@ -70,7 +70,7 @@ export default function PackagesClient() {
       {/* ── HERO ── */}
       <section
         className="flex flex-col justify-end px-[var(--page-px)]"
-        style={{ minHeight: "50vh", paddingBottom: 80 }}
+        style={{ minHeight: "50vh", paddingTop: "var(--hero-pt)", paddingBottom: 80 }}
       >
         <p
           data-hero-label
