@@ -225,7 +225,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-end",
-          padding: "0 var(--page-px) 60px",
+          padding: "var(--hero-pt) var(--page-px) 60px",
         }}
       >
         <p
