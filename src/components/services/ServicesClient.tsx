@@ -138,9 +138,6 @@ export default function ServicesClient() {
         >
           Four capabilities. Find the one that sounds like yours.
         </p>
-        <div className="svc-hero-stagger">
-          <DiagnosticTrigger />
-        </div>
       </section>
 
       {/* ═══ SERVICE BLOCKS ═══ */}
@@ -197,6 +194,11 @@ export default function ServicesClient() {
           </div>
         ))}
       </section>
+
+      {/* ═══ DIAGNOSTIC TRIGGER ═══ */}
+      <div style={{ padding: "clamp(56px, 8vw, 100px) var(--page-px) 0" }}>
+        <DiagnosticTrigger />
+      </div>
     </>
   );
 }
