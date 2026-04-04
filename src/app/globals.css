@@ -3771,7 +3771,7 @@ select.contact-input option {
   background: #FFFFFF;
   border-radius: 50% !important;
   pointer-events: none;
-  z-index: 99999;
+  z-index: 9999999;
   mix-blend-mode: difference;
   will-change: transform;
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
@@ -3788,7 +3788,7 @@ select.contact-input option {
   border-radius: 50% !important;
   opacity: 0.4;
   pointer-events: none;
-  z-index: 99998;
+  z-index: 9999998;
   mix-blend-mode: difference;
   will-change: transform;
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
