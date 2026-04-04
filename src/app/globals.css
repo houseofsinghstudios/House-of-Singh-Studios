@@ -2563,13 +2563,13 @@ body {
   color: var(--text-primary);
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(26, 26, 26, 0.15);
+  border-bottom: 1px solid var(--marble, #A9A6A2);
   padding: 12px 0;
   outline: none;
   transition: border-color 0.2s ease;
 }
 .contact-input:focus {
-  border-bottom-color: rgba(26, 26, 26, 0.5);
+  border-bottom-color: var(--obsidian, #22211F);
 }
 select.contact-input {
   appearance: none;
@@ -2593,15 +2593,16 @@ select.contact-input option {
   font-size: 16px;
   color: var(--text-primary);
   background: transparent;
-  border: 1px solid rgba(26, 26, 26, 0.1);
-  padding: 16px;
-  min-height: 120px;
+  border: none;
+  border-bottom: 1px solid var(--marble, #A9A6A2);
+  padding: 12px 0;
+  min-height: 80px;
   outline: none;
-  resize: none;
+  resize: vertical;
   transition: border-color 0.2s ease;
 }
 .contact-textarea:focus {
-  border-color: rgba(26, 26, 26, 0.3);
+  border-bottom-color: var(--obsidian, #22211F);
 }
 .contact-textarea::placeholder {
   color: rgba(26, 26, 26, 0.45);
@@ -3301,7 +3302,7 @@ select.contact-input option {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--marble, #A9A6A2);
   font-family: var(--sans);
   font-size: 16px;
   color: var(--text-primary);
@@ -3315,7 +3316,7 @@ select.contact-input option {
 .careers-form-input:focus,
 .careers-form-select:focus,
 .careers-form-textarea:focus {
-  border-bottom-color: var(--text-secondary);
+  border-bottom-color: var(--obsidian, #22211F);
 }
 
 .careers-form-input::placeholder,
