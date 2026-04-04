@@ -773,33 +773,32 @@ body {
     transform: scale(1.03);
   }
 }
-/* Dark hover overlay */
-.wp-grid-overlay {
+/* Text swap: name ↔ description on hover */
+.wp-grid-text-swap {
+  position: relative;
+  min-height: 1.6em;
+}
+.wp-grid-desc {
   position: absolute;
-  inset: 0;
-  background: rgba(34, 33, 31, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
+  top: 6px;
+  left: 0;
+  right: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: 2;
+  transition: opacity 0.35s ease;
 }
 @media (hover: hover) {
-  .wp-grid-card:hover .wp-grid-overlay {
+  .wp-grid-card:hover .wp-grid-name {
+    opacity: 0;
+  }
+  .wp-grid-card:hover .wp-grid-desc {
     opacity: 1;
   }
-}
-.wp-grid-overlay-desc {
-  font-family: var(--sans);
-  font-size: clamp(14px, 1.1vw, 16px);
-  font-weight: 400;
-  line-height: 1.6;
-  color: #F7F6F5;
-  text-align: center;
-  margin: 0;
-  max-width: 380px;
 }
 /* Category tags — clickable, styled like nav links */
 .wp-grid-meta {
@@ -851,6 +850,7 @@ body {
   letter-spacing: -0.01em;
   color: var(--text-primary);
   margin: 6px 0 0;
+  transition: opacity 0.35s ease;
 }
 /* Mobile description (visible, no hover needed) */
 .wp-grid-desc-mobile {
@@ -898,8 +898,12 @@ body {
   .wp-grid-img-wrap {
     aspect-ratio: 4 / 3;
   }
-  .wp-grid-overlay {
-    display: none;
+  .wp-grid-desc {
+    position: static;
+    opacity: 1;
+  }
+  .wp-grid-text-swap {
+    min-height: auto;
   }
 }
 
