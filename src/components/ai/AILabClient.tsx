@@ -185,7 +185,7 @@ export default function AILabClient() {
         <div className="ai-compare-row ai-compare-header">
           <div className="ai-compare-label" />
           <div className="ai-compare-trad">Traditional studio</div>
-          <div className="ai-compare-us">House of Singh</div>
+          <div className="ai-compare-us">House of Singh Studios</div>
         </div>
 
         {/* Data rows */}
