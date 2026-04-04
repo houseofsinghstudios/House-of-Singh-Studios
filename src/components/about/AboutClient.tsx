@@ -480,7 +480,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         }}
       >
         <p className="about-qualifier-text">
-          We work with established businesses doing $1M to $20M in revenue that are ready to invest in how they show up.
+          We work with businesses that have outgrown their original brand and are ready to invest in how they show up.
         </p>
       </section>
 
@@ -702,10 +702,16 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
               </div>
             ))}
           </div>
+
+          {/* Careers CTA */}
+          <div className="about-careers-cta scroll-reveal-up">
+            <span className="about-careers-text">Think you belong here? Send your portfolio.</span>
+            <Link href="/careers" className="about-careers-link" data-cursor="link">
+              View Careers <span className="about-careers-arrow">&rarr;</span>
+            </Link>
+          </div>
         </div>
       </section>
-
-      {/* ═══ SECTION 10: STATS ═══ */}
       <section
         ref={statsRef}
         className="css-reveal"

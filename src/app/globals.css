@@ -2510,6 +2510,58 @@ body {
   }
 }
 
+/* Careers CTA below collaborators */
+.about-careers-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+.about-careers-text {
+  font-size: 14px;
+  color: var(--gunmetal, #5C5B58);
+  line-height: 1.6;
+}
+
+.about-careers-link {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  color: var(--obsidian, #22211F);
+  text-decoration: none;
+  transition: opacity 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.about-careers-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) {
+  .about-careers-link:hover {
+    opacity: 0.6;
+  }
+  .about-careers-link:hover .about-careers-arrow {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-careers-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════
    Contact page
    ═══════════════════════════════════════════════════════ */
