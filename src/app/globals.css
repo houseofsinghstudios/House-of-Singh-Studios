@@ -773,33 +773,32 @@ body {
     transform: scale(1.03);
   }
 }
-/* Dark hover overlay */
-.wp-grid-overlay {
+/* Text swap: name ↔ description on hover */
+.wp-grid-text-swap {
+  position: relative;
+  min-height: 1.6em;
+}
+.wp-grid-desc {
   position: absolute;
-  inset: 0;
-  background: rgba(34, 33, 31, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
+  top: 6px;
+  left: 0;
+  right: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
   opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: 2;
+  transition: opacity 0.35s ease;
 }
 @media (hover: hover) {
-  .wp-grid-card:hover .wp-grid-overlay {
+  .wp-grid-card:hover .wp-grid-name {
+    opacity: 0;
+  }
+  .wp-grid-card:hover .wp-grid-desc {
     opacity: 1;
   }
-}
-.wp-grid-overlay-desc {
-  font-family: var(--sans);
-  font-size: clamp(14px, 1.1vw, 16px);
-  font-weight: 400;
-  line-height: 1.6;
-  color: #F7F6F5;
-  text-align: center;
-  margin: 0;
-  max-width: 380px;
 }
 /* Category tags — clickable, styled like nav links */
 .wp-grid-meta {
@@ -851,6 +850,7 @@ body {
   letter-spacing: -0.01em;
   color: var(--text-primary);
   margin: 6px 0 0;
+  transition: opacity 0.35s ease;
 }
 /* Mobile description (visible, no hover needed) */
 .wp-grid-desc-mobile {
@@ -898,8 +898,12 @@ body {
   .wp-grid-img-wrap {
     aspect-ratio: 4 / 3;
   }
-  .wp-grid-overlay {
-    display: none;
+  .wp-grid-desc {
+    position: static;
+    opacity: 1;
+  }
+  .wp-grid-text-swap {
+    min-height: auto;
   }
 }
 
@@ -2129,13 +2133,6 @@ body {
    About page
    ═══════════════════════════════════════════════════════ */
 
-/* ── Stats grid ── */
-.about-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-}
-
 /* ── Process steps ── */
 .about-process-step {
   display: grid;
@@ -2193,10 +2190,6 @@ body {
 
 /* ── About responsive ── */
 @media (max-width: 899px) {
-  .about-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
   .about-process-step {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -2507,6 +2500,58 @@ body {
   .about-team-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
+}
+
+/* Careers CTA below collaborators */
+.about-careers-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+.about-careers-text {
+  font-size: 14px;
+  color: var(--gunmetal, #5C5B58);
+  line-height: 1.6;
+}
+
+.about-careers-link {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  color: var(--obsidian, #22211F);
+  text-decoration: none;
+  transition: opacity 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.about-careers-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) {
+  .about-careers-link:hover {
+    opacity: 0.6;
+  }
+  .about-careers-link:hover .about-careers-arrow {
+    transform: translateX(4px);
+  }
+}
+
+@media (max-width: 768px) {
+  .about-careers-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
 }
 

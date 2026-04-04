@@ -89,17 +89,17 @@ export default function WorkPageClient() {
 
         <div className="wp-view-toggle-wrap" style={{ display: "flex", alignItems: "center", gap: 0, flexShrink: 0 }}>
           <button
-            onClick={() => switchView("list")}
-            className={`content-filter${viewMode === "list" ? " content-filter--active" : ""}`}
-          >
-            LIST
-          </button>
-          <span className="content-filter-divider" style={{ margin: "0 8px" }} />
-          <button
             onClick={() => switchView("grid")}
             className={`content-filter${viewMode === "grid" ? " content-filter--active" : ""}`}
           >
             GRID
+          </button>
+          <span className="content-filter-divider" style={{ margin: "0 8px" }} />
+          <button
+            onClick={() => switchView("list")}
+            className={`content-filter${viewMode === "list" ? " content-filter--active" : ""}`}
+          >
+            LIST
           </button>
         </div>
       </div>
@@ -167,10 +167,6 @@ export default function WorkPageClient() {
                       style={{ objectFit: "cover", pointerEvents: "none" }}
                     />
                   </div>
-                  {/* Hover overlay with description */}
-                  <div className="wp-grid-overlay">
-                    <p className="wp-grid-overlay-desc">{project.shortDescription}</p>
-                  </div>
                 </div>
                 <div className="wp-grid-meta">
                   {project.workType.split(",").map((cat) => (
@@ -188,12 +184,15 @@ export default function WorkPageClient() {
                     </button>
                   ))}
                 </div>
-                <h3
-                  className="wp-grid-name"
-                  style={{ viewTransitionName: `project-${project.slug}` }}
-                >
-                  {project.name}
-                </h3>
+                <div className="wp-grid-text-swap">
+                  <h3
+                    className="wp-grid-name"
+                    style={{ viewTransitionName: `project-${project.slug}` }}
+                  >
+                    {project.name}
+                  </h3>
+                  <p className="wp-grid-desc">{project.shortDescription}</p>
+                </div>
               </Link>
             ))}
           </div>
