@@ -9,11 +9,28 @@ export default function DiagnosticTrigger() {
 
   return (
     <>
-      <button className="diag-bar" onClick={() => setIsOpen(true)}>
-        <span className="diag-bar-dot" />
-        <span className="diag-bar-text">Not sure where to start? Take the brand diagnostic</span>
-        <span className="diag-bar-arrow">&rarr;</span>
-      </button>
+      <div
+        className="diag-wrap"
+        onClick={() => setIsOpen(true)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === 'Enter') setIsOpen(true) }}
+      >
+        <div className="diag-q-row">
+          <span className="diag-breathe" />
+          <span className="diag-q-text">Not sure where to start?</span>
+        </div>
+        <div className="diag-ticker">
+          <div className="diag-track">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <span key={i} className="diag-tick-item">
+                <span className="diag-tick-dot" />
+                <span className="diag-tick-text">Take the brand diagnostic</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
       <SliderDiagnostic isOpen={isOpen} onClose={handleClose} />
     </>
   )
