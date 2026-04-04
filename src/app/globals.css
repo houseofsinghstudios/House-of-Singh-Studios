@@ -2129,13 +2129,6 @@ body {
    About page
    ═══════════════════════════════════════════════════════ */
 
-/* ── Stats grid ── */
-.about-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-}
-
 /* ── Process steps ── */
 .about-process-step {
   display: grid;
@@ -2193,10 +2186,6 @@ body {
 
 /* ── About responsive ── */
 @media (max-width: 899px) {
-  .about-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
   .about-process-step {
     grid-template-columns: 1fr;
     gap: 8px;

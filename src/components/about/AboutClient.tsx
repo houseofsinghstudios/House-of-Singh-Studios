@@ -16,13 +16,6 @@ interface AboutData {
   aboutFounderBioSecondary?: string;
 }
 
-/* ── Stat config ── */
-const STATS = [
-  { target: 50, suffix: "+", label: "Projects delivered across identity, media, and digital." },
-  { target: 12, suffix: "+", label: "Years of multidisciplinary practice." },
-  { target: 8, suffix: "+", label: "Industries served." },
-];
-
 /* ── Process steps ── */
 const STEPS = [
   { name: "Discovery", desc: "We learn your business, your market, and your goals before we design anything." },
@@ -120,10 +113,6 @@ function getTorontoTime(): string {
 }
 
 export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
-  const statsRef = useRef<HTMLElement>(null);
-  const numberRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-  const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
-
   /* ── Clock state ── */
   const [clockTime, setClockTime] = useState(() => getTorontoTime());
 
@@ -184,75 +173,6 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
     handleTabClick(newIndex);
     tabRefs.current[newIndex]?.focus();
   };
-
-  // ── Stats count-up ──
-  useEffect(() => {
-    const section = statsRef.current;
-    if (!section) return;
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rafIds: number[] = [];
-
-    numberRefs.current.forEach((el, i) => {
-      if (el) el.textContent = prefersReducedMotion ? `${STATS[i].target}${STATS[i].suffix}` : `0${STATS[i].suffix}`;
-    });
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-
-        STATS.forEach((stat, i) => {
-          const numEl = numberRefs.current[i];
-          if (!numEl) return;
-
-          if (prefersReducedMotion) {
-            numEl.textContent = `${stat.target}${stat.suffix}`;
-            return;
-          }
-
-          const delay = i * 150;
-          const duration = 1500;
-
-          setTimeout(() => {
-            const startTime = performance.now();
-            const el = numEl!;
-
-            function tick(now: number) {
-              const elapsed = now - startTime;
-              const t = Math.min(elapsed / duration, 1);
-              const progress = 1 - Math.pow(1 - t, 3);
-              el.textContent = `${Math.round(progress * stat.target)}${stat.suffix}`;
-
-              if (t < 1) {
-                rafIds.push(requestAnimationFrame(tick));
-              }
-            }
-
-            rafIds.push(requestAnimationFrame(tick));
-          }, delay);
-        });
-
-        descRefs.current.forEach((el, i) => {
-          if (el) {
-            const labelDelay = i * 150 + 200;
-            setTimeout(() => {
-              el.style.opacity = "0.6";
-              el.style.transform = "translateY(0)";
-            }, labelDelay);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-
-    observer.observe(section);
-
-    return () => {
-      observer.disconnect();
-      rafIds.forEach((id) => cancelAnimationFrame(id));
-    };
-  }, []);
 
   const [hours, minutes] = clockTime.split(":");
 
@@ -712,38 +632,6 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           </div>
         </div>
       </section>
-      <section
-        ref={statsRef}
-        className="css-reveal"
-        style={{
-          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
-          borderTop: "1px solid var(--text-muted)",
-        }}
-      >
-        <EditorialLabel text="07 — Studio" className="mb-10" />
-
-        <div className="about-stats-grid">
-          {STATS.map((stat, i) => (
-            <div key={i}>
-              <p
-                ref={(el) => { numberRefs.current[i] = el; }}
-                className="font-[var(--sans)] font-medium leading-none text-[color:var(--text-primary)] m-0"
-                style={{ fontSize: "clamp(36px, 4vw, 52px)" }}
-              >
-                {stat.target}{stat.suffix}
-              </p>
-              <p
-                ref={(el) => { descRefs.current[i] = el; }}
-                className="font-[var(--sans)] font-normal text-sm leading-[1.5] text-[color:var(--text-primary)]"
-                style={{ opacity: 0, marginTop: 12, maxWidth: 200, transform: "translateY(10px)", transition: "opacity 0.4s ease, transform 0.4s ease" }}
-              >
-                {stat.label}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <NextPageLink />
 
       {/* ═══ DARK CTA ═══ */}
