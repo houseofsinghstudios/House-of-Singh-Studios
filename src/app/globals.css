@@ -3745,6 +3745,14 @@ select.contact-input option {
   justify-content: center;
 }
 
+.cta-dark-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: clamp(32px, 4vw, 48px);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 @media (max-width: 1080px) and (min-width: 600px) {
   .cta-centered {
     align-items: flex-start;
