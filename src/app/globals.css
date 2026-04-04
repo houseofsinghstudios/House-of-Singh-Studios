@@ -2345,27 +2345,6 @@ body {
   }
 }
 
-/* ── Qualifier interstitial ── */
-.about-qualifier {
-  padding: 48px var(--page-px);
-  text-align: center;
-}
-.about-qualifier-text {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: clamp(15px, 1.5vw, 17px);
-  color: var(--text-secondary);
-  letter-spacing: -0.01em;
-  line-height: 1.5;
-  max-width: 640px;
-  margin: 0 auto;
-}
-@media (max-width: 599px) {
-  .about-qualifier {
-    padding: 32px var(--page-px);
-  }
-}
-
 /* ── Contrast: "Not an agency" ── */
 .about-contrast-grid {
   display: grid;

@@ -391,19 +391,6 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         </div>
       </section>
 
-      {/* ═══ SECTION 04: "WHO THIS IS FOR" INTERSTITIAL ═══ */}
-      <section
-        className="about-qualifier css-reveal"
-        style={{
-          borderTop: "1px solid var(--text-muted)",
-          borderBottom: "1px solid var(--text-muted)",
-        }}
-      >
-        <p className="about-qualifier-text">
-          We work with businesses that have outgrown their original brand and are ready to invest in how they show up.
-        </p>
-      </section>
-
       {/* ═══ SECTION 05: "NOT AN AGENCY" POSITIONING ═══ */}
       <section
         className="css-reveal"
