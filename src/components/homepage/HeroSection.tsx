@@ -70,7 +70,7 @@ export default function HeroSection() {
 
         <p
           data-hero-body
-          className="mt-10 font-[var(--sans)] font-normal text-[color:var(--text-secondary)] max-w-[520px]"
+          className="mt-10 font-[var(--sans)] font-normal text-[color:var(--text-secondary)] max-w-[600px]"
           style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.65 }}
         >
           {HERO.secondary}
