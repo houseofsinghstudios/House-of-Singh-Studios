@@ -116,7 +116,7 @@ export default function AILabClient() {
             margin: "0 0 16px",
           }}
         >
-          (AI Lab)
+          (AI)
         </p>
         <h1
           data-hero-heading
@@ -128,7 +128,7 @@ export default function AILabClient() {
             lineHeight: 1.1,
             color: "var(--text-primary)",
             margin: "0 0 20px",
-            maxWidth: 620,
+            maxWidth: 700,
           }}
         >
           AI handles production. Creative direction stays human.
