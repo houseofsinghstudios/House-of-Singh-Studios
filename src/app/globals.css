@@ -5507,37 +5507,63 @@ td a {
    DIAGNOSTIC TRIGGER BUTTON
    ============================================ */
 
-.diag-trigger {
-  display: inline-flex;
+.diag-bar {
+  display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  width: 100%;
+  margin-top: 32px;
+  padding: 20px 28px;
+  background: var(--text-primary, #22211F);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) {
+  .diag-bar:hover {
+    opacity: 0.88;
+  }
+  .diag-bar:hover .diag-bar-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.diag-bar-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #F7F6F5;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: diag-pulse 2s infinite;
+}
+
+.diag-bar-text {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 500;
-  color: var(--text-primary, #22211F);
-  margin-top: 32px;
-  padding: 0;
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-  transition: opacity 0.3s;
+  color: #F7F6F5;
+  flex: 1;
+  text-align: left;
 }
 
-@media (hover: hover) {
-  .diag-trigger:hover {
-    opacity: 0.6;
+.diag-bar-arrow {
+  font-size: 14px;
+  color: #F7F6F5;
+  opacity: 0.4;
+  transform: translateX(-4px);
+  transition: opacity 0.3s, transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .diag-bar {
+    padding: 16px 20px;
   }
-}
-
-.diag-trigger-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--text-primary, #22211F);
-  border-radius: 50%;
-  animation: diag-pulse 2s infinite;
 }
 
 @keyframes diag-pulse {
