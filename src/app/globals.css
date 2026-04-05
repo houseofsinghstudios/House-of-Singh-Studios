@@ -3533,7 +3533,7 @@ select.contact-input option {
 .ai-pulse-form {
   display: flex;
   align-items: stretch;
-  gap: 0;
+  gap: 16px;
 }
 .ai-pulse-input {
   flex: 1;
