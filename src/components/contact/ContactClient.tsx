@@ -171,7 +171,7 @@ export default function ContactClient() {
             Book a 30-minute discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
 
-          <Button href="https://cal.com" className="mt-6" data-cursor="link">
+          <Button href="https://cal.com/houseofsinghstudios/hr" className="mt-6" data-cursor="link" target="_blank" rel="noopener noreferrer">
             Book a Discovery Call
           </Button>
 

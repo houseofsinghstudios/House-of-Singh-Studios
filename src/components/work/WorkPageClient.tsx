@@ -305,7 +305,7 @@ export default function WorkPageClient() {
           </div>
 
           <div className="cta-dark-buttons">
-            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/contact" variant="secondary-inverted" data-cursor="link">

@@ -318,9 +318,11 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
           </div>
           <div className="cta-dark-buttons">
             <Button
-              href="/contact"
+              href="https://cal.com/houseofsinghstudios/hr"
               variant="primary-inverted"
               data-cursor="link"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Book a Discovery Call
             </Button>

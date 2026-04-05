@@ -40,7 +40,7 @@ const tiers = [
     timeline: "8 to 12 weeks",
     bestFor:
       "Businesses doing $1M+ that have outgrown their current brand.",
-    cta: { text: "Book a Discovery Call", href: "/contact", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr", variant: "primary" as const },
     recommended: true,
   },
   {
@@ -59,7 +59,7 @@ const tiers = [
     timeline: "12 to 16 weeks",
     bestFor:
       "Businesses preparing for a major growth phase, market expansion, or rebrand.",
-    cta: { text: "Book a Discovery Call", href: "/contact", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr", variant: "primary" as const },
     recommended: false,
   },
 ];
@@ -196,6 +196,7 @@ export default function PackagesClient() {
                     variant={tier.cta.variant}
                     className="w-full text-center"
                     data-cursor="link"
+                    {...(tier.cta.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                   >
                     {tier.cta.text}
                   </Button>
@@ -262,9 +263,11 @@ export default function PackagesClient() {
           </div>
           <div className="cta-dark-buttons css-reveal">
             <Button
-              href="/contact"
+              href="https://cal.com/houseofsinghstudios/hr"
               variant="primary-inverted"
               data-cursor="link"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Book a Discovery Call
             </Button>

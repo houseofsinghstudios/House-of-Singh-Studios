@@ -198,9 +198,11 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           </div>
           <div className="svcd-cta-buttons">
             <Button
-              href="/contact"
+              href="https://cal.com/houseofsinghstudios/hr"
               variant="primary-inverted"
               data-cursor="link"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Book a Discovery Call
             </Button>

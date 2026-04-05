@@ -20,7 +20,7 @@ export default function CtaSection() {
           <Button href="/contact" variant="primary-inverted" data-cursor="link">
             Start a Project
           </Button>
-          <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+          <Button href="https://cal.com/houseofsinghstudios/hr" variant="secondary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
             Book a Discovery Call
           </Button>
         </div>
