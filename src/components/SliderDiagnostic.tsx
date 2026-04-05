@@ -19,7 +19,7 @@ const SLIDER_CONFIG = [
   },
 ]
 
-const RESULTS: Record<string, { title: string; desc: string; href: string; cta: string }> = {
+const RESULTS: Record<string, { title: string; desc: string; href: string; cta: string; external?: boolean }> = {
   brand: {
     title: 'Start with Brand Identity',
     desc: 'Your brand foundation needs work. A complete visual identity system will give your business the credibility it deserves.',
@@ -47,14 +47,16 @@ const RESULTS: Record<string, { title: string; desc: string; href: string; cta: 
   overhaul: {
     title: 'Your brand needs a comprehensive overhaul.',
     desc: 'Multiple areas need attention. Start with a discovery call so we can scope the right sequence for your business.',
-    href: '/contact',
+    href: 'https://cal.com/houseofsinghstudios/hr',
     cta: 'Book a Discovery Call',
+    external: true,
   },
   healthy: {
     title: 'Your brand is in good shape.',
     desc: 'If something still feels off, book a discovery call. Sometimes the gap is not visible from inside the business.',
-    href: '/contact',
+    href: 'https://cal.com/houseofsinghstudios/hr',
     cta: 'Book a Discovery Call',
+    external: true,
   },
 }
 
@@ -280,23 +282,45 @@ export default function SliderDiagnostic({ isOpen, onClose }: Props) {
             }}>
               {result.desc}
             </p>
-            <Link
-              href={result.href}
-              onClick={onClose}
-              style={{
-                display: 'inline-block',
-                fontSize: '11px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                fontWeight: 500,
-                color: '#22211F',
-                textDecoration: 'none',
-                padding: '12px 24px',
-                border: '1px solid #22211F',
-              }}
-            >
-              {result.cta} →
-            </Link>
+            {result.external ? (
+              <a
+                href={result.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                style={{
+                  display: 'inline-block',
+                  fontSize: '11px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: 500,
+                  color: '#22211F',
+                  textDecoration: 'none',
+                  padding: '12px 24px',
+                  border: '1px solid #22211F',
+                }}
+              >
+                {result.cta} →
+              </a>
+            ) : (
+              <Link
+                href={result.href}
+                onClick={onClose}
+                style={{
+                  display: 'inline-block',
+                  fontSize: '11px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.1em',
+                  fontWeight: 500,
+                  color: '#22211F',
+                  textDecoration: 'none',
+                  padding: '12px 24px',
+                  border: '1px solid #22211F',
+                }}
+              >
+                {result.cta} →
+              </Link>
+            )}
           </div>
         )}
 

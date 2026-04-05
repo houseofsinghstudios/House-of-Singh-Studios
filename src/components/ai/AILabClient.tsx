@@ -565,9 +565,11 @@ export default function AILabClient() {
 
           <div className="cta-dark-buttons css-reveal">
             <Button
-              href="/contact"
+              href="https://cal.com/houseofsinghstudios/hr"
               variant="primary-inverted"
               data-cursor="link"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Book a Discovery Call
             </Button>
