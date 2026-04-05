@@ -1563,6 +1563,7 @@ body {
 .ft-reveal {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--bg);
@@ -1576,11 +1577,14 @@ body {
   gap: 20px;
   clip-path: circle(0% at 50% 50%);
   will-change: clip-path, transform;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
 }
 .ft-reveal-crest {
   height: clamp(120px, 16vw, 180px);
   width: auto;
-  opacity: 0.25;
+  filter: brightness(0) saturate(100%) invert(34%) sepia(5%) saturate(574%) hue-rotate(20deg) brightness(96%) contrast(89%);
 }
 .ft-reveal-tagline {
   font-family: var(--sans);
@@ -1588,9 +1592,14 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--text-muted);
+  color: var(--marble, #A9A6A2);
   text-align: center;
   margin: 0;
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 767px) {
