@@ -23,7 +23,7 @@
   --serif: var(--font-cormorant), Georgia, serif;
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
-  --hero-pt: clamp(200px, 18vw, 260px);
+  --hero-pt: clamp(230px, 20vw, 290px);
 }
 
 @theme inline {
@@ -4283,7 +4283,7 @@ body.nav-open .header-crest-wrap {
 /* ── Responsive: Mobile below 768px ── */
 @media (max-width: 767px) {
   :root {
-    --hero-pt: clamp(160px, 22vw, 200px);
+    --hero-pt: clamp(180px, 24vw, 220px);
   }
   .site-header {
     height: 64px;
