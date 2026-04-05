@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const revalidate = 60;
 
@@ -47,6 +48,11 @@ export default async function InsightArticlePage({ params }: Props) {
 
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Insights', url: 'https://studios.houseofsingh.com/insights' },
+        { name: post.title, url: `https://studios.houseofsingh.com/insights/${post.slug.current}` },
+      ]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

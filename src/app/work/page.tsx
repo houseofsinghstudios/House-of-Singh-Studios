@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import WorkPageClient from "@/components/work/WorkPageClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: 'Work',
@@ -13,5 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default function WorkPage() {
-  return <WorkPageClient />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Work', url: 'https://studios.houseofsingh.com/work' },
+      ]} />
+      <WorkPageClient />
+    </>
+  );
 }

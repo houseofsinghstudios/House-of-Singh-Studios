@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import ServicesClient from "@/components/services/ServicesClient";
 import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: 'Services',
@@ -17,6 +18,10 @@ export const metadata: Metadata = {
 export default function ServicesPage() {
   return (
     <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Services', url: 'https://studios.houseofsingh.com/services' },
+      ]} />
       <ServicesClient />
       <NextPageLink />
       <section

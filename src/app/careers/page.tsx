@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllRoles } from "@/lib/sanity/queries";
 import CareersClient from "@/components/careers/CareersClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const revalidate = 60;
 
@@ -68,6 +69,10 @@ export default async function CareersPage() {
           }}
         />
       )}
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Careers', url: 'https://studios.houseofsingh.com/careers' },
+      ]} />
       <CareersClient roles={roles} />
     </>
   );

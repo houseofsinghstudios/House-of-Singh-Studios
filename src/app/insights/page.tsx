@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/sanity/queries";
 import InsightsClient from "@/components/insights/InsightsClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const revalidate = 60;
 
@@ -20,29 +21,10 @@ export default async function InsightsPage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            itemListElement: [
-              {
-                "@type": "ListItem",
-                position: 1,
-                name: "Home",
-                item: "https://studios.houseofsingh.com",
-              },
-              {
-                "@type": "ListItem",
-                position: 2,
-                name: "Insights",
-                item: "https://studios.houseofsingh.com/insights",
-              },
-            ],
-          }),
-        }}
-      />
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Insights', url: 'https://studios.houseofsingh.com/insights' },
+      ]} />
       <InsightsClient posts={posts || []} />
     </>
   );

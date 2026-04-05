@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AILabClient from "@/components/ai/AILabClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: 'AI',
@@ -13,5 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default function AILabPage() {
-  return <AILabClient />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'AI', url: 'https://studios.houseofsingh.com/ai' },
+      ]} />
+      <AILabClient />
+    </>
+  );
 }

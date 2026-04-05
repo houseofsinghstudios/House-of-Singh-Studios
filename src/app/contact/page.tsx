@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ContactClient from "@/components/contact/ContactClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -13,5 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
-  return <ContactClient />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Contact', url: 'https://studios.houseofsingh.com/contact' },
+      ]} />
+      <ContactClient />
+    </>
+  );
 }

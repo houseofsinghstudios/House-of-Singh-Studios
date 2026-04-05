@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { projects, getProjectBySlug } from "@/data/projects";
 import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -35,5 +36,14 @@ export default async function CaseStudyPage({
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) notFound();
-  return <CaseStudyClient project={project} />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Work', url: 'https://studios.houseofsingh.com/work' },
+        { name: project.name, url: `https://studios.houseofsingh.com/work/${slug}` },
+      ]} />
+      <CaseStudyClient project={project} />
+    </>
+  );
 }

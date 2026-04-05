@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PackagesClient from "@/components/packages/PackagesClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
   title: 'Packages',
@@ -13,5 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default function PackagesPage() {
-  return <PackagesClient />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Packages', url: 'https://studios.houseofsingh.com/packages' },
+      ]} />
+      <PackagesClient />
+    </>
+  );
 }

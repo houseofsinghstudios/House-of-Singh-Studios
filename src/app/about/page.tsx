@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
 import AboutClient from "@/components/about/AboutClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const revalidate = 60;
 
@@ -18,5 +19,13 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const aboutData = await client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } });
-  return <AboutClient aboutData={aboutData} />;
+  return (
+    <>
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'About', url: 'https://studios.houseofsingh.com/about' },
+      ]} />
+      <AboutClient aboutData={aboutData} />
+    </>
+  );
 }
