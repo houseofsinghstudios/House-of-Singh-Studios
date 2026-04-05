@@ -43,21 +43,26 @@ export default function HeroSection() {
         <EditorialLabel text={HERO.label} className="mb-6" />
       </div>
 
+      <h1 className="sr-only">
+        AI Powered Design Studio Toronto — Brand Identity, Visual Design, Creative Direction
+      </h1>
+
       <div>
-        <h1
+        <div
           data-hero-heading
+          aria-hidden="true"
+          role="presentation"
           className="hero-headline"
         >
           <span style={{ display: "block" }}>
             <span className="hero-cycle-inline">
-              <span className="hero-cycle-sizer" aria-hidden="true">
+              <span className="hero-cycle-sizer">
                 {HERO.cycleWords[currentIndex]}
               </span>
               {HERO.cycleWords.map((word, i) => (
                 <span
                   key={word}
                   className={`hero-cycle-fade${i === currentIndex ? " hero-cycle-visible" : ""}`}
-                  aria-hidden={i !== currentIndex}
                 >
                   {word}
                 </span>
@@ -66,7 +71,7 @@ export default function HeroSection() {
             {" "}{HERO.headlineStatic}
           </span>
           <span style={{ display: "block" }}>{HERO.headlineLine2}</span>
-        </h1>
+        </div>
 
         <p
           data-hero-body

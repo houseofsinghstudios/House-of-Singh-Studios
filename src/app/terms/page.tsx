@@ -1,12 +1,19 @@
 import { Metadata } from "next";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — House of Singh Studios",
-  description: "Terms governing use of the House of Singh Studios website.",
+  title: 'Terms of Use',
+  description: 'Terms of Use for House of Singh Studios Inc.',
+  alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
 };
 
 export default function TermsPage() {
   return (
+    <>
+    <BreadcrumbSchema items={[
+      { name: 'Home', url: 'https://studios.houseofsingh.com' },
+      { name: 'Terms of Use', url: 'https://studios.houseofsingh.com/terms' },
+    ]} />
     <section className="legal-page" style={{ padding: "var(--hero-pt) var(--page-px) clamp(80px, 10vw, 120px)" }}>
       <div className="legal-content">
         <p style={{ marginBottom: 24, fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>
@@ -98,5 +105,6 @@ export default function TermsPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

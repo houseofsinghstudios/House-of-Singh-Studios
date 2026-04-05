@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { getAllRoles } from "@/lib/sanity/queries";
 import CareersClient from "@/components/careers/CareersClient";
+import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Careers — House of Singh Studios",
-  description:
-    "Open roles at House of Singh Studios. We are looking for designers, strategists, and producers who build brands that hold up.",
+  title: 'Careers',
+  description: 'Join House of Singh Studios. We work with specialists who raise the standard.',
+  alternates: { canonical: 'https://studios.houseofsingh.com/careers' },
+  openGraph: {
+    title: 'Careers — House of Singh Studios',
+    description: 'Join House of Singh Studios. We work with specialists who raise the standard.',
+    url: 'https://studios.houseofsingh.com/careers',
+  },
 };
 
 interface Role {
@@ -63,6 +69,10 @@ export default async function CareersPage() {
           }}
         />
       )}
+      <BreadcrumbSchema items={[
+        { name: 'Home', url: 'https://studios.houseofsingh.com' },
+        { name: 'Careers', url: 'https://studios.houseofsingh.com/careers' },
+      ]} />
       <CareersClient roles={roles} />
     </>
   );

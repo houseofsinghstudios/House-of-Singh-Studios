@@ -5,7 +5,7 @@ import { Link } from "next-view-transitions";
 const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
-  { label: "AI Lab", href: "/ai" },
+  { label: "AI", href: "/ai" },
   { label: "Packages", href: "/packages" },
 ];
 
