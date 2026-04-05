@@ -1584,7 +1584,7 @@ body {
 .ft-reveal-crest {
   height: clamp(120px, 16vw, 180px);
   width: auto;
-  filter: brightness(0) saturate(100%) invert(34%) sepia(5%) saturate(574%) hue-rotate(20deg) brightness(96%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(73%) sepia(6%) saturate(339%) hue-rotate(15deg) brightness(90%) contrast(87%);
 }
 .ft-reveal-tagline {
   font-family: var(--sans);
