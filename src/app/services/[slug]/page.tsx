@@ -18,9 +18,11 @@ export function generateMetadata({
     return {
       title: service.seoTitle,
       description: service.seoDescription,
+      alternates: { canonical: `https://studios.houseofsingh.com/services/${slug}` },
       openGraph: {
         title: service.seoTitle,
         description: service.seoDescription,
+        url: `https://studios.houseofsingh.com/services/${slug}`,
       },
     };
   });

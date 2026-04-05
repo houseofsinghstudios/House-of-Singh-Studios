@@ -18,9 +18,11 @@ export async function generateMetadata({
   return {
     title: project.seoTitle,
     description: project.seoDescription,
+    alternates: { canonical: `https://studios.houseofsingh.com/work/${slug}` },
     openGraph: {
       title: project.seoTitle,
       description: project.seoDescription,
+      url: `https://studios.houseofsingh.com/work/${slug}`,
     },
   };
 }

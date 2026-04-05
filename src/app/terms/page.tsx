@@ -1,8 +1,9 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terms of Use — House of Singh Studios",
-  description: "Terms governing use of the House of Singh Studios website.",
+  title: 'Terms of Use',
+  description: 'Terms of Use for House of Singh Studios Inc.',
+  alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
 };
 
 export default function TermsPage() {

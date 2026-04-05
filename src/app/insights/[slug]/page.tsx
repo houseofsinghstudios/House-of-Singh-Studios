@@ -18,14 +18,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${post.title} — House of Singh Studios`,
+    title: post.title,
     description:
       post.seoDescription ||
       post.excerpt ||
       "Insights from House of Singh Studios.",
+    alternates: { canonical: `https://studios.houseofsingh.com/insights/${slug}` },
     openGraph: {
       title: post.seoTitle || post.title,
       description: post.excerpt,
+      url: `https://studios.houseofsingh.com/insights/${slug}`,
       images: post.featuredImage?.asset?.url
         ? [{ url: post.featuredImage.asset.url }]
         : [],

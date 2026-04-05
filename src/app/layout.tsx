@@ -27,9 +27,34 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
+const siteUrl = 'https://studios.houseofsingh.com'
+
 export const metadata: Metadata = {
-  title: "House of Singh Studios",
-  description: "Design studio. AI powered. Brand focused.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'House of Singh Studios — AI Powered Design Studio Toronto',
+    template: '%s — House of Singh Studios',
+  },
+  description: 'A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.',
+  openGraph: {
+    type: 'website',
+    locale: 'en_CA',
+    url: siteUrl,
+    siteName: 'House of Singh Studios',
+    title: 'House of Singh Studios — AI Powered Design Studio Toronto',
+    description: 'A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.',
+    // images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'House of Singh Studios' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'House of Singh Studios — AI Powered Design Studio Toronto',
+    description: 'A design studio powered by AI systems and led by creative direction.',
+    // images: ['/og-image.jpg'],
+    creator: '@hosdesignstudio',
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({

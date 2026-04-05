@@ -4,9 +4,14 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
 
 export const metadata: Metadata = {
-  title: "Services — House of Singh Studios",
-  description:
-    "Brand identity, visual media, digital design, and creative strategy for established businesses ready to invest in how they show up.",
+  title: 'Services',
+  description: 'Brand identity, visual media, digital design, and creative strategy. Four capabilities built to solve business problems for established businesses.',
+  alternates: { canonical: 'https://studios.houseofsingh.com/services' },
+  openGraph: {
+    title: 'Services — House of Singh Studios',
+    description: 'Brand identity, visual media, digital design, and creative strategy. Four capabilities built to solve business problems.',
+    url: 'https://studios.houseofsingh.com/services',
+  },
 };
 
 export default function ServicesPage() {
