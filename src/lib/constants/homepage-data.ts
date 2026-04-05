@@ -150,7 +150,7 @@ export const TESTIMONIALS: Testimonial[] = [
 export const CTA = {
   label: "Next Step",
   heading: "Start a project.",
-  supporting: "We respond within 24 hours.",
+  supporting: "",
   buttons: {
     primary: { text: "Book a Discovery Call", href: "/contact" },
     secondary: { text: "Start a Project", href: "/contact" },

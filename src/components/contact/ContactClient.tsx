@@ -64,7 +64,7 @@ export default function ContactClient() {
           className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[600px] mt-6"
           style={{ opacity: 0.6 }}
         >
-          Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project and we will respond within 24 hours.
+          Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project.
         </p>
       </section>
 
@@ -77,7 +77,7 @@ export default function ContactClient() {
               className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)]"
               style={{ opacity: 0.7 }}
             >
-              Thank you. We have received your brief and will respond within 24 hours.
+              Thank you. We have received your brief.
             </p>
           ) : (
             <>

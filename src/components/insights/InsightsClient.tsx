@@ -315,17 +315,6 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
             >
               Have a project in mind?
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.5,
-                marginTop: 20,
-              }}
-            >
-              We respond within 24 hours.
-            </p>
           </div>
           <div className="cta-dark-buttons">
             <Button
