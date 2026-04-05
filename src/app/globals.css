@@ -537,7 +537,7 @@ body {
   font-size: 15px;
   line-height: 1.6;
   color: var(--text-secondary);
-  max-width: 520px;
+  max-width: 700px;
   margin: 12px 0 0;
 }
 
@@ -649,18 +649,21 @@ body {
 /* ── LIST VIEW ── */
 .wp-list {
   border-top: 1px solid var(--text-muted);
+  position: relative;
 }
 .wp-list-row {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1fr auto auto;
   gap: 32px;
   align-items: center;
   padding: 24px 0;
-  border-bottom: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--border, #E5E3E0);
   text-decoration: none;
   color: inherit;
   position: relative;
   isolation: isolate;
+  transition: padding 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+              margin 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   /* stagger entrance */
   opacity: 0;
   transform: translateY(16px);
@@ -689,24 +692,18 @@ body {
 .wp-list-name {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(18px, 2.5vw, 24px);
-  letter-spacing: -0.015em;
+  font-size: clamp(18px, 2vw, 24px);
+  letter-spacing: -0.02em;
   color: var(--text-primary);
-  transition: color 0.3s ease;
+  transition: letter-spacing 0.4s ease;
 }
 .wp-list-cat {
   font-family: var(--sans);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 400;
-  color: var(--text-muted);
-  white-space: nowrap;
-  transition: color 0.3s ease;
-}
-.wp-list-year {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted, #A9A6A2);
   white-space: nowrap;
   transition: color 0.3s ease;
 }
@@ -720,18 +717,48 @@ body {
 
 @media (hover: hover) {
   .wp-list-row:hover::before {
-    opacity: 0.5;
+    opacity: 1;
+  }
+  .wp-list-row:hover {
+    padding: 24px 24px;
+    margin: 0 -24px;
   }
   .wp-list-row:hover .wp-list-name {
-    letter-spacing: 0.01em;
+    letter-spacing: -0.01em;
   }
-  .wp-list-row:hover .wp-list-cat,
-  .wp-list-row:hover .wp-list-year {
+  .wp-list-row:hover .wp-list-cat {
     color: var(--text-secondary);
   }
   .wp-list-row:hover .wp-list-arrow {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+/* Floating image preview (desktop only) */
+.wp-list-preview {
+  position: fixed;
+  right: clamp(80px, 10vw, 160px);
+  width: 280px;
+  height: 373px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transform: scale(0.95);
+  animation: wp-preview-in 0.3s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+@keyframes wp-preview-in {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 1024px) {
+  .wp-list-preview {
+    display: none !important;
   }
 }
 
@@ -884,8 +911,7 @@ body {
     grid-template-columns: 1fr;
     gap: 4px;
   }
-  .wp-list-cat,
-  .wp-list-year {
+  .wp-list-cat {
     font-size: 12px;
   }
   .wp-list-arrow {

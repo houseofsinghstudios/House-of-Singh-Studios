@@ -18,8 +18,10 @@ type ViewMode = "list" | "grid";
 
 export default function WorkPageClient() {
   const [activeFilter, setActiveFilter] = useState("All");
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [viewTransition, setViewTransition] = useState(false);
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
+  const [mouseY, setMouseY] = useState(0);
 
   const filterCategories = useMemo(
     () => ["All", ...getWorkTypeFilters()],
@@ -47,6 +49,10 @@ export default function WorkPageClient() {
     },
     [viewMode]
   );
+
+  const hoveredImage = hoveredSlug
+    ? PROJECT_IMAGES[hoveredSlug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"
+    : null;
 
   return (
     <div>
@@ -119,8 +125,10 @@ export default function WorkPageClient() {
                 key={project.slug}
                 href={`/work/${project.slug}`}
                 className="wp-list-row no-underline"
-                data-cursor="view"
                 style={{ transitionDelay: `${i * 60}ms` }}
+                onMouseEnter={() => setHoveredSlug(project.slug)}
+                onMouseLeave={() => setHoveredSlug(null)}
+                onMouseMove={(e) => setMouseY(e.clientY)}
               >
                 <span
                   className="wp-list-name"
@@ -136,12 +144,27 @@ export default function WorkPageClient() {
                     .map((t) => t.trim())
                     .join(" — ")}
                 </span>
-                <span className="wp-list-year">{project.year}</span>
                 <span className="wp-list-arrow" aria-hidden="true">
                   &rarr;
                 </span>
               </Link>
             ))}
+
+            {/* Floating image preview (desktop only) */}
+            {hoveredImage && (
+              <div
+                className="wp-list-preview"
+                style={{ top: mouseY - 150 }}
+              >
+                <Image
+                  src={hoveredImage}
+                  alt=""
+                  fill
+                  sizes="280px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+            )}
           </div>
         ) : (
           /* ── GRID VIEW ── */
