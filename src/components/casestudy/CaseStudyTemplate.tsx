@@ -237,7 +237,6 @@ export default function CaseStudyTemplate({
           <div>
             <p className="cs-cta-label">(Next step)</p>
             <h2 className="cs-cta-heading">Start a project.</h2>
-            <p className="cs-cta-sub">We respond within 24 hours.</p>
           </div>
           <div className="cs-cta-buttons">
             <Button

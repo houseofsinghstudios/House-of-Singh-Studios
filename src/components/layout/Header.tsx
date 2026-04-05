@@ -30,7 +30,7 @@ export default function Header() {
       rafRef.current = requestAnimationFrame(() => {
         const y = window.scrollY;
 
-        setScrolled(y >= 100);
+        setScrolled(y >= 20);
 
         if (y > 400 && y > lastScrollY.current) {
           setHidden(true);

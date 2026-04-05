@@ -829,17 +829,6 @@ export default function CareersClient({ roles }: CareersClientProps) {
             >
               Ready to build a brand that works?
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 16,
-                lineHeight: 1.6,
-                opacity: 0.5,
-                marginTop: 20,
-              }}
-            >
-              We respond within 24 hours.
-            </p>
           </div>
 
           <div className="cta-dark-buttons">
