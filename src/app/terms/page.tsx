@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <section className="legal-page" style={{ padding: "clamp(140px, 16vw, 200px) var(--page-px) clamp(80px, 10vw, 120px)" }}>
+    <section className="legal-page" style={{ padding: "var(--hero-pt) var(--page-px) clamp(80px, 10vw, 120px)" }}>
       <div className="legal-content">
         <p style={{ marginBottom: 24, fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>
           Legal

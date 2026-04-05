@@ -23,7 +23,7 @@
   --serif: var(--font-cormorant), Georgia, serif;
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
-  --hero-pt: clamp(230px, 20vw, 290px);
+  --hero-pt: clamp(280px, 24vw, 340px);
 }
 
 @theme inline {
@@ -1563,6 +1563,7 @@ body {
 .ft-reveal {
   height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--bg);
@@ -1576,11 +1577,14 @@ body {
   gap: 20px;
   clip-path: circle(0% at 50% 50%);
   will-change: clip-path, transform;
+  flex: 1;
+  justify-content: center;
+  width: 100%;
 }
 .ft-reveal-crest {
   height: clamp(120px, 16vw, 180px);
   width: auto;
-  opacity: 0.25;
+  filter: brightness(0) saturate(100%) invert(73%) sepia(6%) saturate(339%) hue-rotate(15deg) brightness(90%) contrast(87%);
 }
 .ft-reveal-tagline {
   font-family: var(--sans);
@@ -1588,9 +1592,14 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--text-muted);
+  color: var(--marble, #A9A6A2);
   text-align: center;
   margin: 0;
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 767px) {
@@ -4283,7 +4292,7 @@ body.nav-open .header-crest-wrap {
 /* ── Responsive: Mobile below 768px ── */
 @media (max-width: 767px) {
   :root {
-    --hero-pt: clamp(180px, 24vw, 220px);
+    --hero-pt: clamp(200px, 28vw, 260px);
   }
   .site-header {
     height: 64px;
