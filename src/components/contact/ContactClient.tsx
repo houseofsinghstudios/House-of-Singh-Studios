@@ -168,7 +168,7 @@ export default function ContactClient() {
             className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-4"
             style={{ opacity: 0.6 }}
           >
-            Book a 30-minute discovery call. We will discuss your brand, your goals, and whether we are the right fit.
+            Book a discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
 
           <Button href="https://cal.com/houseofsinghstudios/hr" className="mt-6" data-cursor="link" target="_blank" rel="noopener noreferrer">
