@@ -2295,6 +2295,14 @@ body {
   color: var(--text-secondary);
   transition: color 0.2s ease;
   cursor: default;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.about-capabilities-deliverable::before {
+  content: '–';
+  color: var(--marble, #A9A6A2);
+  flex-shrink: 0;
 }
 @media (hover: hover) {
   .about-capabilities-deliverable:hover {
@@ -3533,7 +3541,7 @@ select.contact-input option {
 .ai-pulse-form {
   display: flex;
   align-items: stretch;
-  gap: 0;
+  gap: 16px;
 }
 .ai-pulse-input {
   flex: 1;
@@ -5429,6 +5437,14 @@ td a {
   color: var(--text-muted, #A9A6A2);
   transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1),
               padding-left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.svc-del-item::before {
+  content: '–';
+  color: var(--marble, #A9A6A2);
+  flex-shrink: 0;
 }
 
 @media (hover: hover) {
