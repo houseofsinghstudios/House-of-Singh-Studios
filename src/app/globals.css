@@ -2612,7 +2612,7 @@ body {
   transition: border-color 0.2s ease;
 }
 .contact-input:focus {
-  border-bottom-color: var(--obsidian, #22211F);
+  border-bottom-color: transparent;
 }
 select.contact-input {
   appearance: none;
@@ -2645,7 +2645,7 @@ select.contact-input option {
   transition: border-color 0.2s ease;
 }
 .contact-textarea:focus {
-  border-bottom-color: var(--obsidian, #22211F);
+  border-bottom-color: transparent;
 }
 .contact-textarea::placeholder {
   color: rgba(26, 26, 26, 0.45);
