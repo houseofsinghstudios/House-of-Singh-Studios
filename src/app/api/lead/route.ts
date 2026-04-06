@@ -65,9 +65,12 @@ export async function POST(request: Request) {
 
     const webhookUrl = process.env.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
-      console.warn("N8N_WEBHOOK_URL is not configured. Skipping webhook.");
+      console.error("[lead] N8N_WEBHOOK_URL is not configured");
       return NextResponse.json({ success: true });
     }
+
+    console.log("[lead] Forwarding to webhook:", webhookUrl);
+    console.log("[lead] Payload:", JSON.stringify(sanitized));
 
     const response = await fetch(webhookUrl, {
       method: "POST",
@@ -75,12 +78,19 @@ export async function POST(request: Request) {
       body: JSON.stringify(sanitized),
     });
 
+    const responseText = await response.text();
+    console.log("[lead] Webhook response status:", response.status);
+    console.log("[lead] Webhook response body:", responseText);
+
     if (!response.ok) {
+      console.error("[lead] Webhook failed:", response.status, responseText);
       return NextResponse.json({ success: false }, { status: 500 });
     }
 
+    console.log("[lead] Success — lead forwarded");
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("[lead] Unhandled error:", err);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }
