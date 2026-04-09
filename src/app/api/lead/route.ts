@@ -9,9 +9,9 @@ export async function POST(request: Request) {
     console.log("[lead] POST /api/lead received");
 
     const body = await request.json();
-    const { name, email, service, message, honeypot } = body;
+    const { name, email, service, budget, message, honeypot } = body;
 
-    console.log("[lead] Form data:", { name, email, service, messageLength: message?.length, hasHoneypot: !!honeypot });
+    console.log("[lead] Form data:", { name, email, service, budget, messageLength: message?.length, hasHoneypot: !!honeypot });
 
     if (honeypot) {
       console.log("[lead] Honeypot filled — ignoring");
@@ -32,6 +32,7 @@ export async function POST(request: Request) {
       name: name ? stripHtml(String(name)) : "",
       email: stripHtml(String(email)),
       service: service ? stripHtml(String(service)) : "",
+      budget: budget ? stripHtml(String(budget)) : "",
       message: message ? stripHtml(String(message)) : "",
       source: "contact-form",
       submittedAt: new Date().toISOString(),

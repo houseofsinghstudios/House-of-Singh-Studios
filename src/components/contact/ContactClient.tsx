@@ -18,6 +18,7 @@ export default function ContactClient() {
       name: formData.get("name"),
       email: formData.get("email"),
       service: formData.get("service"),
+      budget: formData.get("budget"),
       message: formData.get("message"),
       honeypot: formData.get("honeypot"),
     };
@@ -126,7 +127,25 @@ export default function ContactClient() {
                     <option value="Visual Media">Visual Media and Content Production</option>
                     <option value="Digital Design">Digital Design and Experience</option>
                     <option value="Creative Strategy">Creative Strategy and Systems</option>
+                    <option value="Multiple Services">Multiple Services</option>
                     <option value="Not sure">Not sure yet</option>
+                  </select>
+                  <span className="focus-line" />
+                </div>
+                <div>
+                  <label className="contact-label">Budget range</label>
+                  <select
+                    name="budget"
+                    className="contact-input"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>Select a range</option>
+                    <option value="Under $5,000">Under $5,000</option>
+                    <option value="$5,000 to $10,000">$5,000 to $10,000</option>
+                    <option value="$10,000 to $25,000">$10,000 to $25,000</option>
+                    <option value="$25,000 to $50,000">$25,000 to $50,000</option>
+                    <option value="$50,000+">$50,000+</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
                   </select>
                   <span className="focus-line" />
                 </div>
