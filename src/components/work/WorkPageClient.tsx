@@ -3,20 +3,29 @@
 import { useState, useMemo, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { projects, getWorkTypeFilters } from "@/data/projects";
+import type { Project } from "@/data/projects";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 
-const PROJECT_IMAGES: Record<string, string> = {
+const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
   meridian: "/images/projects/meridian/meridian.jpg",
   soulbound: "/images/projects/soulbound/soulbound.jpg",
   "nomad-kitchen": "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
 };
 
+function projectImage(project: Project): string {
+  return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
+}
+
 type ViewMode = "list" | "grid";
 
-export default function WorkPageClient() {
+interface WorkPageClientProps {
+  projects: Project[];
+  filters: string[];
+}
+
+export default function WorkPageClient({ projects, filters }: WorkPageClientProps) {
   const [activeFilter, setActiveFilter] = useState("All");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [viewTransition, setViewTransition] = useState(false);
@@ -24,8 +33,8 @@ export default function WorkPageClient() {
   const [mouseY, setMouseY] = useState(0);
 
   const filterCategories = useMemo(
-    () => ["All", ...getWorkTypeFilters()],
-    []
+    () => ["All", ...filters],
+    [filters]
   );
 
   const filteredProjects = useMemo(() => {
@@ -50,9 +59,10 @@ export default function WorkPageClient() {
     [viewMode]
   );
 
-  const hoveredImage = hoveredSlug
-    ? PROJECT_IMAGES[hoveredSlug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"
+  const hoveredProject = hoveredSlug
+    ? filteredProjects.find((p) => p.slug === hoveredSlug)
     : null;
+  const hoveredImage = hoveredProject ? projectImage(hoveredProject) : null;
 
   return (
     <div>
@@ -183,7 +193,7 @@ export default function WorkPageClient() {
                 >
                   <div className="wp-grid-img-inner relative">
                     <Image
-                      src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
+                      src={projectImage(project)}
                       alt={project.name}
                       fill
                       sizes="(max-width: 767px) 100vw, 50vw"
@@ -233,7 +243,7 @@ export default function WorkPageClient() {
             <div className="wp-grid-img-wrap reveal-clip" data-cursor="view">
               <div className="wp-grid-img-inner relative">
                 <Image
-                  src={PROJECT_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg"}
+                  src={projectImage(project)}
                   alt={project.name}
                   fill
                   sizes="100vw"
