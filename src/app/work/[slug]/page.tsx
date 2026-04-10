@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { projects, getProjectBySlug } from "@/data/projects";
+import { getAllProjects, getProjectBySlug, getProjectDetailBySlug } from "@/lib/sanity/projects";
 import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
-export function generateStaticParams() {
+export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const projects = await getAllProjects();
   return projects.map((p) => ({ slug: p.slug }));
 }
 
@@ -14,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
   return {
     title: project.seoTitle,
@@ -34,8 +38,11 @@ export default async function CaseStudyPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const project = await getProjectBySlug(slug);
   if (!project) notFound();
+
+  const detail = await getProjectDetailBySlug(slug);
+
   return (
     <>
       <BreadcrumbSchema items={[
@@ -43,7 +50,7 @@ export default async function CaseStudyPage({
         { name: 'Work', url: 'https://studios.houseofsingh.com/work' },
         { name: project.name, url: `https://studios.houseofsingh.com/work/${slug}` },
       ]} />
-      <CaseStudyClient project={project} />
+      <CaseStudyClient project={project} detail={detail} />
     </>
   );
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import WorkPageClient from "@/components/work/WorkPageClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Work',
@@ -13,14 +16,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function WorkPage() {
+export default async function WorkPage() {
+  const projects = await getAllProjects();
+  const filters = getWorkTypeFilters(projects);
+
   return (
     <>
       <BreadcrumbSchema items={[
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'Work', url: 'https://studios.houseofsingh.com/work' },
       ]} />
-      <WorkPageClient />
+      <WorkPageClient projects={projects} filters={filters} />
     </>
   );
 }

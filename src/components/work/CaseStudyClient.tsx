@@ -1,17 +1,19 @@
 "use client";
 
 import type { Project } from "@/data/projects";
+import type { ProjectDetail } from "@/data/projectDetails";
 import { getProjectDetail } from "@/data/projectDetails";
 import CaseStudyTemplate from "@/components/casestudy/CaseStudyTemplate";
 
 interface CaseStudyClientProps {
   project: Project;
+  detail: ProjectDetail | null;
 }
 
-export default function CaseStudyClient({ project }: CaseStudyClientProps) {
-  const detail = getProjectDetail(project.slug);
+export default function CaseStudyClient({ project, detail }: CaseStudyClientProps) {
+  const resolved = detail || getProjectDetail(project.slug);
 
-  if (!detail) return null;
+  if (!resolved) return null;
 
-  return <CaseStudyTemplate project={detail} />;
+  return <CaseStudyTemplate project={resolved} />;
 }
