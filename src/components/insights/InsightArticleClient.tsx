@@ -6,6 +6,7 @@ import Image from "next/image";
 import { PortableText } from "@portabletext/react";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
+import ShareButtons from "@/components/ShareButtons";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
@@ -140,55 +141,6 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
   },
 };
 /* eslint-enable @typescript-eslint/no-explicit-any */
-
-function ShareRow({ title }: { title: string }) {
-  const [copied, setCopied] = useState(false);
-
-  return (
-    <div className="art-share">
-      <span className="art-share-label">Share</span>
-      <button
-        type="button"
-        onClick={() =>
-          window.open(
-            `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`,
-            "_blank"
-          )
-        }
-        className="art-share-btn"
-      >
-        LinkedIn
-      </button>
-      <button
-        type="button"
-        onClick={() =>
-          window.open(
-            `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(title)}`,
-            "_blank"
-          )
-        }
-        className="art-share-btn"
-      >
-        X
-      </button>
-      <button
-        type="button"
-        onClick={async () => {
-          try {
-            await navigator.clipboard.writeText(window.location.href);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
-          } catch {
-            // Fallback: silently fail
-          }
-        }}
-        className="art-share-btn"
-      >
-        {copied ? "Copied" : "Copy link"}
-      </button>
-    </div>
-  );
-}
 
 function InlineNewsletter() {
   const [email, setEmail] = useState("");
@@ -351,7 +303,10 @@ export default function InsightArticleClient({ post }: { post: Post }) {
             <span className="art-back-arrow">&#8592;</span>
             Back to Insights
           </Link>
-          <ShareRow title={post.title} />
+          <ShareButtons
+            title={post.title}
+            url={`https://studios.houseofsingh.com/insights/${post.slug.current}`}
+          />
           <InlineNewsletter />
         </div>
       </section>
