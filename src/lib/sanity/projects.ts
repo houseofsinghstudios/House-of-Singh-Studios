@@ -2,6 +2,7 @@ import { client } from "./client";
 import { urlFor } from "./image";
 import type { Project, ProjectSection } from "@/data/projects";
 import type { ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
+import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 
 // ── GROQ Queries ──
 
@@ -61,6 +62,15 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   seoTitle,
   seoDescription,
   publishedAt
+}`;
+
+const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | order(publishedAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  services[]-> { _id, title, slug },
+  overview,
+  featuredImage
 }`;
 
 // ── Portable Text → plain text ──
@@ -260,6 +270,43 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
   }
   const { getProjectDetail } = await import("@/data/projectDetails");
   return getProjectDetail(slug) || null;
+}
+
+// ── Map Sanity caseStudy → HomepageProject (for homepage featured work) ──
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapSanityToHomepageProject(doc: any): HomepageProject {
+  const serviceNames = (doc.services || [])
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((s: any) => s.title)
+    .filter(Boolean)
+    .join(", ");
+
+  const overviewText = typeof doc.overview === "string" ? doc.overview : "";
+  const imageUrl = sanityImageUrl(doc.featuredImage);
+
+  return {
+    name: doc.title || "",
+    label: serviceNames || "Brand Identity",
+    sentence: overviewText.length > 160 ? overviewText.slice(0, 160) + "…" : overviewText,
+    href: `/work/${doc.slug || ""}`,
+    color: "#2B2B2B",
+    accent: "#C9A96E",
+    image: imageUrl,
+  };
+}
+
+export async function getFeaturedProjects(): Promise<HomepageProject[]> {
+  try {
+    const docs = await client.fetch(featuredProjectsQuery);
+    if (docs && docs.length > 0) {
+      return docs.map(mapSanityToHomepageProject);
+    }
+  } catch (error) {
+    console.error("[sanity/projects] Featured fetch failed, using fallback:", error);
+  }
+  const { PROJECTS } = await import("@/lib/constants/homepage-data");
+  return PROJECTS;
 }
 
 export function getWorkTypeFilters(projects: Project[]): string[] {
