@@ -346,6 +346,13 @@ body {
   margin: 12px 0 0;
   line-height: 1.4;
 }
+.stat-suffix {
+  display: inline;
+}
+.stat-number-value {
+  display: inline;
+  font-variant-numeric: tabular-nums;
+}
 
 /* ── Services accordion ── */
 .svc-accordion {
