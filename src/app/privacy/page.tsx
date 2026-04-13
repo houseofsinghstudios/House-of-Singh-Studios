@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: 'Privacy Policy',
   description: 'Privacy Policy for House of Singh Studios Inc.',
   alternates: { canonical: 'https://studios.houseofsingh.com/privacy' },
+  openGraph: {
+    title: 'Privacy Policy — House of Singh Studios',
+    description: 'Privacy Policy for House of Singh Studios Inc.',
+    url: 'https://studios.houseofsingh.com/privacy',
+  },
 };
 
 export default function PrivacyPage() {

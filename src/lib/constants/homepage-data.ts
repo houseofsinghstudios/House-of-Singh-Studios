@@ -152,7 +152,7 @@ export const CTA = {
   heading: "Start a project.",
   supporting: "",
   buttons: {
-    primary: { text: "Book a Discovery Call", href: "/contact" },
+    primary: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr" },
     secondary: { text: "Start a Project", href: "/contact" },
   },
 };
