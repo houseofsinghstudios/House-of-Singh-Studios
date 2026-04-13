@@ -461,29 +461,96 @@ body {
   }
 }
 
-/* Mobile: descriptions always visible, no hover */
-@media (max-width: 899px) {
+/* Mobile: tap-to-expand accordion (below 1024px) */
+.svc-mob-toggle { display: none; }
+.svc-mob-learn-more { display: none; }
+.svc-desktop-arrow { display: flex; }
+
+@media (max-width: 1023px) {
   .svc-accordion-row {
-    grid-template-columns: 36px 1fr 64px;
+    grid-template-columns: 36px 1fr 44px;
+    cursor: pointer;
   }
   .svc-accordion-content {
-    padding: 32px 0 32px 20px;
+    padding: 24px 0 24px 20px;
   }
   .svc-accordion-body {
-    max-height: none;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-top: 0;
+    transition: max-height 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                margin-top 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .svc-accordion-row.svc-mob-active .svc-accordion-body {
+    max-height: 200px;
     opacity: 1;
     margin-top: 10px;
   }
   .svc-accordion-row::before {
     display: none;
   }
+  /* Hide desktop arrow, show mobile toggle */
+  .svc-desktop-arrow { display: none; }
+  .svc-mob-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+  }
+  .svc-mob-plus {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-muted);
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    display: inline-block;
+    line-height: 1;
+  }
+  .svc-mob-toggle--active .svc-mob-plus {
+    transform: rotate(45deg);
+    color: var(--text-primary);
+  }
+  /* "Learn More →" link */
+  .svc-mob-learn-more {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--text-primary);
+    margin-top: 12px;
+    text-decoration: none;
+  }
+  .svc-mob-learn-more span {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+  .svc-mob-learn-more:hover span,
+  .svc-mob-learn-more:active span {
+    transform: translateX(4px);
+  }
+  /* Stagger entrance for mobile */
+  .svc-accordion-row {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+                transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .svc-accordion-row.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .svc-accordion-row:nth-child(2).in-view { transition-delay: 0.1s; }
+  .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.2s; }
+  .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.3s; }
 }
+
 @media (max-width: 600px) {
   .svc-accordion-row {
-    grid-template-columns: 36px 1fr;
-  }
-  .svc-accordion-arrow-col {
-    display: none;
+    grid-template-columns: 36px 1fr 40px;
   }
 }
 
@@ -4399,26 +4466,28 @@ body.nav-open .header-crest-wrap {
 /* ── Interaction 3: Staggered Scroll Reveals ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Services accordion stagger */
-    .svc-accordion-row:nth-child(1) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .svc-accordion-row:nth-child(2) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 5% entry 35%;
-    }
-    .svc-accordion-row:nth-child(3) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 10% entry 40%;
-    }
-    .svc-accordion-row:nth-child(4) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 15% entry 45%;
+    /* Services accordion stagger (desktop only; mobile has tap accordion) */
+    @media (min-width: 1024px) {
+      .svc-accordion-row:nth-child(1) {
+        animation: revealFadeUp linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 30%;
+      }
+      .svc-accordion-row:nth-child(2) {
+        animation: revealFadeUp linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry 35%;
+      }
+      .svc-accordion-row:nth-child(3) {
+        animation: revealFadeUp linear both;
+        animation-timeline: view();
+        animation-range: entry 10% entry 40%;
+      }
+      .svc-accordion-row:nth-child(4) {
+        animation: revealFadeUp linear both;
+        animation-timeline: view();
+        animation-range: entry 15% entry 45%;
+      }
     }
 
     /* About page stagger */
@@ -4972,20 +5041,22 @@ td a {
       clip-path: inset(0%);
     }
 
-    /* ── Services accordion rows ── */
-    .svc-accordion-row {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    /* ── Services accordion rows (desktop only; mobile has its own stagger) ── */
+    @media (min-width: 1024px) {
+      .svc-accordion-row {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+                    transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .svc-accordion-row.in-view {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .svc-accordion-row:nth-child(2).in-view { transition-delay: 0.06s; }
+      .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.12s; }
+      .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.18s; }
     }
-    .svc-accordion-row.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .svc-accordion-row:nth-child(2).in-view { transition-delay: 0.06s; }
-    .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.12s; }
-    .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.18s; }
 
     /* ── Clients accordion rows ── */
     .clients-accordion-row {
