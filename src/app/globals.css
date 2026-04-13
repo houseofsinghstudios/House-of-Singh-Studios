@@ -308,48 +308,6 @@ body {
    ═══════════════════════════════════════════════════════ */
 
 
-/* ── Stats row ── */
-/* ── Stats ── */
-.stats-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.stat-cell {
-  padding: clamp(32px, 4vw, 48px) 0;
-  border-right: 1px solid var(--border);
-}
-.stat-cell:last-child {
-  border-right: none;
-}
-.stat-cell:not(:first-child) {
-  padding-left: clamp(24px, 3vw, 40px);
-}
-.stat-number {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: clamp(36px, 5vw, 56px);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  color: var(--text-primary);
-  margin: 0;
-  font-variant-numeric: tabular-nums;
-}
-.stat-label {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  margin: 12px 0 0;
-  line-height: 1.4;
-  transition: opacity 0.3s ease;
-}
-.stat-suffix {
-  transition: opacity 0.3s ease;
-}
-
 /* ── Services accordion ── */
 .svc-accordion {
   display: flex;
@@ -1670,24 +1628,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
-}
-
-@media (max-width: 767px) {
-  .stats-row {
-    grid-template-columns: 1fr;
-    border-bottom: none;
-  }
-  .stat-cell {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 24px 0;
-  }
-  .stat-cell:not(:first-child) {
-    padding-left: 0;
-  }
-  .stat-number {
-    font-size: clamp(32px, 8vw, 44px);
-  }
 }
 
 /* ═══════════════════════════════════════════════════════
