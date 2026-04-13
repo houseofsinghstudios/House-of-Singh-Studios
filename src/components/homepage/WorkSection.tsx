@@ -2,10 +2,14 @@
 
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { PROJECTS } from "@/lib/constants/homepage-data";
+import type { Project } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
-export default function WorkSection() {
+interface WorkSectionProps {
+  projects: Project[];
+}
+
+export default function WorkSection({ projects }: WorkSectionProps) {
   return (
     <section
       className="css-reveal work-section-mobile"
@@ -31,7 +35,7 @@ export default function WorkSection() {
 
       {/* 2-column card grid */}
       <div className="featured-work-grid">
-        {PROJECTS.map((project) => (
+        {projects.map((project) => (
           <Link
             key={project.href}
             href={project.href}
@@ -43,7 +47,7 @@ export default function WorkSection() {
                   src={project.image}
                   alt={project.name}
                   fill
-                  priority={project === PROJECTS[0]}
+                  priority={project === projects[0]}
                   sizes="(max-width: 767px) 100vw, 50vw"
                   style={{
                     objectFit: "cover",

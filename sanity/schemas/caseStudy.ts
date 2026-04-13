@@ -19,6 +19,12 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "featured",
+      title: "Show on Homepage",
+      type: "boolean",
+      initialValue: false,
+    }),
+    defineField({
       name: "client",
       title: "Client",
       type: "string",
@@ -125,12 +131,6 @@ export default defineType({
           type: "string",
         }),
       ],
-    }),
-    defineField({
-      name: "featured",
-      title: "Featured",
-      type: "boolean",
-      initialValue: false,
     }),
     defineField({
       name: "seoTitle",

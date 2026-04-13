@@ -7,6 +7,9 @@ import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import StatsSection from "@/components/homepage/StatsSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
+import { getFeaturedProjects } from "@/lib/sanity/projects";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'House of Singh Studios — AI Powered Design Studio Toronto',
@@ -19,11 +22,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function Home() {
+export default async function Home() {
+  const featuredProjects = await getFeaturedProjects();
+
   return (
     <>
       <HeroSection />
-      <WorkSection />
+      <WorkSection projects={featuredProjects} />
       <ArgumentSection />
       <ServicesSection />
       <TestimonialsSection />
