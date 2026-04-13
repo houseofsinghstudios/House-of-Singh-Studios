@@ -149,7 +149,6 @@ body {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   transition: border-color 0.3s ease, background 0.3s ease;
@@ -3463,7 +3462,6 @@ select.contact-input option {
 .careers-submit-btn {
   font-family: var(--sans);
   font-size: 13px;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   background: var(--text-primary);
   color: var(--bg);
@@ -3680,7 +3678,6 @@ select.contact-input option {
 .ai-pulse-btn {
   font-family: var(--sans);
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 500;
   background: var(--text-primary);

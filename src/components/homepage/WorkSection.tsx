@@ -28,7 +28,7 @@ export default function WorkSection({ projects }: WorkSectionProps) {
         <EditorialLabel text="(01) Featured Work" />
         <Link href="/work" className="arrow-link no-underline" data-cursor="link">
           <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
-            View all projects <span className="arrow-icon">&rarr;</span>
+            View All Projects <span className="arrow-icon">&rarr;</span>
           </span>
         </Link>
       </div>
