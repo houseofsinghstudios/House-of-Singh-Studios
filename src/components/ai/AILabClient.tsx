@@ -384,7 +384,7 @@ export default function AILabClient() {
                   required
                 />
                 <button type="submit" className="ai-pulse-btn">
-                  Notify me
+                  Notify Me
                 </button>
               </form>
             ) : (
