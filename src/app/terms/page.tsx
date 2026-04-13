@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: 'Terms of Use',
   description: 'Terms of Use for House of Singh Studios Inc.',
   alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
+  openGraph: {
+    title: 'Terms of Use — House of Singh Studios',
+    description: 'Terms of Use for House of Singh Studios Inc.',
+    url: 'https://studios.houseofsingh.com/terms',
+  },
 };
 
 export default function TermsPage() {

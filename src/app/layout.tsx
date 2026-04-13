@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ViewTransitions } from "next-view-transitions";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import "@/styles/scroll-animations.css";
@@ -17,14 +17,6 @@ const inter = Inter({
   weight: ["400", "500"],
   display: "swap",
   variable: "--font-inter",
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-cormorant",
 });
 
 const siteUrl = 'https://studios.houseofsingh.com'
@@ -64,7 +56,7 @@ export default function RootLayout({
 }) {
   return (
     <ViewTransitions>
-      <html lang="en" className={`${inter.variable} ${cormorant.variable}`}>
+      <html lang="en" className={inter.variable}>
         <head>
           <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
           <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
