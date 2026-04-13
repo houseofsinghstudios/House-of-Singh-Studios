@@ -27,16 +27,16 @@ function StatItem({ target, suffix, label, isMobile, triggerDesktop }: StatItemP
   const [display, setDisplay] = useState<string>(String(target));
   const [showSuffix, setShowSuffix] = useState(true);
   const [showLabel, setShowLabel] = useState(true);
-  const [cardVisible, setCardVisible] = useState(!isMobile);
-  const [animated, setAnimated] = useState(false);
+  const [cardVisible, setCardVisible] = useState(true);
+  const animatedRef = useRef(false);
   const cellRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
 
   // Desktop: slot-machine animation triggered by parent observer
   useEffect(() => {
-    if (isMobile || !triggerDesktop || animated) return;
+    if (isMobile || !triggerDesktop || animatedRef.current) return;
 
-    setAnimated(true);
+    animatedRef.current = true;
     setDisplay("0");
     setShowSuffix(false);
     setShowLabel(false);
@@ -71,11 +71,11 @@ function StatItem({ target, suffix, label, isMobile, triggerDesktop }: StatItemP
 
     rafRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafRef.current);
-  }, [triggerDesktop, isMobile, target, animated]);
+  }, [triggerDesktop, isMobile, target]);
 
   // Mobile: individual intersection observer + count-up
   useEffect(() => {
-    if (!isMobile || animated) return;
+    if (!isMobile || animatedRef.current) return;
 
     const el = cellRef.current;
     if (!el) return;
@@ -89,12 +89,12 @@ function StatItem({ target, suffix, label, isMobile, triggerDesktop }: StatItemP
       (entries) => {
         if (entries[0].isIntersecting) {
           observer.disconnect();
-          setAnimated(true);
+          animatedRef.current = true;
 
           // Card scale entrance first
           setCardVisible(true);
 
-          // Start counting after card entrance (500ms)
+          // Start counting shortly after card entrance
           setTimeout(() => {
             const duration = 1500;
             const startTime = performance.now();
@@ -116,10 +116,10 @@ function StatItem({ target, suffix, label, isMobile, triggerDesktop }: StatItemP
             }
 
             rafRef.current = requestAnimationFrame(tick);
-          }, 500);
+          }, 200);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     observer.observe(el);
@@ -127,7 +127,7 @@ function StatItem({ target, suffix, label, isMobile, triggerDesktop }: StatItemP
       observer.disconnect();
       cancelAnimationFrame(rafRef.current);
     };
-  }, [isMobile, target, animated]);
+  }, [isMobile, target]);
 
   const mobileStyle = isMobile
     ? {
@@ -190,7 +190,7 @@ export default function StatsSection() {
           observer.disconnect();
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.1 }
     );
 
     observer.observe(el);
