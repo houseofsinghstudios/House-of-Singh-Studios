@@ -331,26 +331,24 @@ body {
 .stat-number {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(48px, 5vw, 72px);
+  font-size: clamp(36px, 5vw, 56px);
   letter-spacing: -0.03em;
   line-height: 1;
   color: var(--text-primary);
   margin: 0;
+  font-variant-numeric: tabular-nums;
 }
-.stat-label-static {
+.stat-label {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 400;
   color: var(--text-secondary);
   margin: 12px 0 0;
   line-height: 1.4;
+  transition: opacity 0.3s ease;
 }
 .stat-suffix {
-  display: inline;
-}
-.stat-number-value {
-  display: inline;
-  font-variant-numeric: tabular-nums;
+  transition: opacity 0.3s ease;
 }
 
 /* ── Services accordion ── */
@@ -1687,6 +1685,9 @@ body {
   }
   .stat-cell:not(:first-child) {
     padding-left: 0;
+  }
+  .stat-number {
+    font-size: clamp(32px, 8vw, 44px);
   }
 }
 
