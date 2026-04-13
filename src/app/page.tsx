@@ -4,7 +4,7 @@ import WorkSection from "@/components/homepage/WorkSection";
 import ArgumentSection from "@/components/homepage/ArgumentSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
-import ProofCounter from "@/components/homepage/ProofCounter";
+import ProofSection from "@/components/homepage/ProofSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
 import { getFeaturedProjects } from "@/lib/sanity/projects";
@@ -32,7 +32,7 @@ export default async function Home() {
       <ArgumentSection />
       <ServicesSection />
       <TestimonialsSection />
-      <ProofCounter />
+      <ProofSection />
       <NextPageLink />
       <CtaSection />
     </>
