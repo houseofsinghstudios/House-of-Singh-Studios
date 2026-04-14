@@ -347,34 +347,8 @@ export interface DisciplineFilter {
   label: string;
 }
 
-export function getWorkTypeFilters(projects: Project[]): DisciplineFilter[] {
-  // Collect disciplines that exist on at least one project
-  const found = new Set<string>();
-  let hasDisciplines = false;
-
-  projects.forEach((p) => {
-    if (p.disciplines && p.disciplines.length > 0) {
-      hasDisciplines = true;
-      p.disciplines.forEach((d) => found.add(d));
-    }
-  });
-
-  // If no projects have disciplines set yet, fall back to workType strings
-  if (!hasDisciplines) {
-    const types = new Set<string>();
-    projects.forEach((p) => {
-      p.workType.split(",").forEach((t) => {
-        const trimmed = t.trim();
-        if (trimmed) types.add(trimmed);
-      });
-    });
-    return Array.from(types).map((t) => ({ value: t, label: t }));
-  }
-
-  // Return in canonical order, only disciplines that have matching projects
-  return DISCIPLINE_ORDER
-    .filter((d) => found.has(d))
-    .map((d) => ({ value: d, label: DISCIPLINE_LABELS[d] || d }));
+export function getWorkTypeFilters(): DisciplineFilter[] {
+  return DISCIPLINE_ORDER.map((d) => ({ value: d, label: DISCIPLINE_LABELS[d] || d }));
 }
 
 // ── Service category project type ──
