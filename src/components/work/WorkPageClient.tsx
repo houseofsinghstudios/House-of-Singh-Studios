@@ -119,7 +119,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         </p>
       </section>
 
-      {/* ═══ MOBILE FILTER (below 768px) ═══ */}
+      {/* ═══ MOBILE FILTER (below 1024px) ═══ */}
       <div className="wp-mf">
         <button
           className="wp-mf-bar"
@@ -161,7 +161,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         {isFilterOpen && <div className="wp-mf-bottom-rule" />}
       </div>
 
-      {/* ═══ FILTER BAR + VIEW TOGGLE (desktop, 768px+) ═══ */}
+      {/* ═══ FILTER BAR + VIEW TOGGLE (desktop, 1024px+) ═══ */}
       <div className="content-filter-sticky wp-desktop-filters">
         <div className="content-filter-row">
           {filterCategories.map((f) => (

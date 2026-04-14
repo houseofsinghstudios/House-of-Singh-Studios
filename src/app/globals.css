@@ -659,7 +659,7 @@ body {
 .wp-desktop-filters {
   display: flex;
 }
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .wp-mf {
     display: block;
     padding: 0 var(--page-px);
@@ -674,7 +674,6 @@ body {
     width: 100%;
     padding: 14px 0;
     border: none;
-    border-top: 1px solid #A9A6A2;
     border-bottom: 1px solid #A9A6A2;
     background: none;
     cursor: pointer;
