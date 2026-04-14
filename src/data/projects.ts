@@ -28,13 +28,6 @@ export interface Project {
   serviceCategory?: string;
 }
 
-const CASE_STUDY_SLUGS = [
-  "tedxtoronto",
-  "meridian",
-  "soulbound",
-  "nomad-kitchen",
-];
-
 export const projects: Project[] = [
   {
     slug: "tedxtoronto",
@@ -253,22 +246,3 @@ export const projects: Project[] = [
   },
 ];
 
-export function getProjectBySlug(slug: string): Project | undefined {
-  return projects.find((p) => p.slug === slug);
-}
-
-export function getNextProject(currentSlug: string): Project {
-  const idx = CASE_STUDY_SLUGS.indexOf(currentSlug);
-  const nextSlug =
-    CASE_STUDY_SLUGS[(idx + 1) % CASE_STUDY_SLUGS.length];
-  return projects.find((p) => p.slug === nextSlug) || projects[0];
-}
-
-/** Get unique filter categories from all projects' workType fields */
-export function getWorkTypeFilters(): string[] {
-  const types = new Set<string>();
-  projects.forEach((p) => {
-    p.workType.split(",").forEach((t) => types.add(t.trim()));
-  });
-  return Array.from(types);
-}
