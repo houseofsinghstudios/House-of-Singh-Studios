@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
@@ -58,6 +58,8 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [mouseY, setMouseY] = useState(0);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filterCategories = useMemo(
     () => [{ value: "All", label: "All" }, ...filters],
@@ -89,6 +91,31 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
     [viewMode]
   );
 
+  const toggleFilter = useCallback(() => {
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current);
+      collapseTimerRef.current = null;
+    }
+    if (isFilterOpen) {
+      setFiltersVisible(false);
+      setIsFilterOpen(false);
+    } else {
+      setIsFilterOpen(true);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => setFiltersVisible(true));
+      });
+    }
+  }, [isFilterOpen]);
+
+  const selectFilter = useCallback((value: string) => {
+    setActiveFilter(value);
+    setFiltersVisible(false);
+    collapseTimerRef.current = setTimeout(() => {
+      setIsFilterOpen(false);
+      collapseTimerRef.current = null;
+    }, 200);
+  }, []);
+
   const hoveredProject = hoveredSlug
     ? filteredProjects.find((p) => p.slug === hoveredSlug)
     : null;
@@ -112,90 +139,70 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
 
         <p
           className="wp-sub css-reveal"
-          style={{ transitionDelay: "200ms" }}
+          style={{ transitionDelay: "200ms", marginBottom: 48 }}
         >
           Brand identities, visual narratives, and digital experiences for
           businesses ready to show up differently.
         </p>
       </section>
 
-      {/* ═══ MOBILE FILTER (below 1024px) ═══ */}
-      <div className="wp-mf">
-        <button
-          className="wp-mf-bar"
-          onClick={() => setIsFilterOpen((v) => !v)}
-          aria-expanded={isFilterOpen}
-        >
-          <span className="wp-mf-label">
-            {isFilterOpen ? "Filter by Discipline" : activeFilterLabel}
-          </span>
-          <span
-            className="wp-mf-icon"
-            style={{
-              transform: isFilterOpen ? "rotate(45deg)" : "rotate(0deg)",
-              transition: "transform 200ms ease",
-            }}
+      {/* ═══ UNIFIED COLLAPSIBLE FILTER ═══ */}
+      <div className="wf" style={{ padding: "0 var(--page-px)" }}>
+        {/* Bar */}
+        <div className="wf-bar">
+          <button
+            className="wf-trigger"
+            onClick={toggleFilter}
+            aria-expanded={isFilterOpen}
           >
-            +
-          </span>
-        </button>
+            <span className="wf-label">{activeFilterLabel}</span>
+            <span
+              className={`wf-icon${isFilterOpen ? " wf-icon--open" : ""}`}
+            >
+              +
+            </span>
+          </button>
+
+          <div className="wf-toggle">
+            <button
+              onClick={() => switchView("grid")}
+              className={`wf-view${viewMode === "grid" ? " wf-view--active" : ""}`}
+            >
+              Grid
+            </button>
+            <span className="wf-sep">|</span>
+            <button
+              onClick={() => switchView("list")}
+              className={`wf-view${viewMode === "list" ? " wf-view--active" : ""}`}
+            >
+              List
+            </button>
+          </div>
+        </div>
+
+        {/* Panel */}
         <div
-          className="wp-mf-grid"
-          style={{
-            display: isFilterOpen ? "grid" : "none",
-          }}
+          className={`wf-panel${isFilterOpen ? " wf-panel--open" : ""}`}
         >
-          {filterCategories.map((f) => (
-            <button
-              key={f.value}
-              className={`wp-mf-option${activeFilter === f.value ? " wp-mf-option--active" : ""}`}
-              onClick={() => {
-                setActiveFilter(f.value);
-                setIsFilterOpen(false);
-              }}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-        {isFilterOpen && <div className="wp-mf-bottom-rule" />}
-      </div>
-
-      {/* ═══ FILTER BAR + VIEW TOGGLE (desktop, 1024px+) ═══ */}
-      <div className="content-filter-sticky wp-desktop-filters">
-        <div className="content-filter-row">
-          {filterCategories.map((f) => (
-            <button
-              key={f.value}
-              onClick={() => setActiveFilter(f.value)}
-              className={`content-filter${activeFilter === f.value ? " content-filter--active" : ""}`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="wp-view-toggle-wrap" style={{ display: "flex", alignItems: "center", gap: 0, flexShrink: 0 }}>
-          <button
-            onClick={() => switchView("grid")}
-            className={`content-filter${viewMode === "grid" ? " content-filter--active" : ""}`}
-          >
-            GRID
-          </button>
-          <span className="content-filter-divider" style={{ margin: "0 8px" }} />
-          <button
-            onClick={() => switchView("list")}
-            className={`content-filter${viewMode === "list" ? " content-filter--active" : ""}`}
-          >
-            LIST
-          </button>
+          <div className="wf-filters">
+            {filterCategories.map((f, i) => (
+              <button
+                key={f.value}
+                className={`wf-item${activeFilter === f.value ? " wf-item--active" : ""}${filtersVisible ? " wf-item--show" : ""}`}
+                style={{ transitionDelay: filtersVisible ? `${i * 40}ms` : "0ms" }}
+                onClick={() => selectFilter(f.value)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* ═══ PROJECT CONTENT ═══ */}
       <div
         className={`wp-content${viewTransition ? " wp-content--exiting" : ""}`}
-        style={{ padding: "32px var(--page-px) 0" }}
+        style={{ padding: "40px var(--page-px) 0" }}
       >
         {filteredProjects.length === 0 ? (
           <p className="wp-empty">No projects in this category yet.</p>
@@ -302,7 +309,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
       </div>
 
       {/* ═══ MOBILE GRID (always visible on mobile) ═══ */}
-      <div className="wp-mobile-grid" style={{ padding: "32px var(--page-px) 0" }}>
+      <div className="wp-mobile-grid" style={{ padding: "40px var(--page-px) 0" }}>
         {filteredProjects.map((project) => (
           <Link
             key={project.slug}
