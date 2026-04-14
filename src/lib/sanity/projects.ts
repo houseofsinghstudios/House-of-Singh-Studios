@@ -376,3 +376,54 @@ export function getWorkTypeFilters(projects: Project[]): DisciplineFilter[] {
     .filter((d) => found.has(d))
     .map((d) => ({ value: d, label: DISCIPLINE_LABELS[d] || d }));
 }
+
+// ── Service category project type ──
+
+export interface ServiceProject {
+  slug: string;
+  name: string;
+  image: string;
+  disciplines: string[];
+}
+
+const serviceCategoryQuery = `*[_type == "caseStudy" && defined(serviceCategory)] | order(publishedAt desc) {
+  title,
+  "slug": slug.current,
+  serviceCategory,
+  disciplines,
+  featuredImage
+}`;
+
+type ServiceCategoryMap = Record<string, ServiceProject[]>;
+
+export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryMap> {
+  const empty: ServiceCategoryMap = {
+    "brand-identity": [],
+    "visual-media": [],
+    "digital-design": [],
+    "creative-strategy": [],
+  };
+
+  try {
+    const docs = await client.fetch(serviceCategoryQuery);
+    if (!docs || docs.length === 0) return empty;
+
+    const grouped = { ...empty };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    docs.forEach((doc: any) => {
+      const cat = doc.serviceCategory as string;
+      if (cat && grouped[cat]) {
+        grouped[cat].push({
+          slug: doc.slug || "",
+          name: doc.title || "",
+          image: sanityImageUrl(doc.featuredImage),
+          disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
+        });
+      }
+    });
+    return grouped;
+  } catch (error) {
+    console.error("[sanity/projects] Service category fetch failed:", error);
+    return empty;
+  }
+}
