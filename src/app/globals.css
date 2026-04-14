@@ -5625,6 +5625,10 @@ td a {
   color: var(--text-muted, #A9A6A2);
 }
 
+.svc-block-proj-meta {
+  padding: 0 24px 24px;
+}
+
 .svc-block-proj-tags {
   font-size: 10px;
   text-transform: uppercase;
@@ -5676,6 +5680,10 @@ td a {
   .svc-block-img,
   .svc-block-img-placeholder {
     aspect-ratio: 3 / 4;
+  }
+
+  .svc-block-proj-meta {
+    padding: 0 16px 16px;
   }
 }
 

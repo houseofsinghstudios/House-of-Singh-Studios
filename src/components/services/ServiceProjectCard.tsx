@@ -51,7 +51,7 @@ export default function ServiceProjectCard({ projects }: Props) {
           />
         ))}
       </Link>
-      <div>
+      <div className="svc-block-proj-meta">
         <p className="svc-block-proj-tags">
           {current.disciplines
             .map((d) => d.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()))
