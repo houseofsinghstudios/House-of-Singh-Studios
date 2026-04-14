@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
 export default async function WorkPage() {
   const projects = await getAllProjects();
-  const filters = getWorkTypeFilters(projects);
+  const filters = getWorkTypeFilters();
 
   return (
     <>

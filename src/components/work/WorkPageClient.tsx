@@ -58,9 +58,6 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [mouseY, setMouseY] = useState(0);
 
-  // Whether filters use discipline slugs (new system) or plain strings (legacy)
-  const isDisciplineMode = filters.length > 0 && filters[0].value !== filters[0].label;
-
   const filterCategories = useMemo(
     () => [{ value: "All", label: "All" }, ...filters],
     [filters]
@@ -68,19 +65,10 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
-    if (isDisciplineMode) {
-      return projects.filter(
-        (p) => p.disciplines && p.disciplines.includes(activeFilter)
-      );
-    }
-    // Legacy fallback: match against workType string
-    return projects.filter((p) =>
-      p.workType
-        .split(",")
-        .map((t) => t.trim())
-        .includes(activeFilter)
+    return projects.filter(
+      (p) => p.disciplines && p.disciplines.includes(activeFilter)
     );
-  }, [activeFilter, projects, isDisciplineMode]);
+  }, [activeFilter, projects]);
 
   const switchView = useCallback(
     (mode: ViewMode) => {
