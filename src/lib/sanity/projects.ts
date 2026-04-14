@@ -1,6 +1,6 @@
 import { client } from "./client";
 import { urlFor } from "./image";
-import type { Project, ProjectSection } from "@/data/projects";
+import type { Project } from "@/data/projects";
 import type { ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
 import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 
@@ -12,7 +12,6 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   "slug": slug.current,
   client,
   industry,
-  services[]-> { _id, title, slug },
   year,
   overview,
   challenge,
@@ -43,7 +42,6 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   "slug": slug.current,
   client,
   industry,
-  services[]-> { _id, title, slug },
   year,
   overview,
   challenge,
@@ -72,7 +70,6 @@ const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | ord
   _id,
   title,
   "slug": slug.current,
-  services[]-> { _id, title, slug },
   overview,
   featuredImage
 }`;
@@ -108,12 +105,6 @@ function sanityImageUrl(img: any): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapSanityToProject(doc: any, index: number): Project {
-  const serviceNames = (doc.services || [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((s: any) => s.title)
-    .filter(Boolean)
-    .join(", ");
-
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -121,7 +112,7 @@ function mapSanityToProject(doc: any, index: number): Project {
     slug: doc.slug || "",
     number: String(index + 1).padStart(2, "0"),
     name: doc.title || "",
-    workType: serviceNames || "Brand Identity",
+    workType: "Brand Identity",
     origin: "Client Project",
     year: doc.year ? String(doc.year) : "",
     description: overviewText,
@@ -164,12 +155,6 @@ function mapSanityToProject(doc: any, index: number): Project {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
-  const serviceNames = (doc.services || [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((s: any) => s.title)
-    .filter(Boolean)
-    .join(", ");
-
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -195,7 +180,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
   return {
     slug: doc.slug || "",
     name: doc.title || "",
-    category: serviceNames || "Brand Identity",
+    category: "Brand Identity",
     year: doc.year ? String(doc.year) : "",
     industry: doc.industry || undefined,
     timeline: undefined,
@@ -284,18 +269,12 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapSanityToHomepageProject(doc: any): HomepageProject {
-  const serviceNames = (doc.services || [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((s: any) => s.title)
-    .filter(Boolean)
-    .join(", ");
-
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
   return {
     name: doc.title || "",
-    label: serviceNames || "Brand Identity",
+    label: "Brand Identity",
     sentence: overviewText.length > 160 ? overviewText.slice(0, 160) + "…" : overviewText,
     href: `/work/${doc.slug || ""}`,
     color: "#2B2B2B",
