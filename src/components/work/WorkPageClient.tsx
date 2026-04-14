@@ -57,11 +57,18 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
   const [viewTransition, setViewTransition] = useState(false);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [mouseY, setMouseY] = useState(0);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const filterCategories = useMemo(
     () => [{ value: "All", label: "All" }, ...filters],
     [filters]
   );
+
+  const activeFilterLabel = useMemo(() => {
+    if (activeFilter === "All") return "All Projects";
+    const match = filterCategories.find((f) => f.value === activeFilter);
+    return match ? match.label : activeFilter;
+  }, [activeFilter, filterCategories]);
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
@@ -112,8 +119,50 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         </p>
       </section>
 
-      {/* ═══ FILTER BAR + VIEW TOGGLE ═══ */}
-      <div className="content-filter-sticky">
+      {/* ═══ MOBILE FILTER (below 768px) ═══ */}
+      <div className="wp-mf">
+        <button
+          className="wp-mf-bar"
+          onClick={() => setIsFilterOpen((v) => !v)}
+          aria-expanded={isFilterOpen}
+        >
+          <span className="wp-mf-label">
+            {isFilterOpen ? "Filter by Discipline" : activeFilterLabel}
+          </span>
+          <span
+            className="wp-mf-icon"
+            style={{
+              transform: isFilterOpen ? "rotate(45deg)" : "rotate(0deg)",
+              transition: "transform 200ms ease",
+            }}
+          >
+            +
+          </span>
+        </button>
+        <div
+          className="wp-mf-grid"
+          style={{
+            display: isFilterOpen ? "grid" : "none",
+          }}
+        >
+          {filterCategories.map((f) => (
+            <button
+              key={f.value}
+              className={`wp-mf-option${activeFilter === f.value ? " wp-mf-option--active" : ""}`}
+              onClick={() => {
+                setActiveFilter(f.value);
+                setIsFilterOpen(false);
+              }}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+        {isFilterOpen && <div className="wp-mf-bottom-rule" />}
+      </div>
+
+      {/* ═══ FILTER BAR + VIEW TOGGLE (desktop, 768px+) ═══ */}
+      <div className="content-filter-sticky wp-desktop-filters">
         <div className="content-filter-row">
           {filterCategories.map((f) => (
             <button
