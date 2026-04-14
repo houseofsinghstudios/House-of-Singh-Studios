@@ -71,17 +71,6 @@ export default defineType({
       type: "string",
     }),
     defineField({
-      name: "services",
-      title: "Services",
-      type: "array",
-      of: [
-        defineArrayMember({
-          type: "reference",
-          to: [{ type: "service" }],
-        }),
-      ],
-    }),
-    defineField({
       name: "year",
       title: "Year",
       type: "number",
