@@ -6,11 +6,7 @@ import "./globals.css";
 import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import FooterReveal from "@/components/layout/FooterReveal";
-import SmoothScroll from "@/components/SmoothScroll";
-import CustomCursor from "@/components/CustomCursor";
-import PageTransition from "@/components/PageTransition";
-import ScrollObserver from "@/components/ScrollObserver";
+import ClientShell from "@/components/ClientShell";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,20 +59,17 @@ export default function RootLayout({
           <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           <link rel="manifest" href="/site.webmanifest" />
-          <link rel="preload" href="/hos-studios-logo.svg" as="image" />
+          <link rel="preconnect" href="https://cdn.sanity.io" />
+          <link rel="dns-prefetch" href="https://cdn.sanity.io" />
         </head>
         <body>
           <div className="scroll-progress" />
-          <SmoothScroll />
-          <CustomCursor />
-          <PageTransition />
+          <ClientShell />
           <Header />
           <div className="site-content-wrap">
             <main>{children}</main>
             <Footer />
           </div>
-          <FooterReveal />
-          <ScrollObserver />
           <SpeedInsights />
           <script
             type="application/ld+json"

@@ -95,7 +95,7 @@ function portableTextToPlain(blocks: PortableTextBlock[] | undefined): string[] 
 function sanityImageUrl(img: any): string {
   if (!img?.asset) return "";
   try {
-    return urlFor(img).width(1600).url();
+    return urlFor(img).width(1600).auto("format").quality(80).url();
   } catch {
     return "";
   }
