@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import DiagnosticTrigger from "@/components/DiagnosticTrigger";
+import ServiceProjectCard from "@/components/services/ServiceProjectCard";
+import type { ServiceProject } from "@/lib/sanity/projects";
 
 const BLOCKS = [
   {
@@ -12,6 +14,7 @@ const BLOCKS = [
     description:
       "Your business has grown. Your brand has not kept up. Prospects compare you to competitors with sharper visuals and walk away. We build complete visual systems that make your business look as established as it actually is.",
     slug: "brand-identity",
+    serviceCategory: "brand-identity",
     deliverables: [
       "Brand Strategy and Positioning",
       "Brand Naming",
@@ -23,12 +26,12 @@ const BLOCKS = [
       "Packaging Design",
       "Art Direction",
     ],
-    image: {
+    fallbackImage: {
       src: "/images/projects/tedxtoronto/tedxtoronto.jpg",
       alt: "TEDxToronto visual identity system",
     },
-    projectTags: "Brand Identity",
-    projectName: "TEDxToronto Visual Identity",
+    fallbackTags: "Brand Identity",
+    fallbackName: "TEDxToronto Visual Identity",
   },
   {
     number: "02",
@@ -37,6 +40,7 @@ const BLOCKS = [
     description:
       "Your content looks different on every platform. Nothing connects. We direct and produce brand photography, video, and content systems that hold together across every channel.",
     slug: "visual-media",
+    serviceCategory: "visual-media",
     deliverables: [
       "Brand Photography",
       "Video Production",
@@ -45,12 +49,12 @@ const BLOCKS = [
       "Creative Direction",
       "Script and Narrative",
     ],
-    image: {
+    fallbackImage: {
       src: "/images/projects/soulbound/soulbound.jpg",
       alt: "Soulbound publication design",
     },
-    projectTags: "Publication Design — Art Direction",
-    projectName: "Soulbound Publication",
+    fallbackTags: "Publication Design — Art Direction",
+    fallbackName: "Soulbound Publication",
   },
   {
     number: "03",
@@ -59,6 +63,7 @@ const BLOCKS = [
     description:
       "Your website exists. But it does not work for your business. People browse for 30 seconds and leave. We design digital experiences where every page has a job.",
     slug: "digital-design",
+    serviceCategory: "digital-design",
     deliverables: [
       "UX Research",
       "Information Architecture",
@@ -69,9 +74,9 @@ const BLOCKS = [
       "Development Direction",
       "Post-Launch Support",
     ],
-    image: null,
-    projectTags: "Digital Design",
-    projectName: "Coming Soon",
+    fallbackImage: null,
+    fallbackTags: "Digital Design",
+    fallbackName: "Coming Soon",
   },
   {
     number: "04",
@@ -80,6 +85,7 @@ const BLOCKS = [
     description:
       "Your team makes brand decisions without a playbook. Marketing, agencies, freelancers — they all interpret your brand differently. We build the framework that lets your team operate without you.",
     slug: "creative-strategy",
+    serviceCategory: "creative-strategy",
     deliverables: [
       "Brand Audit",
       "Positioning",
@@ -89,13 +95,17 @@ const BLOCKS = [
       "Content Strategy",
       "Brand Governance",
     ],
-    image: null,
-    projectTags: "Creative Strategy",
-    projectName: "Coming Soon",
+    fallbackImage: null,
+    fallbackTags: "Creative Strategy",
+    fallbackName: "Coming Soon",
   },
 ];
 
-export default function ServicesClient() {
+interface Props {
+  projectsByCategory?: Record<string, ServiceProject[]>;
+}
+
+export default function ServicesClient({ projectsByCategory }: Props) {
   return (
     <>
       {/* ═══ HERO ═══ */}
@@ -171,25 +181,42 @@ export default function ServicesClient() {
 
             {/* Right column */}
             <div className="svc-block-right">
-              {block.image ? (
-                <div className="svc-block-img">
-                  <Image
-                    src={block.image.src}
-                    alt={block.image.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              ) : (
-                <div className="svc-block-img-placeholder">
-                  <span>Project image coming soon</span>
-                </div>
-              )}
-              <div>
-                <p className="svc-block-proj-tags">{block.projectTags}</p>
-                <p className="svc-block-proj-name">{block.projectName}</p>
-              </div>
+              {(() => {
+                const sanityProjects = projectsByCategory?.[block.serviceCategory] || [];
+                if (sanityProjects.length > 0) {
+                  return <ServiceProjectCard projects={sanityProjects} />;
+                }
+                if (block.fallbackImage) {
+                  return (
+                    <>
+                      <div className="svc-block-img">
+                        <Image
+                          src={block.fallbackImage.src}
+                          alt={block.fallbackImage.alt}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          style={{ objectFit: "cover" }}
+                        />
+                      </div>
+                      <div>
+                        <p className="svc-block-proj-tags">{block.fallbackTags}</p>
+                        <p className="svc-block-proj-name">{block.fallbackName}</p>
+                      </div>
+                    </>
+                  );
+                }
+                return (
+                  <>
+                    <div className="svc-block-img-placeholder">
+                      <span>Project image coming soon</span>
+                    </div>
+                    <div>
+                      <p className="svc-block-proj-tags">{block.fallbackTags}</p>
+                      <p className="svc-block-proj-name">{block.fallbackName}</p>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         ))}

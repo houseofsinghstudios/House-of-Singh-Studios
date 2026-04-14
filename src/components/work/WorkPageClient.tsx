@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
+import type { DisciplineFilter } from "@/lib/sanity/projects";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 
@@ -18,11 +19,36 @@ function projectImage(project: Project): string {
   return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
 }
 
+const DISCIPLINE_LABELS: Record<string, string> = {
+  "brand-identity": "Brand Identity",
+  packaging: "Packaging",
+  publication: "Publication",
+  "art-direction": "Art Direction",
+  website: "Website",
+  video: "Video",
+  photography: "Photography",
+  "social-content": "Social Content",
+  strategy: "Strategy",
+};
+
+function projectTags(project: Project): { value: string; label: string }[] {
+  if (project.disciplines && project.disciplines.length > 0) {
+    return project.disciplines.map((d) => ({
+      value: d,
+      label: DISCIPLINE_LABELS[d] || d,
+    }));
+  }
+  return project.workType.split(",").map((t) => {
+    const trimmed = t.trim();
+    return { value: trimmed, label: trimmed };
+  });
+}
+
 type ViewMode = "list" | "grid";
 
 interface WorkPageClientProps {
   projects: Project[];
-  filters: string[];
+  filters: DisciplineFilter[];
 }
 
 export default function WorkPageClient({ projects, filters }: WorkPageClientProps) {
@@ -32,20 +58,29 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
   const [mouseY, setMouseY] = useState(0);
 
+  // Whether filters use discipline slugs (new system) or plain strings (legacy)
+  const isDisciplineMode = filters.length > 0 && filters[0].value !== filters[0].label;
+
   const filterCategories = useMemo(
-    () => ["All", ...filters],
+    () => [{ value: "All", label: "All" }, ...filters],
     [filters]
   );
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
+    if (isDisciplineMode) {
+      return projects.filter(
+        (p) => p.disciplines && p.disciplines.includes(activeFilter)
+      );
+    }
+    // Legacy fallback: match against workType string
     return projects.filter((p) =>
       p.workType
         .split(",")
         .map((t) => t.trim())
         .includes(activeFilter)
     );
-  }, [activeFilter]);
+  }, [activeFilter, projects, isDisciplineMode]);
 
   const switchView = useCallback(
     (mode: ViewMode) => {
@@ -94,11 +129,11 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         <div className="content-filter-row">
           {filterCategories.map((f) => (
             <button
-              key={f}
-              onClick={() => setActiveFilter(f)}
-              className={`content-filter${activeFilter === f ? " content-filter--active" : ""}`}
+              key={f.value}
+              onClick={() => setActiveFilter(f.value)}
+              className={`content-filter${activeFilter === f.value ? " content-filter--active" : ""}`}
             >
-              {f}
+              {f.label}
             </button>
           ))}
         </div>
@@ -149,10 +184,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                   {project.name}
                 </span>
                 <span className="wp-list-cat">
-                  {project.workType
-                    .split(",")
-                    .map((t) => t.trim())
-                    .join(" — ")}
+                  {projectTags(project).map((t) => t.label).join(" — ")}
                 </span>
                 <span className="wp-list-arrow" aria-hidden="true">
                   &rarr;
@@ -202,18 +234,18 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                   </div>
                 </div>
                 <div className="wp-grid-meta">
-                  {project.workType.split(",").map((cat) => (
+                  {projectTags(project).map((tag) => (
                     <button
-                      key={cat.trim()}
+                      key={tag.value}
                       className="wp-grid-cat-tag"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        setActiveFilter(cat.trim());
+                        setActiveFilter(tag.value);
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
-                      {cat.trim()}
+                      {tag.label}
                     </button>
                   ))}
                 </div>
@@ -252,18 +284,18 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
               </div>
             </div>
             <div className="wp-grid-meta">
-              {project.workType.split(",").map((cat) => (
+              {projectTags(project).map((tag) => (
                 <button
-                  key={cat.trim()}
+                  key={tag.value}
                   className="wp-grid-cat-tag"
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setActiveFilter(cat.trim());
+                    setActiveFilter(tag.value);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
                 >
-                  {cat.trim()}
+                  {tag.label}
                 </button>
               ))}
             </div>

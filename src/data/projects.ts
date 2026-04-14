@@ -24,6 +24,8 @@ export interface Project {
     result: ProjectSection;
   };
   deliverablesList: string[];
+  disciplines?: string[];
+  serviceCategory?: string;
 }
 
 const CASE_STUDY_SLUGS = [

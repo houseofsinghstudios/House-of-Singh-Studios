@@ -25,6 +25,42 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: "serviceCategory",
+      title: "Service Category",
+      type: "string",
+      description:
+        "Which of the 4 studio services does this project belong to? Used on the /services page.",
+      options: {
+        list: [
+          { title: "Brand Identity and Visual Design", value: "brand-identity" },
+          { title: "Visual Media and Content Production", value: "visual-media" },
+          { title: "Digital Design and Experience", value: "digital-design" },
+          { title: "Creative Strategy and Systems", value: "creative-strategy" },
+        ],
+      },
+    }),
+    defineField({
+      name: "disciplines",
+      title: "Disciplines",
+      type: "array",
+      description:
+        "What type of work was done? Select all that apply. Used as filters on the /work page.",
+      of: [{ type: "string" }],
+      options: {
+        list: [
+          { title: "Brand Identity", value: "brand-identity" },
+          { title: "Packaging", value: "packaging" },
+          { title: "Publication", value: "publication" },
+          { title: "Art Direction", value: "art-direction" },
+          { title: "Website", value: "website" },
+          { title: "Video", value: "video" },
+          { title: "Photography", value: "photography" },
+          { title: "Social Content", value: "social-content" },
+          { title: "Strategy", value: "strategy" },
+        ],
+      },
+    }),
+    defineField({
       name: "client",
       title: "Client",
       type: "string",

@@ -30,6 +30,8 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   },
   testimonial,
   featured,
+  serviceCategory,
+  disciplines,
   seoTitle,
   seoDescription,
   publishedAt
@@ -59,6 +61,8 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   },
   testimonial,
   featured,
+  serviceCategory,
+  disciplines,
   seoTitle,
   seoDescription,
   publishedAt
@@ -149,6 +153,10 @@ function mapSanityToProject(doc: any, index: number): Project {
       },
     },
     deliverablesList: doc.deliverables || [],
+    disciplines: Array.isArray(doc.disciplines) && doc.disciplines.length > 0
+      ? doc.disciplines
+      : undefined,
+    serviceCategory: doc.serviceCategory || undefined,
   };
 }
 
@@ -309,10 +317,113 @@ export async function getFeaturedProjects(): Promise<HomepageProject[]> {
   return PROJECTS;
 }
 
-export function getWorkTypeFilters(projects: Project[]): string[] {
-  const types = new Set<string>();
+// Canonical discipline order for the filter bar
+const DISCIPLINE_ORDER = [
+  "brand-identity",
+  "packaging",
+  "publication",
+  "art-direction",
+  "website",
+  "video",
+  "photography",
+  "social-content",
+  "strategy",
+];
+
+const DISCIPLINE_LABELS: Record<string, string> = {
+  "brand-identity": "Brand Identity",
+  packaging: "Packaging",
+  publication: "Publication",
+  "art-direction": "Art Direction",
+  website: "Website",
+  video: "Video",
+  photography: "Photography",
+  "social-content": "Social Content",
+  strategy: "Strategy",
+};
+
+export interface DisciplineFilter {
+  value: string;
+  label: string;
+}
+
+export function getWorkTypeFilters(projects: Project[]): DisciplineFilter[] {
+  // Collect disciplines that exist on at least one project
+  const found = new Set<string>();
+  let hasDisciplines = false;
+
   projects.forEach((p) => {
-    p.workType.split(",").forEach((t) => types.add(t.trim()));
+    if (p.disciplines && p.disciplines.length > 0) {
+      hasDisciplines = true;
+      p.disciplines.forEach((d) => found.add(d));
+    }
   });
-  return Array.from(types);
+
+  // If no projects have disciplines set yet, fall back to workType strings
+  if (!hasDisciplines) {
+    const types = new Set<string>();
+    projects.forEach((p) => {
+      p.workType.split(",").forEach((t) => {
+        const trimmed = t.trim();
+        if (trimmed) types.add(trimmed);
+      });
+    });
+    return Array.from(types).map((t) => ({ value: t, label: t }));
+  }
+
+  // Return in canonical order, only disciplines that have matching projects
+  return DISCIPLINE_ORDER
+    .filter((d) => found.has(d))
+    .map((d) => ({ value: d, label: DISCIPLINE_LABELS[d] || d }));
+}
+
+// ── Service category project type ──
+
+export interface ServiceProject {
+  slug: string;
+  name: string;
+  image: string;
+  disciplines: string[];
+}
+
+const serviceCategoryQuery = `*[_type == "caseStudy" && defined(serviceCategory)] | order(publishedAt desc) {
+  title,
+  "slug": slug.current,
+  serviceCategory,
+  disciplines,
+  featuredImage
+}`;
+
+type ServiceCategoryMap = Record<string, ServiceProject[]>;
+
+export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryMap> {
+  const empty: ServiceCategoryMap = {
+    "brand-identity": [],
+    "visual-media": [],
+    "digital-design": [],
+    "creative-strategy": [],
+  };
+
+  try {
+    const docs = await client.fetch(serviceCategoryQuery);
+    if (!docs || docs.length === 0) return empty;
+
+    const grouped = { ...empty };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    docs.forEach((doc: any) => {
+      const cat = doc.serviceCategory as string;
+      if (cat && grouped[cat]) {
+        grouped[cat].push({
+          slug: doc.slug || "",
+          name: doc.title || "",
+          image: sanityImageUrl(doc.featuredImage),
+          disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
+        });
+      }
+    });
+    return grouped;
+  } catch (error) {
+    console.error("[sanity/projects] Service category fetch failed:", error);
+    return empty;
+  }
 }
