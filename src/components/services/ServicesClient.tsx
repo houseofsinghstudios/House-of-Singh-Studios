@@ -198,7 +198,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
                           style={{ objectFit: "cover" }}
                         />
                       </div>
-                      <div>
+                      <div className="svc-block-proj-meta">
                         <p className="svc-block-proj-tags">{block.fallbackTags}</p>
                         <p className="svc-block-proj-name">{block.fallbackName}</p>
                       </div>
@@ -210,7 +210,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
                     <div className="svc-block-img-placeholder">
                       <span>Project image coming soon</span>
                     </div>
-                    <div>
+                    <div className="svc-block-proj-meta">
                       <p className="svc-block-proj-tags">{block.fallbackTags}</p>
                       <p className="svc-block-proj-name">{block.fallbackName}</p>
                     </div>
