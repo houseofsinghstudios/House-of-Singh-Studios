@@ -32,56 +32,6 @@ export async function getServiceBySlug(slug: string) {
   );
 }
 
-export async function getAllCaseStudies() {
-  return client.fetch(
-    `*[_type == "caseStudy"] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      client,
-      industry,
-      year,
-      overview,
-      featuredImage,
-      featured,
-      publishedAt
-    }`
-  );
-}
-
-export async function getCaseStudyBySlug(slug: string) {
-  return client.fetch(
-    `*[_type == "caseStudy" && slug.current == $slug][0] {
-      _id,
-      title,
-      slug,
-      client,
-      industry,
-      year,
-      overview,
-      challenge,
-      approach,
-      deliverables,
-      results,
-      featuredImage,
-      gallery[] {
-        _key,
-        asset,
-        alt,
-        caption,
-        hotspot,
-        crop
-      },
-      testimonial,
-      featured,
-      seoTitle,
-      seoDescription,
-      publishedAt
-    }`,
-    { slug }
-  );
-}
-
 export async function getAllPosts() {
   try {
     const posts = await client.fetch(
@@ -201,33 +151,6 @@ export async function getFeaturedCaseStudies() {
       industry,
       featuredImage,
       overview
-    }`
-  );
-}
-
-export async function getFeaturedTestimonials() {
-  return client.fetch(
-    `*[_type == "testimonial" && featured == true] {
-      _id,
-      quote,
-      author,
-      role,
-      company,
-      photo
-    }`
-  );
-}
-
-export async function getTeamMembers() {
-  return client.fetch(
-    `*[_type == "teamMember"] | order(order asc) {
-      _id,
-      name,
-      role,
-      bio,
-      photo,
-      linkedin,
-      order
     }`
   );
 }
