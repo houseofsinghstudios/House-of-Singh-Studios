@@ -535,7 +535,7 @@ export default function AILabClient() {
       >
         <div className="cta-centered">
           <p className="cta-label">(Next step)</p>
-          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em" }}>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em", whiteSpace: "normal" }}>
             Ready to see what AI-powered creative direction looks like?
           </h2>
           <div className="cta-buttons">

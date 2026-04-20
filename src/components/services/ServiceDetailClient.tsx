@@ -189,7 +189,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
       >
         <div className="cta-centered">
           <p className="cta-label">(Next step)</p>
-          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>{service.ctaHeading}</h2>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", whiteSpace: "normal" }}>{service.ctaHeading}</h2>
           <p className="cta-sub">
             Book a discovery call. We will scope your project and recommend
             the right approach.
