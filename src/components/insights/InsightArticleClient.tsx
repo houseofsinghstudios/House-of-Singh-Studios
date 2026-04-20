@@ -45,6 +45,7 @@ interface Post {
   publishedAt?: string;
   category?: string;
   featuredImage?: PostImage;
+  keyTakeaways?: string[];
   body?: Array<{ _type: string; children?: Array<{ text?: string }> }>;
   previousPost?: AdjacentPost;
   nextPost?: AdjacentPost;
@@ -278,6 +279,27 @@ export default function InsightArticleClient({ post }: { post: Post }) {
                   }
                 : {})}
             />
+          </div>
+        </section>
+      )}
+
+      {/* ═══ KEY TAKEAWAYS ═══ */}
+      {post.keyTakeaways && post.keyTakeaways.length > 0 && (
+        <section className="art-takeaways-section css-reveal">
+          <div className="art-body">
+            <div className="art-takeaways">
+              <p className="editorial-label art-takeaways-label">
+                (Key Takeaways)
+              </p>
+              <ul className="art-takeaways-list">
+                {post.keyTakeaways.map((takeaway, i) => (
+                  <li key={i} className="art-takeaways-item">
+                    <span className="art-takeaways-dash">&mdash;</span>
+                    <span>{takeaway}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
       )}

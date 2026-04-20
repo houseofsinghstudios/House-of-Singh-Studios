@@ -3122,6 +3122,41 @@ select.contact-input option {
   max-width: 740px;
 }
 
+/* Key Takeaways block */
+.art-takeaways-section {
+  padding: clamp(40px, 5vw, 64px) var(--page-px) 0;
+}
+.art-takeaways {
+  border-top: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--text-muted);
+  padding: clamp(28px, 3.5vw, 40px) 0;
+}
+.art-takeaways-label {
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+.art-takeaways-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.art-takeaways-item {
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+}
+.art-takeaways-dash {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
 /* Article typography */
 .art-p {
   font-family: var(--sans);

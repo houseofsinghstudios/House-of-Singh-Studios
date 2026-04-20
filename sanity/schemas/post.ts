@@ -79,6 +79,17 @@ export default defineType({
       options: { layout: "tags" },
     }),
 
+    // ── Key Takeaways ────────────────────────────────────────────
+    defineField({
+      name: "keyTakeaways",
+      title: "Key Takeaways",
+      description:
+        "A 3 to 5 bullet TL;DR shown at the top of the post. Helps readers skim and improves AI search visibility. Each takeaway should be one clear sentence.",
+      type: "array",
+      of: [{ type: "string" }],
+      validation: (rule) => rule.min(0).max(5),
+    }),
+
     // ── Main content ─────────────────────────────────────────────
     defineField({
       name: "body",
