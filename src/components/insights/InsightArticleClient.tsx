@@ -431,49 +431,14 @@ export default function InsightArticleClient({ post }: { post: Post }) {
           padding: "120px var(--page-px)",
         }}
       >
-        <div className="cta-dark-grid">
-          <div>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                opacity: 0.4,
-                marginBottom: 24,
-              }}
-            >
-              (Next Step)
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--sans)",
-                fontWeight: 500,
-                fontSize: "clamp(48px, 6vw, 80px)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.03em",
-                color: "var(--bg)",
-                margin: 0,
-              }}
-            >
-              Ready to build a brand that works?
-            </h2>
-          </div>
-          <div className="cta-dark-buttons">
-            <Button
-              href="https://cal.com/houseofsinghstudios/hr"
-              variant="primary-inverted"
-              data-cursor="link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+        <div className="cta-centered">
+          <p className="cta-label">(Next Step)</p>
+          <h2 className="cta-heading">Ready to build a brand that works?</h2>
+          <div className="cta-buttons">
+            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button
-              href="/contact"
-              variant="secondary-inverted"
-              data-cursor="link"
-            >
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
               Start a Project
             </Button>
           </div>

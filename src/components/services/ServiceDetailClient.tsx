@@ -187,31 +187,18 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
           padding: "clamp(80px, 10vw, 120px) var(--page-px)",
         }}
       >
-        <div className="svcd-cta-grid">
-          <div>
-            <p className="svcd-cta-label">(Next step)</p>
-            <h2 className="svcd-cta-heading">{service.ctaHeading}</h2>
-            <p className="svcd-cta-sub">
-              Book a discovery call. We will scope your project and recommend
-              the right approach.
-            </p>
-          </div>
-          <div className="svcd-cta-buttons">
-            <Button
-              href="https://cal.com/houseofsinghstudios/hr"
-              variant="primary-inverted"
-              data-cursor="link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+        <div className="cta-centered">
+          <p className="cta-label">(Next step)</p>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", whiteSpace: "normal" }}>{service.ctaHeading}</h2>
+          <p className="cta-sub">
+            Book a discovery call. We will scope your project and recommend
+            the right approach.
+          </p>
+          <div className="cta-buttons">
+            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button
-              href="/packages"
-              variant="text"
-              className="svcd-cta-text-btn"
-              data-cursor="link"
-            >
+            <Button href="/packages" variant="secondary-inverted" data-cursor="link">
               View Packages
             </Button>
           </div>

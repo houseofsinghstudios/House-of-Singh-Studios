@@ -802,36 +802,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
           padding: "120px var(--page-px)",
         }}
       >
-        <div className="cta-dark-grid">
-          <div>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                opacity: 0.4,
-                marginBottom: 24,
-              }}
-            >
-              (Get in touch)
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--sans)",
-                fontWeight: 500,
-                fontSize: "clamp(48px, 6vw, 80px)",
-                lineHeight: 1.05,
-                letterSpacing: "-0.03em",
-                color: "var(--bg)",
-                margin: 0,
-              }}
-            >
-              Not ready to apply yet.
-            </h2>
-          </div>
-
-          <div className="cta-dark-buttons">
+        <div className="cta-centered">
+          <p className="cta-label">(Get in touch)</p>
+          <h2 className="cta-heading">Not ready to apply yet.</h2>
+          <div className="cta-buttons">
             <Button href="/contact" variant="primary-inverted" data-cursor="link">
               Get in touch
             </Button>
