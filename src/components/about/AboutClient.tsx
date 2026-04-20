@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useLayoutEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -23,58 +23,6 @@ const STEPS = [
   { name: "Creative Direction", desc: "We establish the visual language, tone, and systems that will define how your brand shows up." },
   { name: "Production", desc: "We build the assets, documentation, and deliverables with AI-assisted quality control at every step." },
   { name: "Delivery", desc: "You receive a complete brand system with guidelines, files, and the structure to maintain it without us." },
-];
-
-/* ── Capabilities tab data ── */
-const CAPABILITIES = [
-  {
-    label: "Brand Identity",
-    description: "Your brand identity is the first thing your market judges you on. We build complete visual systems.",
-    deliverables: [
-      "Naming and brand strategy",
-      "Logo systems and brand marks",
-      "Color and typography systems",
-      "Brand guidelines and documentation",
-      "Packaging and collateral design",
-      "Art direction",
-    ],
-  },
-  {
-    label: "Visual Media",
-    description: "Content without a visual strategy is noise. We direct and produce with strategic intent.",
-    deliverables: [
-      "Brand photography",
-      "Campaign films and short form video",
-      "Social content systems",
-      "Script development",
-      "Photography and art direction",
-      "Visual storytelling",
-    ],
-  },
-  {
-    label: "Digital Design",
-    description: "Your website is your highest traffic brand touchpoint. We design the systems that make it work.",
-    deliverables: [
-      "Website design direction",
-      "Interface and layout systems",
-      "Content architecture",
-      "Interactive brand experiences",
-      "Digital design support",
-      "Performance optimization",
-    ],
-  },
-  {
-    label: "Creative Strategy",
-    description: "Most brand problems are strategy problems disguised as design problems.",
-    deliverables: [
-      "Brand positioning workshops",
-      "Creative direction frameworks",
-      "Communication strategy",
-      "Visual consistency systems",
-      "AI workflow integration",
-      "Content strategy",
-    ],
-  },
 ];
 
 /* ── Contrast columns ── */
@@ -120,59 +68,6 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
     const id = setInterval(() => setClockTime(getTorontoTime()), 60000);
     return () => clearInterval(id);
   }, []);
-
-  /* ── Capabilities tab state ── */
-  const [activeTab, setActiveTab] = useState(0);
-  const [transitioning, setTransitioning] = useState(false);
-  const tabBarRef = useRef<HTMLDivElement>(null);
-  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [indicatorStyle, setIndicatorStyle] = useState<{ left: number; width: number }>({ left: 0, width: 0 });
-
-  const measureIndicator = useCallback(() => {
-    const btn = tabRefs.current[activeTab];
-    if (btn) {
-      setIndicatorStyle({ left: btn.offsetLeft, width: btn.offsetWidth });
-    }
-  }, [activeTab]);
-
-  useLayoutEffect(() => {
-    measureIndicator();
-  }, [measureIndicator]);
-
-  useEffect(() => {
-    window.addEventListener("resize", measureIndicator);
-    return () => window.removeEventListener("resize", measureIndicator);
-  }, [measureIndicator]);
-
-  const handleTabClick = (index: number) => {
-    if (index === activeTab || transitioning) return;
-    setTransitioning(true);
-    setTimeout(() => {
-      setActiveTab(index);
-      setTransitioning(false);
-    }, 150);
-  };
-
-  const handleTabKeyDown = (e: React.KeyboardEvent, index: number) => {
-    let newIndex = index;
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      newIndex = (index + 1) % CAPABILITIES.length;
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      newIndex = (index - 1 + CAPABILITIES.length) % CAPABILITIES.length;
-    } else if (e.key === "Home") {
-      e.preventDefault();
-      newIndex = 0;
-    } else if (e.key === "End") {
-      e.preventDefault();
-      newIndex = CAPABILITIES.length - 1;
-    } else {
-      return;
-    }
-    handleTabClick(newIndex);
-    tabRefs.current[newIndex]?.focus();
-  };
 
   const [hours, minutes] = clockTime.split(":");
 
@@ -227,103 +122,6 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           <span className="about-clock-time">
             EST {hours}<span className="about-clock-colon">:</span>{minutes}
           </span>
-        </div>
-      </section>
-
-      {/* ═══ SECTION 01: CAPABILITIES (Interactive Tabs) ═══ */}
-      <section
-        className="about-capabilities-section css-reveal"
-        style={{
-          background: "var(--bg-shift)",
-          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
-        }}
-      >
-        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <EditorialLabel text="01 — What We Do" className="mb-10" />
-
-          <h2
-            className="font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-            style={{
-              fontSize: "clamp(28px, 3.5vw, 40px)",
-              letterSpacing: "-0.025em",
-              lineHeight: 1.15,
-              maxWidth: 560,
-              marginBottom: 48,
-            }}
-          >
-            Four capabilities. One studio.
-          </h2>
-
-          {/* Tab bar */}
-          <div
-            ref={tabBarRef}
-            className="about-capabilities-tabbar"
-            role="tablist"
-            aria-label="Capabilities"
-          >
-            {CAPABILITIES.map((cap, i) => (
-              <button
-                key={cap.label}
-                ref={(el) => { tabRefs.current[i] = el; }}
-                role="tab"
-                aria-selected={activeTab === i}
-                tabIndex={activeTab === i ? 0 : -1}
-                className={`about-capabilities-tab${activeTab === i ? " active" : ""}`}
-                onClick={() => handleTabClick(i)}
-                onKeyDown={(e) => handleTabKeyDown(e, i)}
-              >
-                {cap.label}
-              </button>
-            ))}
-            {/* Track line */}
-            <div className="about-capabilities-track" />
-            {/* Sliding indicator */}
-            <div
-              className="about-capabilities-indicator"
-              style={{
-                left: indicatorStyle.left,
-                width: indicatorStyle.width,
-              }}
-            />
-          </div>
-
-          {/* Tab content */}
-          <div
-            role="tabpanel"
-            aria-labelledby={`tab-${activeTab}`}
-            className={`about-capabilities-content${transitioning ? " fading" : ""}`}
-            style={{ marginTop: 40 }}
-          >
-            <div className="about-capabilities-grid">
-              <div>
-                <p
-                  className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)]"
-                  style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 400 }}
-                >
-                  {CAPABILITIES[activeTab].description}
-                </p>
-              </div>
-              <div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {CAPABILITIES[activeTab].deliverables.map((d) => (
-                    <span
-                      key={d}
-                      className="about-capabilities-deliverable"
-                    >
-                      {d}
-                    </span>
-                  ))}
-                </div>
-                <Link
-                  href="/services"
-                  className="about-capabilities-link"
-                  data-cursor="link"
-                >
-                  View our services <span className="about-capabilities-link-arrow">&rarr;</span>
-                </Link>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
