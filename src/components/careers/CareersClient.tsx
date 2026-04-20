@@ -288,7 +288,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             marginBottom: 12,
           }}
         >
-          (Open Roles)
+          (Network Roles)
         </p>
         {roles.length > 0 && (
           <p
@@ -299,7 +299,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               marginBottom: 40,
             }}
           >
-            {roles.length} open position{roles.length !== 1 ? "s" : ""}
+            {roles.length} network position{roles.length !== 1 ? "s" : ""}
           </p>
         )}
 
@@ -814,7 +814,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 marginBottom: 24,
               }}
             >
-              (Start a project)
+              (Get in touch)
             </p>
             <h2
               style={{
@@ -827,16 +827,13 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 margin: 0,
               }}
             >
-              Ready to build a brand that works?
+              Not ready to apply yet.
             </h2>
           </div>
 
           <div className="cta-dark-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
-            </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
-              Start a Project
+            <Button href="/contact" variant="primary-inverted" data-cursor="link">
+              Get in touch
             </Button>
           </div>
         </div>
