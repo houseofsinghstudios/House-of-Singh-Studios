@@ -39,7 +39,6 @@ export async function getAllPosts() {
         _id,
         title,
         slug,
-        excerpt,
         featuredImage {
           ...,
           asset-> {
@@ -69,7 +68,6 @@ export async function getPostBySlug(slug: string) {
       _id,
       title,
       slug,
-      excerpt,
       featuredImage {
         ...,
         asset-> {
@@ -111,7 +109,6 @@ export async function getPostBySlug(slug: string) {
         title,
         slug,
         publishedAt,
-        excerpt,
         category,
         featuredImage {
           ...,

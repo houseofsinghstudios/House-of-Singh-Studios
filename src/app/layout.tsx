@@ -6,6 +6,7 @@ import "./globals.css";
 import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import FooterReveal from "@/components/layout/FooterReveal";
 import ClientShell from "@/components/ClientShell";
 
 const inter = Inter({
@@ -70,6 +71,7 @@ export default function RootLayout({
             <main>{children}</main>
             <Footer />
           </div>
+          <FooterReveal />
           <SpeedInsights />
           <script
             type="application/ld+json"

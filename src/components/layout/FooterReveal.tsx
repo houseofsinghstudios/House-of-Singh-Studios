@@ -45,7 +45,7 @@ export default function FooterReveal() {
           height={99}
         />
         <p className="ft-reveal-tagline">
-          Design studio. AI powered. Brand focused.
+          Directed by humans. Accelerated by AI.
         </p>
       </div>
     </div>

@@ -22,12 +22,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: post.title,
     description:
       post.seoDescription ||
-      post.excerpt ||
       "Insights from House of Singh Studios.",
     alternates: { canonical: `https://studios.houseofsingh.com/insights/${slug}` },
     openGraph: {
       title: post.seoTitle || post.title,
-      description: post.excerpt,
+      description: post.seoDescription || "Insights from House of Singh Studios.",
       url: `https://studios.houseofsingh.com/insights/${slug}`,
       images: post.featuredImage?.asset?.url
         ? [{ url: post.featuredImage.asset.url }]
@@ -60,7 +59,7 @@ export default async function InsightArticlePage({ params }: Props) {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: post.title,
-            description: post.excerpt,
+            description: post.seoDescription || "Insights from House of Singh Studios.",
             image: post.featuredImage?.asset?.url || "",
             datePublished: post.publishedAt,
             author: {

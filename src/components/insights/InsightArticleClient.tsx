@@ -34,7 +34,6 @@ interface RelatedPost {
   title: string;
   slug: { current: string };
   publishedAt?: string;
-  excerpt?: string;
   category?: string;
   featuredImage?: PostImage;
 }
@@ -44,7 +43,6 @@ interface Post {
   title: string;
   slug: { current: string };
   publishedAt?: string;
-  excerpt?: string;
   category?: string;
   featuredImage?: PostImage;
   body?: Array<{ _type: string; children?: Array<{ text?: string }> }>;
@@ -253,8 +251,6 @@ export default function InsightArticleClient({ post }: { post: Post }) {
           </div>
 
           <h1 className="art-title">{post.title}</h1>
-
-          {post.excerpt && <p className="art-excerpt">{post.excerpt}</p>}
         </div>
       </section>
 
