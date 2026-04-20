@@ -233,27 +233,14 @@ export default function CaseStudyTemplate({
           padding: "clamp(80px, 10vw, 120px) var(--page-px)",
         }}
       >
-        <div className="cs-cta-grid">
-          <div>
-            <p className="cs-cta-label">(Next step)</p>
-            <h2 className="cs-cta-heading">Start a project.</h2>
-          </div>
-          <div className="cs-cta-buttons">
-            <Button
-              href="https://cal.com/houseofsinghstudios/hr"
-              variant="primary-inverted"
-              data-cursor="link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+        <div className="cta-centered">
+          <p className="cta-label">(Next step)</p>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>Start a project.</h2>
+          <div className="cta-buttons">
+            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button
-              href="/contact"
-              variant="text"
-              className="cs-cta-text-btn"
-              data-cursor="link"
-            >
+            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
               Start a Project
             </Button>
           </div>

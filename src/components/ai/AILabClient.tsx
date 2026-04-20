@@ -533,44 +533,13 @@ export default function AILabClient() {
           padding: "120px var(--page-px)",
         }}
       >
-        <div className="cta-dark-grid">
-          <div className="css-reveal">
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                opacity: 0.4,
-                marginBottom: 24,
-              }}
-            >
-              (Next step)
-            </p>
-            <h2
-              style={{
-                fontFamily: "var(--sans)",
-                fontWeight: 500,
-                fontSize: "clamp(22px, 3vw, 32px)",
-                lineHeight: 1.2,
-                letterSpacing: "-0.025em",
-                color: "var(--bg)",
-                margin: 0,
-                maxWidth: 520,
-              }}
-            >
-              Ready to see what AI-powered creative direction looks like?
-            </h2>
-          </div>
-
-          <div className="cta-dark-buttons css-reveal">
-            <Button
-              href="https://cal.com/houseofsinghstudios/hr"
-              variant="primary-inverted"
-              data-cursor="link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+        <div className="cta-centered">
+          <p className="cta-label">(Next step)</p>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em" }}>
+            Ready to see what AI-powered creative direction looks like?
+          </h2>
+          <div className="cta-buttons">
+            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/work" variant="secondary-inverted" data-cursor="link">
