@@ -355,7 +355,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
       <section
         className="css-reveal"
         style={{
-          background: "var(--text-primary)",
+          background: "var(--text-secondary)",
           color: "var(--bg)",
           padding: "120px var(--page-px)",
           marginTop: "clamp(80px, 10vw, 140px)",

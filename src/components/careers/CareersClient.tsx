@@ -797,7 +797,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       <section
         className="css-reveal"
         style={{
-          background: "var(--text-primary)",
+          background: "var(--text-secondary)",
           color: "var(--bg)",
           padding: "120px var(--page-px)",
         }}

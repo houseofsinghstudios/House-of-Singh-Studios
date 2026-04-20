@@ -7,7 +7,7 @@ export default function CtaSection() {
     <section
       className="css-reveal"
       style={{
-        background: "var(--text-primary)",
+        background: "var(--text-secondary)",
         color: "var(--bg)",
         padding: "clamp(100px, 12vw, 160px) var(--page-px)",
       }}
