@@ -228,7 +228,7 @@ export default function CaseStudyTemplate({
       <section
         className="css-reveal"
         style={{
-          background: "var(--text-secondary)",
+          background: "var(--text-primary)",
           color: "var(--bg)",
           padding: "clamp(80px, 10vw, 120px) var(--page-px)",
         }}

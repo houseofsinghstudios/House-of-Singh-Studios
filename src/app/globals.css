@@ -1578,7 +1578,7 @@ body {
 
 /* ═══ Footer ═══ */
 .ft-footer {
-  background: var(--text-primary);
+  background: var(--text-secondary);
 }
 .ft-body {
   border-top: 1px solid rgba(247, 246, 245, 0.08);
@@ -1643,7 +1643,7 @@ body {
 .ft-copyright {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.3);
+  color: rgba(247, 246, 245, 0.55);
 }
 .ft-legal {
   display: flex;
@@ -1652,19 +1652,19 @@ body {
 .ft-legal-link {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.4);
+  color: rgba(247, 246, 245, 0.6);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 @media (hover: hover) {
   .ft-legal-link:hover {
-    color: rgba(247, 246, 245, 0.6);
+    color: rgba(247, 246, 245, 0.85);
   }
 }
 .ft-top-btn {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.4);
+  color: rgba(247, 246, 245, 0.6);
   background: none;
   border: none;
   padding: 0;
@@ -1673,7 +1673,7 @@ body {
 }
 @media (hover: hover) {
   .ft-top-btn:hover {
-    color: rgba(247, 246, 245, 0.6);
+    color: rgba(247, 246, 245, 0.85);
   }
 }
 

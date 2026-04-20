@@ -404,7 +404,7 @@ export default function InsightArticleClient({ post }: { post: Post }) {
       <section
         className="css-reveal"
         style={{
-          background: "var(--text-secondary)",
+          background: "var(--text-primary)",
           color: "var(--bg)",
           padding: "120px var(--page-px)",
         }}

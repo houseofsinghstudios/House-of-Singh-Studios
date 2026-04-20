@@ -274,7 +274,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
       <section
         className="css-reveal"
         style={{
-          background: "var(--text-secondary)",
+          background: "var(--text-primary)",
           color: "var(--bg)",
           padding: "120px var(--page-px)",
         }}

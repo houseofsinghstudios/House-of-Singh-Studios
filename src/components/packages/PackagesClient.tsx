@@ -228,7 +228,7 @@ export default function PackagesClient() {
       <section
         className="cta-section-mobile css-reveal"
         style={{
-          background: "var(--text-secondary)",
+          background: "var(--text-primary)",
           color: "var(--bg)",
           padding: "120px var(--page-px)",
         }}
