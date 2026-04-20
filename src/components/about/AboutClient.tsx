@@ -69,6 +69,9 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
     return () => clearInterval(id);
   }, []);
 
+  /* ── Duel pairing state ── */
+  const [duelPairedIndex, setDuelPairedIndex] = useState<number | null>(null);
+
   const [hours, minutes] = clockTime.split(":");
 
   return (
@@ -189,47 +192,57 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         </div>
       </section>
 
-      {/* ═══ SECTION 05: "NOT AN AGENCY" POSITIONING ═══ */}
+      {/* ═══ SECTION 03: HOW WE ARE DIFFERENT (Typographic Duel) ═══ */}
       <section
-        className="css-reveal"
+        className="about-duel-section css-reveal"
         style={{
-          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
+          padding: "clamp(80px, 10vw, 140px) var(--page-px)",
         }}
       >
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <EditorialLabel text="03 — How We Are Different" className="scroll-reveal-up mb-6" />
 
-          <h2
-            className="css-reveal font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
-            style={{
-              fontSize: "clamp(24px, 3vw, 36px)",
-              letterSpacing: "-0.02em",
-              lineHeight: 1.15,
-              marginBottom: 48,
-            }}
-          >
-            A studio, not an agency.
-          </h2>
+          <h2 className="about-duel-heading">A studio, not an agency.</h2>
 
-          <div className="about-contrast-grid">
+          <div className="about-duel-grid">
             {/* Left: What we are */}
-            <div className="about-contrast-col-left reveal-stagger-parent">
-              <p className="about-contrast-heading">What we are</p>
-              {WHAT_WE_ARE.map((s) => (
-                <p key={s} className="about-contrast-statement scroll-reveal-up">{s}</p>
-              ))}
+            <div className="about-duel-col">
+              <p className="about-duel-header about-duel-header--we">
+                What we are
+              </p>
+              <ul className="about-duel-list">
+                {WHAT_WE_ARE.map((s, i) => (
+                  <li
+                    key={i}
+                    className="about-duel-item about-duel-item--we scroll-reveal-up"
+                    onMouseEnter={() => setDuelPairedIndex(i)}
+                    onMouseLeave={() => setDuelPairedIndex(null)}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
             </div>
 
             {/* Right: What we are not */}
-            <div className="about-contrast-col-right reveal-stagger-parent">
-              <p className="about-contrast-heading">What we are not</p>
-              {WHAT_WE_ARE_NOT.map((s) => (
-                <p key={s} className="about-contrast-statement scroll-reveal-up">{s}</p>
-              ))}
+            <div className="about-duel-col">
+              <p className="about-duel-header about-duel-header--not">
+                What we are not
+              </p>
+              <ul className="about-duel-list">
+                {WHAT_WE_ARE_NOT.map((s, i) => (
+                  <li
+                    key={i}
+                    className={`about-duel-item about-duel-item--not scroll-reveal-up${
+                      duelPairedIndex === i ? " is-paired" : ""
+                    }`}
+                  >
+                    {s}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
-
-          {/* Mobile divider is handled via CSS */}
         </div>
       </section>
 
