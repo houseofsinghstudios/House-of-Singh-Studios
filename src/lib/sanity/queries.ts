@@ -49,6 +49,7 @@ export async function getAllPosts() {
         },
         category,
         tags,
+        keyTakeaways,
         body,
         featured,
         "readingTime": round(length(pt::text(body)) / 5 / 200),
@@ -78,6 +79,7 @@ export async function getPostBySlug(slug: string) {
       },
       category,
       tags,
+      keyTakeaways,
       body[] {
         ...,
         _type == "image" => {

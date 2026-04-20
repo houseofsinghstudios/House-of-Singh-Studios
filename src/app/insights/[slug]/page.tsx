@@ -59,7 +59,10 @@ export default async function InsightArticlePage({ params }: Props) {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: post.title,
-            description: post.seoDescription || "Insights from House of Singh Studios.",
+            description:
+              post.keyTakeaways && post.keyTakeaways.length > 0
+                ? post.keyTakeaways.join(" ").slice(0, 200)
+                : post.seoDescription || "Insights from House of Singh Studios.",
             image: post.featuredImage?.asset?.url || "",
             datePublished: post.publishedAt,
             author: {
@@ -76,6 +79,21 @@ export default async function InsightArticlePage({ params }: Props) {
               "@type": "WebPage",
               "@id": `https://studios.houseofsingh.com/insights/${post.slug.current}`,
             },
+            ...(post.keyTakeaways && post.keyTakeaways.length > 0
+              ? {
+                  about: {
+                    "@type": "ItemList",
+                    name: "Key Takeaways",
+                    itemListElement: post.keyTakeaways.map(
+                      (t: string, i: number) => ({
+                        "@type": "ListItem",
+                        position: i + 1,
+                        name: t,
+                      })
+                    ),
+                  },
+                }
+              : {}),
           }),
         }}
       />
