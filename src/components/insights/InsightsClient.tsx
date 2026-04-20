@@ -11,7 +11,6 @@ interface Post {
   _id: string;
   title: string;
   slug: { current: string };
-  excerpt?: string;
   featuredImage?: { asset?: { _ref?: string }; alt?: string };
   category?: string;
   publishedAt?: string;
@@ -210,11 +209,6 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                   readingTime={featuredPost.readingTime}
                 />
                 <h2 className="ins-featured-title">{featuredPost.title}</h2>
-                {featuredPost.excerpt && (
-                  <p className="ins-featured-excerpt">
-                    {featuredPost.excerpt}
-                  </p>
-                )}
               </div>
             </Link>
           )}
@@ -253,9 +247,6 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                       readingTime={post.readingTime}
                     />
                     <h3 className="ins-card-title">{post.title}</h3>
-                    {post.excerpt && (
-                      <p className="ins-card-excerpt">{post.excerpt}</p>
-                    )}
                   </Link>
                 ))}
               </div>

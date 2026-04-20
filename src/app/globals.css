@@ -2961,15 +2961,6 @@ select.contact-input option {
   margin: 6px 0 0;
   transition: opacity 0.3s ease;
 }
-.ins-featured-excerpt {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 6px 0 0;
-  max-width: 560px;
-}
 @media (hover: hover) {
   .ins-featured:hover .ins-featured-title {
     opacity: 0.65;
@@ -3020,18 +3011,6 @@ select.contact-input option {
   color: var(--text-primary);
   margin: 6px 0 0;
   transition: opacity 0.3s ease;
-}
-.ins-card-excerpt {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 400;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  margin: 6px 0 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 @media (hover: hover) {
   .ins-card:hover .ins-card-title {
@@ -3123,16 +3102,6 @@ select.contact-input option {
   max-width: 800px;
   margin: 12px 0 0;
 }
-.art-excerpt {
-  font-family: var(--sans);
-  font-weight: 400;
-  font-size: 17px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  max-width: 600px;
-  margin: 12px 0 0;
-}
-
 /* ── Featured image ── */
 .art-hero-img-section {
   padding: 0;

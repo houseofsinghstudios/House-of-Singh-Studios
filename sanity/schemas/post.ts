@@ -54,12 +54,6 @@ export default defineType({
       ],
     }),
     defineField({
-      name: "excerpt",
-      title: "Excerpt",
-      type: "text",
-      rows: 3,
-    }),
-    defineField({
       name: "category",
       title: "Category",
       type: "string",
@@ -199,7 +193,7 @@ export default defineType({
       name: "seoDescription",
       title: "SEO Description",
       description:
-        "Custom meta description for search engines. Falls back to excerpt if empty.",
+        "Custom meta description for search engines.",
       type: "text",
       rows: 2,
     }),
