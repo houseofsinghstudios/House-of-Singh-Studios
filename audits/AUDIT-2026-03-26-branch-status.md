@@ -334,11 +334,11 @@ src/styles/
    - `src/components/layout/SubscribeForm.tsx`
    - `src/components/ServiceRows.tsx`
 
-3. **Duplicate View Transition definitions** — `::view-transition-old(root)` and `::view-transition-new(root)` are defined twice in globals.css (lines ~1158 and ~2799). The second definition overrides the first and drops the `service-title` group transitions.
+3. ~~**Duplicate View Transition definitions**~~ — **RESOLVED 2026-04-28** (commits `a702f05..919fd6c`). The duplicate was eliminated during the V2 globals.css rewrite. Current file contains one `::view-transition-old(root)`, one `::view-transition-new(root)`, and one `::view-transition-group(*)` wildcard. Visual verification completed in Chrome confirms all morphs (service titles, project titles, project images, site logo) fire correctly. The View Transitions API is Chromium only by design.
 
 ### Should Fix
 
-4. **framer-motion in package.json** — Listed as dependency but not imported anywhere. Dead bundle weight (~130KB). Design system bans animation libraries.
+4. ~~**framer-motion in package.json**~~ — **RESOLVED 2026-04-28**. Dependency removed via `npm uninstall framer-motion`.
 
 5. **`/careers` page build failure** — Fails during static generation due to Sanity API network timeout. Not a code issue but blocks full production build. Consider adding error boundary or fallback.
 
@@ -354,8 +354,8 @@ src/styles/
 
 1. Remove `<DiagnosticTrigger />` from services page hero
 2. Delete 4 orphaned component files
-3. Uninstall framer-motion
-4. Resolve duplicate View Transition CSS definitions
+3. ~~Uninstall framer-motion~~ — RESOLVED 2026-04-28
+4. ~~Resolve duplicate View Transition CSS definitions~~ — RESOLVED 2026-04-28
 5. Add CSS dead class audit comment
 6. Full CSS cleanup pass (~6400 → <4000 lines)
 7. Address `/careers` Sanity timeout with error boundary

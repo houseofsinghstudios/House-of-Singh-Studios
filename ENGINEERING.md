@@ -23,6 +23,8 @@ next-view-transitions plus the native View Transitions API for page transitions.
 Vercel Speed Insights.
 ESLint v9 with eslint-config-next.
 
+Browser support note. The View Transitions API is Chromium only. Safari and Firefox visitors see a default page change as a progressive enhancement fallback. This is the design intent. Do not investigate Safari hard cuts as bugs.
+
 ## What is forbidden
 
 No animation libraries beyond Lenis. Framer Motion was removed and stays removed.
