@@ -1,4 +1,7 @@
 "use client";
+// Sticky site header with crest, wordmark, desktop nav links, and mobile overlay menu.
+// Client component because it tracks scroll position for header shrink behavior
+// and manages open/close state for the mobile navigation overlay.
 
 import { Link } from "next-view-transitions";
 import { useState, useEffect, useRef } from "react";
