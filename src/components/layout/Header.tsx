@@ -3,6 +3,7 @@
 // Client component because it tracks scroll position for header shrink behavior
 // and manages open/close state for the mobile navigation overlay.
 
+import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useState, useEffect, useRef } from "react";
 
@@ -81,13 +82,13 @@ export default function Header() {
         {/* Crest Logo — visible at page top only (desktop) */}
         <div className="header-crest-wrap" aria-hidden={scrolled}>
           <Link href="/" aria-label="House of Singh Studios home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/hos-studios-logo.svg"
               alt=""
               className="header-crest"
               width={140}
               height={115}
+              unoptimized
             />
           </Link>
         </div>
