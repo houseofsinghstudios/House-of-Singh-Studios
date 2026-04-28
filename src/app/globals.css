@@ -4102,6 +4102,11 @@ select.contact-input option {
   view-transition-name: site-logo;
 }
 
+/* ── Spacer ── */
+.header-spacer {
+  flex: 1;
+}
+
 /* ── Desktop nav links ── */
 .header-desktop-nav {
   display: flex;

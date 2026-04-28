@@ -100,7 +100,7 @@ export default function Header() {
         </div>
 
         {/* Spacer */}
-        <div style={{ flex: 1 }} />
+        <div className="header-spacer" />
 
         {/* Desktop Nav Links — visible at top, hidden when scrolled */}
         <nav className="header-desktop-nav" aria-label="Primary navigation">
