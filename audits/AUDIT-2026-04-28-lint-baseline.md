@@ -16,7 +16,7 @@ During the ship-feature cycle for the Header.tsx spacer fix (Finding 3 from AUDI
 
 | # | File | Line | Rule | Category | Severity | Confidence | Status |
 |---|------|------|------|----------|----------|-----------|--------|
-| 1 | ~~src/components/SliderDiagnostic.tsx~~ | ~~87~~ | ~~react-hooks/set-state-in-effect~~ | ~~React hooks~~ | ~~Low~~ | ~~CERTAIN~~ | **RESOLVED** — moved out of src tree, not blocking lint anymore, will be re-evaluated when revived for phase two |
+| 1 | ~~src/components/SliderDiagnostic.tsx~~ | ~~87~~ | ~~react-hooks/set-state-in-effect~~ | ~~React hooks~~ | ~~Low~~ | ~~CERTAIN~~ | **RESOLVED** (commit `d9d9818`) — moved out of src tree, not blocking lint anymore, will be re-evaluated when revived for phase two |
 | 2 | src/components/about/AboutClient.tsx | 11 | @typescript-eslint/no-explicit-any | TypeScript | Medium | CERTAIN | Open |
 | 3 | src/components/about/AboutClient.tsx | 12 | @typescript-eslint/no-explicit-any | TypeScript | Medium | CERTAIN | Open |
 | 4 | src/components/ai/AILabClient.tsx | 4 | @typescript-eslint/no-unused-vars | Dead code | Low | CERTAIN | Open |
@@ -31,7 +31,7 @@ During the ship-feature cycle for the Header.tsx spacer fix (Finding 3 from AUDI
 
 ### ~~Finding 1: setState in effect in SliderDiagnostic.tsx at line 87~~
 
-**RESOLVED 2026-04-28.** File moved out of `src/` tree to `archive/brand-diagnostic/SliderDiagnostic.tsx`. No longer triggers lint. Will be re-evaluated when revived for phase two.
+**RESOLVED 2026-04-28** (commit `d9d9818`). File moved out of `src/` tree to `archive/brand-diagnostic/SliderDiagnostic.tsx`. No longer triggers lint. Will be re-evaluated when revived for phase two.
 
 ### Finding 2: Explicit any type in AboutClient.tsx at line 11
 
@@ -93,7 +93,7 @@ Work through these in the order listed below.
 
 | Finding | File | Line | Rule | Severity | Confidence | Status |
 |---------|------|------|------|----------|-----------|--------|
-| ~~setState in effect (hydration gate)~~ | ~~src/components/SliderDiagnostic.tsx~~ | ~~87~~ | ~~react-hooks/set-state-in-effect~~ | ~~Low~~ | ~~CERTAIN~~ | **RESOLVED** — archived to archive/brand-diagnostic/ |
+| ~~setState in effect (hydration gate)~~ | ~~src/components/SliderDiagnostic.tsx~~ | ~~87~~ | ~~react-hooks/set-state-in-effect~~ | ~~Low~~ | ~~CERTAIN~~ | **RESOLVED** (commit `d9d9818`) — archived to archive/brand-diagnostic/ |
 | Explicit any type | src/components/about/AboutClient.tsx | 11 | @typescript-eslint/no-explicit-any | Medium | CERTAIN | Open |
 | Explicit any type | src/components/about/AboutClient.tsx | 12 | @typescript-eslint/no-explicit-any | Medium | CERTAIN | Open |
 | Unused import (Link) | src/components/ai/AILabClient.tsx | 4 | @typescript-eslint/no-unused-vars | Low | CERTAIN | Open |
