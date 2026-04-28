@@ -326,7 +326,7 @@ src/styles/
 
 ### Must Fix
 
-1. **DiagnosticTrigger still in services page** — `src/app/services/page.tsx` line 87 renders `<DiagnosticTrigger />` in the hero. This component is a holdover from the slider diagnostic era and should be removed from the services page.
+1. ~~**DiagnosticTrigger still in services page**~~ — **RESOLVED 2026-04-28**. Archived to `archive/brand-diagnostic/`, see archive README for revival instructions. Intentionally preserved for phase two work. Live references removed from ServicesClient.tsx. Associated CSS extracted to `archive/brand-diagnostic/diag-styles.css`.
 
 2. **Orphaned component files** — 4 files are not imported anywhere and should be deleted:
    - `src/components/layout/FooterCities.tsx`
@@ -352,7 +352,7 @@ src/styles/
 
 ## 7. Recommended Next Steps (Priority Order)
 
-1. Remove `<DiagnosticTrigger />` from services page hero
+1. ~~Remove `<DiagnosticTrigger />` from services page hero~~ — RESOLVED 2026-04-28 (archived, not deleted)
 2. Delete 4 orphaned component files
 3. ~~Uninstall framer-motion~~ — RESOLVED 2026-04-28
 4. ~~Resolve duplicate View Transition CSS definitions~~ — RESOLVED 2026-04-28
