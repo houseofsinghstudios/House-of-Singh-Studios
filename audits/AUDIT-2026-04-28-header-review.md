@@ -17,19 +17,17 @@ A ship-feature cycle added a client component comment to Header.tsx. The comment
 
 | # | Line | Category | Issue | Confidence | Status |
 |---|------|----------|-------|-----------|--------|
-| 1 | 85 | Raw img tag | `<img>` used for the SVG crest logo with an eslint-disable comment to suppress `@next/next/no-img-element`. ENGINEERING.md says always use `next/image`. | CERTAIN | Open |
+| 1 | ~~85~~ | ~~Raw img tag~~ | ~~`<img>` used for the SVG crest logo with an eslint-disable comment to suppress `@next/next/no-img-element`. ENGINEERING.md says always use `next/image`.~~ | ~~CERTAIN~~ | **RESOLVED 2026-04-28** (commit `a66a316`) |
 | 2 | 78 | Inline style | `style={{ transform: ... }}` on the header element. The value is dynamic (depends on hidden state) so it passes the "No inline styles unless dynamic" rule. However toggling a CSS class would be more consistent with the rest of the codebase. | CERTAIN | Open |
-| 3 | 103 | Inline style | `style={{ flex: 1 }}` on a spacer div. This value is static and never changes. ENGINEERING.md forbids static inline styles. | CERTAIN | Open |
+| 3 | ~~103~~ | ~~Inline style~~ | ~~`style={{ flex: 1 }}` on a spacer div. This value is static and never changes. ENGINEERING.md forbids static inline styles.~~ | ~~CERTAIN~~ | **RESOLVED 2026-04-28** (commit `919fd6c`) |
 
 ---
 
 ## 3. Detail
 
-### Finding 1: Raw img tag at line 85
+### ~~Finding 1: Raw img tag at line 85~~
 
-The crest logo SVG renders using a raw `<img>` tag. An eslint-disable comment suppresses the Next.js lint rule that would catch this. Raw img tags bypass Next.js image optimisation. They can also cause layout shift on load.
-
-**Suggested fix:** Replace the `<img>` tag with the Next.js `Image` component from `next/image`. Set `width`, `height`, and `alt` props. Remove the eslint-disable comment. The lint rule will then pass naturally.
+**RESOLVED 2026-04-28** (commit `a66a316`). Replaced raw `<img>` with `next/image` `<Image>` component using `unoptimized` prop for SVG. Removed the eslint-disable comment. Lint rule now passes naturally.
 
 ### Finding 2: Inline transform style at line 78
 
@@ -59,6 +57,6 @@ Work through these in the order listed below.
 
 | Finding | File | Line | Severity | Confidence | Status |
 |---------|------|------|----------|-----------|--------|
-| Raw img tag with eslint-disable | src/components/layout/Header.tsx | 85 | Medium | CERTAIN | Open |
+| ~~Raw img tag with eslint-disable~~ | ~~src/components/layout/Header.tsx~~ | ~~85~~ | ~~Medium~~ | ~~CERTAIN~~ | **RESOLVED 2026-04-28** (commit `a66a316`) |
 | Inline transform style (dynamic, consistency issue) | src/components/layout/Header.tsx | 78 | Low | CERTAIN | Open |
-| Static inline flex style | src/components/layout/Header.tsx | 103 | Low | CERTAIN | Open |
+| ~~Static inline flex style~~ | ~~src/components/layout/Header.tsx~~ | ~~103~~ | ~~Low~~ | ~~CERTAIN~~ | **RESOLVED 2026-04-28** (commit `919fd6c`) |
