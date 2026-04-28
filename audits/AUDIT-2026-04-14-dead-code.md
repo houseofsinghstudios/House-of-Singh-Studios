@@ -18,10 +18,10 @@ All imported symbols are actively referenced in their respective files.
 
 | File | Component | Notes |
 |------|-----------|-------|
-| `src/components/ui/Container.tsx` | Container | Exported via `src/components/ui/index.ts` barrel but never imported by any page or component |
-| `src/components/ui/Divider.tsx` | Divider | Exported via `src/components/ui/index.ts` barrel but never imported by any page or component |
-| `src/components/ui/SectionWrapper.tsx` | SectionWrapper | Exported via `src/components/ui/index.ts` barrel but never imported by any page or component |
-| `src/components/ui/TextReveal.tsx` | TextReveal | Exported via `src/components/ui/index.ts` barrel but never imported by any page or component |
+| ~~`src/components/ui/Container.tsx`~~ | ~~Container~~ | ~~Exported via barrel but never imported~~ — **RESOLVED 2026-04-28**. File deleted, barrel export removed. |
+| ~~`src/components/ui/Divider.tsx`~~ | ~~Divider~~ | ~~Exported via barrel but never imported~~ — **RESOLVED 2026-04-28**. File deleted, barrel export removed. |
+| ~~`src/components/ui/SectionWrapper.tsx`~~ | ~~SectionWrapper~~ | ~~Exported via barrel but never imported~~ — **RESOLVED** (commit `4fc7f4d`, 2026-04-14). File deleted in earlier V2 cleanup work. |
+| ~~`src/components/ui/TextReveal.tsx`~~ | ~~TextReveal~~ | ~~Exported via barrel but never imported~~ — **RESOLVED** (commit `4fc7f4d`, 2026-04-14). File deleted in earlier V2 cleanup work. |
 
 **Confidence: CERTAIN** — grep confirms zero imports of these components outside their own files and the barrel index.
 
