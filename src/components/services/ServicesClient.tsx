@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Link } from "next-view-transitions";
-import DiagnosticTrigger from "@/components/DiagnosticTrigger";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
 import type { ServiceProject } from "@/lib/sanity/projects";
 
@@ -222,10 +221,6 @@ export default function ServicesClient({ projectsByCategory }: Props) {
         ))}
       </section>
 
-      {/* ═══ DIAGNOSTIC TRIGGER ═══ */}
-      <div style={{ padding: "clamp(56px, 8vw, 100px) var(--page-px) 0" }}>
-        <DiagnosticTrigger />
-      </div>
     </>
   );
 }

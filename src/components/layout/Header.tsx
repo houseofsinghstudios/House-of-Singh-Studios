@@ -1,5 +1,9 @@
 "use client";
+// Sticky site header with crest, wordmark, desktop nav links, and mobile overlay menu.
+// Client component because it tracks scroll position for header shrink behavior
+// and manages open/close state for the mobile navigation overlay.
 
+import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useState, useEffect, useRef } from "react";
 
@@ -78,13 +82,13 @@ export default function Header() {
         {/* Crest Logo — visible at page top only (desktop) */}
         <div className="header-crest-wrap" aria-hidden={scrolled}>
           <Link href="/" aria-label="House of Singh Studios home">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="/hos-studios-logo.svg"
               alt=""
               className="header-crest"
               width={140}
               height={115}
+              unoptimized
             />
           </Link>
         </div>
@@ -97,7 +101,7 @@ export default function Header() {
         </div>
 
         {/* Spacer */}
-        <div style={{ flex: 1 }} />
+        <div className="header-spacer" />
 
         {/* Desktop Nav Links — visible at top, hidden when scrolled */}
         <nav className="header-desktop-nav" aria-label="Primary navigation">

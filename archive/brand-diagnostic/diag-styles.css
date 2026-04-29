@@ -1,0 +1,229 @@
+/* Extracted from src/app/globals.css, lines 5568–5792.
+   These styles support DiagnosticTrigger.tsx and SliderDiagnostic.tsx.
+   Paste back into globals.css when reviving the Brand Diagnostic feature. */
+
+/* ============================================
+   DIAGNOSTIC TRIGGER — BREATHING CIRCLE + TICKER
+   ============================================ */
+
+.diag-wrap {
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+/* Question row */
+.diag-q-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 20px;
+}
+
+.diag-breathe {
+  width: 12px;
+  height: 12px;
+  border: 1.5px solid var(--obsidian, #22211F);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: diag-breathe-anim 2.5s ease-in-out infinite;
+  transition: border-color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.diag-wrap:hover .diag-breathe {
+  border-color: var(--gunmetal, #5C5B58);
+}
+
+@keyframes diag-breathe-anim {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+}
+
+.diag-q-text {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--obsidian, #22211F);
+  margin: 0;
+  transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.diag-wrap:hover .diag-q-text {
+  color: var(--gunmetal, #5C5B58);
+}
+
+/* Full-width dark ticker */
+.diag-ticker {
+  background: var(--obsidian, #22211F);
+  overflow: hidden;
+  padding: 16px 0;
+  position: relative;
+  margin-left: calc(-1 * var(--page-px));
+  margin-right: calc(-1 * var(--page-px));
+}
+
+/* Fade edges */
+.diag-ticker::before,
+.diag-ticker::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.diag-ticker::before {
+  left: 0;
+  background: linear-gradient(to right, var(--obsidian, #22211F), transparent);
+}
+
+.diag-ticker::after {
+  right: 0;
+  background: linear-gradient(to left, var(--obsidian, #22211F), transparent);
+}
+
+/* Track */
+.diag-track {
+  display: flex;
+  gap: 64px;
+  animation: diag-scroll 24s linear infinite;
+  width: max-content;
+}
+
+.diag-wrap:hover .diag-track {
+  animation-play-state: paused;
+}
+
+.diag-tick-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.diag-tick-dot {
+  width: 4px;
+  height: 4px;
+  background: var(--mist, #F7F6F5);
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.diag-tick-text {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  color: var(--mist, #F7F6F5);
+  white-space: nowrap;
+}
+
+@keyframes diag-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Responsive ticker */
+@media (max-width: 1024px) {
+  .diag-track {
+    animation-duration: 18s;
+  }
+}
+
+@media (max-width: 768px) {
+  .diag-wrap {
+    margin-top: 32px;
+  }
+
+  .diag-track {
+    animation-duration: 14s;
+    gap: 48px;
+  }
+
+  .diag-ticker {
+    padding: 14px 0;
+  }
+
+  .diag-tick-text {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+}
+
+/* ============================================
+   DIAGNOSTIC MODAL — RANGE INPUT
+   ============================================ */
+
+.diag-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 24px;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.diag-range::-webkit-slider-runnable-track {
+  height: 1px;
+  background: #E5E3E0;
+  border: none;
+}
+
+.diag-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22211F;
+  border: none;
+  cursor: grab;
+  margin-top: -7px;
+}
+
+.diag-range::-moz-range-track {
+  height: 1px;
+  background: #E5E3E0;
+  border: none;
+}
+
+.diag-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22211F;
+  border: none;
+  cursor: grab;
+}
+
+/* Mobile overrides for portal modal */
+@media (max-width: 640px) {
+  .diag-modal-box {
+    padding: 28px 20px !important;
+    max-height: 95vh !important;
+  }
+
+  .diag-sliders-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .diag-sliders-grid > div {
+    border-left: none !important;
+    border-bottom: 1px solid #E5E3E0;
+    padding: 16px 0 !important;
+  }
+
+  .diag-sliders-grid > div:last-child {
+    border-bottom: none;
+  }
+}
