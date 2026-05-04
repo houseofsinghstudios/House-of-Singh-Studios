@@ -28,7 +28,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="legal-updated" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: March 31, 2026
+          Last updated: April 28, 2026
         </p>
 
         <div className="legal-body" style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -82,8 +82,11 @@ export default function PrivacyPage() {
           <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Sanity</strong> (content management) — manages website content. Does not collect visitor personal information.
           </p>
+          <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude API</strong> (AI processing) — may be used to assist with lead classification, proposal preparation, and content production. Any personal information processed is limited to information you have already provided through our contact form and is not used to train AI models.
+          </p>
           <p style={{ margin: "0 0 32px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude API</strong> (AI processing) — may be used to assist with lead classification and proposal preparation. Any personal information processed is limited to information you have already provided through our contact form and is not used to train AI models.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn API</strong> (social media publishing) — used to publish studio content (articles, project announcements, and thought leadership posts) to our official LinkedIn company page. The integration authenticates via OAuth 2.0 using a studio admin account. No client personal information is shared with LinkedIn through this integration. Published content may reference public project outcomes but never identifies clients without prior written consent.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>5. Consent</h2>
@@ -93,7 +96,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>6. Data retention</h2>
           <p style={{ margin: "0 0 32px" }}>
-            We retain personal information only as long as necessary to fulfill the purposes for which it was collected, or as required by law. Contact form submissions are retained for the duration of the business relationship and for a reasonable period afterward. Analytics data is retained in anonymized form. You may request deletion of your personal information at any time.
+            We retain personal information only as long as necessary to fulfill the purposes for which it was collected, or as required by law. Contact form submissions are retained for the duration of the business relationship and for a reasonable period afterward, up to a maximum of seven years from last contact unless a longer period is required by law. Analytics data is retained in anonymized form. You may request deletion of your personal information at any time.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Data security</h2>
@@ -109,7 +112,7 @@ export default function PrivacyPage() {
             Request access to the personal information we hold about you. Request correction of inaccurate or incomplete information. Withdraw your consent to the collection, use, or disclosure of your information. Request deletion of your personal information, subject to legal and contractual obligations. File a complaint with the Office of the Privacy Commissioner of Canada if you believe your privacy rights have been violated.
           </p>
           <p style={{ margin: "0 0 32px" }}>
-            To exercise any of these rights, contact us at studio@houseofsingh.com. We will respond to requests within 30 days.
+            To exercise any of these rights, contact us at studio@houseofsingh.com. We will respond to requests within 30 days. Deletion requests will be actioned within 30 days of verification of the requester&apos;s identity.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>9. International transfers</h2>
@@ -122,7 +125,35 @@ export default function PrivacyPage() {
             We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date. We encourage you to review this policy periodically. Continued use of our website after changes constitutes acceptance of the updated policy.
           </p>
 
-          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>11. Contact us</h2>
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>11. Automated content publishing</h2>
+          <p style={{ margin: "0 0 12px" }}>
+            We use automated workflows to publish content to third-party social media platforms on behalf of House of Singh Studios. This content includes articles, project announcements, and thought leadership posts authored or approved by studio personnel.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            Automated publishing is performed through authenticated API integrations using OAuth 2.0 credentials tied to studio admin accounts. No client personal information is included in automated posts unless the client has provided prior written consent for public attribution.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            Published content may reference publicly available project outcomes, industry trends, or general studio capabilities. We do not use automated systems to send direct messages, connection requests, or any form of unsolicited outreach on social media platforms.
+          </p>
+          <p style={{ margin: "0 0 32px" }}>
+            All automated publishing workflows are reviewed by studio personnel before activation. Content queues are auditable and can be paused or revoked at any time.
+          </p>
+
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>12. Third-party social media platforms</h2>
+          <p style={{ margin: "0 0 12px" }}>
+            We maintain official accounts on the following social media platforms. Each platform has its own privacy policy governing how it collects and processes data from users who view or interact with our published content:
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn</strong> — used for publishing studio articles, project announcements, and professional updates to our company page. Governed by LinkedIn&apos;s Privacy Policy and API Terms of Use. We access LinkedIn through their Marketing API with permissions limited to content publishing on our own page.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Instagram</strong> — used for sharing visual work samples, studio culture, and project highlights. Governed by Meta&apos;s Privacy Policy.
+          </p>
+          <p style={{ margin: "0 0 32px" }}>
+            We do not scrape, collect, or store personal information from followers or viewers on any social media platform. Our use of platform APIs is limited to publishing our own content and retrieving basic engagement metrics (such as view counts and like counts) in aggregate form.
+          </p>
+
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>13. Contact us</h2>
           <p style={{ margin: "0 0 0" }}>
             For privacy-related questions, requests, or complaints, contact our designated privacy officer: Maninder Singh, Founder and Creative Director, House of Singh Studios Inc., Toronto, Ontario, Canada. Email: studio@houseofsingh.com.
           </p>
