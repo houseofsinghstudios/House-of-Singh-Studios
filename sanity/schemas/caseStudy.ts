@@ -4,6 +4,15 @@ export default defineType({
   name: "caseStudy",
   title: "Project",
   type: "document",
+  fieldsets: [
+    {
+      name: "legacy",
+      title: "Legacy content",
+      description:
+        "Only used when Page Blocks is empty. Kept so older projects keep rendering. Will be removed once every project uses blocks.",
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
     defineField({
       name: "title",
@@ -86,12 +95,14 @@ export default defineType({
       title: "Challenge",
       type: "array",
       of: [{ type: "block" }],
+      fieldset: "legacy",
     }),
     defineField({
       name: "approach",
       title: "Approach",
       type: "array",
       of: [{ type: "block" }],
+      fieldset: "legacy",
     }),
     defineField({
       name: "deliverables",
@@ -104,17 +115,42 @@ export default defineType({
       title: "Results",
       type: "array",
       of: [{ type: "block" }],
+      fieldset: "legacy",
     }),
     defineField({
       name: "featuredImage",
       title: "Featured Image",
       type: "image",
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description:
+            "Describe the image for people using screen readers. Leave empty to use the project title.",
+        }),
+      ],
+    }),
+    defineField({
+      name: "blocks",
+      title: "Page Blocks",
+      type: "array",
+      description: "The body of the project page, top to bottom. Pick a block, fill it, reorder by dragging.",
+      of: [
+        { type: "blockSplit" },
+        { type: "blockOffset" },
+        { type: "blockFull" },
+        { type: "blockPair" },
+        { type: "blockStatement" },
+        { type: "blockFeature" },
+      ],
     }),
     defineField({
       name: "gallery",
       title: "Gallery",
       type: "array",
+      fieldset: "legacy",
       of: [
         defineArrayMember({
           type: "image",

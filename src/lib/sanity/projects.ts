@@ -1,10 +1,25 @@
 import { client } from "./client";
 import { urlFor } from "./image";
 import type { Project } from "@/data/projects";
-import type { ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
+import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
+import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
 import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 
 // ── GROQ Queries ──
+
+// Block images resolve their asset with natural dimensions, so blocks render at the true aspect ratio.
+const blockImageProjection = `{ alt, hotspot, crop, "asset": asset->{ _id, url, metadata { dimensions { width, height, aspectRatio } } } }`;
+
+const blocksProjection = `blocks[] {
+  _type,
+  _key,
+  _type == "blockSplit" => { side, heading, body, image ${blockImageProjection} },
+  _type == "blockOffset" => { heading, body, image ${blockImageProjection} },
+  _type == "blockFull" => { caption, image ${blockImageProjection} },
+  _type == "blockPair" => { "images": images[] ${blockImageProjection} },
+  _type == "blockStatement" => { quote, body },
+  _type == "blockFeature" => { caption, image ${blockImageProjection}, detail ${blockImageProjection} }
+}`;
 
 const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   _id,
@@ -19,6 +34,7 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   deliverables,
   results,
   featuredImage,
+  ${blocksProjection},
   gallery[] {
     _key,
     asset,
@@ -49,6 +65,7 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   deliverables,
   results,
   featuredImage,
+  ${blocksProjection},
   gallery[] {
     _key,
     asset,
@@ -99,6 +116,106 @@ function sanityImageUrl(img: any): string {
   } catch {
     return "";
   }
+}
+
+// ── Sanity page blocks → CaseStudyBlock[] ──
+
+interface RawBlockImage {
+  alt?: string;
+  asset?: {
+    _id?: string;
+    metadata?: { dimensions?: { width?: number; height?: number } };
+  } | null;
+}
+
+interface RawBlock {
+  _type?: string;
+  _key?: string;
+  side?: string;
+  heading?: string;
+  body?: unknown;
+  quote?: string;
+  caption?: string;
+  image?: RawBlockImage | null;
+  detail?: RawBlockImage | null;
+  images?: (RawBlockImage | null)[] | null;
+}
+
+// Block images keep their natural aspect ratio: no crop, never enlarged past the original.
+// Only block images request a modern format here; sanityImageUrl is unchanged.
+function toBlockImage(raw: RawBlockImage | null | undefined, fallbackAlt: string): BlockImage | null {
+  const id = raw?.asset?._id;
+  const width = raw?.asset?.metadata?.dimensions?.width;
+  const height = raw?.asset?.metadata?.dimensions?.height;
+  if (!id || !width || !height) return null;
+  try {
+    const src = urlFor({ _id: id }).width(2000).fit("max").auto("format").url();
+    return { src, alt: raw?.alt || fallbackAlt, width, height };
+  } catch {
+    return null;
+  }
+}
+
+function toBody(raw: unknown): PortableTextBody[] {
+  return Array.isArray(raw) ? (raw as PortableTextBody[]) : [];
+}
+
+// Returns the mapped block, or a reason string when the block cannot render.
+function mapBlock(raw: RawBlock, index: number, title: string): CaseStudyBlock | string {
+  const key = raw._key || `block-${index}`;
+  const image = toBlockImage(raw.image, title);
+
+  switch (raw._type) {
+    case "blockSplit":
+      if (!image) return "missing image or image asset";
+      return {
+        key,
+        type: "split",
+        side: raw.side === "right" ? "right" : "left",
+        heading: raw.heading || "",
+        body: toBody(raw.body),
+        image,
+      };
+    case "blockOffset":
+      if (!image) return "missing image or image asset";
+      return { key, type: "offset", heading: raw.heading || "", body: toBody(raw.body), image };
+    case "blockFull":
+      if (!image) return "missing image or image asset";
+      return { key, type: "full", image, caption: raw.caption || undefined };
+    case "blockPair": {
+      const pair = (raw.images || []).map((img) => toBlockImage(img, title));
+      const [first, second] = pair;
+      if (pair.length !== 2 || !first || !second) return "an image pair needs exactly two images with assets";
+      return { key, type: "pair", images: [first, second] };
+    }
+    case "blockStatement": {
+      const quote = (raw.quote || "").trim();
+      if (!quote) return "missing quote";
+      const body = toBody(raw.body);
+      return { key, type: "statement", quote, body: body.length ? body : undefined };
+    }
+    case "blockFeature": {
+      const detail = toBlockImage(raw.detail, title);
+      if (!image || !detail) return "missing main or detail image, or its asset";
+      return { key, type: "feature", image, detail, caption: raw.caption || undefined };
+    }
+    default:
+      return `unknown block type "${raw._type}"`;
+  }
+}
+
+function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyBlock[] {
+  if (!Array.isArray(raw)) return [];
+  const blocks: CaseStudyBlock[] = [];
+  (raw as RawBlock[]).forEach((block, index) => {
+    const mapped = mapBlock(block || {}, index, title);
+    if (typeof mapped === "string") {
+      console.warn(`[sanity/projects] Skipping block ${block?._key || index} on "${slug}": ${mapped}`);
+    } else {
+      blocks.push(mapped);
+    }
+  });
+  return blocks;
 }
 
 // ── Map Sanity caseStudy → Project (for /work list) ──
@@ -187,7 +304,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
     summary: overviewText,
     heroImage: {
       src: imageUrl,
-      alt: doc.title || "",
+      alt: doc.featuredImage?.alt || doc.title || "",
     },
     overview: {
       heading: "The Business",
@@ -217,6 +334,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
       slug: nextDoc?.slug || "",
       name: nextDoc?.title || "",
     },
+    blocks: mapBlocks(doc.blocks, doc.slug || "", doc.title || ""),
   };
 }
 

@@ -1468,6 +1468,134 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════
+   Case Study Blocks
+   Composed page body. Mobile first: one column in DOM order.
+   From 768px: 12 column grid, placement set per block below.
+   ═══════════════════════════════════════════════════════ */
+.cs-blocks {
+  padding: 0 var(--page-px);
+}
+.cs-block + .cs-block {
+  margin-top: clamp(64px, 8vw, 120px);
+}
+/* Text bearing blocks open with a rule; image only blocks do not. */
+.cs-block--rule {
+  border-top: 1px solid var(--border);
+  padding-top: clamp(24px, 3vw, 40px);
+}
+.cs-block-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 24px;
+}
+
+/* ── Shared block parts ── */
+.cs-block-media {
+  margin: 0;
+  min-width: 0;
+}
+.cs-block-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cs-block-caption {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: left;
+  margin: 12px 0 0;
+}
+.cs-block-heading {
+  font-size: clamp(36px, 4.5vw, 64px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--text-primary);
+  margin: 0;
+}
+.cs-block-body {
+  font-size: clamp(16px, 1.2vw, 17px);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 42ch;
+}
+.cs-block-body p {
+  margin: 0 0 1em;
+}
+.cs-block-body p:last-child {
+  margin-bottom: 0;
+}
+.cs-block-body strong {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.cs-block-body a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.cs-split-text .cs-block-heading + .cs-block-body {
+  margin-top: 24px;
+}
+
+/* ── Statement ── */
+.cs-statement-quote {
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ── Pair: small gap on mobile only so the two read as separate images ── */
+.cs-pair {
+  row-gap: 8px;
+}
+
+/* ── Tablet and desktop ── */
+@media (min-width: 768px) {
+  .cs-block-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(32px, 4vw, 64px);
+    row-gap: 0;
+  }
+  .cs-block-grid > * {
+    grid-row: 1;
+  }
+
+  /* Split: image on one half, text on the image's baseline */
+  .cs-split--left .cs-split-media { grid-column: 1 / 7; }
+  .cs-split--left .cs-split-text { grid-column: 8 / 13; }
+  .cs-split--right .cs-split-text { grid-column: 1 / 6; }
+  .cs-split--right .cs-split-media { grid-column: 7 / 13; }
+  .cs-split-text { align-self: end; }
+
+  /* Offset: heading, body, image on a shared bottom line */
+  .cs-offset { align-items: end; }
+  .cs-offset-heading { grid-column: 1 / 5; }
+  .cs-offset-body { grid-column: 5 / 9; }
+  .cs-offset-media { grid-column: 9 / 13; }
+
+  /* Full width */
+  .cs-full-media { grid-column: 1 / 13; }
+
+  /* Pair: edge to edge, top aligned */
+  .cs-pair { column-gap: 0; align-items: start; }
+  .cs-pair-first { grid-column: 1 / 7; }
+  .cs-pair-second { grid-column: 7 / 13; }
+
+  /* Statement: wide alone, narrower with supporting body */
+  .cs-statement-quote { grid-column: 1 / 10; }
+  .cs-statement--with-body .cs-statement-quote { grid-column: 1 / 8; }
+  .cs-statement-body { grid-column: 9 / 13; align-self: end; }
+
+  /* Feature: main image, detail on the bottom line */
+  .cs-feature-main { grid-column: 1 / 9; }
+  .cs-feature-detail { grid-column: 10 / 13; align-self: end; }
+}
+
+/* ═══════════════════════════════════════════════════════
    Responsive (< 900px)
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 899px) {

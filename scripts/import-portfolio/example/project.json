@@ -1,0 +1,32 @@
+{
+  "title": "Harbour and Pine",
+  "client": "Harbour and Pine",
+  "industry": "Hospitality",
+  "year": 2026,
+  "serviceCategory": "brand-identity",
+  "disciplines": ["brand-identity", "packaging", "art-direction"],
+  "deliverables": ["Brand strategy", "Logo system", "Packaging system", "Signage"],
+  "featured": false,
+  "publishedAt": "2026-10-14",
+  "seoDescription": "A brand identity and packaging system for Harbour and Pine, a coastal guesthouse and kitchen.",
+  "images": {
+    "cover.jpg": "The Harbour and Pine sign above the guesthouse door at dusk",
+    "01-chair.jpg": "An oak dining chair in the restaurant with the new menu resting on it",
+    "02-front.jpg": "The front of the soap packaging in sea green",
+    "03-back.jpg": "The back of the soap packaging with the ingredients panel",
+    "04-room.jpg": "A guest room with the welcome card on the bed",
+    "05-applied.jpg": "The identity applied across menus, keys and signage",
+    "06-detail.jpg": "Close view of the embossed logo on a room key",
+    "07-shelf.jpg": "The retail shelf in the lobby stocked with the new range",
+    "08-label.jpg": "Detail of a jam jar label"
+  },
+  "blocks": [
+    { "type": "split", "side": "left", "section": "the-challenge", "image": "01-chair.jpg" },
+    { "type": "pair", "images": ["02-front.jpg", "03-back.jpg"] },
+    { "type": "statement", "section": "approach" },
+    { "type": "offset", "section": "process", "image": "04-room.jpg" },
+    { "type": "full", "image": "05-applied.jpg", "caption": "Menus, keys and signage from one system." },
+    { "type": "split", "side": "right", "section": "results", "image": "06-detail.jpg" },
+    { "type": "feature", "image": "07-shelf.jpg", "detail": "08-label.jpg", "caption": "The retail range, launched in the lobby." }
+  ]
+}

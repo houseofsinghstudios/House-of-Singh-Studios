@@ -6,6 +6,7 @@ import OverviewMeta from "./OverviewMeta";
 import DeliverableGrid from "./DeliverableGrid";
 import ImageGallery from "./ImageGallery";
 import NextProject from "./NextProject";
+import BlockRenderer from "./blocks/BlockRenderer";
 import NextPageLink from "@/components/layout/NextPageLink";
 
 export default function CaseStudyTemplate({
@@ -29,6 +30,28 @@ export default function CaseStudyTemplate({
   ]
     .filter(Boolean)
     .join(" · ");
+
+  // Projects with page blocks get the composed body. Projects without keep the legacy sections.
+  const blocks = project.blocks && project.blocks.length > 0 ? project.blocks : null;
+
+  const deliverablesSection = (
+    <section
+      style={{
+        padding: "clamp(64px, 8vw, 120px) var(--page-px)",
+      }}
+    >
+      <p className="editorial-label css-reveal" style={{ margin: "0 0 12px" }}>
+        {blocks ? "(02)" : "(04)"} What we delivered
+      </p>
+      <h2
+        className="cs-section-heading css-reveal"
+        style={{ marginBottom: 32 }}
+      >
+        Deliverables
+      </h2>
+      <DeliverableGrid deliverables={project.deliverables} />
+    </section>
+  );
 
   return (
     <>
@@ -113,6 +136,14 @@ export default function CaseStudyTemplate({
         </div>
       </section>
 
+      {blocks ? (
+        <>
+          {/* ═══ COMPOSED BODY: page blocks in Sanity order ═══ */}
+          <BlockRenderer blocks={blocks} />
+          {deliverablesSection}
+        </>
+      ) : (
+        <>
       {/* ═══ SECTION 4: CHALLENGE + APPROACH ═══ */}
       <section
         style={{
@@ -155,22 +186,7 @@ export default function CaseStudyTemplate({
       <ImageGallery images={project.images.set1} />
 
       {/* ═══ SECTION 6: DELIVERABLES ═══ */}
-      <section
-        style={{
-          padding: "clamp(64px, 8vw, 120px) var(--page-px)",
-        }}
-      >
-        <p className="editorial-label css-reveal" style={{ margin: "0 0 12px" }}>
-          (04) What we delivered
-        </p>
-        <h2
-          className="cs-section-heading css-reveal"
-          style={{ marginBottom: 32 }}
-        >
-          Deliverables
-        </h2>
-        <DeliverableGrid deliverables={project.deliverables} />
-      </section>
+      {deliverablesSection}
 
       {/* ═══ SECTION 7: IMAGE GALLERY — SET 2 ═══ */}
       {project.images.set2 && project.images.set2.length > 0 && (
@@ -214,6 +230,8 @@ export default function CaseStudyTemplate({
           )}
         </div>
       </section>
+        </>
+      )}
 
       {/* ═══ SECTION 9: NEXT PROJECT + DARK CTA ═══ */}
       <section style={{ padding: "0 var(--page-px)" }}>

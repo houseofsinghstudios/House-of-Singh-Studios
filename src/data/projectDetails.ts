@@ -1,7 +1,26 @@
+import type { PortableTextBlock } from "@portabletext/react";
+
 export interface ProjectDetailImage {
   src: string;
   alt: string;
 }
+
+// An image inside a case study block, with its natural pixel size so it renders uncropped.
+export interface BlockImage {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+// One composed section of the project page. Order comes from Sanity.
+export type CaseStudyBlock =
+  | { key: string; type: "split"; side: "left" | "right"; heading: string; body: PortableTextBlock[]; image: BlockImage }
+  | { key: string; type: "offset"; heading: string; body: PortableTextBlock[]; image: BlockImage }
+  | { key: string; type: "full"; image: BlockImage; caption?: string }
+  | { key: string; type: "pair"; images: [BlockImage, BlockImage] }
+  | { key: string; type: "statement"; quote: string; body?: PortableTextBlock[] }
+  | { key: string; type: "feature"; image: BlockImage; detail: BlockImage; caption?: string };
 
 export interface ProjectDetailStat {
   value: string;
@@ -40,6 +59,8 @@ export interface ProjectDetail {
     stats?: ProjectDetailStat[];
   };
   nextProject: { slug: string; name: string };
+  // When present and non-empty, these replace the legacy challenge, approach, gallery and result sections.
+  blocks?: CaseStudyBlock[];
 }
 
 export const projectDetails: ProjectDetail[] = [
