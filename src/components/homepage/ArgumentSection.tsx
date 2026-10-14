@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Link } from "next-view-transitions";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const HEADLINE_WORDS = [
@@ -89,9 +90,9 @@ export default function ArgumentSection() {
           Discover what your brand should be. Design the system that makes it real. Deliver assets that hold up everywhere.
         </p>
 
-        <a href="/about" className="argument-about-link" data-cursor="link">
+        <Link href="/about" className="argument-about-link" data-cursor="link">
           About the studio <span>→</span>
-        </a>
+        </Link>
       </div>
     </section>
   );
