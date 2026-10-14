@@ -3,6 +3,7 @@ import { getAllProjects, getProjectBySlug, getProjectDetailBySlug } from "@/lib/
 import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { bareTitle, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -20,12 +21,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project Not Found" };
+  const title = bareTitle(project.seoTitle, project.name);
   return {
-    title: project.seoTitle,
+    title,
     description: project.seoDescription,
     alternates: { canonical: `https://studios.houseofsingh.com/work/${slug}` },
     openGraph: {
-      title: project.seoTitle,
+      title: studioTitle(title),
       description: project.seoDescription,
       url: `https://studios.houseofsingh.com/work/${slug}`,
     },

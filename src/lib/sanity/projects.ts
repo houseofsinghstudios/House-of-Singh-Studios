@@ -238,7 +238,8 @@ function mapSanityToProject(doc: any, index: number): Project {
     year: doc.year ? String(doc.year) : "",
     description: overviewText,
     shortDescription: overviewText.length > 120 ? overviewText.slice(0, 120) + "…" : overviewText,
-    seoTitle: doc.seoTitle || `${doc.title} — House of Singh Studios`,
+    // Bare title: the root layout's title template adds the studio name.
+    seoTitle: doc.seoTitle || doc.title || "",
     seoDescription: doc.seoDescription || overviewText,
     gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
     image: imageUrl,

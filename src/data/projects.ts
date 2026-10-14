@@ -41,7 +41,7 @@ export const projects: Project[] = [
     description:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",
     shortDescription: "Event branding and visual identity system for one of Canada\u2019s largest TEDx events.",
-    seoTitle: "TEDxToronto Visual Identity \u2014 House of Singh Studios",
+    seoTitle: "TEDxToronto Visual Identity",
     seoDescription:
       "Brand identity and visual system for TEDxToronto. Event branding, creative direction, and design by House of Singh Studios.",
     sections: {
@@ -95,7 +95,7 @@ export const projects: Project[] = [
     description:
       "Brand identity system for a mid-market financial services firm.",
     shortDescription: "Typography-led identity for a mid-market financial services firm.",
-    seoTitle: "Meridian Financial Group \u2014 House of Singh Studios",
+    seoTitle: "Meridian Financial Group",
     seoDescription:
       "Brand identity system for a mid-market financial services firm. Studio exploration by House of Singh Studios.",
     sections: {
@@ -149,7 +149,7 @@ export const projects: Project[] = [
     description:
       "Publication cover design and art direction for a leadership book.",
     shortDescription: "Cover design and art direction for a leadership publication.",
-    seoTitle: "Soulbound Publication \u2014 House of Singh Studios",
+    seoTitle: "Soulbound Publication",
     seoDescription:
       "Publication cover design and art direction for a leadership book. Independent project by House of Singh Studios.",
     sections: {
@@ -202,7 +202,7 @@ export const projects: Project[] = [
     description:
       "Brand identity and packaging for a modern South Asian food brand.",
     shortDescription: "Visual identity and packaging connecting cultural authenticity with contemporary design.",
-    seoTitle: "Nomad Kitchen \u2014 House of Singh Studios",
+    seoTitle: "Nomad Kitchen",
     seoDescription:
       "Brand identity and packaging for a modern South Asian food brand. Independent project by House of Singh Studios.",
     sections: {

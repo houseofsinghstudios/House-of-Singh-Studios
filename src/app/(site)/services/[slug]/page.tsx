@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetailClient from "@/components/services/ServiceDetailClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { bareTitle, studioTitle } from "@/lib/seo";
 
 const serviceSchemaMap: Record<string, { name: string; description: string; breadcrumbName: string; deliverables: string[] }> = {
   "brand-identity": {
@@ -43,12 +44,13 @@ export function generateMetadata({
   return params.then(({ slug }) => {
     const service = getServiceBySlug(slug);
     if (!service) return { title: "Service Not Found" };
+    const title = bareTitle(service.seoTitle, service.name);
     return {
-      title: service.seoTitle,
+      title,
       description: service.seoDescription,
       alternates: { canonical: `https://studios.houseofsingh.com/services/${slug}` },
       openGraph: {
-        title: service.seoTitle,
+        title: studioTitle(title),
         description: service.seoDescription,
         url: `https://studios.houseofsingh.com/services/${slug}`,
       },
