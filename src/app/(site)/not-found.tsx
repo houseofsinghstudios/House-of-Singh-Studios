@@ -21,11 +21,11 @@ export default function NotFound() {
       </p>
 
       <h1 className="wp-heading css-reveal" style={{ transitionDelay: "100ms" }}>
-        This page does not exist.
+        This page didn&apos;t make the final&nbsp;cut.
       </h1>
 
       <p className="wp-sub css-reveal" style={{ transitionDelay: "200ms" }}>
-        The link may be out of date, or the page may have moved.
+        It may have moved or been retired. The work that did is one click away.
       </p>
 
       <div className="flex flex-wrap gap-3 mt-12 css-reveal" style={{ transitionDelay: "300ms" }}>
