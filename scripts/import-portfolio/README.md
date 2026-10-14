@@ -166,7 +166,7 @@ This file holds the facts about the project and the list of blocks. Keep all the
   "client": "Harbour and Pine",
   "industry": "Hospitality",
   "year": 2026,
-  "serviceCategory": "brand-identity",
+  "serviceCategories": ["brand-identity", "visual-media"],
   "disciplines": ["brand-identity", "packaging"],
   "deliverables": ["Brand strategy", "Logo system"],
   "featured": false,
@@ -190,7 +190,7 @@ This file holds the facts about the project and the list of blocks. Keep all the
 | `client` | The client's name. | No |
 | `industry` | For example `Hospitality`. | No |
 | `year` | A number with no quote marks, for example `2026`. | No |
-| `serviceCategory` | Exactly one of the four values below. | Yes |
+| `serviceCategories` | One or more of the four values below, in square brackets. | Yes |
 | `disciplines` | One or more of the nine values below, in square brackets. | Yes |
 | `deliverables` | A list of what you made, in square brackets. | No |
 | `featured` | `true` to show it on the homepage, `false` otherwise. No quote marks. | No |
@@ -199,7 +199,7 @@ This file holds the facts about the project and the list of blocks. Keep all the
 | `images` | Every image file in the folder, each with its alt text. | Yes |
 | `blocks` | The page, top to bottom. See below. | Yes |
 
-**`serviceCategory`**, choose one:
+**`serviceCategories`**, choose every service the project covers:
 
 | Value | Service |
 | --- | --- |
@@ -207,6 +207,10 @@ This file holds the facts about the project and the list of blocks. Keep all the
 | `visual-media` | Visual Media and Content Production |
 | `digital-design` | Digital Design and Experience |
 | `creative-strategy` | Creative Strategy and Systems |
+
+The project appears under each service you list on the Services page. A full brand engagement often covers several, for example `["brand-identity", "visual-media", "digital-design"]`. List each service once.
+
+Older project folders may use `"serviceCategory": "brand-identity"`, a single service without square brackets. That still works and is treated as a list of one. Use one or the other, never both.
 
 **`disciplines`**, choose any of: `brand-identity`, `packaging`, `publication`, `art-direction`, `website`, `video`, `photography`, `social-content`, `strategy`. These power the filters on the Work page.
 
@@ -337,6 +341,10 @@ The project is skipped and nothing is uploaded. Fix it and run again.
 | `has no alt text in project.json "images"` | Add the file to `images` in project.json, with a description. |
 | `a pair needs exactly two images` | List exactly two file names in `images`. |
 | `"centre" is not valid. Use "left" or "right"` | Set `side` to `"left"` or `"right"`, or leave it out. |
+| `has both "serviceCategories" and "serviceCategory"` | Delete `serviceCategory` and keep the list. |
+| `"serviceCategories" is empty` | List at least one service in the square brackets. |
+| `includes "branding", which is not a service` | Use only the four values in the services table above. |
+| `lists "brand-identity" more than once` | List each service once. |
 | `cover.jpg is reserved for the hero` | Use a different image in the block. The cover only appears at the top. |
 | `"detail": missing` | Add the field the block needs. See the table of blocks above. |
 | `both become the section key` | Two headings clash. Rename one of them. |
