@@ -234,12 +234,14 @@ export default function CaseStudyTemplate({
       )}
 
       {/* ═══ SECTION 9: NEXT PROJECT + DARK CTA ═══ */}
-      <section style={{ padding: "0 var(--page-px)" }}>
-        <NextProject
-          slug={project.nextProject.slug}
-          name={project.nextProject.name}
-        />
-      </section>
+      {project.nextProject.slug && (
+        <section style={{ padding: "0 var(--page-px)" }}>
+          <NextProject
+            slug={project.nextProject.slug}
+            name={project.nextProject.name}
+          />
+        </section>
+      )}
 
       <NextPageLink />
 

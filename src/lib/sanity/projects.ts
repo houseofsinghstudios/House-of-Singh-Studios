@@ -460,14 +460,27 @@ export function getWorkTypeFilters(): DisciplineFilter[] {
 export interface ServiceProject {
   slug: string;
   name: string;
+  // The card's second line, from real fields only: industry, else client when it differs from the
+  // title, else the overview's first sentence. Never invented.
+  subtitle: string;
   image: string;
   disciplines: string[];
+}
+
+function firstSentence(text: unknown): string {
+  if (typeof text !== "string") return "";
+  const trimmed = text.trim();
+  const match = trimmed.match(/^.*?[.!?](?=\s|$)/);
+  return (match ? match[0] : trimmed).trim();
 }
 
 const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory))] | order(publishedAt desc) {
   title,
   "slug": slug.current,
   ${serviceCategoriesProjection},
+  client,
+  industry,
+  overview,
   disciplines,
   featuredImage
 }`;
@@ -494,6 +507,12 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
       const project: ServiceProject = {
         slug: doc.slug || "",
         name: doc.title || "",
+        subtitle: (
+          doc.industry ||
+          (doc.client && doc.client !== doc.title ? doc.client : "") ||
+          firstSentence(doc.overview) ||
+          ""
+        ).trim(),
         image: sanityImageUrl(doc.featuredImage),
         disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
       };

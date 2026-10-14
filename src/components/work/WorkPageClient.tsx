@@ -10,9 +10,6 @@ import NextPageLink from "@/components/layout/NextPageLink";
 
 const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-  meridian: "/images/projects/meridian/meridian.jpg",
-  soulbound: "/images/projects/soulbound/soulbound.jpg",
-  "nomad-kitchen": "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
 };
 
 function projectImage(project: Project): string {

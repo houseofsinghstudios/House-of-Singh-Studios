@@ -87,36 +87,6 @@ export const PROJECTS: Project[] = [
     accent: "#E62B1E",
     image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
   },
-  {
-    name: "Meridian Financial Group",
-    label: "Brand Identity",
-    sentence:
-      "Typography-led identity for a mid-market financial services firm.",
-    href: "/work/meridian",
-    color: "#1A3A5C",
-    accent: "#C9A96E",
-    image: "/images/projects/meridian/meridian.jpg",
-  },
-  {
-    name: "Soulbound Publication",
-    label: "Publication Design",
-    sentence:
-      "Cover design and art direction for a leadership publication.",
-    href: "/work/soulbound",
-    color: "#3C2A4A",
-    accent: "#D4AF37",
-    image: "/images/projects/soulbound/soulbound.jpg",
-  },
-  {
-    name: "Nomad Kitchen",
-    label: "Brand Identity, Packaging",
-    sentence:
-      "Visual identity and packaging connecting cultural authenticity with contemporary design.",
-    href: "/work/nomad-kitchen",
-    color: "#4A3728",
-    accent: "#E8A848",
-    image: "/images/projects/nomad-kitchen/nomad-kitchen.jpg",
-  },
 ];
 
 export interface Testimonial {
