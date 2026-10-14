@@ -27,8 +27,19 @@ interface Role {
   publishedAt?: string;
 }
 
+// If Sanity is unreachable the page renders its "No open roles" state instead of failing
+// the build or the request, and refreshes once Sanity is back.
+async function getRoles(): Promise<Role[]> {
+  try {
+    return (await getAllRoles()) || [];
+  } catch (error) {
+    console.warn("[careers] Sanity fetch failed, rendering with no roles:", error instanceof Error ? error.name : "unknown error");
+    return [];
+  }
+}
+
 export default async function CareersPage() {
-  const roles: Role[] = (await getAllRoles()) || [];
+  const roles = await getRoles();
 
   return (
     <>

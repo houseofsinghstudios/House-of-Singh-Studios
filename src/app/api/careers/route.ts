@@ -88,7 +88,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Career application error:", error);
+    // Name only: error messages can quote the request body or the webhook host.
+    console.error("Career application error:", error instanceof Error ? error.name : "unknown error");
     return NextResponse.json(
       { error: "An unexpected error occurred." },
       { status: 500 }

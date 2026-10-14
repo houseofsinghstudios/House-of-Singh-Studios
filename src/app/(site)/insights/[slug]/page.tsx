@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: bareTitle(post.title),
+    // The SEO title when set, otherwise the article title: the same choice og makes below.
+    title: bareTitle(post.seoTitle, post.title),
     description:
       post.seoDescription ||
       "Insights from House of Singh Studios.",
