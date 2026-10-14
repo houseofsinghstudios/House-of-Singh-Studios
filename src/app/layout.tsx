@@ -36,9 +36,8 @@ export const metadata: Metadata = {
     // images: ['/og-image.jpg'],
     creator: '@hosdesignstudio',
   },
-  alternates: {
-    canonical: siteUrl,
-  },
+  // No default canonical: every page sets its own. A root canonical would be inherited by
+  // 404s and the Studio, pointing them at the homepage.
 };
 
 export default function RootLayout({
