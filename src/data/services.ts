@@ -3,14 +3,6 @@ export interface ServiceDeliverable {
   description: string;
 }
 
-export interface ServiceRelatedWork {
-  slug: string;
-  name: string;
-  client: string;
-  result: string;
-  gradient: string;
-  image: string;
-}
 
 export interface ServiceProcessStep {
   step: string;
@@ -35,7 +27,6 @@ export interface ServiceData {
     body: string;
   };
   process: ServiceProcessStep[];
-  relatedWork: ServiceRelatedWork[];
   ctaHeading: string;
 }
 
@@ -135,24 +126,6 @@ export const services: ServiceData[] = [
           "Complete system with guidelines, files, and structure to maintain it.",
       },
     ],
-    relatedWork: [
-      {
-        slug: "tedxtoronto",
-        name: "TEDxToronto",
-        client: "TEDx",
-        result: "Complete visual identity system across 14 touchpoints",
-        gradient: "linear-gradient(135deg, #2C2C2C 0%, #1A1A1A 100%)",
-        image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-      },
-      {
-        slug: "meridian",
-        name: "Meridian",
-        client: "Meridian Financial",
-        result: "40% improvement in brand recall across digital channels",
-        gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
-        image: "/images/projects/meridian/meridian.jpg",
-      },
-    ],
     ctaHeading: "Ready to fix your brand identity?",
   },
   {
@@ -237,7 +210,6 @@ export const services: ServiceData[] = [
           "Final assets, content libraries, and templates your team can use ongoing.",
       },
     ],
-    relatedWork: [],
     ctaHeading: "Ready to build a content system?",
   },
   {
@@ -331,7 +303,6 @@ export const services: ServiceData[] = [
           "Design handoff, development oversight, and post-launch iteration support.",
       },
     ],
-    relatedWork: [],
     ctaHeading: "Ready to redesign your digital presence?",
   },
   {
@@ -420,7 +391,6 @@ export const services: ServiceData[] = [
           "Presentation to leadership, team training, and implementation roadmap.",
       },
     ],
-    relatedWork: [],
     ctaHeading: "Ready to get a strategic framework?",
   },
 ];

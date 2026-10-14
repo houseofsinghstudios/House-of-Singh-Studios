@@ -48,12 +48,9 @@ const BLOCKS = [
       "Creative Direction",
       "Script and Narrative",
     ],
-    fallbackImage: {
-      src: "/images/projects/soulbound/soulbound.jpg",
-      alt: "Soulbound publication design",
-    },
-    fallbackTags: "Publication Design — Art Direction",
-    fallbackName: "Soulbound Publication",
+    fallbackImage: null,
+    fallbackTags: "Visual Media",
+    fallbackName: "Coming Soon",
   },
   {
     number: "03",

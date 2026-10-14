@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
 import NextPageLink from "@/components/layout/NextPageLink";
+import type { ServiceProject } from "@/lib/sanity/projects";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
@@ -19,12 +20,19 @@ const CLIENT_QUALIFIER: Record<string, string> = {
     "This service is for businesses where the brand problem is actually a strategy problem. Your team makes inconsistent creative decisions because there is no framework. You need positioning clarity, creative direction systems, and operational structure before you need more design.",
 };
 
-export default function ServiceDetailClient({ slug }: { slug: string }) {
+export default function ServiceDetailClient({
+  slug,
+  projects,
+}: {
+  slug: string;
+  // Sanity case studies that list this service. The section is hidden when there are none.
+  projects: ServiceProject[];
+}) {
   const service = getServiceBySlug(slug);
 
   if (!service) return null;
 
-  const hasRelatedWork = service.relatedWork.length > 0;
+  const hasRelatedWork = projects.length > 0;
   const qualifierText = CLIENT_QUALIFIER[slug] || "";
 
   return (
@@ -151,7 +159,7 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
             (05) Related work
           </p>
           <div className="svcd-work-grid">
-            {service.relatedWork.slice(0, 2).map((work, i) => (
+            {projects.map((work, i) => (
               <Link
                 key={work.slug}
                 href={`/work/${work.slug}`}
@@ -160,16 +168,18 @@ export default function ServiceDetailClient({ slug }: { slug: string }) {
                 style={{ transitionDelay: `${i * 100}ms` }}
               >
                 <div className="svcd-work-img reveal-clip">
-                  <Image
-                    src={work.image}
-                    alt={work.name}
-                    fill
-                    sizes="(max-width: 767px) 100vw, 50vw"
-                    style={{ objectFit: "cover" }}
-                  />
+                  {work.image && (
+                    <Image
+                      src={work.image}
+                      alt={work.name}
+                      fill
+                      sizes="(max-width: 767px) 100vw, 50vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  )}
                 </div>
                 <p className="svcd-work-name">{work.name}</p>
-                <p className="svcd-work-cat">{work.client}</p>
+                {work.subtitle && <p className="svcd-work-cat">{work.subtitle}</p>}
               </Link>
             ))}
           </div>

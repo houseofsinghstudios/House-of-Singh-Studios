@@ -4,6 +4,10 @@ import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetailClient from "@/components/services/ServiceDetailClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { bareTitle, studioTitle } from "@/lib/seo";
+import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
+
+// Same as /services: newly imported projects appear here within a minute, without a deploy.
+export const revalidate = 60;
 
 const serviceSchemaMap: Record<string, { name: string; description: string; breadcrumbName: string; deliverables: string[] }> = {
   "brand-identity": {
@@ -67,6 +71,8 @@ export default async function ServiceDetailPage({
   const service = getServiceBySlug(slug);
   if (!service) notFound();
   const schema = serviceSchemaMap[slug];
+  // Real case studies from Sanity that list this service. Empty if none, or if Sanity is unreachable.
+  const projects = (await getAllProjectsGroupedByService())[slug] || [];
   return (
     <>
       <BreadcrumbSchema items={[
@@ -102,7 +108,7 @@ export default async function ServiceDetailPage({
           }}
         />
       )}
-      <ServiceDetailClient slug={slug} />
+      <ServiceDetailClient slug={slug} projects={projects} />
     </>
   );
 }
