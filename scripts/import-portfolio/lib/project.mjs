@@ -17,6 +17,7 @@ const PROJECT_KEYS = [
   "client",
   "industry",
   "year",
+  "serviceCategories",
   "serviceCategory",
   "disciplines",
   "deliverables",
@@ -124,11 +125,7 @@ function readProjectJson(dir, errors, warnings) {
     errors.push(`"year" must be a whole number without quotes, for example 2026.`);
   }
 
-  if (!SERVICE_CATEGORIES.includes(data.serviceCategory)) {
-    errors.push(
-      `"serviceCategory" is "${data.serviceCategory ?? ""}". It must be one of: ${SERVICE_CATEGORIES.join(", ")}.`
-    );
-  }
+  checkServiceCategories(data, errors);
 
   if (!Array.isArray(data.disciplines) || data.disciplines.length === 0) {
     errors.push(`"disciplines" is required and must be a list, for example ["brand-identity", "packaging"].`);
@@ -166,6 +163,48 @@ function readProjectJson(dir, errors, warnings) {
   }
 
   return data;
+}
+
+// serviceCategories: a list of one or more services. The older single "serviceCategory" string is
+// still accepted as a one item list. On success data.serviceCategories holds the final list,
+// and only that is ever written to Sanity.
+function checkServiceCategories(data, errors) {
+  const example = `["brand-identity", "visual-media"]`;
+  const allowed = `It must be one of: ${SERVICE_CATEGORIES.join(", ")}.`;
+  const hasList = data.serviceCategories !== undefined;
+  const hasSingle = data.serviceCategory !== undefined;
+
+  if (hasList && hasSingle) {
+    errors.push(`project.json has both "serviceCategories" and "serviceCategory". Keep only "serviceCategories", for example ${example}.`);
+    return;
+  }
+  if (!hasList && !hasSingle) {
+    errors.push(`"serviceCategories" is required: a list of the services this project covers, for example ${example}. ${allowed}`);
+    return;
+  }
+
+  const field = hasList ? "serviceCategories" : "serviceCategory";
+  const list = hasList ? data.serviceCategories : [data.serviceCategory];
+  if (!Array.isArray(list)) {
+    errors.push(`"serviceCategories" must be a list in square brackets, for example ${example}.`);
+    return;
+  }
+  if (list.length === 0) {
+    errors.push(`"serviceCategories" is empty. List at least one service, for example ${example}.`);
+    return;
+  }
+
+  const errorsBefore = errors.length;
+  for (const value of list) {
+    if (!SERVICE_CATEGORIES.includes(value)) errors.push(`"${field}" includes "${value ?? ""}", which is not a service. ${allowed}`);
+  }
+  const duplicates = [...new Set(list.filter((value, i) => list.indexOf(value) !== i))];
+  if (duplicates.length) errors.push(`"${field}" lists ${duplicates.map((d) => `"${d}"`).join(", ")} more than once. List each service once.`);
+
+  if (errors.length === errorsBefore) {
+    data.serviceCategories = [...list];
+    delete data.serviceCategory;
+  }
 }
 
 function isValidDate(value) {

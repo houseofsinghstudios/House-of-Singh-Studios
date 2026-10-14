@@ -15,7 +15,10 @@ export async function runProject(slug, { dryRun, client, overwrite, showJson = f
   // Every message names the project.
   const warn = () => project.warnings.forEach((w) => console.log(`  warning [${slug}]: ${w}`));
 
-  console.log(`\n${"=".repeat(72)}\n${slug}  |  ${title}\n${"=".repeat(72)}`);
+  // Shown only once validated, so an invalid list never looks accepted.
+  const services = !project.errors.length && Array.isArray(project.meta?.serviceCategories) ? project.meta.serviceCategories : [];
+  const servicesLabel = services.length ? `  |  services: ${services.join(", ")}` : "";
+  console.log(`\n${"=".repeat(72)}\n${slug}  |  ${title}${servicesLabel}\n${"=".repeat(72)}`);
 
   if (project.errors.length) {
     console.log(`  FAILED validation, ${project.errors.length} problem(s). Nothing was processed or uploaded:`);

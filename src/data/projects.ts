@@ -25,7 +25,7 @@ export interface Project {
   };
   deliverablesList: string[];
   disciplines?: string[];
-  serviceCategory?: string;
+  serviceCategories?: string[];
 }
 
 export const projects: Project[] = [

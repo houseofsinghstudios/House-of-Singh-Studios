@@ -3,7 +3,7 @@
   "client": "Harbour and Pine",
   "industry": "Hospitality",
   "year": 2026,
-  "serviceCategory": "brand-identity",
+  "serviceCategories": ["brand-identity", "visual-media", "digital-design"],
   "disciplines": ["brand-identity", "packaging", "art-direction"],
   "deliverables": ["Brand strategy", "Logo system", "Packaging system", "Signage"],
   "featured": false,

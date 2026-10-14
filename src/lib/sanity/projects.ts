@@ -7,6 +7,10 @@ import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 
 // ── GROQ Queries ──
 
+// A project's services as a list: the new serviceCategories field, or the legacy single
+// serviceCategory as a one item list, so older projects keep working without a migration.
+const serviceCategoriesProjection = `"serviceCategories": coalesce(serviceCategories, select(defined(serviceCategory) => [serviceCategory], []))`;
+
 // Block images resolve their asset with natural dimensions, so blocks render at the true aspect ratio.
 const blockImageProjection = `{ alt, hotspot, crop, "asset": asset->{ _id, url, metadata { dimensions { width, height, aspectRatio } } } }`;
 
@@ -45,7 +49,7 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   },
   testimonial,
   featured,
-  serviceCategory,
+  ${serviceCategoriesProjection},
   disciplines,
   seoTitle,
   seoDescription,
@@ -76,7 +80,7 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   },
   testimonial,
   featured,
-  serviceCategory,
+  ${serviceCategoriesProjection},
   disciplines,
   seoTitle,
   seoDescription,
@@ -264,7 +268,9 @@ function mapSanityToProject(doc: any, index: number): Project {
     disciplines: Array.isArray(doc.disciplines) && doc.disciplines.length > 0
       ? doc.disciplines
       : undefined,
-    serviceCategory: doc.serviceCategory || undefined,
+    serviceCategories: Array.isArray(doc.serviceCategories) && doc.serviceCategories.length > 0
+      ? doc.serviceCategories
+      : undefined,
   };
 }
 
@@ -457,10 +463,10 @@ export interface ServiceProject {
   disciplines: string[];
 }
 
-const serviceCategoryQuery = `*[_type == "caseStudy" && defined(serviceCategory)] | order(publishedAt desc) {
+const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory))] | order(publishedAt desc) {
   title,
   "slug": slug.current,
-  serviceCategory,
+  ${serviceCategoriesProjection},
   disciplines,
   featuredImage
 }`;
@@ -480,16 +486,18 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
     if (!docs || docs.length === 0) return empty;
 
     const grouped = { ...empty };
+    // A project appears under every service it covers, once per service.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     docs.forEach((doc: any) => {
-      const cat = doc.serviceCategory as string;
-      if (cat && grouped[cat]) {
-        grouped[cat].push({
-          slug: doc.slug || "",
-          name: doc.title || "",
-          image: sanityImageUrl(doc.featuredImage),
-          disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
-        });
+      const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
+      const project: ServiceProject = {
+        slug: doc.slug || "",
+        name: doc.title || "",
+        image: sanityImageUrl(doc.featuredImage),
+        disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
+      };
+      for (const cat of new Set(categories)) {
+        if (grouped[cat]) grouped[cat].push(project);
       }
     });
     return grouped;

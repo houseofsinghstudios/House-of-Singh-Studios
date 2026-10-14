@@ -1,5 +1,13 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
 
+// The four studio services. Shared by serviceCategories and the legacy serviceCategory field.
+const SERVICE_CATEGORY_OPTIONS = [
+  { title: "Brand Identity and Visual Design", value: "brand-identity" },
+  { title: "Visual Media and Content Production", value: "visual-media" },
+  { title: "Digital Design and Experience", value: "digital-design" },
+  { title: "Creative Strategy and Systems", value: "creative-strategy" },
+];
+
 export default defineType({
   name: "caseStudy",
   title: "Project",
@@ -34,19 +42,27 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: "serviceCategories",
+      title: "Service Categories",
+      type: "array",
+      of: [{ type: "string" }],
+      description:
+        "Every studio service this project covers. The project appears under each one on the /services page.",
+      options: {
+        list: SERVICE_CATEGORY_OPTIONS,
+        layout: "grid",
+      },
+      validation: (rule) => rule.required().min(1).unique(),
+    }),
+    defineField({
       name: "serviceCategory",
       title: "Service Category",
       type: "string",
-      description:
-        "Which of the 4 studio services does this project belong to? Used on the /services page.",
+      description: "Replaced by Service Categories. Kept so older projects keep working.",
       options: {
-        list: [
-          { title: "Brand Identity and Visual Design", value: "brand-identity" },
-          { title: "Visual Media and Content Production", value: "visual-media" },
-          { title: "Digital Design and Experience", value: "digital-design" },
-          { title: "Creative Strategy and Systems", value: "creative-strategy" },
-        ],
+        list: SERVICE_CATEGORY_OPTIONS,
       },
+      fieldset: "legacy",
     }),
     defineField({
       name: "disciplines",

@@ -95,7 +95,8 @@ export function buildDocument(project, refs) {
     client: meta.client,
     industry: meta.industry,
     year: meta.year,
-    serviceCategory: meta.serviceCategory,
+    // Only the list is written. The legacy single serviceCategory field is never written.
+    serviceCategories: meta.serviceCategories,
     disciplines: meta.disciplines,
     deliverables: meta.deliverables,
     featured: meta.featured,
