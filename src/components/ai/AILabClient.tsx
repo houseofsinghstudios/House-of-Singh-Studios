@@ -86,14 +86,28 @@ const PULSE_SCORES = [
 
 export default function AILabClient() {
   const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const submitted = status === "success";
 
+  // Stores the signup through /api/subscribe. Success shows only once n8n has saved it.
   const handleNotify = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
-      if (email.trim()) setSubmitted(true);
+      if (!email.trim() || status === "sending") return;
+      setStatus("sending");
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email.trim(), source: "brand-pulse" }),
+        });
+        const data = await res.json().catch(() => null);
+        setStatus(res.ok && data?.success === true ? "success" : "error");
+      } catch {
+        setStatus("error");
+      }
     },
-    [email]
+    [email, status]
   );
 
   return (
@@ -382,8 +396,15 @@ export default function AILabClient() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="ai-pulse-input"
                   required
+                  disabled={status === "sending"}
                 />
-                <button type="submit" className="ai-pulse-btn">
+                <button
+                  type="submit"
+                  className="ai-pulse-btn"
+                  disabled={status === "sending"}
+                  aria-busy={status === "sending"}
+                  style={{ opacity: status === "sending" ? 0.4 : undefined }}
+                >
                   Notify Me
                 </button>
               </form>
@@ -399,7 +420,13 @@ export default function AILabClient() {
               </p>
             )}
 
-            {!submitted && (
+            {status === "error" && (
+              <p className="art-newsletter-error" role="alert">
+                Something went wrong. Email us at studio@houseofsingh.com
+              </p>
+            )}
+
+            {!submitted && status !== "error" && (
               <p
                 style={{
                   fontSize: 11,
