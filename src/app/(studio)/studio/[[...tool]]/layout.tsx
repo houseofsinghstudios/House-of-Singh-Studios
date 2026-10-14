@@ -2,7 +2,8 @@
 // The wrapper hands the Studio the whole viewport so its own panes do the scrolling,
 // with the normal system cursor.
 export const metadata = {
-  title: "Studio — House of Singh Studios CMS",
+  // absolute: already names the studio, so the root title template must not append it again.
+  title: { absolute: "Studio — House of Singh Studios CMS" },
 };
 
 const studioStyles = `

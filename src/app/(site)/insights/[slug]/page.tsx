@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { bareTitle, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -19,13 +20,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: post.title,
+    title: bareTitle(post.title),
     description:
       post.seoDescription ||
       "Insights from House of Singh Studios.",
     alternates: { canonical: `https://studios.houseofsingh.com/insights/${slug}` },
     openGraph: {
-      title: post.seoTitle || post.title,
+      title: studioTitle(bareTitle(post.seoTitle, post.title)),
       description: post.seoDescription || "Insights from House of Singh Studios.",
       url: `https://studios.houseofsingh.com/insights/${slug}`,
       images: post.featuredImage?.asset?.url

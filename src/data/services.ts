@@ -48,7 +48,7 @@ export const services: ServiceData[] = [
     headline: "Your business has grown. Your brand has not kept up.",
     description: "We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint.",
     tagline: "The system behind how your business looks.",
-    seoTitle: "Brand Identity and Visual Design — House of Singh Studios",
+    seoTitle: "Brand Identity and Visual Design",
     seoDescription:
       "Complete brand identity systems built for established businesses. Logo, typography, color architecture, and brand guidelines that scale.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
@@ -164,7 +164,7 @@ export const services: ServiceData[] = [
       "Your content looks different on every platform. Nothing connects.",
     description: "We direct and produce brand photography, campaign films, and social content systems. Every piece serves a strategic purpose. Nothing is produced without a clear brief and defined outcome.",
     tagline: "Content with direction, not just production.",
-    seoTitle: "Visual Media and Content Production — House of Singh Studios",
+    seoTitle: "Visual Media and Content Production",
     seoDescription:
       "Brand photography, campaign films, and social content systems built on strategic intent. Visual production directed by brand strategy.",
     gradient: "linear-gradient(135deg, #4A3F35 0%, #2C2419 100%)",
@@ -249,7 +249,7 @@ export const services: ServiceData[] = [
       "Your website exists. But it does not work for your business.",
     description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
     tagline: "Your highest-traffic brand touchpoint, designed.",
-    seoTitle: "Digital Design and Experience — House of Singh Studios",
+    seoTitle: "Digital Design and Experience",
     seoDescription:
       "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
     gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
@@ -343,7 +343,7 @@ export const services: ServiceData[] = [
       "Your team makes brand decisions without a playbook. Every output looks different.",
     description: "We build the strategic layer that gives your team the ability to make brand decisions confidently. Positioning workshops, creative direction frameworks, and visual consistency systems.",
     tagline: "Strategy before design. Clarity before everything.",
-    seoTitle: "Creative Strategy and Systems — House of Singh Studios",
+    seoTitle: "Creative Strategy and Systems",
     seoDescription:
       "Brand positioning workshops, creative direction frameworks, and visual consistency systems. Strategy that makes everything else work.",
     gradient: "linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 100%)",
