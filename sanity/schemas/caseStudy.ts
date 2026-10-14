@@ -110,6 +110,15 @@ export default defineType({
       title: "Featured Image",
       type: "image",
       options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt Text",
+          type: "string",
+          description:
+            "Describe the image for people using screen readers. Leave empty to use the project title.",
+        }),
+      ],
     }),
     defineField({
       name: "gallery",

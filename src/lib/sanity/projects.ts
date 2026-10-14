@@ -187,7 +187,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
     summary: overviewText,
     heroImage: {
       src: imageUrl,
-      alt: doc.title || "",
+      alt: doc.featuredImage?.alt || doc.title || "",
     },
     overview: {
       heading: "The Business",

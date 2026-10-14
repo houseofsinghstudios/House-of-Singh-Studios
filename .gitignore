@@ -34,6 +34,11 @@ yarn-error.log*
 .env*
 !.env.example
 
+# portfolio import: local tool only. .env.import holds a Sanity write token.
+.env.import
+portfolio-import/
+!.env.import.example
+
 # vercel
 .vercel
 

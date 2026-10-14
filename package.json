@@ -6,10 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "import:portfolio": "node scripts/import-portfolio/index.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",
+    "@sanity/client": "^7.27.0",
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^5.31.2",
     "@vercel/speed-insights": "^2.0.0",
