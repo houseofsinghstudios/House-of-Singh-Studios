@@ -74,7 +74,7 @@ Use only lowercase letters, numbers and hyphens. No spaces, capitals, `&` or ful
 
 ### Images
 
-- **`cover.jpg`** is required. It is the main image for the case study. The name must be exactly `cover.jpg`.
+- **`cover.jpg`** is required. It is the main image for the case study. The name must be exactly `cover.jpg`. Use a **landscape** image: the page shows the cover in a fixed wide frame (16:9), so a portrait cover is cropped top and bottom. The tool warns you if the cover is portrait.
 - **Gallery images** start with a number and a hyphen: `01-logo-system.jpg`, `02-packaging.jpg`. They appear in number order. Use two digits (`01`, `02` ... `10`) so the order is always clear.
 - JPG, PNG and WebP files all work. Everything is converted to JPG on upload.
 - Any other image in the folder (for example `logo.jpg` with no number) stops that project, so nothing gets silently left out.
@@ -164,6 +164,7 @@ Paragraphs.
 - Each heading starts with two `#` symbols and a space.
 - Do not add other headings, and do not put any text above `## Overview`.
 - Write plain text. Bold, links and bullet points are not supported and would show up as stray symbols.
+- Italics are not supported either. If you write `*like this*`, the tool removes the asterisks, keeps the words as plain text, and warns you.
 
 ---
 
@@ -242,5 +243,7 @@ If one project has a problem, the tool reports it and carries on with the others
 | `copy.md is missing the heading "## Approach"` | Add the heading, spelled exactly as shown. |
 | `"serviceCategory" is "branding"` | Use one of the four values in the table above. |
 | `"logo.jpg" has no alt text entry` | Add the file to `images` in project.json, with a description. |
+| `cover.jpg is portrait` | Only a warning. The import still runs, but the top and bottom of the cover will be cut off. Swap in a landscape cover if that matters. |
+| `uses *single asterisk* italics` | Only a warning. The words import as plain text without the asterisks. |
 | `A case study with this slug already exists` | It is already on the site. Add `--overwrite` only if you mean to replace it. |
 | `images were uploaded before the failure` | Fix the problem and run again. The images are reused, not duplicated. |

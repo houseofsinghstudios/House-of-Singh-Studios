@@ -1,13 +1,13 @@
 import { PortableText, type PortableTextComponents, type PortableTextBlock } from "@portabletext/react";
 
-// Block bodies allow paragraphs, bold, italic and links only. Anything else renders as a plain paragraph.
+// Block bodies allow paragraphs, bold and links only. Any other style renders as a plain paragraph,
+// and any other mark (italic included) renders as plain text.
 const components: PortableTextComponents = {
   block: {
     normal: ({ children }) => <p>{children}</p>,
   },
   marks: {
     strong: ({ children }) => <strong>{children}</strong>,
-    em: ({ children }) => <em>{children}</em>,
     link: ({ value, children }) => {
       const href: string = value?.href || "";
       const external = /^https?:\/\//.test(href);
@@ -19,6 +19,7 @@ const components: PortableTextComponents = {
     },
   },
   unknownBlockStyle: ({ children }) => <p>{children}</p>,
+  unknownMark: ({ children }) => <>{children}</>,
   unknownType: () => null,
 };
 

@@ -59,7 +59,7 @@ function listProjectFolders(only) {
 }
 
 async function runProject(slug, { dryRun, client, overwrite }) {
-  const project = validateProject(slug, path.join(IMPORT_DIR, slug));
+  const project = await validateProject(slug, path.join(IMPORT_DIR, slug));
   const title = project.meta && typeof project.meta.title === "string" ? project.meta.title : "(no title)";
   const result = { slug, title, status: "failed", images: 0, bytes: 0, detail: "" };
 

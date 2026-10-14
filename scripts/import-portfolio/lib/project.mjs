@@ -1,8 +1,9 @@
 // Reads and validates one project folder: project.json, copy.md and the images.
-// Pure file reads. No network, no image processing.
+// Local file reads only (image headers included). No network, no image processing.
 
 import fs from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 import { COPY_HEADINGS, DISCIPLINES, SERVICE_CATEGORIES } from "./config.mjs";
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
@@ -10,6 +11,8 @@ const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const IMAGE_FILE = /\.(jpe?g|png|webp)$/i;
 const GALLERY_FILE = /^\d+-.+\.(jpe?g|png|webp)$/i;
 const COVER_FILE = "cover.jpg";
+// *word* or *a few words*: one asterisk each side, hugging the text. Leaves **bold**, "5 * 3" and a lone footnote * alone.
+const SINGLE_ASTERISK_ITALIC = /(?<![*\w])\*(?![\s*])([^*\n]+?)(?<![\s*])\*(?![*\w])/;
 const SYSTEM_FILES = new Set([".DS_Store", "Thumbs.db", "desktop.ini"]);
 const PROJECT_KEYS = [
   "title",
@@ -25,7 +28,7 @@ const PROJECT_KEYS = [
   "images",
 ];
 
-export function validateProject(slug, dir) {
+export async function validateProject(slug, dir) {
   const errors = [];
   const warnings = [];
 
@@ -38,8 +41,31 @@ export function validateProject(slug, dir) {
   const meta = readProjectJson(dir, errors, warnings);
   const copy = readCopy(dir, errors, warnings);
   const images = readImages(dir, meta, errors, warnings);
+  await checkCoverShape(dir, errors, warnings);
 
   return { slug, dir, meta, copy, images, errors, warnings };
+}
+
+// The site shows the cover in a fixed 16:9 frame (3:2 on mobile), so a portrait cover loses its top and bottom.
+async function checkCoverShape(dir, errors, warnings) {
+  const file = path.join(dir, COVER_FILE);
+  if (!fs.existsSync(file)) return;
+  let meta;
+  try {
+    meta = await sharp(file).metadata();
+  } catch (err) {
+    errors.push(`cover.jpg could not be read as an image: ${err.message}`);
+    return;
+  }
+  // EXIF orientations 5 to 8 store the image sideways. Judge the shape a viewer sees.
+  const sideways = (meta.orientation || 1) >= 5;
+  const width = sideways ? meta.height : meta.width;
+  const height = sideways ? meta.width : meta.height;
+  if (height > width) {
+    warnings.push(
+      `cover.jpg is portrait (${width}x${height}). The case study page shows the cover in a fixed 16:9 frame, so it will be cropped top and bottom. Use a landscape image to control the framing.`
+    );
+  }
 }
 
 function readProjectJson(dir, errors, warnings) {
@@ -192,6 +218,16 @@ function readCopy(dir, errors, warnings) {
   const found = order.filter((n) => COPY_HEADINGS.includes(n));
   if (found.length === COPY_HEADINGS.length && found.some((n, i) => n !== COPY_HEADINGS[i])) {
     errors.push(`copy.md headings are out of order. They must be: ${COPY_HEADINGS.map((h) => `## ${h}`).join(", ")}.`);
+  }
+
+  // Italic is not supported on the site. *word* becomes plain "word": asterisks removed, text kept.
+  for (const [name, paras] of Object.entries(sections)) {
+    if (paras.some((p) => SINGLE_ASTERISK_ITALIC.test(p))) {
+      sections[name] = paras.map((p) => p.replace(new RegExp(SINGLE_ASTERISK_ITALIC.source, "g"), "$1"));
+      warnings.push(
+        `copy.md "## ${name}" uses *single asterisk* italics. Italics are not supported, so the asterisks will be removed and the words kept as plain text.`
+      );
+    }
   }
 
   for (const [name, paras] of Object.entries(sections)) {

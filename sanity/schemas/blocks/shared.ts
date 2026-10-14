@@ -17,7 +17,8 @@ export const blockImage = defineType({
   ],
 });
 
-// Portable text for block bodies: plain paragraphs with bold, italic and links only.
+// Portable text for block bodies: plain paragraphs with bold and links only.
+// No italic: the site loads no italic face for Inter.
 export function bodyField(options: { required: boolean; description?: string }) {
   return defineField({
     name: "body",
@@ -30,10 +31,7 @@ export function bodyField(options: { required: boolean; description?: string }) 
         styles: [{ title: "Normal", value: "normal" }],
         lists: [],
         marks: {
-          decorators: [
-            { title: "Bold", value: "strong" },
-            { title: "Italic", value: "em" },
-          ],
+          decorators: [{ title: "Bold", value: "strong" }],
           annotations: [
             {
               name: "link",
