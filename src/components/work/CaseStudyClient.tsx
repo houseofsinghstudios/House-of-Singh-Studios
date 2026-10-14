@@ -1,5 +1,5 @@
-"use client";
-
+// Server component: resolves the project detail (Sanity first, then the src/data fallback)
+// and renders the template. Interactive children carry their own "use client".
 import type { Project } from "@/data/projects";
 import type { ProjectDetail } from "@/data/projectDetails";
 import { getProjectDetail } from "@/data/projectDetails";
