@@ -2,7 +2,7 @@
 // The client module is imported lazily so a dry run never loads it or opens a connection.
 
 import crypto from "node:crypto";
-import { API_VERSION } from "./config.mjs";
+import { API_VERSION, BLOCK_TYPES } from "./config.mjs";
 
 export async function createSanityClient({ projectId, dataset, token }) {
   const { createClient } = await import("@sanity/client");
@@ -54,10 +54,39 @@ export async function writeDocument(client, doc, target) {
   return client.create(doc);
 }
 
-// refs: { cover: assetId, gallery: [assetId, ...] }. In a dry run these are placeholders.
+// refs: a Map of image file -> asset id. In a dry run the ids are placeholders.
+// Writes the overview, the cover and the composed blocks. Legacy challenge, approach,
+// results and gallery are never written.
 export function buildDocument(project, refs) {
-  const { slug, meta, copy, images } = project;
+  const { slug, meta, copy, cover, plan, altMap } = project;
   const keys = new Set();
+  const key = () => uniqueKey(keys);
+
+  const reference = (file) => ({ _type: "reference", _ref: refs.get(file) });
+  const blockImage = (file) => ({ _type: "blockImage", asset: reference(file), alt: altMap[file].trim() });
+
+  const blocks = plan.map((b) => {
+    const base = { _type: BLOCK_TYPES[b.type], _key: key() };
+    switch (b.type) {
+      case "split":
+        return { ...base, side: b.side, heading: b.section.heading, body: toPortableText(b.section.paragraphs, key), image: blockImage(b.image) };
+      case "offset":
+        return { ...base, heading: b.section.heading, body: toPortableText(b.section.paragraphs, key), image: blockImage(b.image) };
+      case "full":
+        return withOptional({ ...base, image: blockImage(b.image) }, "caption", b.caption);
+      case "pair":
+        return { ...base, images: b.images.map((file) => ({ _key: key(), ...blockImage(file) })) };
+      case "statement": {
+        // First paragraph is the quote, as plain text. Any further paragraphs are the body.
+        const [first, ...rest] = b.section.paragraphs;
+        return withOptional({ ...base, quote: first.plain }, "body", rest.length ? toPortableText(rest, key) : undefined);
+      }
+      case "feature":
+        return withOptional({ ...base, image: blockImage(b.image), detail: blockImage(b.detail) }, "caption", b.caption);
+      default:
+        throw new Error(`Unhandled block type "${b.type}"`);
+    }
+  });
 
   const doc = {
     _type: "caseStudy",
@@ -73,32 +102,37 @@ export function buildDocument(project, refs) {
     publishedAt: `${meta.publishedAt}T12:00:00.000Z`,
     seoDescription: meta.seoDescription,
     // overview is a plain text field, not portable text.
-    overview: copy.Overview.join("\n\n"),
-    challenge: toBlocks(copy.Challenge, keys),
-    approach: toBlocks(copy.Approach, keys),
-    results: toBlocks(copy.Results, keys),
-    featuredImage: imageField(refs.cover, images.cover.alt),
-    gallery: images.gallery.length
-      ? images.gallery.map((img, i) => ({ _key: uniqueKey(keys), ...imageField(refs.gallery[i], img.alt) }))
-      : undefined,
+    overview: copy.overview.paragraphs.map((p) => p.plain).join("\n\n"),
+    featuredImage: { _type: "image", asset: reference(cover.file), alt: cover.alt },
+    blocks,
     // seoTitle is deliberately not set. The layout already appends the studio name.
   };
 
   return Object.fromEntries(Object.entries(doc).filter(([, v]) => v !== undefined));
 }
 
-function toBlocks(paragraphs, keys) {
-  return paragraphs.map((text) => ({
-    _type: "block",
-    _key: uniqueKey(keys),
-    style: "normal",
-    markDefs: [],
-    children: [{ _type: "span", _key: uniqueKey(keys), text, marks: [] }],
-  }));
+// Paragraphs from copy.md become portable text blocks. Bold is the "strong" decorator;
+// links become markDefs with their own keys, referenced from the span marks.
+function toPortableText(paragraphs, key) {
+  return paragraphs.map((p) => {
+    const linkKeys = p.links.map(() => key());
+    return {
+      _type: "block",
+      _key: key(),
+      style: "normal",
+      markDefs: p.links.map((href, i) => ({ _type: "link", _key: linkKeys[i], href })),
+      children: p.spans.map((span) => ({
+        _type: "span",
+        _key: key(),
+        text: span.text,
+        marks: span.marks.map((m) => (m.startsWith("link:") ? linkKeys[Number(m.slice(5))] : m)),
+      })),
+    };
+  });
 }
 
-function imageField(assetId, alt) {
-  return { _type: "image", asset: { _type: "reference", _ref: assetId }, alt };
+function withOptional(object, field, value) {
+  return value === undefined ? object : { ...object, [field]: value };
 }
 
 function uniqueKey(keys) {

@@ -1,18 +1,16 @@
-// Reads and validates one project folder: project.json, copy.md and the images.
+// Reads and validates one project folder: project.json, copy.md, the images and the block list.
 // Local file reads only (image headers included). No network, no image processing.
 
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { COPY_HEADINGS, DISCIPLINES, SERVICE_CATEGORIES } from "./config.mjs";
+import { DISCIPLINES, SERVICE_CATEGORIES } from "./config.mjs";
+import { OVERVIEW_KEY, readCopy, sectionKey } from "./copy.mjs";
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const IMAGE_FILE = /\.(jpe?g|png|webp)$/i;
-const GALLERY_FILE = /^\d+-.+\.(jpe?g|png|webp)$/i;
 const COVER_FILE = "cover.jpg";
-// *word* or *a few words*: one asterisk each side, hugging the text. Leaves **bold**, "5 * 3" and a lone footnote * alone.
-const SINGLE_ASTERISK_ITALIC = /(?<![*\w])\*(?![\s*])([^*\n]+?)(?<![\s*])\*(?![*\w])/;
 const SYSTEM_FILES = new Set([".DS_Store", "Thumbs.db", "desktop.ini"]);
 const PROJECT_KEYS = [
   "title",
@@ -26,7 +24,22 @@ const PROJECT_KEYS = [
   "publishedAt",
   "seoDescription",
   "images",
+  "blocks",
 ];
+
+// Fields each block type takes. Field names match sanity/schemas/blocks/.
+const BLOCK_FIELDS = {
+  split: { required: ["section", "image"], optional: ["side"] },
+  offset: { required: ["section", "image"], optional: [] },
+  full: { required: ["image"], optional: ["caption"] },
+  pair: { required: ["images"], optional: [] },
+  statement: { required: ["section"], optional: [] },
+  feature: { required: ["image", "detail"], optional: ["caption"] },
+};
+const TEXT_BLOCKS = new Set(["split", "offset", "statement"]);
+const LONG_QUOTE = 280;
+
+export { COVER_FILE };
 
 export async function validateProject(slug, dir) {
   const errors = [];
@@ -40,10 +53,17 @@ export async function validateProject(slug, dir) {
 
   const meta = readProjectJson(dir, errors, warnings);
   const copy = readCopy(dir, errors, warnings);
-  const images = readImages(dir, meta, errors, warnings);
+  const files = listImageFiles(dir, warnings);
+  const altMap = meta && meta.images && typeof meta.images === "object" && !Array.isArray(meta.images) ? meta.images : null;
+  const { plan, usage, mentioned } = validateBlocks(meta, copy, files, altMap, errors, warnings);
+  checkImageFiles(files, altMap, mentioned, errors, warnings);
   await checkCoverShape(dir, errors, warnings);
 
-  return { slug, dir, meta, copy, images, errors, warnings };
+  // Each file is processed and uploaded once: the cover first, then in order of first use.
+  const uploadFiles = [COVER_FILE, ...[...usage.keys()].filter((f) => f !== COVER_FILE)];
+  const cover = { file: COVER_FILE, alt: altText(altMap, COVER_FILE) };
+
+  return { slug, dir, meta, copy, cover, plan, usage, uploadFiles, altMap, errors, warnings };
 }
 
 // The site shows the cover in a fixed 16:9 frame (3:2 on mobile), so a portrait cover loses its top and bottom.
@@ -154,138 +174,229 @@ function isValidDate(value) {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 
-// copy.md must contain exactly the four headings, in order, each followed by text.
-function readCopy(dir, errors, warnings) {
-  const file = path.join(dir, "copy.md");
-  if (!fs.existsSync(file)) {
-    errors.push("copy.md is missing.");
-    return null;
-  }
-
-  const lines = fs.readFileSync(file, "utf8").replace(/\r\n?/g, "\n").split("\n");
-  const sections = {};
-  const order = [];
-  let current = null;
-  let paragraph = [];
-  let reportedLeadingText = false;
-
-  const flush = () => {
-    if (current && paragraph.length) sections[current].push(paragraph.join(" ").replace(/\s+/g, " ").trim());
-    paragraph = [];
-  };
-
-  lines.forEach((line, i) => {
-    const heading = line.match(/^(#{1,6})\s+(.*?)\s*#*\s*$/);
-    if (heading) {
-      flush();
-      const name = COPY_HEADINGS.find((h) => h.toLowerCase() === heading[2].toLowerCase());
-      if (heading[1] !== "##" || !name) {
-        errors.push(
-          `copy.md line ${i + 1}: unexpected heading "${line.trim()}". Only these four are allowed: ${COPY_HEADINGS.map((h) => `## ${h}`).join(", ")}.`
-        );
-        current = null;
-        return;
-      }
-      if (sections[name]) {
-        errors.push(`copy.md line ${i + 1}: "## ${name}" appears more than once.`);
-        current = null;
-        return;
-      }
-      sections[name] = [];
-      order.push(name);
-      current = name;
-      return;
-    }
-    if (line.trim() === "") {
-      flush();
-      return;
-    }
-    if (!current) {
-      if (order.length === 0 && !reportedLeadingText) {
-        errors.push(`copy.md line ${i + 1}: text before the first heading would be lost.`);
-        reportedLeadingText = true;
-      }
-      return;
-    }
-    paragraph.push(line.trim());
-  });
-  flush();
-
-  for (const name of COPY_HEADINGS) {
-    if (!sections[name]) errors.push(`copy.md is missing the heading "## ${name}".`);
-    else if (sections[name].length === 0) errors.push(`copy.md: "## ${name}" has no text under it.`);
-  }
-  const found = order.filter((n) => COPY_HEADINGS.includes(n));
-  if (found.length === COPY_HEADINGS.length && found.some((n, i) => n !== COPY_HEADINGS[i])) {
-    errors.push(`copy.md headings are out of order. They must be: ${COPY_HEADINGS.map((h) => `## ${h}`).join(", ")}.`);
-  }
-
-  // Italic is not supported on the site. *word* becomes plain "word": asterisks removed, text kept.
-  for (const [name, paras] of Object.entries(sections)) {
-    if (paras.some((p) => SINGLE_ASTERISK_ITALIC.test(p))) {
-      sections[name] = paras.map((p) => p.replace(new RegExp(SINGLE_ASTERISK_ITALIC.source, "g"), "$1"));
-      warnings.push(
-        `copy.md "## ${name}" uses *single asterisk* italics. Italics are not supported, so the asterisks will be removed and the words kept as plain text.`
-      );
-    }
-  }
-
-  for (const [name, paras] of Object.entries(sections)) {
-    if (paras.some((p) => /\*\*|__|\[[^\]]+\]\([^)]+\)|^[-*+]\s|^\d+\.\s/.test(p))) {
-      warnings.push(`copy.md "## ${name}" contains Markdown formatting (bold, links or lists). It will appear as plain characters on the site.`);
-    }
-  }
-
-  return sections;
-}
-
-function readImages(dir, meta, errors, warnings) {
-  if (!fs.existsSync(dir)) return null;
+function listImageFiles(dir, warnings) {
+  if (!fs.existsSync(dir)) return [];
   const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const files = entries.filter((e) => e.isFile()).map((e) => e.name);
-
   for (const e of entries) {
     if (e.isDirectory()) warnings.push(`Subfolder "${e.name}" is ignored.`);
-  }
-  for (const name of files) {
-    if (!IMAGE_FILE.test(name) && !["project.json", "copy.md"].includes(name) && !SYSTEM_FILES.has(name)) {
-      warnings.push(`File "${name}" is not used and will be ignored.`);
+    else if (!IMAGE_FILE.test(e.name) && !["project.json", "copy.md"].includes(e.name) && !SYSTEM_FILES.has(e.name)) {
+      warnings.push(`File "${e.name}" is not used and will be ignored.`);
     }
   }
+  return entries.filter((e) => e.isFile() && IMAGE_FILE.test(e.name)).map((e) => e.name);
+}
 
-  const imageFiles = files.filter((n) => IMAGE_FILE.test(n));
-  if (!imageFiles.includes(COVER_FILE)) {
-    const lookalike = imageFiles.find((n) => /^cover\./i.test(n));
+function altText(altMap, file) {
+  return altMap && typeof altMap[file] === "string" ? altMap[file].trim() : "";
+}
+
+// Validates project.json "blocks" against copy.md and the folder. Returns the page plan,
+// usage (a Map of valid image file -> block numbers using it, the cover being "hero"), and
+// mentioned (every file name any block refers to, valid or not, so problems are reported once).
+function validateBlocks(meta, copy, files, altMap, errors, warnings) {
+  const plan = [];
+  const usage = new Map();
+  const mentioned = new Set();
+  const sectionsUsed = new Set();
+  const sections = copy ? copy.sections : new Map();
+  const types = Object.keys(BLOCK_FIELDS);
+
+  if (files.includes(COVER_FILE)) usage.set(COVER_FILE, ["hero"]);
+  else {
+    const lookalike = files.find((n) => /^cover\./i.test(n));
     errors.push(`cover.jpg is missing.${lookalike ? ` Found "${lookalike}". Rename it to exactly cover.jpg.` : ""}`);
   }
 
-  const gallery = imageFiles
-    .filter((n) => GALLERY_FILE.test(n))
-    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-
-  for (const name of imageFiles) {
-    if (name !== COVER_FILE && !GALLERY_FILE.test(name)) {
-      errors.push(`"${name}" is not cover.jpg and does not start with a number like 01-name.jpg, so it would not be used. Rename or remove it.`);
-    }
+  if (!meta) return { plan, usage, mentioned };
+  const blocks = meta.blocks;
+  if (!Array.isArray(blocks) || blocks.length === 0) {
+    errors.push(
+      `"blocks" is missing or empty. List the page blocks in order, for example [{ "type": "full", "image": "05-applied.jpg" }]. See scripts/import-portfolio/example/project.json.`
+    );
+    return { plan, usage, mentioned };
   }
-  if (gallery.length === 0) warnings.push("No numbered gallery images found. The case study will show the cover only.");
 
-  const altMap = meta && meta.images && typeof meta.images === "object" && !Array.isArray(meta.images) ? meta.images : null;
-  if (altMap) {
-    for (const name of imageFiles) {
-      if (!(name in altMap)) errors.push(`"${name}" has no alt text entry in project.json "images".`);
-      else if (typeof altMap[name] !== "string" || altMap[name].trim() === "") {
-        errors.push(`Alt text for "${name}" in project.json is empty.`);
+  blocks.forEach((raw, index) => {
+    const n = index + 1;
+    const errorsBefore = errors.length;
+
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      errors.push(`Block ${n}: each block must be an object, for example { "type": "full", "image": "05-applied.jpg" }.`);
+      return;
+    }
+    if (raw.type === undefined) {
+      errors.push(`Block ${n}, "type": missing. Use one of: ${types.join(", ")}.`);
+      return;
+    }
+    if (!BLOCK_FIELDS[raw.type]) {
+      errors.push(`Block ${n}, "type": "${raw.type}" is not a block type. Use one of: ${types.join(", ")}.`);
+      return;
+    }
+
+    const type = raw.type;
+    const at = (field) => `Block ${n} (${type}), "${field}"`;
+    const spec = BLOCK_FIELDS[type];
+    const allowed = new Set(["type", ...spec.required, ...spec.optional]);
+
+    for (const field of Object.keys(raw)) {
+      if (allowed.has(field)) continue;
+      if (field === "section") {
+        errors.push(`${at("section")}: a ${type} block does not take a section. Only split, offset and statement blocks show text.`);
+      } else {
+        warnings.push(`${at(field)}: not used by a ${type} block, so it will be ignored.`);
       }
     }
-    for (const name of Object.keys(altMap)) {
-      if (!files.includes(name)) errors.push(`project.json "images" lists "${name}", but no file with that exact name exists.`);
+    for (const field of spec.required) {
+      if (raw[field] === undefined || raw[field] === null || raw[field] === "") {
+        errors.push(`${at(field)}: missing. A ${type} block needs ${spec.required.map((f) => `"${f}"`).join(" and ")}.`);
+      }
+    }
+
+    if (type === "split" && raw.side !== undefined && raw.side !== "left" && raw.side !== "right") {
+      errors.push(`${at("side")}: "${raw.side}" is not valid. Use "left" or "right".`);
+    }
+
+    let section = null;
+    if (allowed.has("section") && raw.section !== undefined && raw.section !== "") {
+      section = checkSection(raw.section, at("section"), sections, errors);
+      if (section) sectionsUsed.add(section.key);
+    }
+
+    const useImage = (value, field) => {
+      if (typeof value === "string") mentioned.add(value);
+      if (checkImage(value, at(field), files, altMap, errors)) {
+        usage.set(value, [...(usage.get(value) || []), n]);
+        return value;
+      }
+      return null;
+    };
+
+    const image = raw.image !== undefined && allowed.has("image") ? useImage(raw.image, "image") : null;
+    const detail = raw.detail !== undefined && allowed.has("detail") ? useImage(raw.detail, "detail") : null;
+
+    let images = null;
+    if (type === "pair" && raw.images !== undefined) {
+      if (!Array.isArray(raw.images) || raw.images.length !== 2) {
+        const found = Array.isArray(raw.images) ? raw.images.length : "not a list";
+        errors.push(`${at("images")}: a pair needs exactly two images, like ["02-front.jpg", "03-back.jpg"]. Found ${found}.`);
+      } else {
+        images = raw.images.map((value, i) => useImage(value, `images[${i + 1}]`));
+        if (raw.images[0] === raw.images[1]) {
+          warnings.push(`${at("images")}: both sides of the pair are "${raw.images[0]}", so the same image shows twice side by side.`);
+        }
+      }
+    }
+
+    if (raw.caption !== undefined && allowed.has("caption") && typeof raw.caption !== "string") {
+      errors.push(`${at("caption")}: must be text.`);
+    }
+
+    if (errors.length > errorsBefore) return;
+
+    const entry = { n, type, section, image, detail, images };
+    if (type === "split") entry.side = raw.side || "left";
+    if (typeof raw.caption === "string" && raw.caption.trim()) entry.caption = raw.caption.trim();
+
+    if (type === "statement") {
+      const [first] = section.paragraphs;
+      if (first.links.length || first.spans.some((s) => s.marks.length)) {
+        warnings.push(`${at("section")}: the first paragraph of "## ${section.heading}" becomes the quote, which is plain text. Its bold and links are dropped.`);
+      }
+      if (first.plain.length > LONG_QUOTE) {
+        warnings.push(
+          `${at("section")}: the quote (first paragraph of "## ${section.heading}") is ${first.plain.length} characters. Statements are shown large, so it will dominate the page. Aim for under about ${LONG_QUOTE} and move the rest into the next paragraph.`
+        );
+      }
+    }
+    plan.push(entry);
+  });
+
+  // Page rhythm: two text blocks of the same kind in a row read as one long block.
+  for (let i = 1; i < plan.length; i++) {
+    const a = plan[i - 1];
+    const b = plan[i];
+    if (a.n + 1 !== b.n || !TEXT_BLOCKS.has(a.type) || a.type !== b.type) continue;
+    if (a.type === "split" && a.side !== b.side) continue;
+    const kind = a.type === "split" ? `split (${a.side})` : a.type;
+    const fix = a.type === "split" ? "Alternate the side, or put an image block between them." : "Put an image block between them, or use a different block type.";
+    warnings.push(`Blocks ${a.n} and ${b.n}, "type": two ${kind} blocks back to back, so the page loses its rhythm. ${fix}`);
+  }
+
+  for (const [file, uses] of usage) {
+    const blockUses = [...new Set(uses.filter((u) => u !== "hero"))];
+    if (blockUses.length > 1) {
+      warnings.push(`"${file}" is used in blocks ${blockUses.join(" and ")}. It is uploaded once and shown in each place.`);
+    }
+  }
+  for (const section of sections.values()) {
+    if (section.key !== OVERVIEW_KEY && !sectionsUsed.has(section.key)) {
+      warnings.push(`copy.md "## ${section.heading}" (section "${section.key}") is not used by any block, so it will not appear on the page.`);
     }
   }
 
-  const alt = (name) => (altMap && typeof altMap[name] === "string" ? altMap[name].trim() : "");
-  return {
-    cover: { file: COVER_FILE, alt: alt(COVER_FILE) },
-    gallery: gallery.map((file) => ({ file, alt: alt(file) })),
-  };
+  return { plan, usage, mentioned };
+}
+
+function checkSection(value, where, sections, errors) {
+  if (typeof value !== "string") {
+    errors.push(`${where}: must be a section key like "the-challenge".`);
+    return null;
+  }
+  if (value === OVERVIEW_KEY) {
+    errors.push(`${where}: "overview" is the page intro and cannot be used inside a block. Write a separate section in copy.md.`);
+    return null;
+  }
+  const section = sections.get(value);
+  if (!section) {
+    const keys = [...sections.keys()].filter((k) => k !== OVERVIEW_KEY);
+    const guess = sections.get(sectionKey(value));
+    errors.push(
+      `${where}: "${value}" does not exist in copy.md.${guess && guess.key !== OVERVIEW_KEY ? ` Did you mean "${guess.key}"?` : ""} Sections found: ${keys.join(", ") || "none"}.`
+    );
+    return null;
+  }
+  if (section.paragraphs.length === 0) {
+    errors.push(`${where}: "## ${section.heading}" has no text under it in copy.md.`);
+    return null;
+  }
+  return section;
+}
+
+function checkImage(value, where, files, altMap, errors) {
+  if (typeof value !== "string" || value.trim() === "") {
+    errors.push(`${where}: must be an image file name, like "01-chair.jpg".`);
+    return false;
+  }
+  if (value === COVER_FILE) {
+    errors.push(`${where}: cover.jpg is reserved for the hero at the top of the page and cannot be used inside a block.`);
+    return false;
+  }
+  if (!files.includes(value)) {
+    const lookalike = files.find((f) => f.toLowerCase() === value.toLowerCase());
+    errors.push(`${where}: "${value}" does not exist in the folder.${lookalike ? ` Did you mean "${lookalike}"? Names must match exactly.` : ""}`);
+    return false;
+  }
+  if (!altText(altMap, value)) {
+    errors.push(`${where}: "${value}" has no alt text in project.json "images".`);
+    return false;
+  }
+  return true;
+}
+
+// Alt text for every image file, and the reverse: every alt entry has a file.
+// Files a block refers to were already checked there, so they are not reported twice.
+function checkImageFiles(files, altMap, mentioned, errors, warnings) {
+  if (!altMap) return;
+  for (const name of files) {
+    if (name !== COVER_FILE && mentioned.has(name)) continue;
+    if (!altText(altMap, name)) {
+      errors.push(`"${name}" has no alt text in project.json "images". Every image in the folder needs one.`);
+    }
+    if (name !== COVER_FILE) {
+      warnings.push(`"${name}" is in the folder but not used by the cover or any block, so it will not be uploaded.`);
+    }
+  }
+  for (const name of Object.keys(altMap)) {
+    if (!files.includes(name)) errors.push(`project.json "images" lists "${name}", but no file with that exact name exists.`);
+  }
 }

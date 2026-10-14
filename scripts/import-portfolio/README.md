@@ -1,6 +1,6 @@
 # Portfolio import
 
-This tool turns folders of project files on your computer into finished case studies on the website. For each project folder it:
+This tool turns a folder of project files on your computer into a finished case study on the website. You describe the page as a list of **blocks**, top to bottom, and the tool:
 
 1. Checks that everything is filled in correctly.
 2. Prepares every image so it looks sharp and loads quickly.
@@ -47,7 +47,32 @@ If a token is ever shared by mistake, delete it in the Sanity **Tokens** page an
 
 ---
 
-## Preparing your projects
+## How a page is built
+
+Every case study page has three parts:
+
+1. **The top, always the same:** the title, the overview text, the project facts and the cover image.
+2. **The middle, made of blocks:** you choose the blocks and their order.
+3. **The bottom, always the same:** deliverables, the next project and the "Start a project" panel.
+
+### The six blocks
+
+| Block | What it looks like |
+| --- | --- |
+| `split` | An image on one half of the page, a heading and text on the other. Choose which side the image is on. |
+| `offset` | A heading, a column of text and an image side by side in three steps across the page. |
+| `full` | One image across the full width of the page, with an optional caption. |
+| `pair` | Two images side by side, edge to edge. |
+| `statement` | One or two sentences shown large, with optional smaller text beside them. |
+| `feature` | A large main image with a small detail image beside it, and an optional caption. |
+
+Blocks with text (split, offset and statement) get a thin line above them, which gives the page its rhythm. Alternating text blocks with image blocks reads best.
+
+Images are always shown whole, at their real shape. Portrait images stay portrait. Nothing is cropped, except the cover (see below).
+
+---
+
+## Preparing a project
 
 Create a folder called `portfolio-import` in the project folder (next to `package.json`). Inside it, make one folder per project:
 
@@ -57,14 +82,16 @@ portfolio-import/
     project.json
     copy.md
     cover.jpg
-    01-logo-system.jpg
-    02-packaging.jpg
-    03-signage.jpg
+    01-chair.jpg
+    02-front.jpg
+    ...
   another-project/
     ...
 ```
 
 Git ignores the whole `portfolio-import` folder, so nothing in it is ever saved to GitHub.
+
+**The fastest way to start:** copy `scripts/import-portfolio/example/` into `portfolio-import/`, rename the folder, add your images, and edit the two files. The example uses all six blocks.
 
 ### The folder name becomes the web address
 
@@ -74,10 +101,11 @@ Use only lowercase letters, numbers and hyphens. No spaces, capitals, `&` or ful
 
 ### Images
 
-- **`cover.jpg`** is required. It is the main image for the case study. The name must be exactly `cover.jpg`. Use a **landscape** image: the page shows the cover in a fixed wide frame (16:9), so a portrait cover is cropped top and bottom. The tool warns you if the cover is portrait.
-- **Gallery images** start with a number and a hyphen: `01-logo-system.jpg`, `02-packaging.jpg`. They appear in number order. Use two digits (`01`, `02` ... `10`) so the order is always clear.
+- **`cover.jpg`** is required. It is the big image at the top of the page. The name must be exactly `cover.jpg`. Use a **landscape** image: the page shows the cover in a fixed wide frame (16:9), so a portrait cover is cropped top and bottom. The tool warns you if the cover is portrait.
+- `cover.jpg` is only for the top of the page. It cannot be used inside a block.
+- Name the other images however you like, for example `01-chair.jpg`. Starting with a number keeps them in order in your folder, but the page order comes from your block list, not the file names.
 - JPG, PNG and WebP files all work. Everything is converted to JPG on upload.
-- Any other image in the folder (for example `logo.jpg` with no number) stops that project, so nothing gets silently left out.
+- The same image can appear in more than one block. It is uploaded once.
 
 Send the largest, best quality files you have. The tool prepares them for you:
 
@@ -88,28 +116,73 @@ Send the largest, best quality files you have. The tool prepares them for you:
 
 A typical photo ends up between about 300 KB and 700 KB.
 
-### project.json
+---
 
-This file holds the facts about the project. Copy this example and change the values. Keep all the quote marks, colons and commas exactly as shown.
+## copy.md: the words
+
+This file holds all the text on the page, split into sections. Each section starts with a heading of two `#` symbols and a space.
+
+```
+## Overview
+Harbour and Pine is a guesthouse and kitchen on the coast.
+
+We gave it one identity that holds from the front door to the jam jar.
+
+## The Challenge
+Every part of the business had its own logo and its own voice.
+
+The owners wanted **one clear identity** without losing the warmth.
+
+## Approach
+A brand should feel like the place before you arrive.
+
+Read more on the [services page](https://studios.houseofsingh.com/services).
+```
+
+The rules:
+
+- **`## Overview` is required.** It becomes the intro at the top of the page and the text on the project's card on the Work page.
+- **Every other heading is a section you name yourself**, for example `## The Challenge`, `## Process` or `## What Changed`. Blocks pick which section to show.
+- A section's **key** is how a block refers to it: the heading in lowercase, with spaces and punctuation turned into hyphens. `## The Challenge` becomes `the-challenge`. `## What Changed?` becomes `what-changed`.
+- The heading shows on the page exactly as you wrote it.
+- Leave an empty line between paragraphs.
+- **Bold:** put two asterisks each side, `**like this**`.
+- **Links:** `[the words to click](https://example.com)`. Links must start with `https://`, `http://` or `mailto:`.
+- No bullet points or numbered lists, and no smaller headings (`###`).
+- Italics are not supported either. If you write `*like this*`, the tool removes the asterisks, keeps the words as plain text, and warns you.
+- Do not put any text above the first heading.
+- Two headings cannot share the same key. `## Results` and `## Results!` would clash.
+- The Overview and the large statement quote are always plain text, so bold and links there are dropped.
+
+---
+
+## project.json: the facts and the page
+
+This file holds the facts about the project and the list of blocks. Keep all the quote marks, colons, commas and brackets exactly as shown.
 
 ```json
 {
-  "title": "Tairn and Co.",
-  "client": "Tairn and Co.",
+  "title": "Harbour and Pine",
+  "client": "Harbour and Pine",
   "industry": "Hospitality",
   "year": 2026,
   "serviceCategory": "brand-identity",
   "disciplines": ["brand-identity", "packaging"],
   "deliverables": ["Brand strategy", "Logo system"],
-  "featured": true,
+  "featured": false,
   "publishedAt": "2026-10-14",
   "seoDescription": "One sentence under 155 characters.",
   "images": {
     "cover.jpg": "Describe the cover image",
-    "01-logo-system.jpg": "Describe this image"
-  }
+    "01-chair.jpg": "Describe this image"
+  },
+  "blocks": [
+    { "type": "split", "side": "left", "section": "the-challenge", "image": "01-chair.jpg" }
+  ]
 }
 ```
+
+### The facts
 
 | Field | What to put | Required |
 | --- | --- | --- |
@@ -124,6 +197,7 @@ This file holds the facts about the project. Copy this example and change the va
 | `publishedAt` | The date, written `YYYY-MM-DD`, for example `"2026-10-14"`. | Yes |
 | `seoDescription` | The sentence Google shows in search results. Keep it under 155 characters. | Recommended |
 | `images` | Every image file in the folder, each with its alt text. | Yes |
+| `blocks` | The page, top to bottom. See below. | Yes |
 
 **`serviceCategory`**, choose one:
 
@@ -136,35 +210,41 @@ This file holds the facts about the project. Copy this example and change the va
 
 **`disciplines`**, choose any of: `brand-identity`, `packaging`, `publication`, `art-direction`, `website`, `video`, `photography`, `social-content`, `strategy`. These power the filters on the Work page.
 
-**Alt text** in `images` describes each picture for people who cannot see it, and helps search engines. Keep it short and specific. Every image file needs an entry, and every entry needs a matching file. Names must match exactly, including capitals.
+**Alt text** in `images` describes each picture for people who cannot see it, and helps search engines. Keep it short and specific. Every image file in the folder needs an entry, and every entry needs a matching file. Names must match exactly, including capitals.
 
 Do not add an SEO title. The site adds the studio name to every page title automatically.
 
-### copy.md
+### The blocks
 
-This file holds the written story. It must have exactly these four headings, in this order, each with at least one paragraph under it:
+`blocks` is a list in square brackets. Each item is one block, written between curly brackets, in the order it appears on the page. Here is every block type:
 
-```
-## Overview
-First paragraph.
-
-Second paragraph.
-
-## Challenge
-Paragraphs.
-
-## Approach
-Paragraphs.
-
-## Results
-Paragraphs.
+```json
+"blocks": [
+  { "type": "split", "side": "left", "section": "the-challenge", "image": "01-chair.jpg" },
+  { "type": "pair", "images": ["02-front.jpg", "03-back.jpg"] },
+  { "type": "statement", "section": "approach" },
+  { "type": "offset", "section": "process", "image": "04-room.jpg" },
+  { "type": "full", "image": "05-applied.jpg", "caption": "Optional caption" },
+  { "type": "split", "side": "right", "section": "results", "image": "06-detail.jpg" },
+  { "type": "feature", "image": "07-shelf.jpg", "detail": "08-label.jpg", "caption": "Optional caption" }
+]
 ```
 
-- Leave an empty line between paragraphs.
-- Each heading starts with two `#` symbols and a space.
-- Do not add other headings, and do not put any text above `## Overview`.
-- Write plain text. Bold, links and bullet points are not supported and would show up as stray symbols.
-- Italics are not supported either. If you write `*like this*`, the tool removes the asterisks, keeps the words as plain text, and warns you.
+| Block | Needs | Optional |
+| --- | --- | --- |
+| `split` | `section`, `image` | `side`: `"left"` or `"right"`. Left if you leave it out. |
+| `offset` | `section`, `image` | |
+| `full` | `image` | `caption` |
+| `pair` | `images`: exactly two file names | |
+| `statement` | `section` | |
+| `feature` | `image` (the main one), `detail` (the small one) | `caption`, shown under the detail image |
+
+How text is used:
+
+- **split and offset** show the section's heading and all of its paragraphs.
+- **statement** shows the section's **first paragraph** large, as the statement. Any further paragraphs appear small beside it. A section with one paragraph gives a statement on its own. Keep statements to one or two sentences.
+
+`section` always uses the section key (`the-challenge`), not the heading as written (`The Challenge`).
 
 ---
 
@@ -178,17 +258,39 @@ Open a terminal in the project folder.
 npm run import:portfolio
 ```
 
-A dry run checks every project and prepares every image, then shows exactly what it would create. **It writes nothing and does not connect to Sanity.** Fix anything it reports, then run it again until it is clean.
+A dry run checks every project and prepares every image, then prints each page as a numbered list so you can read its shape:
 
-### Step 2: the real run
+```
+  Page:
+    hero
+           cover.jpg (hero)                   2800 x 1867    612.0 KB
+    1     split (left)    The Challenge  (2 paragraphs)
+           01-chair.jpg                       2100 x 2800    540.0 KB
+    2     pair
+           02-front.jpg                       2240 x 2800    480.0 KB
+           03-back.jpg                        2240 x 2800    470.0 KB
+    3     statement       Approach  (quote 53 chars, 2 body paragraphs)
+```
+
+**It writes nothing and does not connect to Sanity.** Fix anything it reports, then run it again until it is clean.
+
+### Step 2: import one project
+
+```
+npm run import:portfolio -- --commit --only tairn-and-co
+```
+
+Open the new page on the site and check it looks right.
+
+### Step 3: import the rest
 
 ```
 npm run import:portfolio -- --commit
 ```
 
-This uploads the images and creates the case studies. They are published straight away.
+Projects that already exist on the site are skipped automatically, so the one you imported in step 2 is not created twice.
 
-Note the two hyphens `--` on their own before `--commit`. They are needed whenever you add options.
+Note the two hyphens `--` on their own before the options. They are needed whenever you add options.
 
 ### Options
 
@@ -199,14 +301,7 @@ Note the two hyphens `--` on their own before `--commit`. They are needed whenev
 | `--commit` | Actually create the case studies in Sanity. Nothing is ever written without this. |
 | `--only tairn-and-co` | Process just that one project folder. Works with a dry run or `--commit`. |
 | `--overwrite` | Use with `--commit`. Replaces a case study that already has the same web address. |
-
-Examples:
-
-```
-npm run import:portfolio -- --only tairn-and-co
-npm run import:portfolio -- --commit --only tairn-and-co
-npm run import:portfolio -- --commit --only tairn-and-co --overwrite
-```
+| `--json` | Use with a dry run. Also prints the full document that would be sent to Sanity. |
 
 ---
 
@@ -216,34 +311,53 @@ Before doing any work on a project, a `--commit` run checks whether Sanity alrea
 
 To replace it, run again with `--overwrite`. This replaces the existing case study in place, keeping the same address. Be aware:
 
-- Overwriting replaces the whole case study with what is in your folder. Any changes made directly in Sanity Studio since then are lost.
+- Overwriting replaces the whole case study with what is in your folder. Any changes made directly in Sanity Studio since then are lost. This includes the older Challenge, Approach, Results and Gallery content of projects made before blocks existed.
 - If someone has unsaved edits to that case study in Studio (a draft), the tool warns you. Studio keeps showing the draft until it is published or discarded.
 
 The tool never deletes anything.
 
 ---
 
-## What you will see
+## What the messages mean
 
-For each project, the tool shows:
+Every message names the project, and for blocks, the block number and the field, for example `[tairn-and-co] Block 3 (pair), "images"`.
 
-- Each image with its size before and after, for example `4000x3000 -> 2800x2100   8.21 MB -> 612.4 KB`.
-- Either the document it created, or **SKIPPED** or **FAILED** with the reason in plain words.
+### Problems that stop a project
 
-At the end, a summary shows how many projects were created, skipped and failed, how many images were uploaded, the total size, and the web address of each new case study.
-
-If one project has a problem, the tool reports it and carries on with the others.
-
-### Common messages
+The project is skipped and nothing is uploaded. Fix it and run again.
 
 | Message | What to do |
 | --- | --- |
+| `copy.md is missing "## Overview"` | Add an `## Overview` section at the top of copy.md. |
+| `"blocks" is missing or empty` | Add the `blocks` list to project.json. Copy it from the example. |
+| `"carousel" is not a block type` | Use one of: split, offset, full, pair, statement, feature. |
+| `"the challenge" does not exist in copy.md` | Use the section key, with hyphens: `the-challenge`. The message suggests the right one. |
+| `a full block does not take a section` | Only split, offset and statement show text. Remove `section`, or change the block type. |
+| `"01-Chair.jpg" does not exist in the folder` | Check the spelling and capitals. The message suggests the right name. |
+| `has no alt text in project.json "images"` | Add the file to `images` in project.json, with a description. |
+| `a pair needs exactly two images` | List exactly two file names in `images`. |
+| `"centre" is not valid. Use "left" or "right"` | Set `side` to `"left"` or `"right"`, or leave it out. |
+| `cover.jpg is reserved for the hero` | Use a different image in the block. The cover only appears at the top. |
+| `"detail": missing` | Add the field the block needs. See the table of blocks above. |
+| `both become the section key` | Two headings clash. Rename one of them. |
+| `text before the first ## heading` | Move the text under a heading, or delete it. |
+| `the link "..." must start with https://` | Write the full address, starting `https://`. |
+| `is a sub heading` | Remove the `###` heading, or make it a `##` section of its own. |
 | `SANITY_WRITE_TOKEN in .env.import is empty` | Follow "Before you start" above. |
 | `Sanity rejected the token` | The token was copied wrongly or does not have Editor permission. Create a new one. |
-| `copy.md is missing the heading "## Approach"` | Add the heading, spelled exactly as shown. |
-| `"serviceCategory" is "branding"` | Use one of the four values in the table above. |
-| `"logo.jpg" has no alt text entry` | Add the file to `images` in project.json, with a description. |
-| `cover.jpg is portrait` | Only a warning. The import still runs, but the top and bottom of the cover will be cut off. Swap in a landscape cover if that matters. |
+
+### Warnings
+
+The project still imports. Read them and decide whether anything needs changing.
+
+| Message | What it means |
+| --- | --- |
 | `uses *single asterisk* italics` | Only a warning. The words import as plain text without the asterisks. |
+| `cover.jpg is portrait` | Only a warning. The import still runs, but the top and bottom of the cover will be cut off. Swap in a landscape cover if that matters. |
+| `is in the folder but not used` | An image no block uses. It will not be uploaded. |
+| `is not used by any block` | A copy.md section no block shows. It will not appear on the page. |
+| `is used in blocks 2 and 5` | The same image appears twice. Fine if you meant it; it is uploaded once. |
+| `the quote ... is 304 characters` | A long statement dominates the page. Keep the first paragraph to one or two sentences. |
+| `two split (left) blocks back to back` | The page loses its rhythm. Alternate the side, or put an image block between them. |
 | `A case study with this slug already exists` | It is already on the site. Add `--overwrite` only if you mean to replace it. |
 | `images were uploaded before the failure` | Fix the problem and run again. The images are reused, not duplicated. |

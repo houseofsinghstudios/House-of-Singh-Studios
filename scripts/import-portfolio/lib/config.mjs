@@ -28,7 +28,15 @@ export const DISCIPLINES = [
   "social-content",
   "strategy",
 ];
-export const COPY_HEADINGS = ["Overview", "Challenge", "Approach", "Results"];
+// Block types an author can use in project.json, and the Sanity _type each one is written as.
+export const BLOCK_TYPES = {
+  split: "blockSplit",
+  offset: "blockOffset",
+  full: "blockFull",
+  pair: "blockPair",
+  statement: "blockStatement",
+  feature: "blockFeature",
+};
 
 const HELP = `
 Portfolio import. Creates published case studies in Sanity from portfolio-import/.
@@ -37,6 +45,7 @@ Portfolio import. Creates published case studies in Sanity from portfolio-import
   npm run import:portfolio -- --commit             Write to Sanity.
   npm run import:portfolio -- --only <slug>        Process one project folder only.
   npm run import:portfolio -- --commit --overwrite Replace projects that already exist.
+  npm run import:portfolio -- --json               Dry run that also prints the full document.
 
 Full instructions: scripts/import-portfolio/README.md
 `;
@@ -51,6 +60,7 @@ export function parseCliArgs(argv) {
         commit: { type: "boolean" },
         only: { type: "string" },
         overwrite: { type: "boolean" },
+        json: { type: "boolean" },
         help: { type: "boolean", short: "h" },
       },
       strict: true,
@@ -71,6 +81,7 @@ export function parseCliArgs(argv) {
     mode: values.commit ? "commit" : "dry-run",
     only: values.only,
     overwrite: Boolean(values.overwrite),
+    showJson: Boolean(values.json),
   };
 }
 
