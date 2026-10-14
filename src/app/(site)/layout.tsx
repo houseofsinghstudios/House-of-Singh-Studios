@@ -1,0 +1,72 @@
+import { ViewTransitions } from "next-view-transitions";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import "../globals.css";
+import "@/styles/scroll-animations.css";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import FooterReveal from "@/components/layout/FooterReveal";
+import ClientShell from "@/components/ClientShell";
+
+// The website shell: site CSS, header, footer and client behaviour for every site page.
+// /studio lives in the (studio) group, so none of this ever loads there.
+export default function SiteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ViewTransitions>
+      <div className="scroll-progress" />
+      <ClientShell />
+      <Header />
+      <div className="site-content-wrap">
+        <main>{children}</main>
+        <Footer />
+      </div>
+      <FooterReveal />
+      <SpeedInsights />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": ["LocalBusiness", "Organization"],
+            "name": "House of Singh Studios",
+            "url": "https://studios.houseofsingh.com",
+            "logo": "https://studios.houseofsingh.com/hos-studios-logo.svg",
+            "description": "A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.",
+            "email": "studio@houseofsingh.com",
+            "founder": {
+              "@type": "Person",
+              "name": "Maninder Singh",
+              "jobTitle": "Founder and Creative Director",
+              "url": "https://houseofsingh.com"
+            },
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Toronto",
+              "addressRegion": "ON",
+              "addressCountry": "CA"
+            },
+            "areaServed": [
+              { "@type": "City", "name": "Toronto" },
+              { "@type": "Country", "name": "Canada" },
+              { "@type": "Country", "name": "United States" }
+            ],
+            "sameAs": [
+              "https://instagram.com/houseofsinghstudios",
+              "https://linkedin.com/company/houseofsinghstudios",
+              "https://x.com/hosdesignstudio"
+            ],
+            "numberOfEmployees": {
+              "@type": "QuantitativeValue",
+              "value": "1-10"
+            },
+            "foundingDate": "2024",
+            "priceRange": "$$$$"
+          })
+        }}
+      />
+    </ViewTransitions>
+  );
+}

@@ -1,0 +1,24 @@
+// Sanity Studio runs in its own route group: no site chrome, no site CSS, no site scripts.
+// The wrapper hands the Studio the whole viewport so its own panes do the scrolling,
+// with the normal system cursor.
+export const metadata = {
+  title: "Studio — House of Singh Studios CMS",
+};
+
+const studioStyles = `
+  body { margin: 0; }
+  #sanity-studio-root { position: fixed; inset: 0; height: 100dvh; overflow: hidden; }
+`;
+
+export default function StudioLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <style>{studioStyles}</style>
+      <div id="sanity-studio-root">{children}</div>
+    </>
+  );
+}
