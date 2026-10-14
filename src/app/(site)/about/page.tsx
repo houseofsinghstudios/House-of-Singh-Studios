@@ -17,8 +17,19 @@ export const metadata: Metadata = {
   },
 };
 
+// If Sanity is unreachable the page renders with AboutClient's built-in copy instead of
+// failing the build or the request, and refreshes once Sanity is back.
+async function getAboutData() {
+  try {
+    return await client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } });
+  } catch (error) {
+    console.warn("[about] Sanity fetch failed, rendering with fallback content:", error instanceof Error ? error.name : "unknown error");
+    return undefined;
+  }
+}
+
 export default async function AboutPage() {
-  const aboutData = await client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } });
+  const aboutData = await getAboutData();
   return (
     <>
       <BreadcrumbSchema items={[
