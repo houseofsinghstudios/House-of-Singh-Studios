@@ -340,3 +340,9 @@ Primary easing: cubic-bezier(0.23, 1, 0.32, 1). Fast start, gentle settle. Confi
 Phase 1 (immediate): Navigation overlay, page transitions, scroll reveal variety
 Phase 2 (next): Image clip-path reveals, hover interaction standardization
 Phase 3 (polish): Loading states, mobile optimization, performance audit
+
+---
+
+## SANITY
+
+Sanity Studio is embedded at /studio inside its own route group and deploys with Vercel. Never run `sanity deploy`; it creates a separate hosted Studio that falls out of sync with the code.

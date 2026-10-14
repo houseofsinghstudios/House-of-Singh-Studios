@@ -12,7 +12,8 @@ import { getFeaturedProjects } from "@/lib/sanity/projects";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'House of Singh Studios — AI Powered Design Studio Toronto',
+  // absolute: this page sits below the root layout's title template, which would otherwise append the studio name twice.
+  title: { absolute: 'House of Singh Studios — AI Powered Design Studio Toronto' },
   description: 'A design studio powered by AI systems and led by creative direction. We build brand identities, visual systems, and digital experiences for established businesses.',
   alternates: { canonical: 'https://studios.houseofsingh.com' },
   openGraph: {
