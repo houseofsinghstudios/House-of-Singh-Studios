@@ -3,11 +3,11 @@ import AILabClient from "@/components/ai/AILabClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
 export const metadata: Metadata = {
-  title: 'AI',
+  title: 'AI Lab',
   description: 'How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human.',
   alternates: { canonical: 'https://studios.houseofsingh.com/ai' },
   openGraph: {
-    title: 'AI — House of Singh Studios',
+    title: 'AI Lab — House of Singh Studios',
     description: 'How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human.',
     url: 'https://studios.houseofsingh.com/ai',
   },
@@ -18,7 +18,7 @@ export default function AILabPage() {
     <>
       <BreadcrumbSchema items={[
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
-        { name: 'AI', url: 'https://studios.houseofsingh.com/ai' },
+        { name: 'AI Lab', url: 'https://studios.houseofsingh.com/ai' },
       ]} />
       <AILabClient />
     </>
