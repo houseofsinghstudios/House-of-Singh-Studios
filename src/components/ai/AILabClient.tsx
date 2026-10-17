@@ -1,9 +1,10 @@
-"use client";
+// The AI Lab page body. A server component: the only interactive part is the Brand Pulse flow,
+// which is its own client component.
 
-import { useState, useCallback } from "react";
-import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
+import BrandPulse from "@/components/brand-pulse/BrandPulse";
+import { INTRO } from "@/lib/brand-pulse/content";
 
 /* ── Comparison table rows ── */
 const COMPARISON_ROWS = [
@@ -77,39 +78,7 @@ const OUTCOMES = [
   },
 ];
 
-/* ── Sample scores for brand pulse mockup ── */
-const PULSE_SCORES = [
-  { label: "Visual consistency", score: 78, fill: "var(--text-primary)" },
-  { label: "Messaging clarity", score: 52, fill: "var(--text-muted)" },
-  { label: "Digital presence", score: 34, fill: "var(--text-muted)" },
-];
-
 export default function AILabClient() {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
-  const submitted = status === "success";
-
-  // Stores the signup through /api/subscribe. Success shows only once n8n has saved it.
-  const handleNotify = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!email.trim() || status === "sending") return;
-      setStatus("sending");
-      try {
-        const res = await fetch("/api/subscribe", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email.trim(), source: "brand-pulse" }),
-        });
-        const data = await res.json().catch(() => null);
-        setStatus(res.ok && data?.success === true ? "success" : "error");
-      } catch {
-        setStatus("error");
-      }
-    },
-    [email, status]
-  );
-
   return (
     <>
       {/* ═══ SECTION 1: HERO ═══ */}
@@ -342,165 +311,12 @@ export default function AILabClient() {
         <div style={{ borderBottom: "1px solid var(--border)" }} />
       </section>
 
-      {/* ═══ SECTION 6: BRAND PULSE CHECK ═══ */}
+      {/* ═══ SECTION 6: BRAND PULSE ═══ */}
       <section
-        className="css-reveal"
+        id="brand-pulse"
         style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}
       >
-        <p
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-muted)",
-            margin: "0 0 16px",
-          }}
-        >
-          (Brand Pulse Check)
-        </p>
-        <div className="ai-pulse-grid">
-          {/* Left column: heading + form */}
-          <div>
-            <h2
-              className="font-[var(--sans)]"
-              style={{
-                fontSize: "clamp(22px, 3vw, 32px)",
-                fontWeight: 500,
-                letterSpacing: "-0.025em",
-                lineHeight: 1.2,
-                color: "var(--text-primary)",
-                margin: "0 0 12px",
-              }}
-            >
-              How strong is your brand?
-            </h2>
-            <p
-              style={{
-                fontSize: 14,
-                color: "var(--text-secondary)",
-                lineHeight: 1.6,
-                margin: "0 0 32px",
-                maxWidth: 400,
-              }}
-            >
-              Our AI analyzes your brand&apos;s visual consistency, messaging
-              clarity, and digital presence. Free. Instant. Launching soon.
-            </p>
-
-            {!submitted ? (
-              <form onSubmit={handleNotify} className="ai-pulse-form">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="ai-pulse-input"
-                  required
-                  disabled={status === "sending"}
-                />
-                <button
-                  type="submit"
-                  className="ai-pulse-btn"
-                  disabled={status === "sending"}
-                  aria-busy={status === "sending"}
-                  style={{ opacity: status === "sending" ? 0.4 : undefined }}
-                >
-                  Notify Me
-                </button>
-              </form>
-            ) : (
-              <p
-                style={{
-                  fontSize: 13,
-                  color: "var(--text-secondary)",
-                  margin: 0,
-                }}
-              >
-                We&apos;ll email you when Brand Pulse Check goes live.
-              </p>
-            )}
-
-            {status === "error" && (
-              <p className="art-newsletter-error" role="alert">
-                Something went wrong. Email us at studio@houseofsingh.com
-              </p>
-            )}
-
-            {!submitted && status !== "error" && (
-              <p
-                style={{
-                  fontSize: 11,
-                  color: "var(--text-muted)",
-                  marginTop: 12,
-                }}
-              >
-                We will email you when Brand Pulse Check goes live.
-              </p>
-            )}
-          </div>
-
-          {/* Right column: sample result mockup */}
-          <div className="ai-pulse-mockup">
-            <p className="ai-pulse-mockup-label">Sample result preview</p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-              {PULSE_SCORES.map((s) => (
-                <div key={s.label}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      marginBottom: 6,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12,
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      {s.label}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 12,
-                        color: "var(--text-secondary)",
-                      }}
-                    >
-                      {s.score}
-                    </span>
-                  </div>
-                  <div className="ai-pulse-bar-track">
-                    <div
-                      className="ai-pulse-bar-fill"
-                      style={{ width: `${s.score}%`, background: s.fill }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              style={{
-                borderTop: "1px solid var(--border)",
-                marginTop: 20,
-                paddingTop: 8,
-              }}
-            >
-              <p
-                style={{
-                  fontSize: 11,
-                  color: "var(--text-muted)",
-                  lineHeight: 1.5,
-                  margin: 0,
-                }}
-              >
-                Your digital presence is the weakest area. A structured content
-                architecture would improve conversion and reduce bounce rate.
-              </p>
-            </div>
-          </div>
-        </div>
+        <BrandPulse startLabel={INTRO.buttonElsewhere} />
         <div
           style={{
             borderBottom: "1px solid var(--border)",

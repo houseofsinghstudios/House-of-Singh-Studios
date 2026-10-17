@@ -17,11 +17,10 @@ import {
   VITALS,
   WEAKEST_SENTENCES,
 } from "./content";
+import { SITE_URL } from "./settings";
 import type { Answers, Level, ProfileId, Pulse, Result, ServiceKey, ServiceLink, VitalId, Weakest } from "./types";
 
 export const ENGINE_VERSION = "1.0.0";
-
-const SITE_URL = "https://studios.houseofsingh.com";
 
 const SERVICE_SLUGS: Record<ServiceKey, string> = {
   BRAND: "brand-identity",
