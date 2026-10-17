@@ -1,5 +1,6 @@
 import { client } from "./client";
 import { urlFor } from "./image";
+import { disciplineLabel } from "@/lib/disciplines";
 import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
@@ -434,17 +435,6 @@ const DISCIPLINE_ORDER = [
   "strategy",
 ];
 
-const DISCIPLINE_LABELS: Record<string, string> = {
-  "brand-identity": "Brand Identity",
-  packaging: "Packaging",
-  publication: "Publication",
-  "art-direction": "Art Direction",
-  website: "Website",
-  video: "Video",
-  photography: "Photography",
-  "social-content": "Social Content",
-  strategy: "Strategy",
-};
 
 export interface DisciplineFilter {
   value: string;
@@ -452,7 +442,7 @@ export interface DisciplineFilter {
 }
 
 export function getWorkTypeFilters(): DisciplineFilter[] {
-  return DISCIPLINE_ORDER.map((d) => ({ value: d, label: DISCIPLINE_LABELS[d] || d }));
+  return DISCIPLINE_ORDER.map((d) => ({ value: d, label: disciplineLabel(d) }));
 }
 
 // ── Service category project type ──

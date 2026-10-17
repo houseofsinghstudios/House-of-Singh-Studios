@@ -7,6 +7,8 @@ import type { Project } from "@/data/projects";
 import type { DisciplineFilter } from "@/lib/sanity/projects";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
+import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
+import { disciplineLabel } from "@/lib/disciplines";
 
 const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
@@ -16,24 +18,9 @@ function projectImage(project: Project): string {
   return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
 }
 
-const DISCIPLINE_LABELS: Record<string, string> = {
-  "brand-identity": "Brand Identity",
-  packaging: "Packaging",
-  publication: "Publication",
-  "art-direction": "Art Direction",
-  website: "Website",
-  video: "Video",
-  photography: "Photography",
-  "social-content": "Social Content",
-  strategy: "Strategy",
-};
-
-function projectTags(project: Project): { value: string; label: string }[] {
+function projectTags(project: Project): DisciplineTag[] {
   if (project.disciplines && project.disciplines.length > 0) {
-    return project.disciplines.map((d) => ({
-      value: d,
-      label: DISCIPLINE_LABELS[d] || d,
-    }));
+    return project.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) }));
   }
   return project.workType.split(",").map((t) => {
     const trimmed = t.trim();
@@ -68,6 +55,12 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
     const match = filterCategories.find((f) => f.value === activeFilter);
     return match ? match.label : activeFilter;
   }, [activeFilter, filterCategories]);
+
+  // Tapping a tag on a card filters the page to that discipline.
+  const filterByTag = useCallback((value: string) => {
+    setActiveFilter(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
@@ -224,9 +217,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                 >
                   {project.name}
                 </span>
-                <span className="wp-list-cat">
-                  {projectTags(project).map((t) => t.label).join(" — ")}
-                </span>
+                <DisciplineTags tags={projectTags(project)} className="wp-list-cat" />
                 <span className="wp-list-arrow" aria-hidden="true">
                   &rarr;
                 </span>
@@ -274,22 +265,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                     />
                   </div>
                 </div>
-                <div className="wp-grid-meta">
-                  {projectTags(project).map((tag) => (
-                    <button
-                      key={tag.value}
-                      className="wp-grid-cat-tag"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setActiveFilter(tag.value);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}
-                    >
-                      {tag.label}
-                    </button>
-                  ))}
-                </div>
+                <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
                 <div className="wp-grid-text-swap">
                   <h3
                     className="wp-grid-name"
@@ -324,22 +300,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                 />
               </div>
             </div>
-            <div className="wp-grid-meta">
-              {projectTags(project).map((tag) => (
-                <button
-                  key={tag.value}
-                  className="wp-grid-cat-tag"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setActiveFilter(tag.value);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  {tag.label}
-                </button>
-              ))}
-            </div>
+            <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
             <h3 className="wp-grid-name">{project.name}</h3>
             <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
           </Link>
