@@ -37,6 +37,8 @@ yarn-error.log*
 # portfolio import: local tool only. .env.import holds a Sanity write token.
 .env.import
 portfolio-import/
+# roles import: role drafts live locally until published.
+roles-import/
 !.env.import.example
 
 # vercel

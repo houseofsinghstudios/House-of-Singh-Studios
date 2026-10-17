@@ -114,7 +114,7 @@ export function buildDocument(project, refs) {
 
 // Paragraphs from copy.md become portable text blocks. Bold is the "strong" decorator;
 // links become markDefs with their own keys, referenced from the span marks.
-function toPortableText(paragraphs, key) {
+export function toPortableText(paragraphs, key) {
   return paragraphs.map((p) => {
     const linkKeys = p.links.map(() => key());
     return {
@@ -136,7 +136,7 @@ function withOptional(object, field, value) {
   return value === undefined ? object : { ...object, [field]: value };
 }
 
-function uniqueKey(keys) {
+export function uniqueKey(keys) {
   let key;
   do key = crypto.randomBytes(6).toString("hex");
   while (keys.has(key));

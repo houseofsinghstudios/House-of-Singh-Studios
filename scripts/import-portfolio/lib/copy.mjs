@@ -11,7 +11,7 @@ export const OVERVIEW_KEY = "overview";
 const SINGLE_ASTERISK_ITALIC = /(?<![*\w])\*(?![\s*])([^*\n]+?)(?<![\s*])\*(?![*\w])/;
 const LINK = /^\[([^\]]+)\]\(([^)\s]+)\)/;
 // Matches the link annotation in sanity/schemas/blocks/shared.ts.
-const ALLOWED_LINK = /^(https?:\/\/|mailto:)\S+$/i;
+export const ALLOWED_LINK = /^(https?:\/\/|mailto:)\S+$/i;
 const LIST_LINE = /^([-*+]|\d+[.)])\s/;
 
 // "## The Challenge" -> "the-challenge". "## What Changed?" -> "what-changed".

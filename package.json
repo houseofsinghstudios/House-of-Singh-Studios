@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "import:portfolio": "node scripts/import-portfolio/index.mjs",
-    "test": "node --import tsx --test \"tests/**/*.test.ts\""
+    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "import:roles": "node scripts/import-roles/index.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",

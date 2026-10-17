@@ -31,7 +31,10 @@ interface Role {
 // the build or the request, and refreshes once Sanity is back.
 async function getRoles(): Promise<Role[]> {
   try {
-    return (await getAllRoles()) || [];
+    // Titles are trimmed here so a stray space typed in Studio never shows on the card,
+    // the apply form or the job posting data.
+    const roles: Role[] = (await getAllRoles()) || [];
+    return roles.map((role) => ({ ...role, title: (role.title || "").trim() }));
   } catch (error) {
     console.warn("[careers] Sanity fetch failed, rendering with no roles:", error instanceof Error ? error.name : "unknown error");
     return [];
