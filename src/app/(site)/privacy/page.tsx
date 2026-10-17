@@ -48,6 +48,9 @@ export default function PrivacyPage() {
           <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information collected automatically:</strong> IP address, browser type, device information, pages visited, time spent on pages, referring URL, and general geographic location through analytics tools and server logs.
           </p>
+          <p style={{ margin: "0 0 12px" }}>
+            Brand Pulse answers are kept anonymously to improve the check. Contact details are only stored if you choose to share them.
+          </p>
           <p style={{ margin: "0 0 32px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cookies and similar technologies:</strong> we use cookies and similar tracking technologies to understand how visitors interact with our website. You can control cookie preferences through your browser settings.
           </p>

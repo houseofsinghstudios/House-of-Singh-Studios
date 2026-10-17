@@ -205,7 +205,8 @@ function InlineNewsletter() {
   );
 }
 
-export default function InsightArticleClient({ post }: { post: Post }) {
+// endCta is server rendered by the page and placed where the article ends.
+export default function InsightArticleClient({ post, endCta }: { post: Post; endCta?: React.ReactNode }) {
   const readTime = calculateReadTime(post.body);
 
   // Filter related posts to same category, max 2
@@ -310,6 +311,13 @@ export default function InsightArticleClient({ post }: { post: Post }) {
           <div className="art-body">
             <PortableText value={post.body} components={portableTextComponents} />
           </div>
+        </section>
+      )}
+
+      {/* ═══ END OF ARTICLE CALL TO ACTION ═══ */}
+      {endCta && (
+        <section style={{ padding: "0 var(--page-px)" }}>
+          <div className="art-body">{endCta}</div>
         </section>
       )}
 

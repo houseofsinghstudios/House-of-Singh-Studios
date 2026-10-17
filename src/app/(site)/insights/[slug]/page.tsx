@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { bareTitle, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -99,7 +100,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={post} />
+      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} />
     </>
   );
 }

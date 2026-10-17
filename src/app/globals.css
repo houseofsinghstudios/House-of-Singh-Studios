@@ -3653,75 +3653,6 @@ select.contact-input option {
   margin: 0;
 }
 
-/* ── Brand Pulse Check ── */
-.ai-pulse-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 4vw, 64px);
-  align-items: start;
-}
-.ai-pulse-form {
-  display: flex;
-  align-items: stretch;
-  gap: 16px;
-}
-.ai-pulse-input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--text-primary);
-  padding: 10px 0;
-  outline: none;
-  border-radius: 0;
-  -webkit-appearance: none;
-  transition: border-color 0.3s;
-}
-.ai-pulse-input:focus {
-  border-bottom-color: var(--text-primary);
-}
-.ai-pulse-input::placeholder {
-  color: var(--text-muted);
-}
-.ai-pulse-btn {
-  font-family: var(--sans);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  font-weight: 500;
-  background: var(--text-primary);
-  color: var(--bg);
-  padding: 10px 20px;
-  border: none;
-  border-radius: 0;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  white-space: nowrap;
-}
-.ai-pulse-btn:hover {
-  opacity: 0.85;
-}
-.ai-pulse-mockup {
-  background: var(--bg-shift);
-  padding: 28px;
-}
-.ai-pulse-mockup-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  margin: 0 0 20px;
-}
-.ai-pulse-bar-track {
-  height: 4px;
-  background: var(--border);
-  width: 100%;
-}
-.ai-pulse-bar-fill {
-  height: 100%;
-}
-
 /* ── AI page mobile ── */
 @media (max-width: 768px) {
   .ai-compare-row {
@@ -3764,10 +3695,6 @@ select.contact-input option {
   .ai-proof-col:last-child,
   .ai-outcome-col:last-child {
     border-bottom: none;
-  }
-  .ai-pulse-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
   }
 }
 
