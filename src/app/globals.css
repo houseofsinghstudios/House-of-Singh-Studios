@@ -889,6 +889,7 @@ body {
   letter-spacing: 0.1em;
   color: var(--text-muted, #A9A6A2);
   white-space: nowrap;
+  justify-content: flex-end;
   transition: color 0.3s ease;
 }
 .wp-list-arrow {
@@ -1013,9 +1014,38 @@ body {
 }
 /* Category tags — clickable, styled like nav links */
 .wp-grid-meta {
-  display: flex;
-  gap: 12px;
   margin-top: 12px;
+}
+
+/* Discipline tags (DisciplineTags): /work grid, /work list, /services project cards.
+   A tag never breaks inside itself; the row wraps. Below 768px: first two, then "+N". */
+.dtags {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 6px;
+  column-gap: 12px;
+}
+.dtag {
+  white-space: nowrap;
+}
+.dtag-more {
+  display: none;
+  color: var(--text-primary);
+}
+.wp-grid-meta .dtag-more {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+@media (max-width: 767px) {
+  .dtag--extra {
+    display: none;
+  }
+  .dtag-more {
+    display: inline;
+  }
 }
 .wp-grid-cat-tag {
   position: relative;
@@ -5555,6 +5585,12 @@ td a {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted, #A9A6A2);
+}
+
+.svc-block-card {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .svc-block-proj-meta {

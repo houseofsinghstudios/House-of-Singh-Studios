@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Link } from "next-view-transitions";
+import DisciplineTags from "@/components/work/DisciplineTags";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
 import type { ServiceProject } from "@/lib/sanity/projects";
 
@@ -195,7 +196,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
                         />
                       </div>
                       <div className="svc-block-proj-meta">
-                        <p className="svc-block-proj-tags">{block.fallbackTags}</p>
+                        <DisciplineTags tags={[{ value: block.fallbackTags, label: block.fallbackTags }]} className="svc-block-proj-tags" />
                         <p className="svc-block-proj-name">{block.fallbackName}</p>
                       </div>
                     </>
@@ -207,7 +208,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
                       <span>Project image coming soon</span>
                     </div>
                     <div className="svc-block-proj-meta">
-                      <p className="svc-block-proj-tags">{block.fallbackTags}</p>
+                      <DisciplineTags tags={[{ value: block.fallbackTags, label: block.fallbackTags }]} className="svc-block-proj-tags" />
                       <p className="svc-block-proj-name">{block.fallbackName}</p>
                     </div>
                   </>
