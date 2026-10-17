@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import:portfolio": "node scripts/import-portfolio/index.mjs"
+    "import:portfolio": "node scripts/import-portfolio/index.mjs",
+    "test": "node --import tsx --test \"tests/**/*.test.ts\""
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",
@@ -32,6 +33,7 @@
     "eslint-config-next": "16.4.0",
     "sharp": "^0.34.5",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5"
   }
 }

@@ -42,8 +42,9 @@ Build: npm run build
 Start: npm run start
 Lint: npm run lint
 Typecheck: npx tsc --noEmit
+Test: npm run test (Node's built in test runner, with tsx to load TypeScript)
 
-There is no test command yet. Manual QA on Vercel preview deployments. Visual regression with Playwright is on the roadmap, not yet active.
+Unit tests cover the Brand Pulse engine only. Manual QA on Vercel preview deployments. Visual regression with Playwright is on the roadmap, not yet active.
 
 ## Conventions
 
