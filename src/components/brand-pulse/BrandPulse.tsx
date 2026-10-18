@@ -43,7 +43,6 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   const [stage, setStage] = useState(0);
   const [lead, setLead] = useState<SendStatus>("idle");
   const [contact, setContact] = useState<LeadContact | null>(null);
-  const [name, setName] = useState("");
   const [unlocked, setUnlocked] = useState(gate !== "before-full-result");
   const session = useRef<PulseSession | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -139,13 +138,11 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
 
   // The copy link uses this site's address; the booking notes always carry the public one.
   const share = complete ? shareUrl(complete, window.location.origin) : "";
-  const booking = complete && result ? bookingUrl(complete, result, shareUrl(complete), { email: contact?.email, name }) : "";
+  const booking = complete && result ? bookingUrl(complete, result, shareUrl(complete)) : "";
 
   async function submitProfile(c: ProfileContact, honeypot: string) {
     if (!session.current || !complete) return false;
-    const ok = await sendEvent(session.current, gate, complete, { event: "profile", contact: c, honeypot });
-    if (ok && c.name) setName(c.name);
-    return ok;
+    return sendEvent(session.current, gate, complete, { event: "profile", contact: c, honeypot });
   }
 
   function sendFeedback(feedback: Feedback) {

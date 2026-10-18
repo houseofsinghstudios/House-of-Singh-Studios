@@ -34,10 +34,8 @@ export function bookingNotes(answers: Answers, result: Result, share: string): s
   return `Brand Pulse: ${result.profileName}, ${result.pulseLabel}. ${vitals}. ${facts} Result: ${share}`;
 }
 
-// Email and name are added only when the visitor gave them in this session.
-export function bookingUrl(answers: Answers, result: Result, share: string, contact?: { email?: string; name?: string }): string {
-  const params: [string, string][] = [["notes", bookingNotes(answers, result, share)]];
-  if (contact?.email) params.push(["email", contact.email]);
-  if (contact?.name) params.push(["name", contact.name]);
-  return `${BOOKING_URL}?${params.map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&")}`;
+// The booking link carries the notes only. Never an email, name or other personal detail:
+// URLs end up in browser history, server logs and referrer headers.
+export function bookingUrl(answers: Answers, result: Result, share: string): string {
+  return `${BOOKING_URL}?notes=${encodeURIComponent(bookingNotes(answers, result, share))}`;
 }
