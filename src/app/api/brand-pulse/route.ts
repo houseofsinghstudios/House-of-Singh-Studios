@@ -109,10 +109,7 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       service: result.service,
       alsoService: result.alsoService,
       shareUrl: share,
-      bookingUrl: bookingUrl(answers, result, share, {
-        email: contact?.email,
-        name: contact && "name" in contact ? contact.name : undefined,
-      }),
+      bookingUrl: bookingUrl(answers, result, share),
     },
     ...(contact ? { contact } : {}),
     ...(fields.feedback ? { feedback: fields.feedback } : {}),
