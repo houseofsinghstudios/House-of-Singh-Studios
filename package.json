@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "import:portfolio": "node scripts/import-portfolio/index.mjs",
-    "test": "node --import tsx --test \"tests/**/*.test.ts\"",
+    "test": "node --conditions=react-server --import tsx --test \"tests/**/*.test.ts\"",
     "import:roles": "node scripts/import-roles/index.mjs"
   },
   "dependencies": {
@@ -23,7 +23,8 @@
     "next-view-transitions": "^0.3.5",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "sanity": "^5.31.2"
+    "sanity": "^5.31.2",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
