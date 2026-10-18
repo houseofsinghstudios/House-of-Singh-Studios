@@ -199,6 +199,11 @@ test("answers validation accepts only allowed, consistent ids", () => {
     ["not an object", "photo"],
   ];
   for (const [label, input] of bad) assert.ok(!validateAnswers(input).ok, label);
+  // The unsure path skips the priorities step, so its draft has no priorities field at all.
+  const unsureDraft = { needs: ["unsure"], primary: "unsure", start: "changing", goal: "other", timing: "flexible" };
+  const v = validateAnswers(unsureDraft);
+  assert.ok(v.ok && v.answers.priorities.length === 0, "unsure draft without priorities is complete");
+  assert.ok(!validateAnswers({ ...ok, priorities: undefined }).ok, "a service draft without priorities is not");
 });
 
 test("booking links carry the notes only: no email, name, budget or free text, under 300 characters", () => {

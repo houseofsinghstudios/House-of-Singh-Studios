@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createRateLimiter } from "@/lib/rate-limit";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
 import { assessWithActions } from "@/lib/brand-pulse/actions";
 import { ENGINE_VERSION } from "@/lib/brand-pulse/engine";
@@ -16,29 +17,9 @@ type PulseEvent = (typeof EVENTS)[number];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const rateLimit = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
 // A full visit sends up to four events (completed, feedback, lead, profile), so a quick retake
 // needs more room than the contact form. The lead, careers and subscribe routes stay at 5.
-const MAX_REQUESTS = 20;
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now - entry.timestamp > RATE_LIMIT_WINDOW) {
-    rateLimit.set(ip, { count: 1, timestamp: now });
-    return false;
-  }
-  entry.count++;
-  return entry.count > MAX_REQUESTS;
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimit.entries()) {
-    if (now - entry.timestamp > RATE_LIMIT_WINDOW) rateLimit.delete(ip);
-  }
-}, 5 * 60 * 1000);
+const isRateLimited = createRateLimiter(20);
 
 function clean(value: unknown, max: number): string {
   return typeof value === "string" ? value.replace(/<[^>]*>/g, "").trim().slice(0, max) : "";

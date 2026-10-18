@@ -86,6 +86,25 @@ export default defineType({
       },
     }),
     defineField({
+      name: "workDelivered",
+      title: "Work actually delivered",
+      type: "array",
+      description: "Tick only what was genuinely delivered for this project. Used to choose proof in the Project Planner.",
+      of: [{ type: "string" }],
+      options: {
+        list: [
+          { title: "Identity", value: "identity" },
+          { title: "Strategy", value: "strategy" },
+          { title: "Website design", value: "website_design" },
+          { title: "Website build", value: "website_build" },
+          { title: "Photography", value: "photography" },
+          { title: "Video", value: "video" },
+          { title: "Packaging", value: "packaging" },
+          { title: "Print", value: "print" },
+        ],
+      },
+    }),
+    defineField({
       name: "client",
       title: "Client",
       type: "string",

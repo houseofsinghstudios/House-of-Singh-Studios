@@ -51,6 +51,9 @@ export default function PrivacyPage() {
           <p style={{ margin: "0 0 12px" }}>
             Brand Pulse answers are kept anonymously to improve the check. Contact details are only stored if you choose to share them.
           </p>
+          <p style={{ margin: "0 0 12px" }}>
+            When you complete the Project Planner, we keep your project selections without your name or contact details, to understand what visitors need. Contact details are stored only if you choose to send your brief.
+          </p>
           <p style={{ margin: "0 0 32px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cookies and similar technologies:</strong> we use cookies and similar tracking technologies to understand how visitors interact with our website. You can control cookie preferences through your browser settings.
           </p>

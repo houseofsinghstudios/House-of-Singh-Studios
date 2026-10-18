@@ -60,7 +60,8 @@ export function validateAnswers(input: unknown): { ok: true; answers: Answers } 
   if (!oneOf(START_IDS[primary], a.start)) return { ok: false, error: "start" };
   if (!oneOf(GOAL_IDS, a.goal)) return { ok: false, error: "goal" };
   if (!oneOf(TIMING_IDS, a.timing)) return { ok: false, error: "timing" };
-  const priorities = a.priorities;
+  // The priorities step is skipped when unsure, so a draft may have no priorities at all.
+  const priorities = primary === "unsure" && a.priorities === undefined ? [] : a.priorities;
   if (!Array.isArray(priorities)) return { ok: false, error: "priorities" };
   if (primary === "unsure") {
     if (priorities.length) return { ok: false, error: "no priorities when unsure" };
