@@ -23,6 +23,12 @@
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
   --hero-pt: clamp(280px, 24vw, 340px);
+  /* The header crest's position and size. The crest reads these, so anything measured from them
+     follows the real logo. */
+  --header-logo-top: 48px;
+  --header-logo-height: 115px;
+  /* Space a page needs at its top so the first content clears the crest by 24px. */
+  --header-clearance: calc(var(--header-logo-top) + var(--header-logo-height) + 24px);
 }
 
 @theme inline {
@@ -1452,8 +1458,9 @@ body {
 
 /* ── Case Study Responsive: Mobile ── */
 @media (max-width: 767px) {
+  /* Starts below the header crest, which reaches 128px on phones. */
   .cs-hero {
-    padding-top: 100px !important;
+    padding-top: var(--header-clearance) !important;
   }
   .cs-hero-heading {
     font-size: clamp(28px, 7vw, 40px);
@@ -2351,8 +2358,9 @@ body {
 }
 
 @media (max-width: 767px) {
+  /* Starts below the header crest, which reaches 128px on phones. */
   .svcd-hero {
-    padding-top: 100px !important;
+    padding-top: var(--header-clearance) !important;
   }
   .svcd-del-grid {
     grid-template-columns: 1fr;
@@ -4141,7 +4149,7 @@ select.contact-input option {
 .header-crest-wrap {
   position: fixed;
   left: var(--page-px);
-  top: 48px;
+  top: var(--header-logo-top);
   z-index: 100;
   opacity: 1;
   transform: translateY(0);
@@ -4161,7 +4169,7 @@ select.contact-input option {
   pointer-events: none;
 }
 .header-crest {
-  height: 115px;
+  height: var(--header-logo-height);
   width: auto;
   display: block;
 }
@@ -4343,18 +4351,14 @@ body.nav-open .header-crest-wrap {
 @media (max-width: 767px) {
   :root {
     --hero-pt: clamp(200px, 28vw, 260px);
+    --header-logo-top: 32px;
+    --header-logo-height: 96px;
   }
   .site-header {
     height: 64px;
   }
   .site-header--scrolled {
     height: 64px;
-  }
-  .header-crest-wrap {
-    top: 32px;
-  }
-  .header-crest {
-    height: 96px;
   }
   .header-wordmark-wrap {
     opacity: 0;
