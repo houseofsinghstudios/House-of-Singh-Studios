@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
-import { assess, ENGINE_VERSION } from "@/lib/brand-pulse/engine";
+import { assessWithActions } from "@/lib/brand-pulse/actions";
+import { ENGINE_VERSION } from "@/lib/brand-pulse/engine";
 import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { FEEDBACK_IDS, GATES, QUESTION_ORDER, TEAM_SIZE_IDS, type Answers, type Feedback, type Gate, type TeamSize } from "@/lib/brand-pulse/types";
 
@@ -17,7 +18,9 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const rateLimit = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000;
-const MAX_REQUESTS = 5;
+// A full visit sends up to four events (completed, feedback, lead, profile), so a quick retake
+// needs more room than the contact form. The lead, careers and subscribe routes stay at 5.
+const MAX_REQUESTS = 20;
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
@@ -85,7 +88,7 @@ function eventFields(event: PulseEvent, body: Record<string, unknown>): { contac
 }
 
 function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers: Answers, fields: { contact?: Contact; feedback?: Feedback }) {
-  const result = assess(answers);
+  const result = assessWithActions(answers);
   const share = shareUrl(answers);
   const contact = fields.contact;
   const a = (body.attribution && typeof body.attribution === "object" ? body.attribution : {}) as Record<string, unknown>;
@@ -103,7 +106,8 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       profileId: result.profileId,
       profileName: result.profileName,
       headline: result.headline,
-      vitals: result.vitals.map(({ id, label, level }) => ({ id, label, level })),
+      vitals: result.vitals.map(({ id, label, level, severity }) => ({ id, label, level, severity })),
+      total: result.total,
       paragraphs: result.paragraphs,
       actions: result.actions,
       service: result.service,

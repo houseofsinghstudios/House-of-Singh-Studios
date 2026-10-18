@@ -71,6 +71,8 @@ export interface Vital {
   label: string;
   level: Level;
   levelLabel: string;
+  // 0 healthy to 4 serious.
+  severity: number;
   explainer: string;
 }
 
@@ -87,10 +89,16 @@ export interface Result {
   profileName: string;
   headline: string;
   vitals: Vital[];
+  // The five severities added up, 0 to 20.
+  total: number;
   paragraphs: [string, string, string, string];
-  // For the email only. Never rendered on the page.
-  actions: [string, string, string];
   service: ServiceLink;
   alsoService: ServiceLink | null;
   engineVersion: string;
+}
+
+// The result as the server sends it to n8n: the same, plus the three actions for the email.
+// The actions never reach the browser.
+export interface ServerResult extends Result {
+  actions: [string, string, string];
 }

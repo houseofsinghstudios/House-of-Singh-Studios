@@ -28,7 +28,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="legal-updated" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: April 28, 2026
+          Last updated: October 18, 2026
         </p>
 
         <div className="legal-body" style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
