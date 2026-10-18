@@ -94,7 +94,8 @@ export default function ContactClient() {
                   .
                 </p>
               )}
-              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
+              <form method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8">
                 <div>
                   <label className="contact-label">Name</label>
                   <input
