@@ -27,11 +27,43 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
+// Shown when the contact form is submitted before JavaScript has loaded, so the browser posts
+// the form itself instead of the page sending JSON. Nothing is read from that post or forwarded.
+const NO_SCRIPT_PAGE = `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Message not sent | House of Singh Studios</title>
+<style>
+  body { margin: 0; background: #F7F6F5; color: #22211F; font-family: system-ui, sans-serif; }
+  main { max-width: 560px; padding: 120px max(24px, 8vw); }
+  h1 { font-size: 32px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 16px; }
+  p { color: #5C5B58; font-size: 16px; line-height: 1.6; margin: 0 0 16px; }
+  a { color: #22211F; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Your message was not sent.</h1>
+  <p>The form needs the page to finish loading before it can send. Please go back to the <a href="/contact">contact page</a> and try again.</p>
+  <p>Or email us directly at <a href="mailto:studio@houseofsingh.com">studio@houseofsingh.com</a>.</p>
+</main>
+</body>
+</html>`;
+
 // Logs record only what helps debugging. Never a name, email, budget, message,
 // the webhook URL or the n8n response body: Vercel keeps logs.
 export async function POST(request: Request) {
   try {
     console.log("[lead] request received");
+
+    // Only the JSON the contact page sends is accepted. A plain form post is never read or treated as a lead.
+    if (!(request.headers.get("content-type") || "").toLowerCase().startsWith("application/json")) {
+      console.log("[lead] non JSON request rejected");
+      return new NextResponse(NO_SCRIPT_PAGE, { status: 415, headers: { "content-type": "text/html; charset=utf-8" } });
+    }
 
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";

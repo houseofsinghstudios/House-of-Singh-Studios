@@ -1,3 +1,5 @@
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+
 export const HERO = {
   label: "Creative Direction Studio",
   cycleWords: ["Your brand", "Your identity", "Your positioning", "Your visual system"],
@@ -122,7 +124,7 @@ export const CTA = {
   heading: "Start a project.",
   supporting: "",
   buttons: {
-    primary: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr" },
+    primary: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL },
     secondary: { text: "Start a Project", href: "/contact" },
   },
 };

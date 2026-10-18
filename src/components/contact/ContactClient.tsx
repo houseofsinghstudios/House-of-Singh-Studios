@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
@@ -94,7 +95,8 @@ export default function ContactClient() {
                   .
                 </p>
               )}
-              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
+              <form method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8">
                 <div>
                   <label className="contact-label">Name</label>
                   <input
@@ -190,7 +192,7 @@ export default function ContactClient() {
             Book a discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
 
-          <Button href="https://cal.com/houseofsinghstudios/hr" className="mt-6" data-cursor="link" target="_blank" rel="noopener noreferrer">
+          <Button href={DISCOVERY_CALL_URL} className="mt-6" data-cursor="link" target="_blank" rel="noopener noreferrer">
             Book a Discovery Call
           </Button>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/ui/Button";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export default function CtaSection() {
   return (
@@ -20,7 +21,7 @@ export default function CtaSection() {
           <Button href="/contact" variant="primary-inverted" data-cursor="link">
             Start a Project
           </Button>
-          <Button href="https://cal.com/houseofsinghstudios/hr" variant="secondary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+          <Button href={DISCOVERY_CALL_URL} variant="secondary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
             Book a Discovery Call
           </Button>
         </div>
