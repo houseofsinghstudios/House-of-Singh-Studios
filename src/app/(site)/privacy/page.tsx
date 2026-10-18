@@ -74,6 +74,9 @@ export default function PrivacyPage() {
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting and analytics) — collects anonymized usage data including page views and performance metrics. Data is processed in accordance with Vercel&apos;s privacy policy.
           </p>
           <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed and approximate location. We do not use it for advertising, and we do not send it names, emails or form contents. Visitors in regions with stricter consent rules are measured without analytics cookies.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Airtable</strong> (client relationship management) — stores contact form submissions including name, email, service interest, and project details for lead management.
           </p>
           <p style={{ margin: "0 0 12px" }}>
