@@ -32,7 +32,7 @@ export default function NotFound() {
         <Button href="/work" variant="primary" data-cursor="link">
           View Our Work
         </Button>
-        <Button href="/contact" variant="secondary" data-cursor="link">
+        <Button href="/start" variant="secondary" data-cursor="link">
           Start a Project
         </Button>
       </div>

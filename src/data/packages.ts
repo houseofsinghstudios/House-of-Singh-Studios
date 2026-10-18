@@ -34,7 +34,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     timeline: "4 to 6 weeks",
     bestFor:
       "Founders, new ventures, businesses operating without a formal brand system.",
-    cta: { text: "Start a Project", href: "/contact", variant: "secondary" as const },
+    cta: { text: "Start a Project", href: "/start", variant: "secondary" as const },
     recommended: false,
   },
   {

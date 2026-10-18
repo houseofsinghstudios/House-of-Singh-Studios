@@ -52,6 +52,7 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   featured,
   ${serviceCategoriesProjection},
   disciplines,
+  workDelivered,
   seoTitle,
   seoDescription,
   publishedAt
@@ -83,6 +84,7 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   featured,
   ${serviceCategoriesProjection},
   disciplines,
+  workDelivered,
   seoTitle,
   seoDescription,
   publishedAt
@@ -343,6 +345,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
       name: nextDoc?.title || "",
     },
     blocks: mapBlocks(doc.blocks, doc.slug || "", doc.title || ""),
+    workDelivered: Array.isArray(doc.workDelivered) ? doc.workDelivered.filter((w: unknown) => typeof w === "string") : [],
   };
 }
 
@@ -514,5 +517,33 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
   } catch (error) {
     console.error("[sanity/projects] Service category fetch failed:", error);
     return empty;
+  }
+}
+
+// ── Project Planner: published case studies that say what they delivered ──
+
+export interface PlannerCaseStudy {
+  title: string;
+  slug: string;
+  workDelivered: string[];
+}
+
+const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current) && count(workDelivered) > 0 && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+  "title": title,
+  "slug": slug.current,
+  workDelivered
+}`;
+
+// Related work for the planner. Never falls back to unrelated projects: on any failure, none.
+export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
+  try {
+    const docs: unknown = await client.fetch(plannerCaseStudiesQuery, {}, { next: { revalidate: 60 } });
+    if (!Array.isArray(docs)) return [];
+    return docs
+      .filter((d) => d && typeof d.title === "string" && typeof d.slug === "string" && Array.isArray(d.workDelivered))
+      .map((d) => ({ title: d.title.trim(), slug: d.slug, workDelivered: d.workDelivered.filter((w: unknown) => typeof w === "string") }));
+  } catch (error) {
+    console.warn("[sanity/projects] Planner case studies fetch failed:", error instanceof Error ? error.name : "unknown error");
+    return [];
   }
 }

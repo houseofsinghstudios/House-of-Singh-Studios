@@ -61,6 +61,8 @@ export interface ProjectDetail {
   nextProject: { slug: string; name: string };
   // When present and non-empty, these replace the legacy challenge, approach, gallery and result sections.
   blocks?: CaseStudyBlock[];
+  // caseStudy.workDelivered: what was genuinely delivered. Chooses the Project Planner link.
+  workDelivered?: string[];
 }
 
 export const projectDetails: ProjectDetail[] = [

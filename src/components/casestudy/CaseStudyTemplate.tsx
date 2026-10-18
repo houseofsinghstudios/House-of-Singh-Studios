@@ -9,6 +9,8 @@ import NextProject from "./NextProject";
 import BlockRenderer from "./blocks/BlockRenderer";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { PLACEMENTS } from "@/lib/project-planner/content";
+import { serviceForCaseStudy, startHref } from "@/lib/project-planner/start-links";
 
 export default function CaseStudyTemplate({
   project,
@@ -234,6 +236,15 @@ export default function CaseStudyTemplate({
         </>
       )}
 
+      {/* ═══ PLAN SOMETHING SIMILAR ═══ */}
+      <section style={{ padding: "clamp(40px, 5vw, 64px) var(--page-px) 0" }}>
+        <p className="cs-plan-similar">
+          <Link href={startHref("case_study", serviceForCaseStudy(project.workDelivered))} className="cs-plan-similar-link" data-cursor="link">
+            {PLACEMENTS.caseStudy}
+          </Link>
+        </p>
+      </section>
+
       {/* ═══ SECTION 9: NEXT PROJECT + DARK CTA ═══ */}
       {project.nextProject.slug && (
         <section style={{ padding: "0 var(--page-px)" }}>
@@ -261,7 +272,7 @@ export default function CaseStudyTemplate({
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+            <Button href="/start" variant="secondary-inverted" data-cursor="link">
               Start a Project
             </Button>
           </div>

@@ -7,7 +7,7 @@ export const HERO = {
   headlineLine2: "It demands direction and context.",
   secondary: "A design studio for businesses that have outgrown their brand.",
   cta: {
-    primary: { text: "Start a Project", href: "/contact" },
+    primary: { text: "Start a Project", href: "/start" },
   },
 };
 
@@ -125,6 +125,6 @@ export const CTA = {
   supporting: "",
   buttons: {
     primary: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL },
-    secondary: { text: "Start a Project", href: "/contact" },
+    secondary: { text: "Start a Project", href: "/start" },
   },
 };

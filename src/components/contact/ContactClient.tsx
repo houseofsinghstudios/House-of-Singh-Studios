@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import Button from "@/components/ui/Button";
+import { PLACEMENTS } from "@/lib/project-planner/content";
+import { startHref } from "@/lib/project-planner/start-links";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
@@ -67,6 +70,11 @@ export default function ContactClient() {
           style={{ opacity: 0.6 }}
         >
           Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project.
+        </p>
+
+        <p className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] text-[color:var(--text-primary)] mt-4" style={{ opacity: 0.6 }}>
+          {PLACEMENTS.contactLead}{" "}
+          <Link href={startHref("contact")} className="underline underline-offset-4">{PLACEMENTS.contactLink}</Link>
         </p>
       </section>
 
