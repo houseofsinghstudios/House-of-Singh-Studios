@@ -6,9 +6,13 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FooterReveal from "@/components/layout/FooterReveal";
 import ClientShell from "@/components/ClientShell";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
+// Google Analytics loads on the production deployment only: never locally or on previews.
+const analyticsEnabled = process.env.VERCEL_ENV === "production";
+
 export default function SiteLayout({
   children,
 }: {
@@ -25,6 +29,7 @@ export default function SiteLayout({
       </div>
       <FooterReveal />
       <SpeedInsights />
+      {analyticsEnabled && <GoogleAnalytics />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
