@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import PlannerInvite from "@/components/project-planner/PlannerInvite";
 
 export const revalidate = 60;
 
@@ -28,6 +29,7 @@ export default async function ServicesPage() {
         { name: 'Services', url: 'https://studios.houseofsingh.com/services' },
       ]} />
       <ServicesClient projectsByCategory={projectsByCategory} />
+      <PlannerInvite />
       <NextPageLink />
       <section
         className="css-reveal"

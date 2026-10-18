@@ -1,0 +1,437 @@
+/* ── Project Planner ──
+   The same editorial language as Brand Pulse: text on the page, 1px rules, no boxes, zero radius,
+   no shadows. Motion is 200ms fades only. */
+
+.pp-root {
+  scroll-margin-top: 96px;
+  font-family: var(--sans);
+  max-width: 880px;
+}
+.pp-screen {
+  animation: pp-fade 0.2s ease backwards;
+}
+@keyframes pp-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── Type ── */
+.pp-eyebrow,
+.pp-label {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+}
+.pp-heading,
+.pp-headline {
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+  max-width: 760px;
+}
+.pp-headline:focus,
+.pp-question:focus,
+.pp-send-heading:focus {
+  outline: none;
+}
+.pp-lead {
+  font-size: clamp(16px, 1.4vw, 18px);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  max-width: 640px;
+}
+.pp-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+  max-width: 640px;
+}
+.pp-small {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 12px 0 0;
+  max-width: 640px;
+}
+.pp-muted {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+.pp-note {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 24px 0 0;
+}
+.pp-error,
+.pp-message {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 8px 0 0;
+  min-height: 1px;
+}
+.pp-link {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.pp-quiet {
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.pp-btn {
+  margin-top: 24px;
+}
+.pp-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.pp-btn:focus-visible,
+.pp-quiet:focus-visible,
+.pp-link:focus-visible,
+.pp-summary:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+/* ── Intro ── */
+.pp-intro-links {
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Steps ── */
+.pp-progress {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  margin: 0 0 24px;
+}
+.pp-question {
+  font-size: clamp(24px, 3.2vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.pp-helper {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 32px;
+}
+.pp-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.pp-options {
+  border-top: 1px solid var(--text-muted);
+}
+.pp-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--text-muted);
+  font-size: 17px;
+  line-height: 1.4;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+@media (hover: hover) {
+  .pp-option:hover {
+    background: var(--bg-shift);
+  }
+}
+.pp-option.is-selected,
+.pp-option.is-selected:hover {
+  background: var(--text-primary);
+  color: var(--bg);
+}
+.pp-option:has(.pp-input:focus-visible) {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -2px;
+}
+.pp-option.is-selected:has(.pp-input:focus-visible) {
+  outline-color: var(--bg);
+  outline-offset: -5px;
+}
+.pp-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+.pp-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+.pp-option-hint {
+  font-size: 13px;
+  opacity: 0.75;
+}
+.pp-check {
+  width: 16px;
+  font-size: 14px;
+  text-align: right;
+}
+.pp-step-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+.pp-step-actions .pp-quiet {
+  margin-top: 24px;
+}
+.pp-focus {
+  margin-top: 24px;
+}
+.pp-focus-line {
+  font-size: 15px;
+  color: var(--text-primary);
+  margin: 0;
+}
+.pp-focus-choice {
+  margin-top: 16px;
+}
+
+/* ── Brief ── */
+.pp-announce {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+.pp-section {
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+.pp-section .pp-label {
+  margin-bottom: 12px;
+}
+.pp-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pp-chip {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr) auto;
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 8px 0;
+  font-size: 15px;
+}
+.pp-chip-q {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+.pp-chip-a {
+  color: var(--text-primary);
+}
+.pp-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.pp-list strong {
+  font-weight: 500;
+}
+.pp-prices {
+  margin: 0 0 8px;
+}
+.pp-price {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 6px 0;
+  font-size: 15px;
+}
+.pp-price dt {
+  color: var(--text-secondary);
+}
+.pp-price dd {
+  margin: 0;
+  color: var(--text-primary);
+}
+.pp-optional {
+  margin-top: 16px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.pp-summary {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.pp-optional .pp-fieldset {
+  margin-top: 24px;
+}
+.pp-legend-small {
+  padding: 0;
+  margin: 0 0 12px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.pp-field {
+  margin-top: 24px;
+}
+.pp-textarea {
+  resize: vertical;
+}
+.pp-fit {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 24px 0 0;
+  max-width: 640px;
+}
+.pp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 16px;
+}
+.pp-quiet-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 32px;
+  margin-top: 40px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Send form ── */
+.pp-send {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  max-width: 560px;
+}
+.pp-send-heading {
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0 0 12px;
+}
+.pp-tick {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.pp-tick input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  border: 1px solid var(--text-primary);
+  cursor: pointer;
+}
+.pp-tick input:checked {
+  background: var(--text-primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23F7F6F5' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") center no-repeat;
+}
+.pp-tick input:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+.pp-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ── Invitation blocks elsewhere on the site ── */
+.pp-invite {
+  padding: clamp(64px, 8vw, 112px) var(--page-px);
+  border-top: 1px solid var(--border);
+}
+.pp-invite-inner {
+  max-width: 640px;
+}
+
+/* ── Small screens ── */
+@media (max-width: 600px) {
+  .pp-option {
+    font-size: 16px;
+    padding: 12px;
+  }
+  .pp-chip,
+  .pp-price {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .pp-chip-a {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .pp-price dd {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pp-screen {
+    animation: none;
+  }
+}
+
+/* ── Print: the brief only ── */
+@media print {
+  .site-header,
+  .header-crest-wrap,
+  footer,
+  .footer-reveal,
+  .next-page-link,
+  .scroll-progress,
+  .pp-no-print,
+  .pp-send {
+    display: none !important;
+  }
+  .pp-root {
+    max-width: none;
+  }
+}

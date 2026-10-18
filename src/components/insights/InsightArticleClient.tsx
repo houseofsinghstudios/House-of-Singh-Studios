@@ -447,7 +447,7 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+            <Button href="/start" variant="secondary-inverted" data-cursor="link">
               Start a Project
             </Button>
           </div>

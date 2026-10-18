@@ -4,66 +4,7 @@ import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-
-const tiers = [
-  {
-    number: "01",
-    title: "Brand Foundation",
-    price: "$4,000",
-    description:
-      "For businesses launching or formalizing their visual identity for the first time.",
-    includes: [
-      "Logo system with primary mark and variations",
-      "Color and typography framework",
-      "Basic brand guidelines document",
-      "Primary brand applications",
-    ],
-    timeline: "4 to 6 weeks",
-    bestFor:
-      "Founders, new ventures, businesses operating without a formal brand system.",
-    cta: { text: "Start a Project", href: "/contact", variant: "secondary" as const },
-    recommended: false,
-  },
-  {
-    number: "02",
-    title: "Brand Identity System",
-    price: "$10,000",
-    description:
-      "For established businesses that need a complete visual identity built to scale.",
-    includes: [
-      "Full discovery and strategy phase",
-      "Complete logo system with variations",
-      "Typography and color architecture",
-      "Comprehensive brand guidelines document",
-      "Collateral design suite",
-      "Art direction for brand photography and content",
-    ],
-    timeline: "8 to 12 weeks",
-    bestFor:
-      "Businesses doing $1M+ that have outgrown their current brand.",
-    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
-    recommended: true,
-  },
-  {
-    number: "03",
-    title: "Brand Ecosystem",
-    price: "$20,000",
-    description:
-      "For businesses that need brand identity, digital presence, content systems, and ongoing creative direction under one roof.",
-    includes: [
-      "Everything in Brand Identity System",
-      "Website design direction and content architecture",
-      "Content strategy and social media systems",
-      "Brand launch support",
-      "3 months of post-launch creative direction and support",
-    ],
-    timeline: "12 to 16 weeks",
-    bestFor:
-      "Businesses preparing for a major growth phase, market expansion, or rebrand.",
-    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
-    recommended: false,
-  },
-];
+import { PACKAGE_TIERS as tiers } from "@/data/packages";
 
 export default function PackagesClient() {
   return (
@@ -241,7 +182,7 @@ export default function PackagesClient() {
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button href="/contact" variant="secondary-inverted" data-cursor="link">
+            <Button href="/start" variant="secondary-inverted" data-cursor="link">
               Start a Project
             </Button>
           </div>

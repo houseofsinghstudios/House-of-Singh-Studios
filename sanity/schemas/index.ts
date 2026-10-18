@@ -6,6 +6,7 @@ import testimonial from "./testimonial";
 import teamMember from "./teamMember";
 import siteSettings from "./siteSettings";
 import role from "./role";
+import servicePricing from "./servicePricing";
 import { blockImage } from "./blocks/shared";
 import blockSplit from "./blocks/blockSplit";
 import blockOffset from "./blocks/blockOffset";
@@ -23,6 +24,7 @@ export const schemaTypes = [
   teamMember,
   siteSettings,
   role,
+  servicePricing,
   blockImage,
   blockSplit,
   blockOffset,

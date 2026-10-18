@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { Link } from "next-view-transitions";
 import { FEEDBACK, KEEP_IT, NEXT_STEP, QUIET_LINKS } from "@/lib/brand-pulse/content";
+import { PLACEMENTS } from "@/lib/project-planner/content";
 import type { Feedback } from "@/lib/brand-pulse/types";
 import PulseEmailForm from "./PulseEmailForm";
 import PulseStudioView from "./PulseStudioView";
@@ -13,6 +14,8 @@ import type { LeadContact, ProfileContact, SendStatus } from "./events";
 interface Props {
   bookingHref: string;
   shareHref: string;
+  // /start with the recommended service preselected.
+  planHref: string;
   lead: SendStatus;
   leadEmail: string | null;
   onFeedback: (feedback: Feedback) => void;
@@ -98,6 +101,7 @@ export default function PulseFollowUp(props: Props) {
       </div>
       <nav className="bp-quiet" aria-label="Brand Pulse">
         <Link href="/contact" className="bp-quiet-link">{QUIET_LINKS.conversation}</Link>
+        <Link href={props.planHref} className="bp-quiet-link">{PLACEMENTS.brandPulse}</Link>
         <CopyLink href={props.shareHref} />
         <button type="button" className="bp-quiet-link" onClick={props.onRestart}>{QUIET_LINKS.startAgain}</button>
       </nav>

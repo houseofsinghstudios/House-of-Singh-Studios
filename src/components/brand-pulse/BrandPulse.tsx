@@ -8,6 +8,7 @@ import { assess } from "@/lib/brand-pulse/engine";
 import { GATE_COPY, INTRO, KEEP_IT } from "@/lib/brand-pulse/content";
 import { bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { GATE } from "@/lib/brand-pulse/settings";
+import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
 import { QUESTION_ORDER, type Answers, type Feedback, type Gate } from "@/lib/brand-pulse/types";
 import PulseIntro from "./PulseIntro";
 import PulseQuestion from "./PulseQuestion";
@@ -188,6 +189,7 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
               <PulseFollowUp
                 bookingHref={booking}
                 shareHref={share}
+                planHref={startHref("brand_pulse", serviceForSiteSlug(result.service.slug))}
                 lead={lead}
                 leadEmail={contact?.email ?? null}
                 onFeedback={sendFeedback}

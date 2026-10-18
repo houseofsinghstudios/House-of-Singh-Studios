@@ -1208,6 +1208,20 @@ body {
   margin: 16px 0 0;
 }
 
+/* ── "Planning something similar?" link at the end of a case study ── */
+.cs-plan-similar {
+  margin: 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  font-size: 15px;
+}
+.cs-plan-similar-link {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
 /* ── Hero Image (full-bleed) ── */
 .cs-hero-image {
   position: relative;
