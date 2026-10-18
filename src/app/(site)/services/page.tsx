@@ -4,6 +4,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export const revalidate = 60;
 
@@ -39,7 +40,7 @@ export default async function ServicesPage() {
         <div className="cta-centered">
           <h2 className="cta-heading">Ready to start a conversation?</h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/packages" variant="secondary-inverted" data-cursor="link">

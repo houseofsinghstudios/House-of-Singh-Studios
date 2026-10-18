@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import BrandPulse from "@/components/brand-pulse/BrandPulse";
 import { INTRO } from "@/lib/brand-pulse/content";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 /* ── Comparison table rows ── */
 const COMPARISON_ROWS = [
@@ -382,7 +383,7 @@ export default function AILabClient() {
             Ready to see what AI-powered creative direction looks like?
           </h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/work" variant="secondary-inverted" data-cursor="link">

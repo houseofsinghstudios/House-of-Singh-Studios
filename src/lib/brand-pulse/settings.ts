@@ -1,4 +1,5 @@
 // Brand Pulse settings.
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import type { Gate } from "./types";
 
 // When the email is asked for:
@@ -8,4 +9,5 @@ import type { Gate } from "./types";
 export const GATE: Gate = "none";
 
 export const SITE_URL = "https://studios.houseofsingh.com";
-export const BOOKING_URL = "https://cal.com/houseofsinghstudios/30min";
+// The sitewide discovery call link. Brand Pulse adds its notes to it.
+export const BOOKING_URL = DISCOVERY_CALL_URL;

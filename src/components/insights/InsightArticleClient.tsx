@@ -10,6 +10,7 @@ import ShareButtons from "@/components/ShareButtons";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 interface PostImage {
   asset?: {
@@ -443,7 +444,7 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
           <p className="cta-label">(Next Step)</p>
           <h2 className="cta-heading">Ready to build a brand that works?</h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/contact" variant="secondary-inverted" data-cursor="link">

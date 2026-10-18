@@ -3,6 +3,7 @@
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import NextPageLink from "@/components/layout/NextPageLink";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 const tiers = [
   {
@@ -40,7 +41,7 @@ const tiers = [
     timeline: "8 to 12 weeks",
     bestFor:
       "Businesses doing $1M+ that have outgrown their current brand.",
-    cta: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
     recommended: true,
   },
   {
@@ -59,7 +60,7 @@ const tiers = [
     timeline: "12 to 16 weeks",
     bestFor:
       "Businesses preparing for a major growth phase, market expansion, or rebrand.",
-    cta: { text: "Book a Discovery Call", href: "https://cal.com/houseofsinghstudios/hr", variant: "primary" as const },
+    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
     recommended: false,
   },
 ];
@@ -237,7 +238,7 @@ export default function PackagesClient() {
           <p className="cta-label">(Next Step)</p>
           <h2 className="cta-heading">Not sure which package fits?</h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/contact" variant="secondary-inverted" data-cursor="link">

@@ -9,6 +9,7 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
 import { disciplineLabel } from "@/lib/disciplines";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
@@ -323,7 +324,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
           <p className="cta-label">(Next Step)</p>
           <h2 className="cta-heading">Have a project in mind?</h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/contact" variant="secondary-inverted" data-cursor="link">

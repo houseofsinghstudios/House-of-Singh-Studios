@@ -8,6 +8,7 @@ import ImageGallery from "./ImageGallery";
 import NextProject from "./NextProject";
 import BlockRenderer from "./blocks/BlockRenderer";
 import NextPageLink from "@/components/layout/NextPageLink";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export default function CaseStudyTemplate({
   project,
@@ -257,7 +258,7 @@ export default function CaseStudyTemplate({
           <p className="cta-label">(Next step)</p>
           <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>Start a project.</h2>
           <div className="cta-buttons">
-            <Button href="https://cal.com/houseofsinghstudios/hr" variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
+            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
             <Button href="/contact" variant="secondary-inverted" data-cursor="link">

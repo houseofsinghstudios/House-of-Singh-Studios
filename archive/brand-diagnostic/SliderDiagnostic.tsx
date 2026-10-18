@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
+import { DISCOVERY_CALL_URL } from '@/lib/constants/booking'
 
 const SLIDER_CONFIG = [
   {
@@ -47,14 +48,14 @@ const RESULTS: Record<string, { title: string; desc: string; href: string; cta: 
   overhaul: {
     title: 'Your brand needs a comprehensive overhaul.',
     desc: 'Multiple areas need attention. Start with a discovery call so we can scope the right sequence for your business.',
-    href: 'https://cal.com/houseofsinghstudios/hr',
+    href: DISCOVERY_CALL_URL,
     cta: 'Book a Discovery Call',
     external: true,
   },
   healthy: {
     title: 'Your brand is in good shape.',
     desc: 'If something still feels off, book a discovery call. Sometimes the gap is not visible from inside the business.',
-    href: 'https://cal.com/houseofsinghstudios/hr',
+    href: DISCOVERY_CALL_URL,
     cta: 'Book a Discovery Call',
     external: true,
   },
