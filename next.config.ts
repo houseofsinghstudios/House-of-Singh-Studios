@@ -10,6 +10,19 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Old /journal addresses moved to /insights: permanent 301s (permanent: true would send 308).
+  // The specific article comes first: its slug changed too.
+  async redirects() {
+    return [
+      {
+        source: "/journal/rebrand-or-refresh-how-established-businesses-decide",
+        destination: "/insights/rebrand-or-refresh-how-established-businesses-should-decide",
+        statusCode: 301,
+      },
+      { source: "/journal/:slug", destination: "/insights/:slug", statusCode: 301 },
+      { source: "/journal", destination: "/insights", statusCode: 301 },
+    ];
+  },
   async headers() {
     return [
       {

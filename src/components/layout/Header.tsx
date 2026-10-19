@@ -83,7 +83,7 @@ export default function Header() {
           <Link href="/" aria-label="House of Singh Studios home">
             <Image
               src="/hos-studios-logo.svg"
-              alt=""
+              alt="House of Singh Studios"
               className="header-crest"
               width={140}
               height={115}

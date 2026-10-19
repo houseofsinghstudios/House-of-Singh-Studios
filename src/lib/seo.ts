@@ -3,14 +3,26 @@
 
 export const STUDIO_NAME = "House of Singh Studios";
 
-// A trailing studio name typed by hand: " — ", " – ", " - " or " | " before it, any case.
-const STUDIO_SUFFIX = /\s*[—–|-]\s*House of Singh Studios\s*$/i;
+// A studio name typed by hand at either end, with " — ", " – ", " - ", " | " or ": " between, any case.
+const STUDIO_SUFFIX = /\s*[—–|:-]\s*House of Singh Studios\s*$/i;
+const STUDIO_PREFIX = /^\s*House of Singh Studios\s*[—–|:-]\s*/i;
+const STUDIO_ONLY = /^\s*House of Singh Studios\s*$/i;
 
-// The first non-empty candidate with any trailing studio name removed.
+function stripStudio(title: string): string {
+  let t = title;
+  for (let previous = ""; previous !== t; ) {
+    previous = t;
+    t = t.replace(STUDIO_SUFFIX, "").replace(STUDIO_PREFIX, "");
+  }
+  return STUDIO_ONLY.test(t) ? "" : t.trim();
+}
+
+// The first candidate that still has words once any studio name at either end is removed.
 // bareTitle(project.seoTitle, project.name): the SEO title if set, otherwise the name.
+// A title that is only the studio name falls through to the next candidate.
 export function bareTitle(...candidates: (string | null | undefined)[]): string {
   for (const candidate of candidates) {
-    const title = (candidate || "").replace(STUDIO_SUFFIX, "").trim();
+    const title = stripStudio(candidate || "");
     if (title) return title;
   }
   return "";
