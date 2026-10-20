@@ -48,7 +48,7 @@ export default function PlannerSendForm({ onSend }: Props) {
   }
 
   return (
-    <form className="pp-send" onSubmit={submit} noValidate>
+    <form className="pp-send" onSubmit={submit} noValidate data-clarity-mask="True">
       <h3 className="pp-send-heading" tabIndex={-1} id="pp-send-heading">{SEND.heading}</h3>
       <p className="pp-text">{SEND.text}</p>
       {FIELDS.map((f) => {

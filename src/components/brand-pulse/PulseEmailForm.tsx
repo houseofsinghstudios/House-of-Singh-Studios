@@ -31,7 +31,7 @@ export default function PulseEmailForm({ id, buttonLabel, status, onSubmit }: Pr
   }
 
   return (
-    <form className="bp-form" onSubmit={handleSubmit} noValidate>
+    <form className="bp-form" onSubmit={handleSubmit} noValidate data-clarity-mask="True">
       <div className="bp-field">
         <label className="contact-label" htmlFor={`${id}-email`}>{KEEP_IT.emailLabel}</label>
         <input

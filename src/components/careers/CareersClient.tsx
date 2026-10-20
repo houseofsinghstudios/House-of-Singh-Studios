@@ -561,6 +561,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       {/* ── SECTION 3: APPLICATION FORM ── */}
       <section
         ref={formSectionRef}
+        data-clarity-mask="True"
         style={{
           padding: "120px var(--page-px)",
           background: "var(--bg-shift)",
