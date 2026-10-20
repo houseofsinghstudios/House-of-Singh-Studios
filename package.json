@@ -9,7 +9,8 @@
     "lint": "eslint",
     "import:portfolio": "node scripts/import-portfolio/index.mjs",
     "test": "node --conditions=react-server --import tsx --test \"tests/**/*.test.ts\"",
-    "import:roles": "node scripts/import-roles/index.mjs"
+    "import:roles": "node scripts/import-roles/index.mjs",
+    "indexnow": "node scripts/indexnow/index.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^6.0.2",

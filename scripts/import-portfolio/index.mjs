@@ -6,6 +6,7 @@ import fs from "node:fs";
 import { IMPORT_DIR, SITE_URL, fail, loadImportEnv, parseCliArgs, requireSanityConfig } from "./lib/config.mjs";
 import { createSanityClient } from "./lib/sanity.mjs";
 import { explain, runProject, size } from "./lib/run.mjs";
+import { notifyIndexNow, portfolioUrls } from "../indexnow/lib/after-import.mjs";
 
 async function main() {
   const args = parseCliArgs(process.argv.slice(2));
@@ -34,6 +35,8 @@ async function main() {
   }
 
   printSummary(results, dryRun);
+  // Tell Bing about the new pages. A failure is one warning line, never a failed import.
+  if (!dryRun && args.indexnow) await notifyIndexNow(portfolioUrls(results), "the case studies");
   if (results.some((r) => r.status === "failed")) process.exitCode = 1;
 }
 

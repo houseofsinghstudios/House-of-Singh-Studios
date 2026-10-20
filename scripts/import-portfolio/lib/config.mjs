@@ -46,6 +46,9 @@ Portfolio import. Creates published case studies in Sanity from portfolio-import
   npm run import:portfolio -- --only <slug>        Process one project folder only.
   npm run import:portfolio -- --commit --overwrite Replace projects that already exist.
   npm run import:portfolio -- --json               Dry run that also prints the full document.
+  npm run import:portfolio -- --commit --no-indexnow  Write, but do not tell Bing about the new pages.
+
+After a --commit, the new or replaced case study URLs and /work are sent to IndexNow (Bing).
 
 Full instructions: scripts/import-portfolio/README.md
 `;
@@ -61,6 +64,7 @@ export function parseCliArgs(argv) {
         only: { type: "string" },
         overwrite: { type: "boolean" },
         json: { type: "boolean" },
+        "no-indexnow": { type: "boolean" },
         help: { type: "boolean", short: "h" },
       },
       strict: true,
@@ -82,6 +86,7 @@ export function parseCliArgs(argv) {
     only: values.only,
     overwrite: Boolean(values.overwrite),
     showJson: Boolean(values.json),
+    indexnow: !values["no-indexnow"],
   };
 }
 

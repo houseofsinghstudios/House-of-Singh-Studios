@@ -8,6 +8,7 @@ import { SITE_URL, fail, loadImportEnv, requireSanityConfig } from "../import-po
 import { createSanityClient } from "../import-portfolio/lib/sanity.mjs";
 import { ROLES_DIR, parseCliArgs } from "./lib/config.mjs";
 import { explain, runRole } from "./lib/run.mjs";
+import { notifyIndexNow, rolesUrls } from "../indexnow/lib/after-import.mjs";
 
 async function main() {
   const args = parseCliArgs(process.argv.slice(2));
@@ -35,6 +36,8 @@ async function main() {
   }
 
   printSummary(results, dryRun);
+  // Tell Bing the careers page changed. A failure is one warning line, never a failed import.
+  if (!dryRun && args.indexnow) await notifyIndexNow(rolesUrls(results), "the careers page");
   if (results.some((r) => r.status === "failed")) process.exitCode = 1;
 }
 
