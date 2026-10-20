@@ -30,6 +30,9 @@ Roles import. Creates published careers roles in Sanity from roles-import/*.md.
   npm run import:roles -- --commit              Write to Sanity.
   npm run import:roles -- --only <slug>         Process one file only (roles-import/<slug>.md).
   npm run import:roles -- --commit --overwrite  Replace roles that already exist.
+  npm run import:roles -- --commit --no-indexnow  Write, but do not tell Bing about /careers.
+
+After a --commit, /careers is sent to IndexNow (Bing).
 
 Full instructions: scripts/import-roles/README.md
 `;
@@ -44,6 +47,7 @@ export function parseCliArgs(argv) {
         commit: { type: "boolean" },
         only: { type: "string" },
         overwrite: { type: "boolean" },
+        "no-indexnow": { type: "boolean" },
         help: { type: "boolean", short: "h" },
       },
       strict: true,
@@ -62,5 +66,6 @@ export function parseCliArgs(argv) {
     mode: values.commit ? "commit" : "dry-run",
     only: values.only ? values.only.replace(/\.md$/i, "") : undefined,
     overwrite: Boolean(values.overwrite),
+    indexnow: !values["no-indexnow"],
   };
 }
