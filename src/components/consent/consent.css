@@ -1,0 +1,148 @@
+/* ── Quiet consent ──
+   White surface, 1px Marble border, zero radius, no shadow. Phones: a block in the page flow above
+   the footer. Desktop (768px and wider): fixed bottom left, a tab that expands to a 240px card. */
+
+.cx-root {
+  font-family: var(--sans);
+  animation: cx-fade 0.2s ease;
+}
+@keyframes cx-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cx-card {
+  background: #ffffff;
+  border: 1px solid var(--text-muted);
+  padding: 16px;
+  color: var(--text-secondary);
+}
+.cx-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.cx-label,
+.cx-tab {
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.cx-heading {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 10px 0 6px;
+}
+.cx-heading:focus {
+  outline: none;
+}
+.cx-body,
+.cx-thanks {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+.cx-thanks {
+  color: var(--text-primary);
+}
+.cx-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+/* Both choices look exactly alike. */
+.cx-button {
+  flex: 1;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 12px;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  border-radius: 0;
+  cursor: pointer;
+}
+.cx-close {
+  width: 24px;
+  height: 24px;
+  margin: -4px -4px 0 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.cx-tab {
+  display: none;
+  background: #ffffff;
+  border: 1px solid var(--text-muted);
+  border-radius: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.cx-button:focus-visible,
+.cx-close:focus-visible,
+.cx-tab:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* Phones: in the page flow, full width within the page padding. */
+@media (max-width: 767px) {
+  .cx-root {
+    padding: 32px var(--page-px) 40px;
+    background: var(--bg);
+  }
+  /* The ask has no close on phones: it simply stays in place above the footer. */
+  .cx-ask .cx-close {
+    display: none;
+  }
+}
+
+/* Desktop: fixed in the bottom left margin. */
+@media (min-width: 768px) {
+  .cx-root {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z-index: 90;
+  }
+  .cx-card {
+    width: 240px;
+  }
+  .cx-ask .cx-tab {
+    display: inline-block;
+  }
+  .cx-root:not(.is-expanded) .cx-card,
+  .cx-root.is-expanded .cx-tab {
+    display: none;
+  }
+  .cx-root.is-desktop-hidden {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cx-root {
+    animation: none;
+  }
+}
+
+/* Footer: "Privacy choices" is a button that looks like the legal links beside it. */
+.ft-legal-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
