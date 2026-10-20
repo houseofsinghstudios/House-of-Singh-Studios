@@ -2500,6 +2500,14 @@ body {
   letter-spacing: 0.06em;
   color: var(--text-muted);
 }
+/* Equal width digits, so the time never changes width as it ticks or when it first appears. */
+.about-clock-time {
+  font-variant-numeric: tabular-nums;
+}
+/* Before the browser knows the time: invisible placeholder digits keep the space. */
+.about-clock-pending {
+  visibility: hidden;
+}
 .about-clock-colon {
   animation: colonBlink 2s ease-in-out infinite;
 }
