@@ -8,6 +8,7 @@ import FooterReveal from "@/components/layout/FooterReveal";
 import ClientShell from "@/components/ClientShell";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
+import ConsentManager from "@/components/consent/ConsentManager";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
@@ -27,7 +28,8 @@ export default function SiteLayout({
       <Header />
       <div className="site-content-wrap">
         <main>{children}</main>
-        <Footer />
+        {analyticsEnabled && <ConsentManager />}
+        <Footer consentEnabled={analyticsEnabled} />
       </div>
       <FooterReveal />
       <SpeedInsights />

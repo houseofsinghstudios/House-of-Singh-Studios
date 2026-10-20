@@ -1,6 +1,10 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { Link } from "next-view-transitions";
+import { CONSENT_COPY } from "@/lib/constants/consent";
+import { CLARITY_HOST } from "@/lib/constants/clarity";
+import { PRIVACY_CHOICES_EVENT } from "@/components/consent/ConsentManager";
 
 const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
@@ -22,7 +26,14 @@ const CONNECT_LINKS = [
   { label: "X / Twitter", href: "https://x.com/hosdesignstudio" },
 ];
 
-export default function Footer() {
+const noSubscribe = () => () => {};
+// The consent notice and Privacy choices exist only where analytics run: production, on the real site.
+function useConsentActive(enabled: boolean) {
+  return useSyncExternalStore(noSubscribe, () => enabled && window.location.hostname === CLARITY_HOST, () => false);
+}
+
+export default function Footer({ consentEnabled = false }: { consentEnabled?: boolean }) {
+  const consentActive = useConsentActive(consentEnabled);
   return (
     <footer className="ft-footer">
       <div className="ft-body">
@@ -79,9 +90,14 @@ export default function Footer() {
         </div>
 
         <div className="ft-bottom">
-          <span className="ft-copyright">&copy; 2026 House of Singh Studios Inc.</span>
+          <span className="ft-copyright">&copy; 2026 House of Singh Studios Inc.{consentActive && ` ${CONSENT_COPY.footerNotice}`}</span>
           <div className="ft-legal">
             <Link href="/privacy" className="ft-legal-link">Privacy Policy</Link>
+            {consentActive && (
+              <button type="button" className="ft-legal-link ft-legal-button" onClick={() => window.dispatchEvent(new Event(PRIVACY_CHOICES_EVENT))}>
+                {CONSENT_COPY.footerLink}
+              </button>
+            )}
             <Link href="/terms" className="ft-legal-link">Terms</Link>
           </div>
           <button className="ft-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} type="button">

@@ -54,8 +54,11 @@ export default function PrivacyPage() {
           <p style={{ margin: "0 0 12px" }}>
             When you complete the Project Planner, we keep your project selections without your name or contact details, to understand what visitors need. Contact details are stored only if you choose to send your brief.
           </p>
-          <p style={{ margin: "0 0 32px" }}>
+          <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cookies and similar technologies:</strong> we use cookies and similar tracking technologies to understand how visitors interact with our website. You can control cookie preferences through your browser settings.
+          </p>
+          <p style={{ margin: "0 0 32px" }}>
+            You can change your analytics choice at any time using Privacy choices at the bottom of every page. Advertising cookies are never used.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>3. How we use your information</h2>
