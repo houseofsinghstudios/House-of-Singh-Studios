@@ -43,7 +43,7 @@ function ActionButton({ action, primary, href, onAction }: { action: ActionId; p
 
 function OptionalDetails({ optional, onOptional }: Pick<Props, "optional" | "onOptional">) {
   return (
-    <details className="pp-optional">
+    <details className="pp-optional" data-clarity-mask="True">
       <summary className="pp-summary">{OPTIONAL.toggle}</summary>
       <fieldset className="pp-fieldset">
         <legend className="pp-legend-small">{OPTIONAL.investmentQuestion} <span className="pp-muted">{OPTIONAL.optional}</span></legend>

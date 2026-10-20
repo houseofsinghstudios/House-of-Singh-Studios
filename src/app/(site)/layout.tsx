@@ -7,10 +7,12 @@ import Footer from "@/components/layout/Footer";
 import FooterReveal from "@/components/layout/FooterReveal";
 import ClientShell from "@/components/ClientShell";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import MicrosoftClarity from "@/components/MicrosoftClarity";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
-// Google Analytics loads on the production deployment only: never locally or on previews.
+// Google Analytics and Microsoft Clarity load on the production deployment only: never locally or on
+// previews. Clarity also checks the hostname in the browser, so the vercel.app address sends nothing.
 const analyticsEnabled = process.env.VERCEL_ENV === "production";
 
 export default function SiteLayout({
@@ -30,6 +32,7 @@ export default function SiteLayout({
       <FooterReveal />
       <SpeedInsights />
       {analyticsEnabled && <GoogleAnalytics />}
+      {analyticsEnabled && <MicrosoftClarity />}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

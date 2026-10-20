@@ -41,7 +41,7 @@ export default function PulseStudioView({ email, onSubmit }: Props) {
   }
 
   return (
-    <form className="bp-form bp-studio" onSubmit={handleSubmit} noValidate>
+    <form className="bp-form bp-studio" onSubmit={handleSubmit} noValidate data-clarity-mask="True">
       <p className="bp-text">{STUDIO_VIEW.text}</p>
       <div className="bp-studio-grid">
         {FIELDS.map((f) => (

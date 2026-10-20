@@ -177,7 +177,7 @@ function InlineNewsletter() {
 
   return (
     <div style={{ marginTop: 32 }}>
-      <form onSubmit={handleSubmit} className="art-newsletter-form">
+      <form onSubmit={handleSubmit} className="art-newsletter-form" data-clarity-mask="True">
         <span className="art-newsletter-label">
           Get studio insights in your inbox.
         </span>
