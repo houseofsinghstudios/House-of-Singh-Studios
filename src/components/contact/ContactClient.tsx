@@ -247,7 +247,7 @@ export default function ContactClient() {
         </div>
       </section>
 
-      <NextPageLink />
+      <NextPageLink current="/contact" />
     </>
   );
 }

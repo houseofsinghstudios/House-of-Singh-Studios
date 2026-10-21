@@ -255,7 +255,7 @@ export default function CaseStudyTemplate({
         </section>
       )}
 
-      <NextPageLink />
+      <NextPageLink current={`/work/${project.slug}`} />
 
       <section
         className="css-reveal"

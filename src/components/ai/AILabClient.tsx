@@ -341,7 +341,7 @@ export default function AILabClient() {
         </p>
       </section>
 
-      <NextPageLink />
+      <NextPageLink current="/ai" />
 
       {/* ═══ SECTION 8: DARK CTA ═══ */}
       <section

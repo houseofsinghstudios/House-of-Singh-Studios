@@ -429,7 +429,7 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
         </section>
       )}
 
-      <NextPageLink />
+      <NextPageLink current={`/insights/${post.slug.current}`} />
 
       {/* ═══ DARK CTA ═══ */}
       <section

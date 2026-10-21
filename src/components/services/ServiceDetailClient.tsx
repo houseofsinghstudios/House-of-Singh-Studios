@@ -187,7 +187,7 @@ export default function ServiceDetailClient({
         </section>
       )}
 
-      <NextPageLink />
+      <NextPageLink current={`/services/${slug}`} />
 
       {/* ═══ CTA — Dark Section ═══ */}
       <section

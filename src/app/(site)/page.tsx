@@ -34,7 +34,7 @@ export default async function Home() {
       <ServicesSection />
       <TestimonialsSection />
       <ProofSection />
-      <NextPageLink />
+      <NextPageLink current="/" />
       <CtaSection />
     </>
   );

@@ -269,7 +269,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
         </div>
       )}
 
-      <NextPageLink />
+      <NextPageLink current="/insights" />
 
       {/* ═══ DARK CTA ═══ */}
       <section
