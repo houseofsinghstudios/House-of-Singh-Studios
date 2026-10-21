@@ -1,9 +1,10 @@
-// The AI Lab page body. A server component: the only interactive part is the Brand Pulse flow,
-// which is its own client component.
+// The AI Lab page body. A server component: the interactive parts are the statistics count up and
+// the Brand Pulse flow, each its own client component.
 
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import BrandPulse from "@/components/brand-pulse/BrandPulse";
+import ProofStats, { type ProofStat } from "@/components/ai/ProofStats";
 import { INTRO } from "@/lib/brand-pulse/content";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
@@ -42,24 +43,24 @@ const COMPARISON_ROWS = [
 ];
 
 /* ── Proof bar stats ── */
-const PROOF_STATS = [
+const PROOF_STATS: ProofStat[] = [
   {
-    value: "37%",
-    width: 37,
-    text: "Higher originality when human direction is combined with AI.",
-    source: "AI Flywheel, 2025",
+    value: 91,
+    text: "Of designers say AI tools improve their designs. The tools bring speed; the vision still comes from the designer.",
+    source: "Figma, State of the Designer 2026",
+    link: "https://www.figma.com/blog/state-of-the-designer-2026/",
   },
   {
-    value: "85%",
-    width: 85,
-    text: "Of AI initiatives fail from poor direction, not poor tools.",
-    source: "Forbes / Gartner, 2025",
+    value: 83,
+    text: "Of CEOs say AI success depends more on people than on the technology.",
+    source: "IBM Institute for Business Value, CEO Study 2026",
+    link: "https://newsroom.ibm.com/2026-05-04-ibm-study-ceos-are-reshaping-c-suite-roles-for-the-ai-era",
   },
   {
-    value: "89%",
-    width: 89,
-    text: "Of designers report AI improved their workflow when integrated properly.",
-    source: "Foundation Capital, 2025",
+    value: 87,
+    text: "Of Canadian and US consumers assume brand content is at least partly AI made. Distinct, crafted work is what stands out.",
+    source: "Cashew, 2026",
+    link: "https://www.prnewswire.com/news-releases/consumers-assume-brand-content-is-ai-generated-new-cashew-research-reveals-what-builds-trust-instead-302843128.html",
   },
 ];
 
@@ -228,21 +229,9 @@ export default function AILabClient() {
             >
               Right means: right for your market, right for your audience, right
               for where your business is heading in three years. AI is trained on
-              what exists. Creative direction imagines what should exist. Research
-              confirms that human-AI collaboration scores 37% higher on
-              originality than AI working alone. That gap is not going away. That
-              gap is creative direction.
-            </p>
-            <p
-              style={{
-                fontSize: 12,
-                color: "rgba(247, 246, 245, 0.35)",
-                fontStyle: "italic",
-                marginTop: 16,
-              }}
-            >
-              AI Flywheel, State of AI in Design, 2025. Nielsen Norman Group,
-              2025.
+              what exists. Creative direction imagines what should exist. When
+              every brand has access to the same tools, the work starts to look
+              the same. That gap is creative direction.
             </p>
           </div>
         </div>
@@ -253,21 +242,7 @@ export default function AILabClient() {
         className="css-reveal"
         style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}
       >
-        <div className="ai-proof-grid">
-          {PROOF_STATS.map((stat, i) => (
-            <div key={i} className="ai-proof-col">
-              <p className="ai-proof-num">{stat.value}</p>
-              <div className="ai-proof-bar">
-                <div
-                  className="ai-proof-bar-fill"
-                  style={{ width: `${stat.width}%` }}
-                />
-              </div>
-              <p className="ai-proof-text">{stat.text}</p>
-              <p className="ai-proof-source">{stat.source}</p>
-            </div>
-          ))}
-        </div>
+        <ProofStats stats={PROOF_STATS} />
       </section>
 
       {/* ═══ SECTION 5: THE OUTCOME ═══ */}

@@ -1,72 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useRef } from "react";
+import { useCountUp } from "@/lib/use-count-up";
 
 const ITEMS = [
   { value: 50, suffix: "+", label: "Projects Delivered", duration: 1800 },
   { value: 12, suffix: "+", label: "Years of Practice", duration: 1400 },
   { value: 8, suffix: "+", label: "Industries Served", duration: 1000 },
 ];
-
-let hasRun = false;
+const DURATIONS = ITEMS.map((item) => item.duration);
 
 export default function ProofSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const numRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const rafIds = useRef<number[]>([]);
-
-  const setNumRef = useCallback(
-    (i: number) => (el: HTMLSpanElement | null) => {
-      numRefs.current[i] = el;
-    },
-    [],
-  );
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || hasRun) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries[0].isIntersecting) return;
-        if (hasRun) return;
-        hasRun = true;
-        observer.disconnect();
-
-        ITEMS.forEach((item, i) => {
-          const num = numRefs.current[i];
-          if (!num) return;
-
-          num.textContent = "0";
-          const t0 = performance.now();
-
-          function tick(now: number) {
-            const elapsed = now - t0;
-            const progress = Math.min(elapsed / item.duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const value = Math.round(eased * item.value);
-            num!.textContent = String(value);
-
-            if (progress < 1) {
-              rafIds.current[i] = requestAnimationFrame(tick);
-            } else {
-              num!.textContent = String(item.value);
-            }
-          }
-
-          rafIds.current[i] = requestAnimationFrame(tick);
-        });
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(section);
-
-    return () => {
-      observer.disconnect();
-      rafIds.current.forEach(cancelAnimationFrame);
-    };
-  }, []);
+  // Counts up once per visit, the first time the section is at least 10% on screen.
+  useCountUp(sectionRef, { duration: DURATIONS, threshold: 0.1, sessionKey: "home-proof" });
 
   return (
     <>
@@ -138,7 +85,7 @@ export default function ProofSection() {
           {ITEMS.map((item, i) => (
             <div key={i} className="proof-col">
               <p className="proof-value">
-                <span ref={setNumRef(i)}>{item.value}</span>{item.suffix}
+                <span data-count-up={item.value}>{item.value}</span>{item.suffix}
               </p>
               <p className="proof-value-label">
                 {item.label}
