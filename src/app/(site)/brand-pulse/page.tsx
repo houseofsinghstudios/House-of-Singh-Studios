@@ -4,13 +4,14 @@ import BrandPulse from "@/components/brand-pulse/BrandPulse";
 import PulseResultView from "@/components/brand-pulse/PulseResultView";
 import Button from "@/components/ui/Button";
 import { decode } from "@/lib/brand-pulse/codec";
+import { parsePrefill } from "@/lib/brand-pulse/entry";
 import { INTRO, PAGE, SHARED } from "@/lib/brand-pulse/content";
 import { assess } from "@/lib/brand-pulse/engine";
 import { studioTitle } from "@/lib/seo";
 
 const URL = "https://studios.houseofsingh.com/brand-pulse";
 
-type Props = { searchParams: Promise<{ r?: string | string[] }> };
+type Props = { searchParams: Promise<{ r?: string | string[]; q?: string | string[] }> };
 
 // Shared results (?r=) are not indexed and point search engines at the check itself.
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
@@ -25,8 +26,10 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default async function BrandPulsePage({ searchParams }: Props) {
-  const { r } = await searchParams;
+  const { r, q } = await searchParams;
   const shared = decode(Array.isArray(r) ? r[0] : r);
+  // ?q= preselects one answer and starts at question 1; invalid values are ignored.
+  const prefill = parsePrefill(q);
 
   return (
     <>
@@ -47,7 +50,7 @@ export default async function BrandPulsePage({ searchParams }: Props) {
             </div>
           </div>
         ) : (
-          <BrandPulse headingLevel="h1" />
+          <BrandPulse headingLevel="h1" prefill={prefill} />
         )}
       </section>
     </>

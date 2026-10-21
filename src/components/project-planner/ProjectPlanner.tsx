@@ -20,6 +20,8 @@ interface Props {
   pricing: Pricing;
   related: CaseStudyLink[];
   initialService: ServiceId | null;
+  // ?begin=1: skip the intro and open the first question, with any preselected service showing.
+  begin?: boolean;
 }
 
 type Screen = "intro" | "step" | "brief";
@@ -34,8 +36,8 @@ function scrollToTop(el: HTMLElement | null) {
   else el.scrollIntoView({ block: "start" });
 }
 
-export default function ProjectPlanner({ pricing, related, initialService }: Props) {
-  const [screen, setScreen] = useState<Screen>("intro");
+export default function ProjectPlanner({ pricing, related, initialService, begin = false }: Props) {
+  const [screen, setScreen] = useState<Screen>(begin ? "step" : "intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [draft, setDraft] = useState<Draft>(() => emptyDraft(initialService));
   const [optional, setOptional] = useState<Optional>({});
@@ -66,6 +68,18 @@ export default function ProjectPlanner({ pricing, related, initialService }: Pro
     go("step", 0);
   }
 
+  // A begin link skips the intro, so the session starts here, with the same started event.
+  useEffect(() => {
+    if (!begin || session.current) return;
+    session.current = startSession();
+    void sendEvent(session.current, { event: "started" });
+  }, [begin]);
+
+  function showBrief() {
+    if (session.current) setBriefId(session.current.briefId);
+    go("brief");
+  }
+
   function announce() {
     setAnnouncement("");
     requestAnimationFrame(() => setAnnouncement(FLOW.updated));
@@ -75,10 +89,10 @@ export default function ProjectPlanner({ pricing, related, initialService }: Pro
     const firstMissing = steps.findIndex((s, i) => i > stepIndex && !isAnswered(s, draft));
     if (editing && answers && firstMissing === -1) {
       setEditing(false);
-      go("brief");
+      showBrief();
       announce();
     } else if (stepIndex === steps.length - 1) {
-      if (answers) go("brief");
+      if (answers) showBrief();
     } else {
       go("step", stepIndex + 1);
     }

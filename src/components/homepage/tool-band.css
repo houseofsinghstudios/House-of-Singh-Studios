@@ -1,0 +1,356 @@
+/* ── Two ways to start ──
+   The homepage band into Brand Pulse and the Project Planner. A full bleed inverted section:
+   Obsidian ground, Mist type, the same vertical rhythm as the other homepage sections.
+   Tones are Mist (--bg) at the opacities the footer and dark sections already use:
+   50% for muted labels (AA on Obsidian), 65% for body text, 8% for rules, 40% for chip borders. */
+
+.tb {
+  --tb-fg: var(--bg);
+  --tb-muted: color-mix(in srgb, var(--bg) 50%, transparent);
+  --tb-body: color-mix(in srgb, var(--bg) 65%, transparent);
+  --tb-rule: color-mix(in srgb, var(--bg) 8%, transparent);
+  --tb-chip-border: color-mix(in srgb, var(--bg) 40%, transparent);
+  --tb-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  background: var(--text-primary);
+  color: var(--tb-fg);
+  padding: clamp(80px, 10vw, 140px) var(--page-px);
+  padding-block: round(clamp(80px, 10vw, 140px), 1px);
+  font-family: var(--sans);
+}
+/* Whole pixel line heights (round() where the type is fluid) keep the band a whole number of
+   pixels tall, so every section below it renders exactly as it did before the band existed. */
+
+/* ── Header ── */
+.tb .tb-label {
+  color: var(--tb-muted);
+  line-height: 16px;
+  margin: 0 0 24px;
+}
+.tb-heading {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  line-height: round(calc(clamp(32px, 4vw, 48px) * 1.1), 1px);
+  color: var(--tb-fg);
+  margin: 0 0 64px;
+}
+
+/* ── Columns (desktop) ── */
+.tb-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.tb-col {
+  border-top: 1px solid var(--tb-rule);
+  padding-top: 40px;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  /* A shared subgrid: tag, heading, body, visual, question, chips and button line up across columns. */
+  .tb-columns {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(7, auto);
+  }
+  .tb-col {
+    display: grid;
+    grid-row: span 7;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+  .tb-col > * {
+    align-self: start;
+  }
+  .tb-col:first-child {
+    padding-right: clamp(32px, 4vw, 64px);
+  }
+  .tb-col + .tb-col {
+    border-left: 1px solid var(--tb-rule);
+    padding-left: clamp(32px, 4vw, 64px);
+  }
+}
+
+/* ── Column content ── */
+.tb-tag {
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 16px;
+  color: var(--tb-muted);
+  margin: 0 0 16px;
+}
+.tb-col-heading {
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  line-height: round(calc(clamp(22px, 2.2vw, 28px) * 1.2), 1px);
+  color: var(--tb-fg);
+  margin: 0 0 12px;
+}
+.tb-body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tb-body);
+  margin: 0;
+  max-width: 480px;
+}
+
+/* Visuals: the same height in both columns, so the questions line up. */
+.tb-visual {
+  min-height: 72px;
+  margin: 32px 0;
+}
+.tb-pulse {
+  display: block;
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+}
+.tb-pulse-path {
+  fill: none;
+  stroke: var(--tb-fg);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tb-signs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.tb-sign {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  color: var(--tb-fg);
+}
+.tb-brief {
+  box-sizing: border-box;
+  height: 72px;
+  border: 1px solid var(--tb-chip-border);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.tb-brief-line {
+  display: block;
+  height: 2px;
+  background: var(--tb-muted);
+  transform-origin: left;
+}
+.tb-brief-line:nth-child(1) { width: 70%; }
+.tb-brief-line:nth-child(2) { width: 92%; }
+.tb-brief-line:nth-child(3) { width: 55%; }
+
+.tb-question {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--tb-fg);
+  margin: 0 0 16px;
+}
+
+/* ── Chips: real links, at least 44px tall, inverted on hover, focus and press ── */
+.tb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tb-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 18px;
+  box-sizing: border-box;
+  border: 1px solid var(--tb-chip-border);
+  background: transparent;
+  color: var(--tb-fg);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-decoration: none;
+  transition: background-color 0.15s var(--tb-ease), color 0.15s var(--tb-ease), border-color 0.15s var(--tb-ease);
+}
+@media (hover: hover) {
+  .tb-chip:hover {
+    background: var(--tb-fg);
+    color: var(--text-primary);
+    border-color: var(--tb-fg);
+  }
+}
+.tb-chip:focus-visible,
+.tb-chip:active {
+  background: var(--tb-fg);
+  color: var(--text-primary);
+  border-color: var(--tb-fg);
+}
+.tb-chip:focus-visible {
+  outline: 2px solid var(--tb-fg);
+  outline-offset: 2px;
+}
+
+/* ── Buttons: the shared light on dark button, with the arrow nudge ── */
+.tb-action {
+  margin-top: 32px;
+}
+.tb-button {
+  line-height: 20px;
+}
+.tb-arrow {
+  display: inline-block;
+  margin-left: 4px;
+  transition: transform 0.25s var(--tb-ease);
+}
+@media (hover: hover) {
+  .tb-button:hover .tb-arrow {
+    transform: translateX(4px);
+  }
+}
+.tb-button:focus-visible .tb-arrow {
+  transform: translateX(4px);
+}
+.tb-button:focus-visible {
+  outline: 2px solid var(--tb-fg);
+  outline-offset: 2px;
+}
+
+/* ── Phone switch: hidden on desktop ── */
+.tb-tabs {
+  display: none;
+}
+
+/* ── Phones: one tool at a time ── */
+@media (max-width: 767px) {
+  .tb-heading {
+    margin-bottom: 40px;
+  }
+  .tb-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    border-bottom: 1px solid var(--tb-rule);
+    margin-bottom: 32px;
+  }
+  .tb-tab {
+    min-height: 48px;
+    padding: 12px 8px 12px 0;
+    background: none;
+    border: 0;
+    color: var(--tb-muted);
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.2s var(--tb-ease);
+  }
+  .tb-tab:focus-visible {
+    outline: 2px solid var(--tb-fg);
+    outline-offset: -2px;
+  }
+  .tb-switch[data-selected="pulse"] #tb-tab-pulse,
+  .tb-switch[data-selected="planner"] #tb-tab-planner {
+    color: var(--tb-fg);
+  }
+  .tb-tabs-underline {
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 50%;
+    height: 2px;
+    background: var(--tb-fg);
+    transition: transform 0.2s var(--tb-ease);
+  }
+  .tb-switch[data-selected="planner"] .tb-tabs-underline {
+    transform: translateX(100%);
+  }
+  /* Both panels share one cell, so the band keeps the taller panel's height and never jumps. */
+  .tb-columns {
+    grid-template-columns: 1fr;
+  }
+  .tb-col {
+    grid-area: 1 / 1;
+    border-top: 0;
+    padding-top: 0;
+    transition: opacity 0.15s var(--tb-ease), visibility 0s linear 0s;
+  }
+  .tb-col:not(.is-selected) {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s var(--tb-ease), visibility 0s linear 0.15s;
+  }
+}
+
+/* Without JavaScript: no switch, both panels stacked. */
+@media (max-width: 767px) and (scripting: none) {
+  .tb-tabs {
+    display: none;
+  }
+  .tb-col,
+  .tb-col:not(.is-selected) {
+    grid-area: auto;
+    opacity: 1;
+    visibility: visible;
+  }
+  .tb-col + .tb-col {
+    border-top: 1px solid var(--tb-rule);
+    margin-top: 48px;
+    padding-top: 40px;
+  }
+}
+
+/* ── Arrival, once: the pulse line draws, the vital signs light in turn, the brief takes shape ──
+   The base styles above are the final state. "waiting" is set only while the band is off screen. */
+/* --tb-pulse-len is the visible length of the line in pixels, measured by the client. */
+.tb[data-arrival] .tb-pulse-path {
+  stroke-dasharray: var(--tb-pulse-len) 4000px;
+}
+.tb[data-arrival="waiting"] .tb-pulse-path {
+  stroke-dashoffset: var(--tb-pulse-len);
+}
+.tb[data-arrival="waiting"] .tb-sign {
+  opacity: 0.5;
+}
+.tb[data-arrival="waiting"] .tb-brief-line {
+  transform: scaleX(0);
+}
+.tb[data-arrival="playing"] .tb-pulse-path {
+  transition: stroke-dashoffset 1.4s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-sign {
+  transition: opacity 0.3s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-sign:nth-child(1) { transition-delay: 0.5s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(2) { transition-delay: 0.68s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(3) { transition-delay: 0.86s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(4) { transition-delay: 1.04s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(5) { transition-delay: 1.22s; }
+.tb[data-arrival="playing"] .tb-brief-line {
+  transition: transform 0.5s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-brief-line:nth-child(2) { transition-delay: 0.25s; }
+.tb[data-arrival="playing"] .tb-brief-line:nth-child(3) { transition-delay: 0.5s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tb[data-arrival] .tb-pulse-path { stroke-dashoffset: 0; }
+  .tb[data-arrival] .tb-sign { opacity: 1; }
+  .tb[data-arrival] .tb-brief-line { transform: none; }
+
+  .tb-tabs-underline,
+  .tb-col,
+  .tb-col:not(.is-selected),
+  .tb-arrow {
+    transition: none;
+  }
+}
