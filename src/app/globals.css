@@ -2824,15 +2824,15 @@ select.contact-input option {
 .contact-textarea::placeholder {
   color: rgba(26, 26, 26, 0.45);
 }
-/* Visible focus for keyboard users: a 1px Obsidian rule in the site's border language.
+/* Visible focus for keyboard users: the field's own bottom line becomes a 2px Obsidian rule.
+   The second pixel is an inset shadow, so the field keeps its size. No box, no outline.
    ContactClient sets data-pointer-focus after a mouse or touch press, until the next Tab. */
 form:not([data-pointer-focus]) .contact-input:focus-visible,
 form:not([data-pointer-focus]) .contact-textarea:focus-visible {
   border-bottom-color: var(--text-primary);
-  outline: 1px solid var(--text-primary);
-  outline-offset: 1px;
+  box-shadow: inset 0 -1px 0 var(--text-primary);
 }
-/* One line only: the ring replaces the focus line while it shows. Hidden, not removed, so nothing moves. */
+/* One line only: the rule replaces the focus line while it shows. Hidden, not removed, so nothing moves. */
 form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line,
 form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   visibility: hidden;
