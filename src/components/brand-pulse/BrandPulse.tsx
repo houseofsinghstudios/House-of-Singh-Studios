@@ -25,6 +25,9 @@ interface Props {
   gate?: Gate;
   startLabel?: string;
   headingLevel?: "h1" | "h2";
+  // One answer chosen on the link in (?q=): the flow skips the intro and starts at question 1, and
+  // that answer is already selected, and changeable, when the visitor reaches its question.
+  prefill?: Partial<Answers> | null;
 }
 
 const FADE_MS = 200;
@@ -35,11 +38,11 @@ const STAGE_MS = 400;
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, headingLevel = "h2" }: Props) {
-  const [screen, setScreen] = useState<Screen>("intro");
+export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, headingLevel = "h2", prefill = null }: Props) {
+  const [screen, setScreen] = useState<Screen>(() => (!prefill ? "intro" : gate === "before-questions" ? "gate" : "question"));
   const [leaving, setLeaving] = useState(false);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Partial<Answers>>({});
+  const [answers, setAnswers] = useState<Partial<Answers>>(() => prefill ?? {});
   const [pending, setPending] = useState<string | null>(null);
   const [stage, setStage] = useState(0);
   const [lead, setLead] = useState<SendStatus>("idle");
@@ -53,6 +56,11 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   const result = useMemo(() => (complete ? assess(complete) : null), [complete]);
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
+
+  // A prefilled start skips the intro, so the session (and its attribution) begins here instead.
+  useEffect(() => {
+    if (prefill && !session.current) session.current = startSession();
+  }, [prefill]);
   const later = (fn: () => void, ms: number) => timers.current.push(window.setTimeout(fn, ms));
 
   function scrollToTop() {

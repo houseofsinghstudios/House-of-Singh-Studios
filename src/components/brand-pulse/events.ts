@@ -1,6 +1,7 @@
 // Browser side of Brand Pulse events: attribution capture and posting to /api/brand-pulse.
 // Answers are sent only once the result is shown. The server recomputes the result itself.
 
+import { parsePlacement, type EntryPlacement } from "@/lib/brand-pulse/entry";
 import type { Answers, Feedback, Gate, TeamSize } from "@/lib/brand-pulse/types";
 
 export interface Attribution {
@@ -9,6 +10,8 @@ export interface Attribution {
   campaign: string;
   landingPage: string;
   referrer: string;
+  // Where the visitor came from inside the site, from ?from= on our own links, else "direct".
+  entryPlacement: EntryPlacement;
 }
 
 export interface LeadContact {
@@ -53,6 +56,7 @@ export function startSession(): PulseSession {
       campaign: params.get("utm_campaign") ?? "",
       landingPage: window.location.pathname,
       referrer: document.referrer,
+      entryPlacement: parsePlacement(params.get("from")),
     },
   };
 }

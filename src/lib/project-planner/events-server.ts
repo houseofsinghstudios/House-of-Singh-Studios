@@ -3,6 +3,7 @@
 import "server-only";
 import { buildBrief, ENGINE_VERSION, answerLabels, validateAnswers, validBand } from "./engine";
 import { bookingUrl } from "./links";
+import { parsePlacement } from "./start-links";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -14,7 +15,6 @@ export const STATUS_RANK: Record<PlannerEvent, number | null> = { started: 1, vi
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PLACEMENTS = ["direct", "services", "case_study", "brand_pulse", "contact"];
 
 const clean = (v: unknown, max: number): string => (typeof v === "string" ? v.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, max) : "");
 
@@ -38,7 +38,7 @@ function attribution(v: unknown) {
     medium: clean(a.medium, 100),
     campaign: clean(a.campaign, 100),
     landingPage: landing.startsWith("/") ? landing.split(/[?#]/)[0] : "",
-    entryPlacement: PLACEMENTS.includes(a.entryPlacement as string) ? (a.entryPlacement as string) : "direct",
+    entryPlacement: parsePlacement(a.entryPlacement),
     referrer: originAndPath(a.referrer),
   };
 }

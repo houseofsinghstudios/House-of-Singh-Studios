@@ -1,7 +1,8 @@
 "use client";
 // Two ways to start, phones: one tool at a time behind a two option tab switch. Desktop: two
 // columns, no switch. Client component: it holds the selected tab, moves between tabs with the
-// arrow keys, applies the tab roles only at phone width, and starts the arrival animation.
+// arrow keys, applies the tab roles only at phone width, starts the arrival animation and reports
+// chip and button clicks.
 // The panels arrive server rendered. Showing and hiding is CSS, so hydration changes nothing on
 // screen, and without JavaScript both panels show stacked.
 
@@ -67,12 +68,30 @@ function useArrival(ref: RefObject<HTMLElement | null>) {
   }, [ref]);
 }
 
+// One Google Analytics event per chip or button click: which tool, chip or button, and the answer
+// or service code. Never personal data. GA only exists on the production site, under its consent.
+function useClickEvents(ref: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const root = ref.current;
+    if (!root) return;
+    const onClick = (e: MouseEvent) => {
+      const link = (e.target as Element | null)?.closest<HTMLElement>("[data-tb-kind]");
+      const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
+      if (!link || !gtag) return;
+      gtag("event", "tool_band_click", { tool: link.dataset.tbTool, kind: link.dataset.tbKind, value: link.dataset.tbValue || "none" });
+    };
+    root.addEventListener("click", onClick);
+    return () => root.removeEventListener("click", onClick);
+  }, [ref]);
+}
+
 export default function ToolBandSwitch({ pulse, planner }: { pulse: ReactNode; planner: ReactNode }) {
   const [selected, setSelected] = useState<TabId>("pulse");
   const phone = useSyncExternalStore(subscribe, isPhone, notOnServer);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   useArrival(rootRef);
+  useClickEvents(rootRef);
   const panels: Record<TabId, ReactNode> = { pulse, planner };
 
   function onKeyDown(e: KeyboardEvent<HTMLButtonElement>, index: number) {

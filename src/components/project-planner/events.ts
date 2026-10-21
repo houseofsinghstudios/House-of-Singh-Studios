@@ -1,6 +1,7 @@
 // Browser side of Project Planner events. Nothing is sent until the visitor starts, and contact
 // details only with the send form. The server validates everything and recomputes the brief.
 
+import { parsePlacement } from "@/lib/project-planner/start-links";
 import type { Answers, BandId } from "@/lib/project-planner/types";
 
 export interface Attribution {
@@ -27,9 +28,6 @@ export interface Contact {
   marketingConsent: boolean;
 }
 
-// Where the visitor came from inside the site, from ?from= on our own links.
-const PLACEMENTS = ["services", "case_study", "brand_pulse", "contact"];
-
 function uuid(): string {
   if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
   const b = crypto.getRandomValues(new Uint8Array(16));
@@ -51,7 +49,6 @@ function referrerOriginAndPath(): string {
 
 export function startSession(): Session {
   const params = new URLSearchParams(window.location.search);
-  const from = params.get("from") ?? "";
   return {
     briefId: uuid(),
     attribution: {
@@ -59,7 +56,8 @@ export function startSession(): Session {
       medium: params.get("utm_medium") ?? "",
       campaign: params.get("utm_campaign") ?? "",
       landingPage: window.location.pathname,
-      entryPlacement: PLACEMENTS.includes(from) ? from : "direct",
+      // Where the visitor came from inside the site, from ?from= on our own links.
+      entryPlacement: parsePlacement(params.get("from")),
       referrer: referrerOriginAndPath(),
     },
   };

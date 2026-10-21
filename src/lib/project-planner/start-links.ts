@@ -1,5 +1,27 @@
-// Links into /start from elsewhere on the site. Tiny on purpose: Brand Pulse and the case study page import it.
-import type { DeliveredId, ServiceId } from "./types";
+// Links into /start from elsewhere on the site, and the rules for reading them back. Tiny on
+// purpose: Brand Pulse, the case study page and the browser side of the planner import it.
+import { SERVICE_IDS, type DeliveredId, type ServiceId } from "./types";
+
+// Where a visitor came from inside the site (?from=), recorded as attribution.entryPlacement.
+export const ENTRY_PLACEMENTS = ["services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button"] as const;
+export type EntryPlacement = (typeof ENTRY_PLACEMENTS)[number];
+
+const first = (v: unknown): unknown => (Array.isArray(v) ? v[0] : v);
+
+// A known placement, otherwise "direct".
+export function parsePlacement(value: unknown): EntryPlacement | "direct" {
+  const raw = first(value);
+  return (ENTRY_PLACEMENTS as readonly unknown[]).includes(raw) ? (raw as EntryPlacement) : "direct";
+}
+// ?service= preselects one known service; anything else is ignored.
+export function parseService(value: unknown): ServiceId | null {
+  const raw = first(value);
+  return (SERVICE_IDS as readonly unknown[]).includes(raw) ? (raw as ServiceId) : null;
+}
+// ?begin=1 skips the intro and opens the first question.
+export function parseBegin(value: unknown): boolean {
+  return first(value) === "1";
+}
 
 const SERVICE_FOR_DELIVERED: Record<DeliveredId, ServiceId | null> = {
   identity: "identity",
@@ -19,7 +41,7 @@ const SERVICE_FOR_SITE_SLUG: Record<string, ServiceId> = {
   "creative-strategy": "strategy",
 };
 
-export function startHref(from: "services" | "case_study" | "brand_pulse" | "contact", service?: ServiceId | null): string {
+export function startHref(from: EntryPlacement, service?: ServiceId | null): string {
   return service ? `/start?service=${service}&from=${from}` : `/start?from=${from}`;
 }
 // The case study's first delivered type, or no preselection.

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
+import { parsePlacement } from "@/lib/brand-pulse/entry";
 import { assessWithActions } from "@/lib/brand-pulse/actions";
 import { ENGINE_VERSION } from "@/lib/brand-pulse/engine";
 import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
@@ -104,6 +105,7 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       campaign: clean(a.campaign, 200),
       landingPage: clean(a.landingPage, 500),
       referrer: clean(a.referrer, 500),
+      entryPlacement: parsePlacement(a.entryPlacement),
     },
   };
 }
