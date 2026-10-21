@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Old /journal addresses moved to /insights: permanent 301s (permanent: true would send 308).
+  // Permanent 301s (permanent: true would send 308). Old /journal addresses moved to /insights.
   // The specific article comes first: its slug changed too.
   async redirects() {
     return [
@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
       },
       { source: "/journal/:slug", destination: "/insights/:slug", statusCode: 301 },
       { source: "/journal", destination: "/insights", statusCode: 301 },
+      // Short links for bios and print. The query string (UTM tags) carries over unchanged.
+      // Not in the sitemap: they are addresses to share, not pages.
+      { source: "/pulse", destination: "/brand-pulse", statusCode: 301 },
+      { source: "/plan", destination: "/start", statusCode: 301 },
     ];
   },
   async headers() {
