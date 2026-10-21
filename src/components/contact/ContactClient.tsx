@@ -106,8 +106,9 @@ export default function ContactClient() {
               {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
               <form method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
                 <div>
-                  <label className="contact-label">Name</label>
+                  <label htmlFor="contact-name" className="contact-label">Name</label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
                     required
@@ -116,8 +117,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Email</label>
+                  <label htmlFor="contact-email" className="contact-label">Email</label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
                     required
@@ -126,8 +128,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Service interest</label>
+                  <label htmlFor="contact-service" className="contact-label">Service interest</label>
                   <select
+                    id="contact-service"
                     name="service"
                     className="contact-input"
                     defaultValue=""
@@ -143,8 +146,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Budget range</label>
+                  <label htmlFor="contact-budget" className="contact-label">Budget range</label>
                   <select
+                    id="contact-budget"
                     name="budget"
                     className="contact-input"
                     defaultValue=""
@@ -160,8 +164,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Message</label>
+                  <label htmlFor="contact-message" className="contact-label">Message</label>
                   <textarea
+                    id="contact-message"
                     name="message"
                     required
                     rows={5}
@@ -171,8 +176,8 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
-                  <label>Do not fill this field</label>
-                  <input type="text" name="honeypot" tabIndex={-1} autoComplete="off" />
+                  <label htmlFor="contact-honeypot">Do not fill this field</label>
+                  <input id="contact-honeypot" type="text" name="honeypot" tabIndex={-1} autoComplete="off" />
                 </div>
                 <div>
                   <Button type="submit" variant="primary" disabled={submitting}>
