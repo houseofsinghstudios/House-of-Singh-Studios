@@ -2,6 +2,11 @@
 // A server component: every word, link and the final visual state is in the server HTML, so the
 // band works in full without JavaScript. The Brand Pulse question and answers come straight from
 // the Brand Pulse content, so the band always matches the check itself.
+//
+// Placement rule: no two tool prompts within one viewport. On phones and desktops the band sits
+// more than a viewport from the hero's Start a Project button and from the final call to action.
+// Documented exception: tall portrait tablets (about 820x1180 and 1024x1366), where the band's
+// buttons and the final Start a Project button come within about 0.85 to 0.9 of a viewport.
 
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
@@ -10,7 +15,7 @@ import { QUESTIONS, VITALS } from "@/lib/brand-pulse/content";
 import "./tool-band.css";
 
 export const TOOL_BAND = {
-  label: "(Two ways to start)",
+  label: "(04) Two ways to start",
   heading: "Start with a check, or start with a plan.",
   pulse: {
     tag: "Brand Pulse · About a minute",
