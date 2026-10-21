@@ -88,8 +88,9 @@ export function PulseColumn() {
     <>
       <ColumnText {...TOOL_BAND.pulse} />
       <div className="tb-visual">
-        <svg className="tb-pulse" viewBox="0 0 400 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-          <path className="tb-pulse-path" d="M0 24 H168 L178 24 L188 4 L198 36 L206 14 L212 24 H400" pathLength={1} />
+        {/* Drawn at 1:1 pixels: the flat line runs on and the column clips it, at any width. */}
+        <svg className="tb-pulse" aria-hidden="true" focusable="false">
+          <path className="tb-pulse-path" d="M0 24 H150 L160 24 L170 4 L180 36 L188 14 L194 24 H4000" />
         </svg>
         <ul className="tb-signs">
           {VITALS.map((v) => (

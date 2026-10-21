@@ -106,7 +106,7 @@
   display: block;
   width: 100%;
   height: 40px;
-  overflow: visible;
+  overflow: hidden;
 }
 .tb-pulse-path {
   fill: none;
@@ -114,7 +114,6 @@
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
 }
 .tb-signs {
   display: flex;
@@ -311,7 +310,43 @@
   }
 }
 
+/* ── Arrival, once: the pulse line draws, the vital signs light in turn, the brief takes shape ──
+   The base styles above are the final state. "waiting" is set only while the band is off screen. */
+/* --tb-pulse-len is the visible length of the line in pixels, measured by the client. */
+.tb[data-arrival] .tb-pulse-path {
+  stroke-dasharray: var(--tb-pulse-len) 4000px;
+}
+.tb[data-arrival="waiting"] .tb-pulse-path {
+  stroke-dashoffset: var(--tb-pulse-len);
+}
+.tb[data-arrival="waiting"] .tb-sign {
+  opacity: 0.5;
+}
+.tb[data-arrival="waiting"] .tb-brief-line {
+  transform: scaleX(0);
+}
+.tb[data-arrival="playing"] .tb-pulse-path {
+  transition: stroke-dashoffset 1.4s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-sign {
+  transition: opacity 0.3s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-sign:nth-child(1) { transition-delay: 0.5s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(2) { transition-delay: 0.68s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(3) { transition-delay: 0.86s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(4) { transition-delay: 1.04s; }
+.tb[data-arrival="playing"] .tb-sign:nth-child(5) { transition-delay: 1.22s; }
+.tb[data-arrival="playing"] .tb-brief-line {
+  transition: transform 0.5s var(--tb-ease);
+}
+.tb[data-arrival="playing"] .tb-brief-line:nth-child(2) { transition-delay: 0.25s; }
+.tb[data-arrival="playing"] .tb-brief-line:nth-child(3) { transition-delay: 0.5s; }
+
 @media (prefers-reduced-motion: reduce) {
+  .tb[data-arrival] .tb-pulse-path { stroke-dashoffset: 0; }
+  .tb[data-arrival] .tb-sign { opacity: 1; }
+  .tb[data-arrival] .tb-brief-line { transform: none; }
+
   .tb-tabs-underline,
   .tb-col,
   .tb-col:not(.is-selected),
