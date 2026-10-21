@@ -12,17 +12,24 @@ interface Props {
 }
 
 export default function ServiceProjectCard({ projects }: Props) {
-  const [activeIndex, setActiveIndex] = useState(() =>
-    projects.length > 1 ? Math.floor(Math.random() * projects.length) : 0,
-  );
+  // The server and the first browser render both show the first project, so hydration matches.
+  // A random starting project is picked on the first frame after mount. Every image is already
+  // stacked in the same box, so the swap changes only opacity and text, never the layout.
+  const [activeIndex, setActiveIndex] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (projects.length <= 1) return;
+    const frame = requestAnimationFrame(() => {
+      setActiveIndex(Math.floor(Math.random() * projects.length));
+    });
     timerRef.current = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % projects.length);
     }, 5000);
-    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+    return () => {
+      cancelAnimationFrame(frame);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [projects.length]);
 
   if (projects.length === 0) return null;
