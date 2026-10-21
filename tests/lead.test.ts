@@ -1,0 +1,40 @@
+// Contact form lead rules. Run with: npm run test
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
+
+const valid = { name: "Ada", email: "ada@example.com", service: "Brand Identity", budget: "Under $5,000", message: "Hello." };
+
+test("clean: tags and surrounding whitespace removed, missing values empty", () => {
+  assert.equal(cleanField("  <b>Ada</b>  "), "Ada");
+  assert.equal(cleanField(undefined), "");
+  assert.equal(cleanField(null), "");
+  assert.equal(cleanField(""), "");
+  assert.equal(cleanField(42), "42");
+});
+
+test("lengths: a normal lead passes, service and budget may be empty", () => {
+  assert.equal(checkLeadLengths(valid), null);
+  assert.equal(checkLeadLengths({ ...valid, service: "", budget: "" }), null);
+  assert.equal(checkLeadLengths({ ...valid, name: "a".repeat(LEAD_LIMITS.name), message: "m".repeat(LEAD_LIMITS.message) }), null);
+});
+
+test("lengths: name 1 to 120 and message 1 to 5,000, measured after cleaning", () => {
+  assert.match(checkLeadLengths({ ...valid, name: cleanField("   ") }) ?? "", /^Name/);
+  assert.match(checkLeadLengths({ ...valid, name: cleanField("<i></i>") }) ?? "", /^Name/);
+  assert.match(checkLeadLengths({ ...valid, name: "a".repeat(121) }) ?? "", /^Name/);
+  assert.equal(checkLeadLengths({ ...valid, name: cleanField(`  ${"a".repeat(120)}  `) }), null);
+  assert.match(checkLeadLengths({ ...valid, message: "" }) ?? "", /^Message must be 1 to 5,000/);
+  assert.match(checkLeadLengths({ ...valid, message: "m".repeat(5001) }) ?? "", /^Message/);
+});
+
+test("lengths: service and budget capped at 80", () => {
+  assert.equal(checkLeadLengths({ ...valid, service: "s".repeat(80), budget: "b".repeat(80) }), null);
+  assert.match(checkLeadLengths({ ...valid, service: "s".repeat(81) }) ?? "", /^Service/);
+  assert.match(checkLeadLengths({ ...valid, budget: "b".repeat(81) }) ?? "", /^Budget/);
+});
+
+test("reasons never quote the submitted value", () => {
+  const secret = "x".repeat(121);
+  assert.ok(!(checkLeadLengths({ ...valid, name: secret }) ?? "").includes(secret));
+});
