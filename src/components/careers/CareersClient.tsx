@@ -726,6 +726,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               </button>
               {formState === "error" && (
                 <p
+                  role="alert"
                   style={{
                     fontFamily: "var(--sans)",
                     fontSize: 13,

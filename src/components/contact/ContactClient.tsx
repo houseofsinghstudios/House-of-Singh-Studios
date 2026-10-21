@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { PLACEMENTS } from "@/lib/project-planner/content";
@@ -12,6 +12,24 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Browsers match :focus-visible on text fields and selects even after a mouse click. The focus
+  // ring is for keyboard users, so a pointer press holds it back until the next Tab.
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    const onPointer = () => form.setAttribute("data-pointer-focus", "");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") form.removeAttribute("data-pointer-focus");
+    };
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+  }, [submitted]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -93,6 +111,7 @@ export default function ContactClient() {
             <>
               {error && (
                 <p
+                  role="alert"
                   className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] mb-6"
                   style={{ color: "rgba(139, 0, 0, 0.8)" }}
                 >
@@ -104,10 +123,11 @@ export default function ContactClient() {
                 </p>
               )}
               {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
-              <form method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
+              <form ref={formRef} method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
                 <div>
-                  <label className="contact-label">Name</label>
+                  <label htmlFor="contact-name" className="contact-label">Name</label>
                   <input
+                    id="contact-name"
                     type="text"
                     name="name"
                     required
@@ -116,8 +136,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Email</label>
+                  <label htmlFor="contact-email" className="contact-label">Email</label>
                   <input
+                    id="contact-email"
                     type="email"
                     name="email"
                     required
@@ -126,8 +147,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Service interest</label>
+                  <label htmlFor="contact-service" className="contact-label">Service interest</label>
                   <select
+                    id="contact-service"
                     name="service"
                     className="contact-input"
                     defaultValue=""
@@ -143,8 +165,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Budget range</label>
+                  <label htmlFor="contact-budget" className="contact-label">Budget range</label>
                   <select
+                    id="contact-budget"
                     name="budget"
                     className="contact-input"
                     defaultValue=""
@@ -160,8 +183,9 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label className="contact-label">Message</label>
+                  <label htmlFor="contact-message" className="contact-label">Message</label>
                   <textarea
+                    id="contact-message"
                     name="message"
                     required
                     rows={5}
@@ -171,8 +195,8 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
-                  <label>Do not fill this field</label>
-                  <input type="text" name="honeypot" tabIndex={-1} autoComplete="off" />
+                  <label htmlFor="contact-honeypot">Do not fill this field</label>
+                  <input id="contact-honeypot" type="text" name="honeypot" tabIndex={-1} autoComplete="off" />
                 </div>
                 <div>
                   <Button type="submit" variant="primary" disabled={submitting}>

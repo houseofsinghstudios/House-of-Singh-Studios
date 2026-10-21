@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
@@ -52,6 +52,15 @@ const TEAM_ROLES = [
 ];
 
 /* ── Toronto clock helper ── */
+// The time exists only in the browser: the server renders a placeholder, so the HTML never carries
+// a build time that disagrees with the visitor's clock (that mismatch broke hydration).
+// Checked every second; the clock re-renders only when the minute actually changes.
+const subscribeClock = (onChange: () => void) => {
+  const id = setInterval(onChange, 1000);
+  return () => clearInterval(id);
+};
+const noTimeOnServer = () => null;
+
 function getTorontoTime(): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Toronto",
@@ -63,17 +72,13 @@ function getTorontoTime(): string {
 
 export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
   /* ── Clock state ── */
-  const [clockTime, setClockTime] = useState(() => getTorontoTime());
-
-  useEffect(() => {
-    const id = setInterval(() => setClockTime(getTorontoTime()), 60000);
-    return () => clearInterval(id);
-  }, []);
+  const clockTime = useSyncExternalStore(subscribeClock, getTorontoTime, noTimeOnServer);
 
   /* ── Duel pairing state ── */
   const [duelPairedIndex, setDuelPairedIndex] = useState<number | null>(null);
 
-  const [hours, minutes] = clockTime.split(":");
+  // Until the time is known, hidden placeholder digits hold exactly the same width.
+  const [hours, minutes] = (clockTime ?? "00:00").split(":");
 
   return (
     <>
@@ -124,7 +129,10 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         >
           <span className="about-clock-location">Toronto, Canada</span>
           <span className="about-clock-time">
-            EST {hours}<span className="about-clock-colon">:</span>{minutes}
+            EST{" "}
+            <span className={clockTime ? undefined : "about-clock-pending"} aria-hidden={clockTime ? undefined : true}>
+              {hours}<span className="about-clock-colon">:</span>{minutes}
+            </span>
           </span>
         </div>
       </section>
