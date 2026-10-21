@@ -3707,6 +3707,18 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   color: var(--text-primary);
   margin: 0;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+/* The counting digits sit over the final value, which holds the width, so nothing moves. */
+.ai-proof-num-figure {
+  display: inline-grid;
+  justify-items: end;
+}
+.ai-proof-num-figure > span {
+  grid-area: 1 / 1;
+}
+.ai-proof-num-reserve {
+  visibility: hidden;
 }
 .ai-proof-bar {
   height: 3px;
@@ -3717,6 +3729,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 .ai-proof-bar-fill {
   height: 100%;
   background: var(--text-primary);
+  transform-origin: left;
 }
 .ai-proof-text {
   font-size: 12px;
@@ -3729,6 +3742,12 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   color: var(--text-muted);
   font-style: italic;
   margin: 0;
+}
+.ai-proof-source a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 /* ── Outcome grid ── */
