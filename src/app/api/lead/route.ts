@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
-
-function stripHtml(str: string): string {
-  return str.replace(/<[^>]*>/g, "").trim();
-}
+import { checkLeadLengths, cleanField } from "@/lib/lead";
 
 const rateLimit = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000;
@@ -92,16 +89,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Sanitize text inputs
-    const sanitized = {
-      name: name ? stripHtml(String(name)) : "",
-      email: stripHtml(String(email)),
-      service: service ? stripHtml(String(service)) : "",
-      budget: budget ? stripHtml(String(budget)) : "",
-      message: message ? stripHtml(String(message)) : "",
-      source: "contact-form",
-      submittedAt: new Date().toISOString(),
+    // Sanitize text inputs, then check lengths on the cleaned values
+    const fields = {
+      name: cleanField(name),
+      email: cleanField(email),
+      service: cleanField(service),
+      budget: cleanField(budget),
+      message: cleanField(message),
     };
+    const invalid = checkLeadLengths(fields);
+    if (invalid) {
+      console.log(`[lead] validation failed: ${invalid.toLowerCase()}`);
+      return NextResponse.json({ success: false, error: invalid }, { status: 400 });
+    }
+    const sanitized = { ...fields, source: "contact-form", submittedAt: new Date().toISOString() };
 
     const webhookUrl = process.env.N8N_WEBHOOK_URL;
     if (!webhookUrl) {
