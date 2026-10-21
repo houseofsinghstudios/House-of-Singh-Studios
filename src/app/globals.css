@@ -2794,6 +2794,14 @@ select.contact-input option {
 .contact-textarea::placeholder {
   color: rgba(26, 26, 26, 0.45);
 }
+/* Visible focus for keyboard users: a 1px Obsidian rule in the site's border language.
+   ContactClient sets data-pointer-focus after a mouse or touch press, until the next Tab. */
+form:not([data-pointer-focus]) .contact-input:focus-visible,
+form:not([data-pointer-focus]) .contact-textarea:focus-visible {
+  border-bottom-color: var(--text-primary);
+  outline: 1px solid var(--text-primary);
+  outline-offset: 1px;
+}
 @media (max-width: 1080px) {
   .contact-columns {
     grid-template-columns: 1fr;
