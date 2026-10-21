@@ -1,6 +1,7 @@
 // Browser side of Project Planner events. Nothing is sent until the visitor starts, and contact
 // details only with the send form. The server validates everything and recomputes the brief.
 
+import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement } from "@/lib/project-planner/start-links";
 import type { Answers, BandId } from "@/lib/project-planner/types";
 
@@ -49,12 +50,14 @@ function referrerOriginAndPath(): string {
 
 export function startSession(): Session {
   const params = new URLSearchParams(window.location.search);
+  // This page's campaign tags if it has any, otherwise the visit's first touch tags.
+  const { source, medium, campaign } = resolveCampaign(window.location.search, sessionStore());
   return {
     briefId: uuid(),
     attribution: {
-      source: params.get("utm_source") ?? "",
-      medium: params.get("utm_medium") ?? "",
-      campaign: params.get("utm_campaign") ?? "",
+      source,
+      medium,
+      campaign,
       landingPage: window.location.pathname,
       // Where the visitor came from inside the site, from ?from= on our own links.
       entryPlacement: parsePlacement(params.get("from")),
