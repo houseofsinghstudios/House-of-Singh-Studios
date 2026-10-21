@@ -30,7 +30,7 @@ export default async function ServicesPage() {
       ]} />
       <ServicesClient projectsByCategory={projectsByCategory} />
       <PlannerInvite />
-      <NextPageLink />
+      <NextPageLink current="/services" />
       <section
         className="css-reveal"
         style={{

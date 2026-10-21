@@ -308,7 +308,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         ))}
       </div>
 
-      <NextPageLink />
+      <NextPageLink current="/work" />
 
       {/* ═══ DARK CTA ═══ */}
       <section

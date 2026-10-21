@@ -164,7 +164,7 @@ export default function PackagesClient() {
         </p>
       </div>
 
-      <NextPageLink />
+      <NextPageLink current="/packages" />
 
       {/* ── CTA (dark inverted) ── */}
       <section

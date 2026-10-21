@@ -793,7 +793,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
         </div>
       </section>
 
-      <NextPageLink />
+      <NextPageLink current="/careers" />
 
       {/* ── SECTION 5: DARK CTA ── */}
       <section

@@ -439,7 +439,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           </div>
         </div>
       </section>
-      <NextPageLink />
+      <NextPageLink current="/about" />
 
       {/* ═══ DARK CTA ═══ */}
       <section

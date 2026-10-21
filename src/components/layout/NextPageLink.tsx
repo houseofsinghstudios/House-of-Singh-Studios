@@ -1,7 +1,7 @@
-"use client";
+// The "Next" link at the foot of a page. Each page passes its own route, so the server and the
+// browser always pick the same next page (no hydration mismatch).
 
 import { Link } from "next-view-transitions";
-import { usePathname } from "next/navigation";
 
 const NEXT_MAP: Record<string, { name: string; href: string }> = {
   "/": { name: "Services", href: "/services" },
@@ -26,9 +26,8 @@ function getNextPage(pathname: string) {
   return DEFAULT_NEXT;
 }
 
-export default function NextPageLink() {
-  const pathname = usePathname();
-  const next = getNextPage(pathname);
+export default function NextPageLink({ current }: { current: string }) {
+  const next = getNextPage(current);
 
   return (
     <div className="next-page-link">
