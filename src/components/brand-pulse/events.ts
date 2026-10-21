@@ -1,6 +1,7 @@
 // Browser side of Brand Pulse events: attribution capture and posting to /api/brand-pulse.
 // Answers are sent only once the result is shown. The server recomputes the result itself.
 
+import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement, type EntryPlacement } from "@/lib/brand-pulse/entry";
 import type { Answers, Feedback, Gate, TeamSize } from "@/lib/brand-pulse/types";
 
@@ -48,12 +49,14 @@ function uuid(): string {
 // Captured once when the flow starts and kept in memory for the session.
 export function startSession(): PulseSession {
   const params = new URLSearchParams(window.location.search);
+  // This page's campaign tags if it has any, otherwise the visit's first touch tags.
+  const { source, medium, campaign } = resolveCampaign(window.location.search, sessionStore());
   return {
     resultId: uuid(),
     attribution: {
-      source: params.get("utm_source") ?? "",
-      medium: params.get("utm_medium") ?? "",
-      campaign: params.get("utm_campaign") ?? "",
+      source,
+      medium,
+      campaign,
       landingPage: window.location.pathname,
       referrer: document.referrer,
       entryPlacement: parsePlacement(params.get("from")),

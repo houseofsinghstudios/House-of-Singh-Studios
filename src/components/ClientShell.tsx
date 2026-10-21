@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import CampaignCapture from "@/components/CampaignCapture";
 
 const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
@@ -14,6 +15,7 @@ export default function ClientShell() {
       <CustomCursor />
       <PageTransition />
       <ScrollObserver />
+      <CampaignCapture />
     </>
   );
 }
