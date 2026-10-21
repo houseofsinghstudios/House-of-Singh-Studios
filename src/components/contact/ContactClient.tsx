@@ -111,6 +111,7 @@ export default function ContactClient() {
             <>
               {error && (
                 <p
+                  role="alert"
                   className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] mb-6"
                   style={{ color: "rgba(139, 0, 0, 0.8)" }}
                 >
