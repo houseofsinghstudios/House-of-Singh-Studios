@@ -23,11 +23,13 @@ export default function SiteLayout({
 }) {
   return (
     <ViewTransitions>
+      {/* First focusable element on every site page. Hidden until focused. /studio never loads this layout. */}
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <div className="scroll-progress" />
       <ClientShell />
       <Header />
       <div className="site-content-wrap">
-        <main>{children}</main>
+        <main id="main-content" tabIndex={-1}>{children}</main>
         {analyticsEnabled && <ConsentManager />}
         <Footer consentEnabled={analyticsEnabled} />
       </div>
