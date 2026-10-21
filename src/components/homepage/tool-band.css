@@ -1,0 +1,18 @@
+/* ── Two ways to start ──
+   The homepage band into Brand Pulse and the Project Planner. A full bleed inverted section:
+   Obsidian ground, Mist type, the same vertical rhythm as the other homepage sections. */
+
+.tb {
+  background: var(--text-primary);
+  color: var(--bg);
+  padding: clamp(80px, 10vw, 140px) var(--page-px);
+}
+.tb-columns {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .tb-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}

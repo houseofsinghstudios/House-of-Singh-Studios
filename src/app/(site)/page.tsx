@@ -3,6 +3,7 @@ import HeroSection from "@/components/homepage/HeroSection";
 import WorkSection from "@/components/homepage/WorkSection";
 import ArgumentSection from "@/components/homepage/ArgumentSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
+import ToolBand from "@/components/homepage/ToolBand";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import ProofSection from "@/components/homepage/ProofSection";
 import NextPageLink from "@/components/layout/NextPageLink";
@@ -32,6 +33,7 @@ export default async function Home() {
       <WorkSection projects={featuredProjects} />
       <ArgumentSection />
       <ServicesSection />
+      <ToolBand />
       <TestimonialsSection />
       <ProofSection />
       <NextPageLink current="/" />
