@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { PLACEMENTS } from "@/lib/project-planner/content";
@@ -12,6 +12,24 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Browsers match :focus-visible on text fields and selects even after a mouse click. The focus
+  // ring is for keyboard users, so a pointer press holds it back until the next Tab.
+  useEffect(() => {
+    const form = formRef.current;
+    if (!form) return;
+    const onPointer = () => form.setAttribute("data-pointer-focus", "");
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Tab") form.removeAttribute("data-pointer-focus");
+    };
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+  }, [submitted]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -104,7 +122,7 @@ export default function ContactClient() {
                 </p>
               )}
               {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
-              <form method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
+              <form ref={formRef} method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
                 <div>
                   <label htmlFor="contact-name" className="contact-label">Name</label>
                   <input
