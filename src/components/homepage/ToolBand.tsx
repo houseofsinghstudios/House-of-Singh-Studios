@@ -5,6 +5,7 @@
 
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
+import ToolBandSwitch from "./ToolBandSwitch";
 import { QUESTIONS, VITALS } from "@/lib/brand-pulse/content";
 import "./tool-band.css";
 
@@ -134,14 +135,7 @@ export default function ToolBand() {
         <p className="editorial-label tb-label">{TOOL_BAND.label}</p>
         <h2 id="tb-heading" className="tb-heading">{TOOL_BAND.heading}</h2>
       </div>
-      <div className="tb-columns">
-        <div className="tb-col">
-          <PulseColumn />
-        </div>
-        <div className="tb-col">
-          <PlannerColumn />
-        </div>
-      </div>
+      <ToolBandSwitch pulse={<PulseColumn />} planner={<PlannerColumn />} />
     </section>
   );
 }
