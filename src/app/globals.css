@@ -4633,6 +4633,22 @@ body.nav-open .header-crest-wrap {
   }
 }
 
+/* Homepage hero heading: the same upward slide, timing and easing, but visible from the first
+   frame (no fade from opacity 0), so it can be the Largest Contentful Paint at first paint. */
+@keyframes heroHeadingEnter {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-section [data-hero-heading] {
+    animation-name: heroHeadingEnter;
+  }
+}
+
 /* ── Interaction 5: Body Link Hover Opacity ── */
 p a,
 li a,
