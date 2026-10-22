@@ -6,6 +6,7 @@
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useState, useEffect, useRef } from "react";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 const navLinks = [
   { label: "Services", href: "/services" },
@@ -143,7 +144,7 @@ export default function Header() {
             ))}
           </nav>
           <div className="mobile-nav-footer">
-            <span>studio@houseofsingh.com</span>
+            <span>{STUDIO_EMAIL}</span>
             <span>Toronto, Canada</span>
           </div>
         </div>

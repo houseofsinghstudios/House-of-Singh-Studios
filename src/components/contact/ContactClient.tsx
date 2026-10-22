@@ -7,6 +7,7 @@ import { PLACEMENTS } from "@/lib/project-planner/content";
 import { startHref } from "@/lib/project-planner/start-links";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
@@ -116,8 +117,8 @@ export default function ContactClient() {
                   style={{ color: "rgba(139, 0, 0, 0.8)" }}
                 >
                   Something went wrong. Please try again or email us directly at{" "}
-                  <a href="mailto:studio@houseofsingh.com" className="underline">
-                    studio@houseofsingh.com
+                  <a href={`mailto:${STUDIO_EMAIL}`} className="underline">
+                    {STUDIO_EMAIL}
                   </a>
                   .
                 </p>
@@ -236,12 +237,12 @@ export default function ContactClient() {
               Or email us directly
             </p>
             <a
-              href="mailto:studio@houseofsingh.com"
+              href={`mailto:${STUDIO_EMAIL}`}
               className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)] hover:underline"
               style={{ opacity: 0.5 }}
               data-cursor="link"
             >
-              studio@houseofsingh.com
+              {STUDIO_EMAIL}
             </a>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -28,14 +29,14 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="legal-updated" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: October 18, 2026
+          Last updated: October 22, 2026
         </p>
 
         <div className="legal-body" style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>1. Who we are</h2>
           <p style={{ margin: "0 0 32px" }}>
-            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio incorporated in Ontario, Canada. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at studio@houseofsingh.com.
+            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio incorporated in Ontario, Canada. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at {STUDIO_EMAIL}.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>2. What personal information we collect</h2>
@@ -106,7 +107,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>5. Consent</h2>
           <p style={{ margin: "0 0 32px" }}>
-            We obtain your consent before collecting, using, or disclosing your personal information. By submitting the contact form or booking a call, you consent to the collection and use of your information as described in this policy. For marketing communications, we will obtain your explicit opt-in consent. You may withdraw your consent at any time by contacting us at studio@houseofsingh.com.
+            We obtain your consent before collecting, using, or disclosing your personal information. By submitting the contact form or booking a call, you consent to the collection and use of your information as described in this policy. For marketing communications, we will obtain your explicit opt-in consent. You may withdraw your consent at any time by contacting us at {STUDIO_EMAIL}.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>6. Data retention</h2>
@@ -127,7 +128,7 @@ export default function PrivacyPage() {
             Request access to the personal information we hold about you. Request correction of inaccurate or incomplete information. Withdraw your consent to the collection, use, or disclosure of your information. Request deletion of your personal information, subject to legal and contractual obligations. File a complaint with the Office of the Privacy Commissioner of Canada if you believe your privacy rights have been violated.
           </p>
           <p style={{ margin: "0 0 32px" }}>
-            To exercise any of these rights, contact us at studio@houseofsingh.com. We will respond to requests within 30 days. Deletion requests will be actioned within 30 days of verification of the requester&apos;s identity.
+            To exercise any of these rights, contact us at {STUDIO_EMAIL}. We will respond to requests within 30 days. Deletion requests will be actioned within 30 days of verification of the requester&apos;s identity.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>9. International transfers</h2>
@@ -170,7 +171,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>13. Contact us</h2>
           <p style={{ margin: "0 0 0" }}>
-            For privacy-related questions, requests, or complaints, contact our designated privacy officer: Maninder Singh, Founder and Creative Director, House of Singh Studios Inc., Toronto, Ontario, Canada. Email: studio@houseofsingh.com.
+            For privacy-related questions, requests, or complaints, contact our designated privacy officer: Maninder Singh, Founder and Creative Director, House of Singh Studios Inc., Toronto, Ontario, Canada. Email: {STUDIO_EMAIL}.
           </p>
 
         </div>
