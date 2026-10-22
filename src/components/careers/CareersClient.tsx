@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { PortableText } from "@portabletext/react";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
 
 /* ── Department label map ── */
@@ -734,8 +735,8 @@ export default function CareersClient({ roles }: CareersClientProps) {
                     marginTop: 12,
                   }}
                 >
-                  Something went wrong. Please try again or email us at
-                  studio@houseofsingh.com
+                  Something went wrong. Please try again or email us at{" "}
+                  {STUDIO_EMAIL}
                 </p>
               )}
             </>

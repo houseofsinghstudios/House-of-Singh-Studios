@@ -9,6 +9,7 @@ import ClientShell from "@/components/ClientShell";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
 import ConsentManager from "@/components/consent/ConsentManager";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
@@ -47,7 +48,7 @@ export default function SiteLayout({
             "url": "https://studios.houseofsingh.com",
             "logo": "https://studios.houseofsingh.com/hos-studios-logo.svg",
             "description": "A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.",
-            "email": "studio@houseofsingh.com",
+            "email": STUDIO_EMAIL,
             "founder": {
               "@type": "Person",
               "name": "Maninder Singh",

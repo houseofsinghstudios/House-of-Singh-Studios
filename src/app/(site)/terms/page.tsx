@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
@@ -28,7 +29,7 @@ export default function TermsPage() {
           Terms of Use
         </h1>
         <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: March 31, 2026
+          Last updated: October 22, 2026
         </p>
 
         <div style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -69,7 +70,7 @@ export default function TermsPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>6. Email communications</h2>
           <p style={{ margin: "0 0 32px" }}>
-            If you subscribe to receive communications from us, you consent to receiving occasional emails about our services, insights, and studio updates. You may unsubscribe at any time by clicking the unsubscribe link in any email or by contacting us at studio@houseofsingh.com. We comply with Canada&apos;s Anti-Spam Legislation (CASL) and will only send commercial electronic messages with your express or implied consent.
+            If you subscribe to receive communications from us, you consent to receiving occasional emails about our services, insights, and studio updates. You may unsubscribe at any time by clicking the unsubscribe link in any email or by contacting us at {STUDIO_EMAIL}. We comply with Canada&apos;s Anti-Spam Legislation (CASL) and will only send commercial electronic messages with your express or implied consent.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Third-party links</h2>
@@ -104,7 +105,7 @@ export default function TermsPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>13. Contact</h2>
           <p style={{ margin: "0 0 0" }}>
-            For questions about these Terms of Use, contact: House of Singh Studios Inc., Toronto, Ontario, Canada. Email: studio@houseofsingh.com.
+            For questions about these Terms of Use, contact: House of Singh Studios Inc., Toronto, Ontario, Canada. Email: {STUDIO_EMAIL}.
           </p>
 
         </div>

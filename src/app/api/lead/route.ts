@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkLeadLengths, cleanField } from "@/lib/lead";
+import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 const rateLimit = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000;
@@ -45,7 +46,7 @@ const NO_SCRIPT_PAGE = `<!doctype html>
 <main>
   <h1>Your message was not sent.</h1>
   <p>The form needs the page to finish loading before it can send. Please go back to the <a href="/contact">contact page</a> and try again.</p>
-  <p>Or email us directly at <a href="mailto:studio@houseofsingh.com">studio@houseofsingh.com</a>.</p>
+  <p>Or email us directly at <a href="mailto:${STUDIO_EMAIL}">${STUDIO_EMAIL}</a>.</p>
 </main>
 </body>
 </html>`;
