@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { n8nTarget, postToN8n } from "@/lib/n8n";
 
 function stripHtml(str: string): string {
   return str.replace(/<[^>]*>/g, "").trim();
@@ -55,27 +56,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const webhookUrl = process.env.N8N_CAREERS_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error("N8N_CAREERS_WEBHOOK_URL is not configured");
+    const target = n8nTarget("N8N_CAREERS_WEBHOOK_URL");
+    if ("missing" in target) {
+      console.error(`${target.missing} is not configured`);
       return NextResponse.json(
         { error: "Application system is not configured." },
         { status: 500 }
       );
     }
 
-    const n8nResponse = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: stripHtml(String(name)),
-        email: stripHtml(String(email)),
-        role: stripHtml(String(role)),
-        portfolioUrl: portfolioUrl ? stripHtml(String(portfolioUrl)) : "",
-        message: message ? stripHtml(String(message)) : "",
-        source: "careers-page",
-        submittedAt: new Date().toISOString(),
-      }),
+    const n8nResponse = await postToN8n(target, {
+      name: stripHtml(String(name)),
+      email: stripHtml(String(email)),
+      role: stripHtml(String(role)),
+      portfolioUrl: portfolioUrl ? stripHtml(String(portfolioUrl)) : "",
+      message: message ? stripHtml(String(message)) : "",
+      source: "careers-page",
+      submittedAt: new Date().toISOString(),
     });
 
     if (!n8nResponse.ok) {

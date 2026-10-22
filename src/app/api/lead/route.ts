@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField } from "@/lib/lead";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
@@ -105,21 +106,16 @@ export async function POST(request: Request) {
     }
     const sanitized = { ...fields, source: "contact-form", submittedAt: new Date().toISOString() };
 
-    const webhookUrl = process.env.N8N_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error("[lead] N8N_WEBHOOK_URL is not configured");
+    const target = n8nTarget("N8N_WEBHOOK_URL");
+    if ("missing" in target) {
+      console.error(`[lead] ${target.missing} is not configured`);
       return NextResponse.json(
         { success: false, error: "Server configuration error" },
         { status: 500 }
       );
     }
 
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sanitized),
-      signal: AbortSignal.timeout(10000),
-    });
+    const response = await postToN8n(target, sanitized, 10000);
 
     // n8n answers only after saving and alerting, so a non 2xx status is a real failure.
     if (!response.ok) {

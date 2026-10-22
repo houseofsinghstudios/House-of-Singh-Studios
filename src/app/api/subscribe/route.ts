@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { n8nTarget, postToN8n } from "@/lib/n8n";
 
 const rateLimit = new Map<string, { count: number; timestamp: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000;
@@ -48,22 +49,17 @@ export async function POST(request: Request) {
       );
     }
 
-    const webhookUrl = process.env.N8N_SUBSCRIBE_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error("[subscribe] N8N_SUBSCRIBE_WEBHOOK_URL is not configured");
+    const target = n8nTarget("N8N_SUBSCRIBE_WEBHOOK_URL");
+    if ("missing" in target) {
+      console.error(`[subscribe] ${target.missing} is not configured`);
       return NextResponse.json({ success: false }, { status: 500 });
     }
 
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        source: SOURCES.includes(source) ? source : DEFAULT_SOURCE,
-        subscribedAt: new Date().toISOString(),
-      }),
-      signal: AbortSignal.timeout(10000),
-    });
+    const response = await postToN8n(
+      target,
+      { email, source: SOURCES.includes(source) ? source : DEFAULT_SOURCE, subscribedAt: new Date().toISOString() },
+      10000,
+    );
 
     // n8n answers only after storing and alerting, so a non 2xx status is a real failure.
     if (!response.ok) {
