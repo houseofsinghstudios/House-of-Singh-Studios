@@ -2773,6 +2773,14 @@ body {
   color: rgba(26, 26, 26, 0.4);
   margin-bottom: 8px;
 }
+/* Helper line under a field: the same size and tone as the Brand Pulse and Planner helpers. */
+.contact-helper {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+}
 .contact-input {
   width: 100%;
   font-family: var(--sans);

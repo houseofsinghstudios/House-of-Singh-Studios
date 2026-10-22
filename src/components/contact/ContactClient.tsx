@@ -166,22 +166,23 @@ export default function ContactClient() {
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label htmlFor="contact-budget" className="contact-label">Budget range</label>
+                  <label htmlFor="contact-budget" className="contact-label">Budget range (CAD)</label>
                   <select
                     id="contact-budget"
                     name="budget"
                     className="contact-input"
                     defaultValue=""
+                    aria-describedby="contact-budget-help"
                   >
                     <option value="" disabled>Select a range</option>
-                    <option value="Under $5,000">Under $5,000</option>
-                    <option value="$5,000 to $10,000">$5,000 to $10,000</option>
-                    <option value="$10,000 to $25,000">$10,000 to $25,000</option>
-                    <option value="$25,000 to $50,000">$25,000 to $50,000</option>
-                    <option value="$50,000+">$50,000+</option>
-                    <option value="Prefer not to say">Prefer not to say</option>
+                    <option value="$1,000 to $4,000">$1,000 to $4,000</option>
+                    <option value="$4,000 to $10,000">$4,000 to $10,000</option>
+                    <option value="$10,000 to $20,000">$10,000 to $20,000</option>
+                    <option value="$20,000 or more">$20,000 or more</option>
+                    <option value="Not sure yet">Not sure yet</option>
                   </select>
                   <span className="focus-line" />
+                  <p id="contact-budget-help" className="contact-helper">Projects start from $1,000.</p>
                 </div>
                 <div>
                   <label htmlFor="contact-message" className="contact-label">Message</label>
