@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
 import { loadPublishedPricing } from "@/lib/project-planner/pricing";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
@@ -40,20 +41,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    const webhookUrl = process.env.N8N_PROJECT_PLANNER_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error("[project-planner] N8N_PROJECT_PLANNER_WEBHOOK_URL is not configured");
+    const target = n8nTarget("N8N_PROJECT_PLANNER_WEBHOOK_URL");
+    if ("missing" in target) {
+      console.error(`[project-planner] ${target.missing} is not configured`);
       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
     }
 
     // started and call_clicked carry no answers, so they never need prices.
     const pricing = parsed.event === "viewed" || parsed.event === "sent" ? await loadPublishedPricing() : null;
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload(parsed, pricing, new Date().toISOString())),
-      signal: AbortSignal.timeout(10000),
-    });
+    const response = await postToN8n(target, buildPayload(parsed, pricing, new Date().toISOString()), 10000);
 
     if (!response.ok) {
       console.error(`[project-planner] ${parsed.event}: n8n webhook failed with status ${response.status}`);

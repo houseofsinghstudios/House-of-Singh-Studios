@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
 import { parsePlacement } from "@/lib/brand-pulse/entry";
@@ -142,18 +143,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    const webhookUrl = process.env.N8N_BRAND_PULSE_WEBHOOK_URL;
-    if (!webhookUrl) {
-      console.error("[brand-pulse] N8N_BRAND_PULSE_WEBHOOK_URL is not configured");
+    const target = n8nTarget("N8N_BRAND_PULSE_WEBHOOK_URL");
+    if ("missing" in target) {
+      console.error(`[brand-pulse] ${target.missing} is not configured`);
       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
     }
 
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(buildPayload(event, b, b.answers, fields)),
-      signal: AbortSignal.timeout(10000),
-    });
+    const response = await postToN8n(target, buildPayload(event, b, b.answers, fields), 10000);
 
     if (!response.ok) {
       console.error(`[brand-pulse] ${event}: n8n webhook failed with status ${response.status}`);
