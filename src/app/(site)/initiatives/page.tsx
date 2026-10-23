@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InitiativeHero from "@/components/initiatives/InitiativeHero";
 import InitiativeSection from "@/components/initiatives/InitiativeSection";
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: { title: studioTitle(LANDING.title), description: LANDING.description, url: URL },
 };
 
-// Programme slugs that are also project types: their newest published case study fills the row.
+// Program slugs that are also project types: their newest published case study fills the row.
 const TYPED: ProjectType[] = ["parallel", "commons"];
 
 export default async function InitiativesPage() {
@@ -37,7 +36,7 @@ export default async function InitiativesPage() {
     linked: linksToPage(initiative, all),
     newest: (TYPED as string[]).includes(initiative.slug) ? projects[initiative.slug as ProjectType][0] ?? null : null,
   }));
-  // Only programmes that are visible and have a page get a column in the band.
+  // Only programs that are visible and have a page get a column in the band.
   const takePart = LANDING.takePart.filter((item) => rows.some((r) => r.linked && r.initiative.slug === item.slug));
 
   return (
@@ -47,24 +46,13 @@ export default async function InitiativesPage() {
         { name: "Initiatives", url: URL },
       ]} />
       <InitiativeHero heading={LANDING.heading} intro={LANDING.intro} />
-      <InitiativeSection id="programmes" number="01" heading={LANDING.programmesHeading}>
+      <InitiativeSection id="programs" number="01" heading={LANDING.programmesHeading}>
         <ProgrammeRows rows={rows} />
       </InitiativeSection>
       {takePart.length > 0 && <TakePartBand number="02" heading={LANDING.takePartHeading} items={takePart} />}
       <InitiativeSection id="questions" number={takePart.length > 0 ? "03" : "02"} heading={LANDING.questionsHeading}>
         <InitiativeQuestions questions={LANDING.questions} />
       </InitiativeSection>
-      <section className="init-closing css-reveal" aria-labelledby="closing-heading" style={{ padding: "clamp(100px, 12vw, 160px) var(--page-px)" }}>
-        <div className="cta-centered">
-          <h2 id="closing-heading" className="cta-heading">{LANDING.closing.heading}</h2>
-          <p className="init-closing-text">{LANDING.closing.text}</p>
-          <div className="cta-buttons">
-            <Button href={LANDING.closing.href} variant="primary" data-cursor="link">
-              {LANDING.closing.button}
-            </Button>
-          </div>
-        </div>
-      </section>
       <NextPageLink current="/initiatives" />
     </div>
   );

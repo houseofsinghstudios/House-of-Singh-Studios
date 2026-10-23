@@ -2,8 +2,8 @@
    Layout glue only. Every type size, colour, rule and motion comes from existing site styles:
    the Services hero and blocks, the service page rows, lists and accordion, the /work cards and the
    homepage "Two ways to start" band. Sizes reused here: the accordion title clamp(18px, 2vw, 22px),
-   the service block name clamp(26px, 3vw, 40px), the closing heading clamp(48px, 6vw, 80px),
-   body 15px and 14px. */
+   body 15px and 14px, the editorial label 11px. Rules are 1px Marble on the light ground and the
+   band's faint rule on the dark one. */
 
 /* Hero breadcrumb: the label style; Initiatives underlined on hover only. */
 .init-crumb {
@@ -35,21 +35,82 @@
   }
 }
 
-/* ── (01) Programmes: Services page block rows ── */
+/* ── Hero: intro left, "At a glance" right on program pages; stacked on phones ── */
+.init-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: end;
+}
+.init-hero .init-hero-glance.svc-hero-stagger {
+  animation-delay: 0.5s;
+}
+.init-glance-heading {
+  margin: 0 0 16px;
+}
+.init-glance {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--text-muted);
+}
+.init-glance-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--text-muted);
+}
+.init-glance-key {
+  flex: 0 0 88px;
+}
+.init-glance-value {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+@media (max-width: 767px) {
+  .init-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+/* ── Editorial split: label, heading and intro in a third; rows or lists on the right ── */
+.init-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: start;
+}
+.init-split .svcd-process-heading {
+  margin-bottom: 16px;
+}
+.init-split-intro {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 360px;
+}
+@media (max-width: 767px) {
+  .init-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ── (01) Programs: Services page block rows ── */
 .init-row {
-  grid-template-areas:
-    "text visual"
-    "explore visual";
-  grid-template-rows: auto 1fr;
   color: inherit;
   text-decoration: none;
 }
 .init-row-text {
-  grid-area: text;
   padding-top: 8px;
 }
-.init-row-visual {
-  grid-area: visual;
+.init-row-status {
+  color: var(--text-primary);
+  margin: 0 0 8px;
 }
 .init-row-tagline {
   font-size: clamp(15px, 1.5vw, 18px);
@@ -58,9 +119,11 @@
   margin: 0 0 16px;
   max-width: 560px;
 }
+.init-row .svc-block-desc {
+  margin-bottom: 24px;
+}
 .init-row-explore {
-  grid-area: explore;
-  align-self: start;
+  display: inline-block;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-primary);
@@ -78,66 +141,78 @@
   transform: translateX(4px);
 }
 
-/* Typographic panel until a programme has published work: Cloudy ground (from .svc-block-img),
-   the row number top left, the tagline bottom left. It moves with the existing block hover. */
-.init-panel-inner {
-  position: absolute;
-  inset: 0;
+/* The visual: landscape, about 16:10, the cover or the panel. */
+.init-row .init-visual {
+  aspect-ratio: 16 / 10;
+}
+/* Panel until a program has published work: Cloudy ground (from .svc-block-img), the row number
+   small at the top left, the at a glance values in one row along the bottom above a 1px rule.
+   Gunmetal for the number: Marble on Cloudy is too faint to read. */
+.init-panel {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(24px, 3vw, 40px);
-  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-}
-@media (hover: hover) {
-  .svc-block:hover .init-panel-inner {
-    transform: scale(1.04);
-  }
+  padding: clamp(20px, 2.4vw, 32px);
+  box-sizing: border-box;
 }
 .init-panel-num {
-  font-size: clamp(48px, 6vw, 80px);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1;
+  color: var(--text-secondary);
+}
+.init-panel-glance {
+  list-style: none;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--text-muted);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 16px;
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--text-primary);
 }
-.init-panel-tagline {
-  font-size: clamp(26px, 3vw, 40px);
-  font-weight: 500;
-  letter-spacing: -0.025em;
-  line-height: 1.15;
-  color: var(--text-primary);
-  max-width: 90%;
+/* The phone list: hidden beside the panel. */
+.init-row-glance {
+  display: none;
 }
 
-/* Phones: label and status, name, tagline, summary, the visual at 4:3, then the link. */
+/* Phones: label lines, name, tagline, summary, the at a glance list, a cover if there is one,
+   then Explore. No panel. */
 @media (max-width: 768px) {
   .init-row {
-    grid-template-areas:
-      "text"
-      "visual"
-      "explore";
-    grid-template-rows: auto;
-    row-gap: 24px;
+    gap: 0;
   }
   .init-row-text {
-    padding-top: 0;
+    display: contents;
   }
-  .init-row .svc-block-desc {
-    margin-bottom: 0;
+  .init-row-visual {
+    order: 1;
+    margin-bottom: 24px;
   }
-  .init-row .init-visual {
-    aspect-ratio: 4 / 3;
+  .init-row-explore {
+    order: 2;
+    justify-self: start;
   }
-  .init-panel-tagline {
-    font-size: clamp(24px, 5vw, 32px);
+  .init-row-visual--panel {
+    display: none;
+  }
+  .init-row-glance {
+    display: block;
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    border-top: 1px solid var(--text-muted);
+  }
+  .init-row-glance li {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--text-muted);
   }
 }
 
-/* ── Parallel: How it works, the service page numbered rows ── */
-.init-steps {
-  max-width: 780px;
-}
+/* ── Numbered rows: Parallel's edition parts, Commons' criteria ── */
 .init-steps .svc-del-row {
   border-top: 0;
 }
@@ -171,13 +246,7 @@
   margin: 0;
 }
 
-/* ── Commons ── */
-.init-cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(48px, 6vw, 96px);
-  align-items: start;
-}
+/* ── Commons lists ── */
 .init-list {
   gap: 0;
 }
@@ -191,60 +260,154 @@
 .init-list .svc-del-item:first-child {
   border-top: 1px solid var(--text-muted);
 }
-.init-note,
-.init-text {
+.init-note {
   font-size: 15px;
   line-height: 1.6;
   color: var(--text-secondary);
   max-width: 680px;
-}
-.init-note {
   margin: 24px 0 0;
 }
-.init-text {
-  margin: 0 0 48px;
+
+/* ── Commons, Pro bono work: three equal slots between 1px Marble rules, no boxes ── */
+.init-pb-group + .init-pb-group {
+  margin-top: 48px;
 }
-.init-criteria {
+.init-pb-year {
+  margin: 0 0 16px;
+}
+.init-pb-row {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 32px clamp(24px, 3vw, 40px);
-}
-.init-criterion {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   border-top: 1px solid var(--text-muted);
-  padding-top: 20px;
+  border-bottom: 1px solid var(--text-muted);
 }
-.init-criterion-name {
-  font-size: clamp(18px, 2vw, 22px);
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin: 12px 0 8px;
+.init-pb-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 176px;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  text-align: center;
 }
-.init-criterion-line {
-  font-size: 14px;
-  line-height: 1.5;
+.init-pb-slot:not(:nth-child(3n + 1)) {
+  border-left: 1px solid var(--text-muted);
+}
+.init-pb-slot:nth-child(n + 4) {
+  border-top: 1px solid var(--text-muted);
+}
+/* Every logo at one visual height, as uploaded: no filters, no recolouring. */
+.init-pb-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  max-width: 100%;
+}
+.init-pb-logo img {
+  height: 40px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* The name in the label style; Gunmetal, as Marble is too faint to read at this size. */
+.init-pb-name {
   color: var(--text-secondary);
-  margin: 0;
 }
-@media (max-width: 1023px) {
-  .init-criteria {
-    grid-template-columns: 1fr 1fr;
+/* The open slot: an outlined space, 1px Obsidian, linking to the nominate band. */
+.init-pb-slot--open {
+  padding: 16px;
+}
+.init-pb-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: stretch;
+  flex: 1;
+  border: 1px solid var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .init-pb-open:hover .arrow-icon {
+    transform: translateX(4px);
   }
 }
+.init-pb-open:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+/* Commons case studies, when there are any, sit below the logos. */
+.init-pb + .wp-content,
+.init-pb ~ .wp-mobile-grid {
+  margin-top: clamp(48px, 6vw, 72px);
+}
 @media (max-width: 767px) {
-  .init-cols,
-  .init-criteria {
+  .init-pb-row {
     grid-template-columns: 1fr;
+  }
+  .init-pb-slot:not(:nth-child(3n + 1)) {
+    border-left: 0;
+  }
+  .init-pb-slot + .init-pb-slot {
+    border-top: 1px solid var(--text-muted);
+  }
+  .init-pb-slot {
+    min-height: 144px;
+  }
+  .init-pb-logo,
+  .init-pb-logo img {
+    height: 32px;
   }
 }
 
-/* ── Nominate: the homepage band, one column or two ── */
+/* ── Bands ── */
 .init-band .init-band-heading {
   margin-bottom: 16px;
 }
+/* Commons: "What happens next" beside the button. */
+.init-band--split {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: end;
+}
+.init-band-next .tb-label {
+  margin-bottom: 16px;
+}
+.init-next {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--tb-rule);
+}
+.init-next li {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--tb-fg);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--tb-rule);
+}
+/* Parallel: the secondary band, about 60% of the padding, the smaller heading size. */
+.tb.init-band--light {
+  padding-block: round(clamp(48px, 6vw, 84px), 1px);
+}
+@media (max-width: 767px) {
+  .init-band--split {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+/* /initiatives, (02) Take part: two columns. */
 .init-band-cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -290,16 +453,4 @@
     padding-left: 0;
     margin-top: 48px;
   }
-}
-
-/* ── Closing on /initiatives: the closing section layout on the light ground ── */
-.init-closing .cta-heading {
-  color: var(--text-primary);
-}
-.init-closing-text {
-  font-size: 15px;
-  line-height: 1.65;
-  color: var(--text-secondary);
-  max-width: 480px;
-  margin: 24px 0 0;
 }

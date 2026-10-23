@@ -1038,6 +1038,9 @@ body {
 .ptype {
   font-family: var(--sans);
   font-weight: 400;
+  /* Size and line height always come from the tags beside it. */
+  font-size: inherit;
+  line-height: inherit;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-secondary);
@@ -1048,6 +1051,8 @@ body {
 .dtags {
   display: flex;
   flex-wrap: wrap;
+  /* The project type label and the tags share one baseline. */
+  align-items: baseline;
   row-gap: 6px;
   column-gap: 12px;
 }
@@ -1058,8 +1063,9 @@ body {
   display: none;
   color: var(--text-primary);
 }
-.wp-grid-meta .dtag-more,
-.wp-grid-meta .ptype {
+/* Every tag in a card's meta row, buttons or plain text, at the filter tag size, so the project type
+   label and the tags share one baseline wherever the card is used. */
+.wp-grid-meta span.dtag {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 400;
@@ -1073,6 +1079,10 @@ body {
   .dtag-more {
     display: inline;
   }
+}
+/* Tags as plain text (a card without the /work filters) look like the filter tags at rest. */
+.wp-grid-meta span.dtag:not(.ptype, .dtag-more) {
+  color: var(--text-muted);
 }
 .wp-grid-cat-tag {
   position: relative;

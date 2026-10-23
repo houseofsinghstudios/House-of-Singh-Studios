@@ -8,26 +8,33 @@ export interface Question {
 }
 
 // Fallback initiatives. Foundry is built but hidden: it never renders, and its page returns 404.
+// Commons has no fallback recognitions: without Sanity its logos are simply not shown.
 export const FALLBACK_INITIATIVES: Initiative[] = [
   {
     name: "Parallel",
     slug: "parallel",
     category: "Brands reimagined",
     tagline: "One brand. Another possibility.",
-    summary: "We choose growing businesses we admire and reimagine their brand, with their permission. A gift, not a pitch.",
+    summary: "A series where we reimagine exciting brands we admire. Real businesses, new directions, and the thinking behind every choice.",
     status: "live",
+    statusLabel: "Edition 01 underway",
     order: 1,
     hasPage: true,
+    atAGlance: [{ value: "Real brands" }, { value: "New directions" }, { value: "The thinking, shown" }],
+    recognitions: [],
   },
   {
     name: "Commons",
     slug: "commons",
     category: "Pro bono design",
     tagline: "Design for the common good.",
-    summary: "Pro bono brand and design work for charities and community organisations in Toronto. Three projects a year.",
+    summary: "Pro bono brand and design work for charities and community organizations in Toronto. Three projects a year.",
     status: "nominations-open",
+    statusLabel: "Nominations open for 2027",
     order: 2,
     hasPage: true,
+    atAGlance: [{ value: "3 projects a year" }, { value: "Up to 35 hours each" }, { value: "Toronto and the GTA" }],
+    recognitions: [],
   },
   {
     name: "Foundry",
@@ -38,33 +45,38 @@ export const FALLBACK_INITIATIVES: Initiative[] = [
     status: "hidden",
     order: 3,
     hasPage: false,
+    atAGlance: [],
+    recognitions: [],
   },
 ];
+
+// The small label above the at a glance rows in a program page hero.
+export const GLANCE_LABEL = "At a glance";
 
 export const LANDING = {
   title: "Initiatives: Parallel and Commons",
   description:
-    "Studio led programmes by House of Singh Studios: Parallel, brands reimagined for businesses we admire, and Commons, pro bono design for charities and community organisations in Toronto.",
+    "Work House of Singh Studios does for its own reasons: Parallel, a series reimagining exciting brands, and Commons, pro bono design for charities and community organizations in Toronto.",
   label: "Initiatives",
   heading: "Beyond the brief.",
   intro:
-    "Studio led programmes where House of Singh Studios designs without a client brief: new possibilities for businesses we admire, and pro bono design for organisations doing good in Toronto.",
-  programmesHeading: "Programmes",
+    "Work the studio does for its own reasons. Parallel reimagines exciting brands. Commons gives pro bono design to organizations doing good in Toronto.",
+  programmesHeading: "Programs",
   explore: (name: string) => `Explore ${name}`,
   takePartHeading: "Take part",
   takePart: [
     {
       slug: "parallel",
       heading: "Parallel",
-      text: "Know a business we should reimagine? Nominate it for Parallel.",
-      button: "Nominate a Business",
+      text: "Know a brand we should reimagine? Suggest it.",
+      button: "Suggest a Brand",
       href: "/contact?service=parallel",
     },
     {
       slug: "commons",
       heading: "Commons",
-      text: "Know a charity that deserves great design? Nominate it for Commons.",
-      button: "Nominate an Organisation",
+      text: "Know a charity that deserves great design? Nominate it.",
+      button: "Nominate an Organization",
       href: "/contact?service=commons",
     },
   ],
@@ -72,59 +84,54 @@ export const LANDING = {
   questions: [
     {
       q: "What are House of Singh Studios Initiatives?",
-      a: "Studio led programmes outside paid client work. Parallel reimagines brands for growing businesses, with their permission. Commons offers pro bono design to charities and community organisations in Toronto.",
+      a: "Work the studio does outside client briefs. Parallel is a series reimagining exciting brands. Commons is our pro bono design program for charities and community organizations in Toronto.",
     },
     {
       q: "Do you offer pro bono design or branding?",
-      a: "Yes, through Commons. We take on three pro bono projects a year for registered charities, non profits and community groups with an annual operating budget under $1 million.",
+      a: "Yes, through Commons: three projects a year for charities, nonprofits and community groups with an annual operating budget under $1 million.",
     },
     {
-      q: "Can I nominate a business or an organisation?",
-      a: "Yes. Nominate a business for Parallel or a charity for Commons through our contact form. We read every nomination.",
+      q: "Can I suggest a brand or nominate an organization?",
+      a: "Yes, through our contact form.",
     },
   ] satisfies Question[],
-  closing: {
-    heading: "Have an idea worth exploring?",
-    text: "We are always glad to hear from founders, businesses and organisations building something meaningful.",
-    button: "Start a Conversation",
-    href: "/contact",
-  },
 };
 
 export const PARALLEL = {
-  title: "Parallel: Brands Reimagined",
+  title: "Parallel: Brand Identity Concepts by House of Singh Studios",
   description:
-    "Parallel is a programme by House of Singh Studios that reimagines the brands of growing businesses we admire, with their permission. No cost, no obligation.",
+    "Parallel is a studio series by House of Singh Studios that reimagines exciting brands. Same business, a different direction, and the thinking behind every choice.",
   heading: "One brand. Another possibility.",
   intro:
-    "Parallel is where we choose growing businesses we admire and reimagine their brand identity, with their written permission. It is a gift, not a pitch: no cost, no obligation, and the business approves the work before anything is published.",
-  stepsHeading: "How it works",
-  steps: [
-    { name: "We choose.", description: "We look for businesses people already love, with a story worth telling. Anyone can nominate one." },
-    { name: "We ask.", description: "Nothing begins without the business's written permission." },
-    { name: "We reimagine.", description: "A new brand identity, shown across the places it would live, with the thinking behind it." },
-    { name: "They decide.", description: "The business sees the work first and can choose not to publish it." },
-    { name: "We publish.", description: "Credited as an alternative possibility, never as the business's official brand." },
+    "Parallel is a studio series. We choose exciting brands and reimagine them from the ground up. Same business, a different direction. Each edition shows how we think, what we see, and where a brand could go.",
+  glance: [
+    { label: "Format", value: "An ongoing series" },
+    { label: "Subjects", value: "Exciting, growing brands" },
+    { label: "Selection", value: "Chosen by the studio" },
   ],
-  workHeading: "The work",
-  workEmpty: "The first Parallel projects are in progress.",
+  stepsHeading: "Inside each edition",
+  stepsIntro: "Every edition follows the same five parts.",
+  steps: [
+    { name: "The brand today.", description: "What it is, and what makes it worth a second look." },
+    { name: "The question.", description: "The one idea we want to explore." },
+    { name: "The new direction.", description: "Identity, type, colour and voice, rebuilt from that idea." },
+    { name: "In the world.", description: "The brand where it lives: packaging, signage, screens and print." },
+    { name: "The thinking.", description: "Why every choice was made." },
+  ],
+  workHeading: "The editions",
+  workEmpty: "The first editions are underway.",
   questionsHeading: "Questions",
   questions: [
-    { q: "Does Parallel cost anything?", a: "No. Parallel is entirely studio funded." },
-    {
-      q: "Does the business have to use the new brand?",
-      a: "No. There is no obligation to adopt, buy or use the concept. If a business would like to use it, that becomes a separate project.",
-    },
-    {
-      q: "Can a business ask to be part of Parallel?",
-      a: "Yes. Businesses can nominate themselves, and anyone can nominate a business they admire. Selection is at the studio's discretion.",
-    },
-    { q: "Is Parallel a critique of the current brand?", a: "Never. Every Parallel concept is an alternative possibility, not a correction." },
+    { q: "Is Parallel commissioned work?", a: "No. The studio chooses each brand and funds every edition." },
+    { q: "Does the business know?", a: "Yes. Every edition is made with the business's written permission." },
+    { q: "Is Parallel a critique of the current brand?", a: "No. It is an alternative, not a correction." },
+    { q: "Can the business use the new identity?", a: "Only through a separate agreement with the studio." },
+    { q: "Can I suggest a brand?", a: "Yes, though the studio chooses most brands itself." },
   ] satisfies Question[],
   nominate: {
-    heading: "Nominate a business",
-    text: "Tell us about a growing business you think deserves another possibility.",
-    button: "Nominate a Business",
+    heading: "Suggest a brand",
+    text: "Most Parallel brands are chosen by the studio. If you know one we should look at, tell us.",
+    button: "Suggest a Brand",
     href: "/contact?service=parallel",
   },
 };
@@ -132,58 +139,62 @@ export const PARALLEL = {
 export const COMMONS = {
   title: "Commons: Pro Bono Design and Branding in Toronto",
   description:
-    "Commons is the pro bono programme of House of Singh Studios: three pro bono design and branding projects a year for charities and community organisations in Toronto.",
+    "Commons is the pro bono design program of House of Singh Studios: three pro bono branding and design projects a year for charities and community organizations in Toronto.",
   heading: "Design for the common good.",
   intro:
-    "Commons is our pro bono programme. Each year we give three charities and community organisations professional brand and design work, at no cost, with the same care as any client project.",
+    "Commons is our pro bono design program. Each year, three charities and community organizations receive professional brand and design work. No fee. The same standard as our paid work.",
+  glance: [{ value: "3 projects a year" }, { value: "Up to 35 hours each" }, { value: "Toronto and the GTA" }],
   offerHeading: "What we offer",
   offer: [
     "Three pro bono projects a year",
     "Up to 35 hours of studio time each",
-    "A defined scope agreed at the start: for example a brand identity refresh, a campaign, or a photography day",
-    "The same process and standards as our paid work",
+    "A defined scope, agreed at the start",
+    "The same process and standard as our paid work",
   ],
   eligibleHeading: "Who can apply",
   eligible: [
-    "Registered charities, non profits and community groups doing clear public good",
+    "Registered charities, nonprofits and community groups",
     "An annual operating budget under $1 million",
     "Based in Toronto or the GTA",
-    "A named decision maker, content ready, and decisions made on time",
-    "Happy for the finished work to be shared as a case study",
+    "A decision maker, content ready, and time to engage",
+    "Happy for the finished work to be shared",
   ],
-  notEligible: "Not eligible: businesses, political parties and campaigns, and organisations whose purpose conflicts with the studio's values.",
+  notEligible: "Not eligible: Businesses, political parties and campaigns, and organizations whose purpose conflicts with our values.",
   chooseHeading: "How we choose",
-  chooseIntro:
-    "Each nomination is considered on five things: impact, need, readiness, fit with what the studio does well, and whether the work will help the organisation tell its story.",
   criteria: [
-    { name: "Impact", line: "The good the organisation does." },
-    { name: "Need", line: "How much the work would help." },
-    { name: "Readiness", line: "Ready to take part and decide on time." },
-    { name: "Fit", line: "Fit with what the studio does well." },
-    { name: "Story", line: "Whether the work will help the organisation tell its story." },
+    { name: "Impact", line: "How many people benefit, and how much." },
+    { name: "Need", line: "Whether professional design is otherwise out of reach." },
+    { name: "Readiness", line: "A decision maker, content and time." },
+    { name: "Fit", line: "Work the studio does well." },
+    { name: "Story", line: "A result worth sharing." },
   ],
-  workHeading: "The work",
-  workEmpty: "The first Commons projects will appear here.",
+  workHeading: "Pro bono work",
+  // The outlined last slot in the Pro bono work row, linking to the nominate band.
+  openSlot: { text: "2027 nominations open", href: "#nominate" },
   questionsHeading: "Questions",
   questions: [
     {
       q: "What is pro bono design?",
-      a: "Professional design work given free of charge. Through Commons, House of Singh Studios offers pro bono branding and design to charities and community organisations.",
+      a: "Professional design work given free of charge. Through Commons, we offer pro bono branding and design to charities and community organizations.",
     },
     {
       q: "Is Commons really free?",
-      a: "Yes. There is no fee. We ask for a named point of contact, timely decisions, and permission to share the finished work.",
+      a: "Yes. We ask for a named contact, timely decisions, and permission to share the work.",
     },
-    { q: "How often do you take on pro bono projects?", a: "Three a year. Nominations are reviewed once a year." },
+    { q: "How often do you take on pro bono projects?", a: "Three a year, reviewed as nominations arrive." },
     {
-      q: "Can you provide a donation receipt for the work?",
-      a: "No. In Canada, donated services generally cannot receive an official donation receipt, so Commons is a contribution, not a tax arrangement.",
+      q: "Can you provide a donation receipt?",
+      a: "No. In Canada, donated services generally cannot receive an official donation receipt.",
     },
   ] satisfies Question[],
   nominate: {
-    heading: "Nominate an organisation",
-    text: "Tell us about a charity or community group that deserves great design. Organisations can nominate themselves.",
-    button: "Nominate an Organisation",
+    heading: "Nominate an organization",
+    text: "Know a charity or community group that deserves great design? Organizations can nominate themselves.",
+    button: "Nominate an Organization",
     href: "/contact?service=commons",
+  },
+  next: {
+    label: "What happens next",
+    items: ["Reviewed as they arrive", "Chosen on five criteria", "Selected organizations announced publicly"],
   },
 };
