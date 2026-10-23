@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import ContactClient from "@/components/contact/ContactClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { serviceFromQuery } from "@/lib/initiatives/nominations";
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -13,14 +14,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactPage() {
+type Props = { searchParams: Promise<{ service?: string | string[] }> };
+
+// ?service=parallel or ?service=commons preselects a nomination; anything else is ignored.
+export default async function ContactPage({ searchParams }: Props) {
+  const { service } = await searchParams;
   return (
     <>
       <BreadcrumbSchema items={[
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'Contact', url: 'https://studios.houseofsingh.com/contact' },
       ]} />
-      <ContactClient />
+      <ContactClient initialService={serviceFromQuery(service)} />
     </>
   );
 }
