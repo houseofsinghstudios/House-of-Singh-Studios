@@ -170,6 +170,7 @@ This file holds the facts about the project and the list of blocks. Keep all the
   "disciplines": ["brand-identity", "packaging"],
   "deliverables": ["Brand strategy", "Logo system"],
   "featured": false,
+  "projectType": "client",
   "publishedAt": "2026-10-14",
   "seoDescription": "One sentence under 155 characters.",
   "images": {
@@ -181,6 +182,19 @@ This file holds the facts about the project and the list of blocks. Keep all the
   ]
 }
 ```
+
+### Project type
+
+`projectType` says what kind of work this is. The site shows a small label for every type except client work.
+
+| Value | Meaning | Label on the site |
+| --- | --- | --- |
+| `client` | Paid client work. Used when the field is left out. | None |
+| `exploration` | Self initiated work for an invented brand. | Exploration |
+| `parallel` | A real business reimagined, with its written permission (the Parallel initiative). | Parallel |
+| `commons` | Pro bono work (the Commons initiative). | Commons |
+
+Any other value stops the project with an error naming the allowed values. The dry run prints the type next to the title, and for `parallel` it adds a reminder: *Parallel: confirm the signed Participation Agreement and the business's publication approval before --commit.* The type is always written to Sanity, including with `--overwrite`.
 
 ### The facts
 
@@ -194,6 +208,7 @@ This file holds the facts about the project and the list of blocks. Keep all the
 | `disciplines` | One or more of the nine values below, in square brackets. | Yes |
 | `deliverables` | A list of what you made, in square brackets. | No |
 | `featured` | `true` to show it on the homepage, `false` otherwise. No quote marks. | No |
+| `projectType` | `"client"` (the default), `"exploration"`, `"parallel"` or `"commons"`. See below. | No |
 | `publishedAt` | The date, written `YYYY-MM-DD`, for example `"2026-10-14"`. | Yes |
 | `seoDescription` | The sentence Google shows in search results. Keep it under 155 characters. | Recommended |
 | `images` | Every image file in the folder, each with its alt text. | Yes |

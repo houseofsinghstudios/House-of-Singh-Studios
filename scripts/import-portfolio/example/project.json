@@ -7,6 +7,7 @@
   "disciplines": ["brand-identity", "packaging", "art-direction"],
   "deliverables": ["Brand strategy", "Logo system", "Packaging system", "Signage"],
   "featured": false,
+  "projectType": "client",
   "publishedAt": "2026-10-14",
   "seoDescription": "A brand identity and packaging system for Harbour and Pine, a coastal guesthouse and kitchen.",
   "images": {

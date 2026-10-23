@@ -3,7 +3,7 @@
 // dry run gets null and never touches the network.
 
 import path from "node:path";
-import { IMPORT_DIR } from "./config.mjs";
+import { IMPORT_DIR, PARALLEL_REMINDER } from "./config.mjs";
 import { validateProject } from "./project.mjs";
 import { outputFilename, processImage } from "./images.mjs";
 import { buildDocument, decideTarget, findExisting, uploadImage, writeDocument } from "./sanity.mjs";
@@ -11,14 +11,17 @@ import { buildDocument, decideTarget, findExisting, uploadImage, writeDocument }
 export async function runProject(slug, { dryRun, client, overwrite, showJson = false, importDir = IMPORT_DIR }) {
   const project = await validateProject(slug, path.join(importDir, slug));
   const title = project.meta && typeof project.meta.title === "string" ? project.meta.title : "(no title)";
-  const result = { slug, title, status: "failed", images: 0, bytes: 0, detail: "" };
+  const result = { slug, title, projectType: "", status: "failed", images: 0, bytes: 0, detail: "" };
   // Every message names the project.
   const warn = () => project.warnings.forEach((w) => console.log(`  warning [${slug}]: ${w}`));
 
   // Shown only once validated, so an invalid list never looks accepted.
   const services = !project.errors.length && Array.isArray(project.meta?.serviceCategories) ? project.meta.serviceCategories : [];
   const servicesLabel = services.length ? `  |  services: ${services.join(", ")}` : "";
-  console.log(`\n${"=".repeat(72)}\n${slug}  |  ${title}${servicesLabel}\n${"=".repeat(72)}`);
+  const type = !project.errors.length ? project.meta?.projectType ?? "" : "";
+  result.projectType = type;
+  const typeLabel = type ? `  |  ${type}` : "";
+  console.log(`\n${"=".repeat(72)}\n${slug}  |  ${title}${typeLabel}${servicesLabel}\n${"=".repeat(72)}`);
 
   if (project.errors.length) {
     console.log(`  FAILED validation, ${project.errors.length} problem(s). Nothing was processed or uploaded:`);
@@ -28,6 +31,7 @@ export async function runProject(slug, { dryRun, client, overwrite, showJson = f
     return result;
   }
   console.log("  Validation passed.");
+  if (dryRun && type === "parallel") console.log(`  ${PARALLEL_REMINDER}`);
 
   let uploaded = 0;
   try {

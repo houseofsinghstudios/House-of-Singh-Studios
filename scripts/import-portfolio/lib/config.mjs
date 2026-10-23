@@ -28,6 +28,13 @@ export const DISCIPLINES = [
   "social-content",
   "strategy",
 ];
+// Project types. Must match sanity/schemas/caseStudy.ts and src/lib/initiatives/types.ts.
+export const PROJECT_TYPES = ["client", "exploration", "parallel", "commons"];
+export const DEFAULT_PROJECT_TYPE = "client";
+// Printed in every dry run of a Parallel project.
+export const PARALLEL_REMINDER =
+  "Parallel: confirm the signed Participation Agreement and the business's publication approval before --commit.";
+
 // Block types an author can use in project.json, and the Sanity _type each one is written as.
 export const BLOCK_TYPES = {
   split: "blockSplit",
