@@ -1,13 +1,17 @@
 // /initiatives/commons: hero with at a glance, (01) What we offer, (02) Who can apply and (03) How we
-// choose as editorial splits, (04) the work, (05) Questions, (06) Nominate with what happens next.
+// choose as editorial splits, (04) Pro bono work, then Questions and Nominate with what happens next.
+// Pro bono work shows when there are recognitions or Commons case studies; without either it is
+// left out and the sections after it move up a number.
 import type { Project } from "@/data/projects";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { COMMONS } from "@/lib/initiatives/content";
+import type { Recognition } from "@/lib/initiatives/types";
 import InitiativeHero from "./InitiativeHero";
 import InitiativeSection from "./InitiativeSection";
 import InitiativeWork from "./InitiativeWork";
 import InitiativeQuestions from "./InitiativeQuestions";
 import NumberedRows from "./NumberedRows";
+import ProBonoWork from "./ProBonoWork";
 import { NominateBand } from "./NominateBand";
 
 function List({ items, note }: { items: string[]; note?: string }) {
@@ -25,7 +29,9 @@ function List({ items, note }: { items: string[]; note?: string }) {
   );
 }
 
-export default function CommonsPage({ projects }: { projects: Project[] }) {
+export default function CommonsPage({ projects, recognitions }: { projects: Project[]; recognitions: Recognition[] }) {
+  const hasWork = recognitions.length > 0 || projects.length > 0;
+  const num = (n: number) => String(hasWork ? n : n - 1).padStart(2, "0");
   return (
     <div className="init-page">
       <InitiativeHero programme="Commons" heading={COMMONS.heading} intro={COMMONS.intro} glance={COMMONS.glance} />
@@ -38,13 +44,16 @@ export default function CommonsPage({ projects }: { projects: Project[] }) {
       <InitiativeSection id="how-we-choose" number="03" heading={COMMONS.chooseHeading} split>
         <NumberedRows rows={COMMONS.criteria.map((c) => ({ name: c.name, description: c.line }))} />
       </InitiativeSection>
-      <InitiativeSection id="the-work" number="04" heading={COMMONS.workHeading}>
-        <InitiativeWork projects={projects} empty={COMMONS.workEmpty} />
-      </InitiativeSection>
-      <InitiativeSection id="questions" number="05" heading={COMMONS.questionsHeading}>
+      {hasWork && (
+        <InitiativeSection id="pro-bono-work" number="04" heading={COMMONS.workHeading}>
+          {recognitions.length > 0 && <ProBonoWork recognitions={recognitions} />}
+          <InitiativeWork projects={projects} />
+        </InitiativeSection>
+      )}
+      <InitiativeSection id="questions" number={num(5)} heading={COMMONS.questionsHeading}>
         <InitiativeQuestions questions={COMMONS.questions} />
       </InitiativeSection>
-      <NominateBand number="06" item={COMMONS.nominate} next={COMMONS.next} />
+      <NominateBand number={num(6)} item={COMMONS.nominate} next={COMMONS.next} />
       <NextPageLink current="/initiatives/commons" />
     </div>
   );

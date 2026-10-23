@@ -7,7 +7,7 @@ import { COMMONS, PARALLEL } from "@/lib/initiatives/content";
 import { BUILT_PAGES, programmePage, type BuiltPage } from "@/lib/initiatives/pages";
 import { getInitiatives } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
-import { studioTitle } from "@/lib/seo";
+import { STUDIO_NAME, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -30,11 +30,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = initiative.seoTitle || copy.title;
   const description = initiative.seoDescription || copy.description;
   const url = `${SITE}/initiatives/${slug}`;
+  // A title that already names the studio skips the root title template, so the name appears once.
+  const named = title.includes(STUDIO_NAME);
   return {
-    title,
+    title: named ? { absolute: title } : title,
     description,
     alternates: { canonical: url },
-    openGraph: { title: studioTitle(title), description, url },
+    openGraph: { title: named ? title : studioTitle(title), description, url },
   };
 }
 
@@ -51,7 +53,11 @@ export default async function ProgrammePage({ params }: Props) {
         { name: "Initiatives", url: `${SITE}/initiatives` },
         { name: initiative.name, url: `${SITE}/initiatives/${slug}` },
       ]} />
-      {initiative.slug === "parallel" ? <ParallelPage projects={projects} /> : <CommonsPage projects={projects} />}
+      {initiative.slug === "parallel" ? (
+        <ParallelPage projects={projects} />
+      ) : (
+        <CommonsPage projects={projects} recognitions={initiative.recognitions} />
+      )}
     </>
   );
 }

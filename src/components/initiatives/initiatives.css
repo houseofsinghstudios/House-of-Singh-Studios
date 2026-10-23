@@ -268,6 +268,107 @@
   margin: 24px 0 0;
 }
 
+/* ── Commons, Pro bono work: three equal slots between 1px Marble rules, no boxes ── */
+.init-pb-group + .init-pb-group {
+  margin-top: 48px;
+}
+.init-pb-year {
+  margin: 0 0 16px;
+}
+.init-pb-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--text-muted);
+}
+.init-pb-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 176px;
+  padding: 32px 24px;
+  box-sizing: border-box;
+  text-align: center;
+}
+.init-pb-slot:not(:nth-child(3n + 1)) {
+  border-left: 1px solid var(--text-muted);
+}
+.init-pb-slot:nth-child(n + 4) {
+  border-top: 1px solid var(--text-muted);
+}
+/* Every logo at one visual height, as uploaded: no filters, no recolouring. */
+.init-pb-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  max-width: 100%;
+}
+.init-pb-logo img {
+  height: 40px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+/* The name in the label style; Gunmetal, as Marble is too faint to read at this size. */
+.init-pb-name {
+  color: var(--text-secondary);
+}
+/* The open slot: an outlined space, 1px Obsidian, linking to the nominate band. */
+.init-pb-slot--open {
+  padding: 16px;
+}
+.init-pb-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: stretch;
+  flex: 1;
+  border: 1px solid var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .init-pb-open:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+}
+.init-pb-open:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+/* Commons case studies, when there are any, sit below the logos. */
+.init-pb + .wp-content,
+.init-pb ~ .wp-mobile-grid {
+  margin-top: clamp(48px, 6vw, 72px);
+}
+@media (max-width: 767px) {
+  .init-pb-row {
+    grid-template-columns: 1fr;
+  }
+  .init-pb-slot:not(:nth-child(3n + 1)) {
+    border-left: 0;
+  }
+  .init-pb-slot + .init-pb-slot {
+    border-top: 1px solid var(--text-muted);
+  }
+  .init-pb-slot {
+    min-height: 144px;
+  }
+  .init-pb-logo,
+  .init-pb-logo img {
+    height: 32px;
+  }
+}
+
 /* ── Bands ── */
 .init-band .init-band-heading {
   margin-bottom: 16px;
