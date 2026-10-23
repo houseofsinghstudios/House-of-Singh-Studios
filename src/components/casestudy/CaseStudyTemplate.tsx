@@ -8,6 +8,8 @@ import ImageGallery from "./ImageGallery";
 import NextProject from "./NextProject";
 import BlockRenderer from "./blocks/BlockRenderer";
 import NextPageLink from "@/components/layout/NextPageLink";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
+import { projectTypeLabel } from "@/lib/initiatives/types";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import { serviceForCaseStudy, startHref } from "@/lib/project-planner/start-links";
@@ -73,6 +75,8 @@ export default function CaseStudyTemplate({
           className="cs-hero-meta css-reveal"
           style={{ transitionDelay: "80ms" }}
         >
+          <ProjectTypeLabel type={project.projectType} />
+          {projectTypeLabel(project.projectType) && metaLine ? " · " : ""}
           {metaLine}
         </p>
         <h1

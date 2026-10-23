@@ -4,6 +4,8 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import type { Project } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
+import { projectTypeLabel } from "@/lib/initiatives/types";
 
 interface WorkSectionProps {
   projects: Project[];
@@ -57,6 +59,8 @@ export default function WorkSection({ projects }: WorkSectionProps) {
               </div>
             </div>
             <p className="featured-work-tags">
+              <ProjectTypeLabel type={project.projectType} />
+              {projectTypeLabel(project.projectType) ? " · " : ""}
               {project.label
                 .split(",")
                 .map((tag) => tag.trim())

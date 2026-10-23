@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
 import NextPageLink from "@/components/layout/NextPageLink";
+import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
+import { projectTypeLabel } from "@/lib/initiatives/types";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
@@ -180,7 +182,13 @@ export default function ServiceDetailClient({
                   )}
                 </div>
                 <p className="svcd-work-name">{work.name}</p>
-                {work.subtitle && <p className="svcd-work-cat">{work.subtitle}</p>}
+                {(work.subtitle || projectTypeLabel(work.projectType)) && (
+                  <p className="svcd-work-cat">
+                    <ProjectTypeLabel type={work.projectType} />
+                    {projectTypeLabel(work.projectType) && work.subtitle ? " · " : ""}
+                    {work.subtitle}
+                  </p>
+                )}
               </Link>
             ))}
           </div>

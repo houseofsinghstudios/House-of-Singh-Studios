@@ -1023,6 +1023,16 @@ body {
   margin-top: 12px;
 }
 
+/* Project type label (ProjectTypeLabel): Exploration, Parallel, Commons. The small uppercase tracked
+   label style in Gunmetal, at the size of the line it sits in. Client projects never render it. */
+.ptype {
+  font-family: var(--sans);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
 /* Discipline tags (DisciplineTags): /work grid, /work list, /services project cards.
    A tag never breaks inside itself; the row wraps. Below 768px: first two, then "+N". */
 .dtags {
@@ -1038,7 +1048,8 @@ body {
   display: none;
   color: var(--text-primary);
 }
-.wp-grid-meta .dtag-more {
+.wp-grid-meta .dtag-more,
+.wp-grid-meta .ptype {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 400;

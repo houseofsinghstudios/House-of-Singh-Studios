@@ -61,7 +61,7 @@ export default function ServiceProjectCard({ projects }: Props) {
         ))}
       </div>
       <div className="svc-block-proj-meta">
-        <DisciplineTags tags={tags} className="svc-block-proj-tags" />
+        <DisciplineTags tags={tags} className="svc-block-proj-tags" projectType={current.projectType} />
         <p className="svc-block-proj-name">{current.name}</p>
       </div>
     </Link>

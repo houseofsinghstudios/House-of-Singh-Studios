@@ -29,7 +29,7 @@ export default function TermsPage() {
           Terms of Use
         </h1>
         <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: October 22, 2026
+          Last updated: October 23, 2026
         </p>
 
         <div style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -59,8 +59,11 @@ export default function TermsPage() {
           <p style={{ margin: "0 0 12px" }}>
             The House of Singh Studios name, logo, crest, and any associated marks are trademarks of House of Singh Studios Inc. You may not use these marks without prior written consent.
           </p>
-          <p style={{ margin: "0 0 32px" }}>
+          <p style={{ margin: "0 0 12px" }}>
             Case studies and portfolio work displayed on this Site may include work created for clients. The intellectual property rights for client work are governed by the respective client agreements. The presentation and description of such work on this Site is for informational and promotional purposes only.
+          </p>
+          <p style={{ margin: "0 0 32px" }}>
+            Projects marked Exploration are self initiated studies for invented brands. Projects marked Parallel are alternative concepts for real businesses, published with their permission, and are not those businesses&apos; official brands.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>5. Contact form and communications</h2>

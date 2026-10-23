@@ -218,7 +218,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                 >
                   {project.name}
                 </span>
-                <DisciplineTags tags={projectTags(project)} className="wp-list-cat" />
+                <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-list-cat" />
                 <span className="wp-list-arrow" aria-hidden="true">
                   &rarr;
                 </span>
@@ -266,7 +266,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                     />
                   </div>
                 </div>
-                <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
+                <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={filterByTag} />
                 <div className="wp-grid-text-swap">
                   <h3
                     className="wp-grid-name"
@@ -301,7 +301,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                 />
               </div>
             </div>
-            <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
+            <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={filterByTag} />
             <h3 className="wp-grid-name">{project.name}</h3>
             <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
           </Link>

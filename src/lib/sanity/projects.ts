@@ -5,6 +5,7 @@ import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
 import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
+import { projectType, type ProjectType } from "@/lib/initiatives/types";
 
 // ── GROQ Queries ──
 
@@ -50,6 +51,7 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   },
   testimonial,
   featured,
+  projectType,
   ${serviceCategoriesProjection},
   disciplines,
   workDelivered,
@@ -82,6 +84,7 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] 
   },
   testimonial,
   featured,
+  projectType,
   ${serviceCategoriesProjection},
   disciplines,
   workDelivered,
@@ -95,6 +98,7 @@ const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | ord
   title,
   "slug": slug.current,
   overview,
+  projectType,
   featuredImage
 }`;
 
@@ -275,6 +279,7 @@ function mapSanityToProject(doc: any, index: number): Project {
     serviceCategories: Array.isArray(doc.serviceCategories) && doc.serviceCategories.length > 0
       ? doc.serviceCategories
       : undefined,
+    projectType: projectType(doc.projectType),
   };
 }
 
@@ -310,6 +315,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
     category: "Brand Identity",
     year: doc.year ? String(doc.year) : "",
     industry: doc.industry || undefined,
+    projectType: projectType(doc.projectType),
     timeline: undefined,
     summary: overviewText,
     heroImage: {
@@ -406,6 +412,7 @@ function mapSanityToHomepageProject(doc: any): HomepageProject {
     label: "Brand Identity",
     sentence: overviewText.length > 160 ? overviewText.slice(0, 160) + "…" : overviewText,
     href: `/work/${doc.slug || ""}`,
+    projectType: projectType(doc.projectType),
     color: "#2B2B2B",
     accent: "#C9A96E",
     image: imageUrl,
@@ -458,6 +465,7 @@ export interface ServiceProject {
   subtitle: string;
   image: string;
   disciplines: string[];
+  projectType: ProjectType;
 }
 
 function firstSentence(text: unknown): string {
@@ -475,6 +483,7 @@ const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategori
   industry,
   overview,
   disciplines,
+  projectType,
   featuredImage
 }`;
 
@@ -508,6 +517,7 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
         ).trim(),
         image: sanityImageUrl(doc.featuredImage),
         disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
+        projectType: projectType(doc.projectType),
       };
       for (const cat of new Set(categories)) {
         if (grouped[cat]) grouped[cat].push(project);
