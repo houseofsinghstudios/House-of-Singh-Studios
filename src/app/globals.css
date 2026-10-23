@@ -2933,6 +2933,11 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   .package-tier:last-child {
     border-bottom: none;
   }
+  /* The only tier with a background keeps its content inside it. */
+  .package-tier--recommended {
+    padding-left: clamp(20px, 5vw, 32px);
+    padding-right: clamp(20px, 5vw, 32px);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
