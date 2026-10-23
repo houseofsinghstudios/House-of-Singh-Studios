@@ -557,3 +557,33 @@ export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
     return [];
   }
 }
+
+// ── Initiatives: published case studies of one project type, newest first ──
+
+const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+  title,
+  "slug": slug.current,
+  year,
+  overview,
+  featuredImage,
+  disciplines,
+  projectType,
+  ${serviceCategoriesProjection}
+}`;
+
+// Grouped by type. Empty lists when Sanity has none or cannot be reached: pages show their empty line.
+export async function getProjectsByType(types: ProjectType[]): Promise<Record<ProjectType, Project[]>> {
+  const grouped: Record<ProjectType, Project[]> = { client: [], exploration: [], parallel: [], commons: [] };
+  try {
+    const docs: unknown = await client.fetch(projectsByTypeQuery, { types });
+    if (Array.isArray(docs)) {
+      docs.forEach((doc, i) => {
+        const project = mapSanityToProject(doc, i);
+        if (project.projectType && types.includes(project.projectType)) grouped[project.projectType].push(project);
+      });
+    }
+  } catch (error) {
+    console.error("[sanity/projects] Projects by type fetch failed:", error instanceof Error ? error.name : "unknown error");
+  }
+  return grouped;
+}

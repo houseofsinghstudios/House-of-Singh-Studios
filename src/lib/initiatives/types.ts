@@ -69,3 +69,36 @@ export function statusText(i: Pick<Initiative, "status" | "statusLabel">): strin
 export function hasLivePage(i: Pick<Initiative, "status" | "hasPage"> | null | undefined): boolean {
   return !!i && isVisible(i) && i.hasPage;
 }
+
+// Empty category, tagline or summary in Sanity keeps the built-in copy for the same slug,
+// so a half filled document never blanks a row.
+export function withFallbackCopy(list: Initiative[], fallback: Initiative[]): Initiative[] {
+  return list.map((i) => {
+    const f = fallback.find((x) => x.slug === i.slug);
+    if (!f) return i;
+    return { ...i, category: i.category || f.category, tagline: i.tagline || f.tagline, summary: i.summary || f.summary };
+  });
+}
+
+const text = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
+
+// One Sanity initiative document as an Initiative, or null without a name and slug.
+// An unknown status reads as hidden.
+export function toInitiative(doc: Record<string, unknown>): Initiative | null {
+  const name = text(doc.name);
+  const slug = text(doc.slug);
+  if (!name || !slug) return null;
+  return {
+    name,
+    slug,
+    category: text(doc.category),
+    tagline: text(doc.tagline),
+    summary: text(doc.summary),
+    status: initiativeStatus(doc.status),
+    statusLabel: text(doc.statusLabel) || undefined,
+    order: typeof doc.order === "number" ? doc.order : 999,
+    hasPage: doc.hasPage === true,
+    seoTitle: text(doc.seoTitle) || undefined,
+    seoDescription: text(doc.seoDescription) || undefined,
+  };
+}
