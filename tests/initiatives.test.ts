@@ -3,9 +3,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { FALLBACK_INITIATIVES } from "@/lib/initiatives/content";
 import { programmePage, linksToPage } from "@/lib/initiatives/pages";
-import { hasLivePage, initiativeStatus, projectType, projectTypeLabel, statusText, toInitiative, visibleInitiatives, withFallbackCopy, type Initiative } from "@/lib/initiatives/types";
+import { hasLivePage, initiativeStatus, projectType, projectTypeLabel, recognitionsByYear, statusText, toGlance, toInitiative, toRecognitions, visibleInitiatives, withFallbackCopy, type Initiative } from "@/lib/initiatives/types";
 
-const make = (o: Partial<Initiative>): Initiative => ({ name: "X", slug: "x", category: "", tagline: "", summary: "", status: "live", order: 1, hasPage: true, ...o });
+const make = (o: Partial<Initiative>): Initiative => ({ name: "X", slug: "x", category: "", tagline: "", summary: "", status: "live", order: 1, hasPage: true, atAGlance: [], recognitions: [], ...o });
 
 test("visible initiatives: hidden ones are dropped, the rest ordered by order then name", () => {
   const list = [
@@ -67,4 +67,30 @@ test("Sanity copy: empty fields keep the built-in copy, filled fields win", () =
   assert.equal(parallel.category, "Brands reimagined");
   assert.equal(commons.tagline, "New line.");
   assert.ok(commons.summary.startsWith("Pro bono brand"));
+});
+
+test("at a glance: values only, labels optional, at most three; an empty list keeps the built-in one", () => {
+  const glance = toGlance([{ value: " A " }, { label: "Format", value: "B" }, { label: "Empty" }, null, { value: "C" }, { value: "D" }]);
+  assert.deepEqual(glance, [{ label: undefined, value: "A" }, { label: "Format", value: "B" }, { label: undefined, value: "C" }]);
+  assert.deepEqual(toGlance(undefined), []);
+  const [parallel] = withFallbackCopy([make({ name: "Parallel", slug: "parallel" })], FALLBACK_INITIATIVES);
+  assert.deepEqual(parallel.atAGlance.map((g) => g.value), ["Real brands", "New directions", "The thinking, shown"]);
+  const [own] = withFallbackCopy([make({ slug: "parallel", atAGlance: [{ value: "Own" }] })], FALLBACK_INITIATIVES);
+  assert.deepEqual(own.atAGlance, [{ value: "Own" }]);
+});
+
+test("recognitions: incomplete ones are dropped; grouped by year in the order entered", () => {
+  const logo = (alt: string) => ({ url: "https://cdn.sanity.io/x.png", alt, width: 400, height: 100 });
+  const list = toRecognitions([
+    { name: "One", year: 2026, logo: logo("One logo") },
+    { name: "No alt", year: 2026, logo: { ...logo(""), alt: "" } },
+    { name: "", year: 2026, logo: logo("Nameless") },
+    { name: "Undated", logo: logo("Undated logo") },
+    { name: "Two", year: 2026, logo: logo("Two logo") },
+    { name: "Three", year: 2025.5, logo: logo("Three logo") },
+  ]);
+  assert.deepEqual(list.map((r) => r.name), ["One", "Undated", "Two", "Three"]);
+  assert.equal(list[3].year, undefined, "a year must be a whole number");
+  assert.deepEqual(recognitionsByYear(list).map((g) => [g.year, g.items.map((r) => r.name)]), [[2026, ["One", "Two"]], [undefined, ["Undated", "Three"]]]);
+  assert.deepEqual(FALLBACK_INITIATIVES.flatMap((i) => i.recognitions), [], "no fallback recognitions");
 });

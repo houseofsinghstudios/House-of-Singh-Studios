@@ -1,6 +1,6 @@
-import { defineType, defineField } from "sanity";
+import { defineArrayMember, defineType, defineField } from "sanity";
 
-// A studio led programme shown under /initiatives (Parallel, Commons, Foundry).
+// A studio led program shown under /initiatives (Parallel, Commons, Foundry).
 // The status list must match src/lib/initiatives/types.ts. "hidden" never renders anywhere:
 // not on /initiatives, not in the sitemap, and its page returns 404.
 export default defineType({
@@ -12,7 +12,7 @@ export default defineType({
       name: "name",
       title: "Name",
       type: "string",
-      description: "The programme name, for example Parallel.",
+      description: "The program name, for example Parallel.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -79,6 +79,83 @@ export default defineType({
       type: "boolean",
       description: "Whether /initiatives/<slug> exists. The page also needs to be built in the site code.",
       initialValue: false,
+    }),
+    defineField({
+      name: "atAGlance",
+      title: "At a glance",
+      type: "array",
+      description: "Up to three short facts, for example 3 projects a year. Shown along the bottom of this program's panel on /initiatives, and as a short list on phones.",
+      of: [
+        defineArrayMember({
+          name: "glanceItem",
+          title: "Fact",
+          type: "object",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Label",
+              type: "string",
+              description: "Optional. A small label shown before the value, for example Format.",
+            }),
+            defineField({
+              name: "value",
+              title: "Value",
+              type: "string",
+              description: "The fact itself, a few words.",
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: { select: { title: "value", subtitle: "label" } },
+        }),
+      ],
+      validation: (rule) => rule.max(3),
+    }),
+    defineField({
+      name: "recognitions",
+      title: "Recognitions",
+      type: "array",
+      description: "Commons only. Organizations the studio has done pro bono work for, shown as logos in the Pro bono work section, in the order entered here. Without any, the logos are not shown.",
+      hidden: ({ document }) => (document?.slug as { current?: string } | undefined)?.current !== "commons",
+      of: [
+        defineArrayMember({
+          name: "recognition",
+          title: "Recognition",
+          type: "object",
+          fields: [
+            defineField({
+              name: "name",
+              title: "Organization name",
+              type: "string",
+              description: "Shown beneath the logo.",
+              validation: (rule) => rule.required(),
+            }),
+            defineField({
+              name: "year",
+              title: "Year",
+              type: "number",
+              description: "The year of the work, for example 2026. Logos are grouped by year.",
+              validation: (rule) => rule.integer().min(2000).max(2100),
+            }),
+            defineField({
+              name: "logo",
+              title: "Logo",
+              type: "image",
+              description: "Shown as uploaded, at the same height as the other logos. No recolouring.",
+              fields: [
+                defineField({
+                  name: "alt",
+                  title: "Alt text",
+                  type: "string",
+                  description: "For example: Northfield Food Bank logo.",
+                  validation: (rule) => rule.required(),
+                }),
+              ],
+              validation: (rule) => rule.required(),
+            }),
+          ],
+          preview: { select: { title: "name", subtitle: "year", media: "logo" } },
+        }),
+      ],
     }),
     defineField({
       name: "seoTitle",

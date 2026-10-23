@@ -8,26 +8,33 @@ export interface Question {
 }
 
 // Fallback initiatives. Foundry is built but hidden: it never renders, and its page returns 404.
+// Commons has no fallback recognitions: without Sanity its logos are simply not shown.
 export const FALLBACK_INITIATIVES: Initiative[] = [
   {
     name: "Parallel",
     slug: "parallel",
     category: "Brands reimagined",
     tagline: "One brand. Another possibility.",
-    summary: "We choose growing businesses we admire and reimagine their brand, with their permission. A gift, not a pitch.",
+    summary: "A series where we reimagine exciting brands we admire. Real businesses, new directions, and the thinking behind every choice.",
     status: "live",
+    statusLabel: "Edition 01 underway",
     order: 1,
     hasPage: true,
+    atAGlance: [{ value: "Real brands" }, { value: "New directions" }, { value: "The thinking, shown" }],
+    recognitions: [],
   },
   {
     name: "Commons",
     slug: "commons",
     category: "Pro bono design",
     tagline: "Design for the common good.",
-    summary: "Pro bono brand and design work for charities and community organisations in Toronto. Three projects a year.",
+    summary: "Pro bono brand and design work for charities and community organizations in Toronto. Three projects a year.",
     status: "nominations-open",
+    statusLabel: "Nominations open for 2027",
     order: 2,
     hasPage: true,
+    atAGlance: [{ value: "3 projects a year" }, { value: "Up to 35 hours each" }, { value: "Toronto and the GTA" }],
+    recognitions: [],
   },
   {
     name: "Foundry",
@@ -38,6 +45,8 @@ export const FALLBACK_INITIATIVES: Initiative[] = [
     status: "hidden",
     order: 3,
     hasPage: false,
+    atAGlance: [],
+    recognitions: [],
   },
 ];
 
