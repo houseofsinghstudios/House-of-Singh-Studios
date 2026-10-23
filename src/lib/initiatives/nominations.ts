@@ -1,12 +1,12 @@
-// Nominations through the contact form. ?service=parallel and ?service=commons preselect the matching
-// service option; any other value is ignored. Values equal labels, so they reach n8n and Airtable as
+// Parallel suggestions and Commons nominations through the contact form. ?service=parallel and
+// ?service=commons preselect the matching service option; any other value is ignored. Values equal labels, so they reach n8n and Airtable as
 // plain text like every other service.
 export const NOMINATION_SERVICES = {
-  parallel: "Parallel nomination",
+  parallel: "Parallel suggestion",
   commons: "Commons nomination (pro bono)",
 } as const;
 
-export const NOMINATION_PLACEHOLDER = "Tell us about the business or organisation, and why.";
+export const NOMINATION_PLACEHOLDER = "Tell us about the brand or organization, and why.";
 
 const values: readonly string[] = Object.values(NOMINATION_SERVICES);
 

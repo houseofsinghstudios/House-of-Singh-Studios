@@ -3,8 +3,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { NOMINATION_SERVICES, isNomination, serviceFromQuery } from "@/lib/initiatives/nominations";
 
-test("?service=parallel and ?service=commons preselect their nomination", () => {
-  assert.equal(serviceFromQuery("parallel"), "Parallel nomination");
+test("?service=parallel preselects the Parallel suggestion, ?service=commons the Commons nomination", () => {
+  assert.equal(serviceFromQuery("parallel"), "Parallel suggestion");
   assert.equal(serviceFromQuery("commons"), "Commons nomination (pro bono)");
   assert.equal(serviceFromQuery(["commons", "parallel"]), "Commons nomination (pro bono)", "first of a repeated ?service");
 });

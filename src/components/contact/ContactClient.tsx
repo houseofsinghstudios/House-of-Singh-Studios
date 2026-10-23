@@ -12,7 +12,7 @@ import { NOMINATION_PLACEHOLDER, NOMINATION_SERVICES, isNomination } from "@/lib
 
 export default function ContactClient({ initialService = "" }: { initialService?: string }) {
   const [submitted, setSubmitted] = useState(false);
-  // A nomination needs no budget, and asks about the business or organisation instead.
+  // A suggestion or nomination needs no budget, and asks about the brand or organization instead.
   const [service, setService] = useState(initialService);
   const nominating = isNomination(service);
   const [submitting, setSubmitting] = useState(false);
