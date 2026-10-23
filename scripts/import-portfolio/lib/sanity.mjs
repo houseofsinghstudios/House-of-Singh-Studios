@@ -100,6 +100,8 @@ export function buildDocument(project, refs) {
     disciplines: meta.disciplines,
     deliverables: meta.deliverables,
     featured: meta.featured,
+    // Always written, also with --overwrite: "client" when project.json does not set it.
+    projectType: meta.projectType,
     publishedAt: `${meta.publishedAt}T12:00:00.000Z`,
     seoDescription: meta.seoDescription,
     // overview is a plain text field, not portable text.

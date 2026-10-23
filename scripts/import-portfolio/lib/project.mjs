@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
-import { DISCIPLINES, SERVICE_CATEGORIES } from "./config.mjs";
+import { DEFAULT_PROJECT_TYPE, DISCIPLINES, PROJECT_TYPES, SERVICE_CATEGORIES } from "./config.mjs";
 import { OVERVIEW_KEY, readCopy, sectionKey } from "./copy.mjs";
 
 const SLUG_PATTERN = /^[a-z0-9-]+$/;
@@ -22,6 +22,7 @@ const PROJECT_KEYS = [
   "disciplines",
   "deliverables",
   "featured",
+  "projectType",
   "publishedAt",
   "seoDescription",
   "images",
@@ -146,6 +147,8 @@ function readProjectJson(dir, errors, warnings) {
     errors.push(`"featured" must be true or false without quotes.`);
   }
 
+  checkProjectType(data, errors);
+
   if (!isValidDate(data.publishedAt)) {
     errors.push(`"publishedAt" is required and must be a real date written as YYYY-MM-DD, for example "2026-10-14".`);
   }
@@ -163,6 +166,17 @@ function readProjectJson(dir, errors, warnings) {
   }
 
   return data;
+}
+
+// projectType: optional, "client" when missing. On success data.projectType holds the final value.
+export function checkProjectType(data, errors) {
+  if (data.projectType === undefined) {
+    data.projectType = DEFAULT_PROJECT_TYPE;
+    return;
+  }
+  if (!PROJECT_TYPES.includes(data.projectType)) {
+    errors.push(`"projectType" "${data.projectType}" is not valid. It must be one of: ${PROJECT_TYPES.join(", ")}.`);
+  }
 }
 
 // serviceCategories: a list of one or more services. The older single "serviceCategory" string is

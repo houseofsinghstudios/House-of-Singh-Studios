@@ -7,27 +7,9 @@ import type { Project } from "@/data/projects";
 import type { DisciplineFilter } from "@/lib/sanity/projects";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
-import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
-import { disciplineLabel } from "@/lib/disciplines";
+import DisciplineTags from "@/components/work/DisciplineTags";
+import { WorkGridCard, WorkMobileCard, projectImage, projectTags } from "@/components/work/WorkCards";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-
-const FALLBACK_IMAGES: Record<string, string> = {
-  tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-};
-
-function projectImage(project: Project): string {
-  return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
-}
-
-function projectTags(project: Project): DisciplineTag[] {
-  if (project.disciplines && project.disciplines.length > 0) {
-    return project.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) }));
-  }
-  return project.workType.split(",").map((t) => {
-    const trimmed = t.trim();
-    return { value: trimmed, label: trimmed };
-  });
-}
 
 type ViewMode = "list" | "grid";
 
@@ -218,7 +200,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
                 >
                   {project.name}
                 </span>
-                <DisciplineTags tags={projectTags(project)} className="wp-list-cat" />
+                <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-list-cat" />
                 <span className="wp-list-arrow" aria-hidden="true">
                   &rarr;
                 </span>
@@ -245,38 +227,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
           /* ── GRID VIEW ── */
           <div className="wp-grid">
             {filteredProjects.map((project, i) => (
-              <Link
-                key={project.slug}
-                href={`/work/${project.slug}`}
-                className="wp-grid-card no-underline"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div
-                  className="wp-grid-img-wrap reveal-clip"
-                  data-cursor="view"
-                  style={{ viewTransitionName: `project-image-${project.slug}` }}
-                >
-                  <div className="wp-grid-img-inner relative">
-                    <Image
-                      src={projectImage(project)}
-                      alt={project.name}
-                      fill
-                      sizes="(max-width: 767px) 100vw, 50vw"
-                      style={{ objectFit: "cover", pointerEvents: "none" }}
-                    />
-                  </div>
-                </div>
-                <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
-                <div className="wp-grid-text-swap">
-                  <h3
-                    className="wp-grid-name"
-                    style={{ viewTransitionName: `project-${project.slug}` }}
-                  >
-                    {project.name}
-                  </h3>
-                  <p className="wp-grid-desc">{project.shortDescription}</p>
-                </div>
-              </Link>
+              <WorkGridCard key={project.slug} project={project} index={i} onSelect={filterByTag} />
             ))}
           </div>
         )}
@@ -285,28 +236,14 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
       {/* ═══ MOBILE GRID (always visible on mobile) ═══ */}
       <div className="wp-mobile-grid" style={{ padding: "40px var(--page-px) 0" }}>
         {filteredProjects.map((project) => (
-          <Link
-            key={project.slug}
-            href={`/work/${project.slug}`}
-            className="wp-grid-card no-underline"
-          >
-            <div className="wp-grid-img-wrap reveal-clip" data-cursor="view">
-              <div className="wp-grid-img-inner relative">
-                <Image
-                  src={projectImage(project)}
-                  alt={project.name}
-                  fill
-                  sizes="100vw"
-                  style={{ objectFit: "cover", pointerEvents: "none" }}
-                />
-              </div>
-            </div>
-            <DisciplineTags tags={projectTags(project)} className="wp-grid-meta" onSelect={filterByTag} />
-            <h3 className="wp-grid-name">{project.name}</h3>
-            <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
-          </Link>
+          <WorkMobileCard key={project.slug} project={project} onSelect={filterByTag} />
         ))}
       </div>
+
+      <p className="wp-initiatives-note">
+        Some projects are Explorations or Parallel concepts.{" "}
+        <Link href="/initiatives" className="underline underline-offset-4" data-cursor="link">About our initiatives.</Link>
+      </p>
 
       <NextPageLink current="/work" />
 

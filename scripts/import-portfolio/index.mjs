@@ -82,7 +82,7 @@ function printSummary(results, dryRun) {
   for (const r of results) {
     const live = ["created", "overwritten", "would create"].includes(r.status);
     const url = live ? `${SITE_URL}/work/${r.slug}` : r.detail;
-    console.log(`  ${r.status.toUpperCase().padEnd(13)} ${r.slug.padEnd(28)} ${url}`);
+    console.log(`  ${r.status.toUpperCase().padEnd(13)} ${r.slug.padEnd(28)} ${(r.projectType || "").padEnd(12)} ${url}`);
   }
   if (dryRun && count("would create")) console.log("\n  URLs above are where each project will be live after a --commit run.");
   console.log("");

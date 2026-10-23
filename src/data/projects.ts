@@ -1,3 +1,5 @@
+import type { ProjectType } from "@/lib/initiatives/types";
+
 export interface ProjectSection {
   label: string;
   paragraphs: string[];
@@ -26,6 +28,8 @@ export interface Project {
   deliverablesList: string[];
   disciplines?: string[];
   serviceCategories?: string[];
+  // Missing means client work: no label.
+  projectType?: ProjectType;
 }
 
 export const projects: Project[] = [

@@ -10,10 +10,16 @@ interface ProcessStep {
 
 export default function ServiceDetailAccordion({
   steps,
+  initialOpen = 0,
+  headingLevel,
 }: {
   steps: ProcessStep[];
+  // Which row starts open: the first by default (service pages), -1 for all closed (questions).
+  initialOpen?: number;
+  // When set, each trigger sits in a heading of that level (questions are h3).
+  headingLevel?: "h3";
 }) {
-  const [openIndex, setOpenIndex] = useState(0);
+  const [openIndex, setOpenIndex] = useState(initialOpen);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -32,6 +38,21 @@ export default function ServiceDetailAccordion({
     [isMobile]
   );
 
+  const trigger = (step: ProcessStep, i: number, isOpen: boolean) => (
+    <button
+      type="button"
+      className="svc-acc-trigger"
+      onClick={() => toggle(i)}
+      aria-expanded={isOpen}
+    >
+      <span className="svc-acc-num">{step.step}</span>
+      <span className="svc-acc-title">{step.name}</span>
+      <span className="svc-acc-icon" aria-hidden="true">
+        +
+      </span>
+    </button>
+  );
+
   return (
     <div className="svc-accordion-list">
       {steps.map((step, i) => {
@@ -41,18 +62,11 @@ export default function ServiceDetailAccordion({
             key={step.step}
             className={`svc-acc-row${isOpen ? " svc-acc-row--open" : ""}`}
           >
-            <button
-              type="button"
-              className="svc-acc-trigger"
-              onClick={() => toggle(i)}
-              aria-expanded={isOpen}
-            >
-              <span className="svc-acc-num">{step.step}</span>
-              <span className="svc-acc-title">{step.name}</span>
-              <span className="svc-acc-icon" aria-hidden="true">
-                +
-              </span>
-            </button>
+            {headingLevel ? (
+              <h3 className="svc-acc-heading">{trigger(step, i, isOpen)}</h3>
+            ) : (
+              trigger(step, i, isOpen)
+            )}
             <div
               className="svc-acc-panel"
               style={{

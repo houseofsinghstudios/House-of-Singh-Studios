@@ -1,6 +1,8 @@
 import { MetadataRoute } from "next";
 import { client } from "@/lib/sanity/client";
 import { services } from "@/data/services";
+import { programmePage } from "@/lib/initiatives/pages";
+import { getInitiatives } from "@/lib/sanity/initiatives";
 
 // Rebuilt hourly, so a newly published project or article appears without a redeploy.
 export const revalidate = 3600;
@@ -47,6 +49,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   staticPages.forEach((path) => add(path));
   services.forEach((service) => add(`/services/${service.slug}`));
+
+  // Initiatives: the landing page and every programme page that renders. Hidden ones never appear.
+  const initiatives = await getInitiatives();
+  add("/initiatives");
+  initiatives.forEach((i) => {
+    if (programmePage(i.slug, initiatives)) add(`/initiatives/${i.slug}`);
+  });
 
   // If Sanity is unreachable the sitemap still serves the pages above, and retries next hour.
   try {

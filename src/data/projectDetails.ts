@@ -1,3 +1,4 @@
+import type { ProjectType } from "@/lib/initiatives/types";
 import type { PortableTextBlock } from "@portabletext/react";
 
 export interface ProjectDetailImage {
@@ -33,6 +34,8 @@ export interface ProjectDetail {
   category: string;
   year: string;
   industry?: string;
+  // Missing means client work: no label.
+  projectType?: ProjectType;
   timeline?: string;
   summary: string;
   heroImage: ProjectDetailImage;

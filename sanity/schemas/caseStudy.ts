@@ -42,6 +42,25 @@ export default defineType({
       initialValue: false,
     }),
     defineField({
+      name: "projectType",
+      title: "Project type",
+      type: "string",
+      description:
+        "Exploration: self initiated work for an invented brand. Parallel: a real business reimagined with written permission. Commons: pro bono work.",
+      options: {
+        // Must match src/lib/initiatives/types.ts and scripts/import-portfolio/lib/config.mjs.
+        list: [
+          { title: "Client", value: "client" },
+          { title: "Exploration", value: "exploration" },
+          { title: "Parallel", value: "parallel" },
+          { title: "Commons", value: "commons" },
+        ],
+        layout: "radio",
+      },
+      // New projects start as client work. Existing projects have no value and read as client.
+      initialValue: "client",
+    }),
+    defineField({
       name: "serviceCategories",
       title: "Service Categories",
       type: "array",

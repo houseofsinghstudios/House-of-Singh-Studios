@@ -826,6 +826,16 @@ body {
   transform: translateY(0);
 }
 
+/* Under the /work grid: one quiet line about Explorations and Parallel concepts. */
+.wp-initiatives-note {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+  padding: clamp(48px, 6vw, 72px) var(--page-px) 0;
+}
+
 /* ── Empty state ── */
 .wp-empty {
   font-family: var(--sans);
@@ -1023,6 +1033,16 @@ body {
   margin-top: 12px;
 }
 
+/* Project type label (ProjectTypeLabel): Exploration, Parallel, Commons. The small uppercase tracked
+   label style in Gunmetal, at the size of the line it sits in. Client projects never render it. */
+.ptype {
+  font-family: var(--sans);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
 /* Discipline tags (DisciplineTags): /work grid, /work list, /services project cards.
    A tag never breaks inside itself; the row wraps. Below 768px: first two, then "+N". */
 .dtags {
@@ -1038,7 +1058,8 @@ body {
   display: none;
   color: var(--text-primary);
 }
-.wp-grid-meta .dtag-more {
+.wp-grid-meta .dtag-more,
+.wp-grid-meta .ptype {
   font-family: var(--sans);
   font-size: 11px;
   font-weight: 400;
@@ -2741,6 +2762,12 @@ body {
   .about-careers-link:hover .about-careers-arrow {
     transform: translateX(4px);
   }
+}
+
+/* Initiatives link: a 44px tall target without moving the row. */
+.about-initiatives-link {
+  padding: 14px 0;
+  margin: -14px 0;
 }
 
 @media (max-width: 768px) {

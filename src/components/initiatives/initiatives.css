@@ -1,0 +1,305 @@
+/* ── Initiatives pages ──
+   Layout glue only. Every type size, colour, rule and motion comes from existing site styles:
+   the Services hero and blocks, the service page rows, lists and accordion, the /work cards and the
+   homepage "Two ways to start" band. Sizes reused here: the accordion title clamp(18px, 2vw, 22px),
+   the service block name clamp(26px, 3vw, 40px), the closing heading clamp(48px, 6vw, 80px),
+   body 15px and 14px. */
+
+/* Hero breadcrumb: the label style; Initiatives underlined on hover only. */
+.init-crumb {
+  color: inherit;
+  text-decoration: none;
+  /* 44px tall target without moving the label: padding out, margin back in. */
+  display: inline-block;
+  padding: 15px 0;
+  margin: -15px 0;
+}
+@media (hover: hover) {
+  .init-crumb:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+.init-crumb:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion: the hero stagger and the work cards show at once on these pages. */
+@media (prefers-reduced-motion: reduce) {
+  .init-page .svc-hero-stagger,
+  .init-page .wp-grid-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── (01) Programmes: Services page block rows ── */
+.init-row {
+  grid-template-areas:
+    "text visual"
+    "explore visual";
+  grid-template-rows: auto 1fr;
+  color: inherit;
+  text-decoration: none;
+}
+.init-row-text {
+  grid-area: text;
+  padding-top: 8px;
+}
+.init-row-visual {
+  grid-area: visual;
+}
+.init-row-tagline {
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+  max-width: 560px;
+}
+.init-row-explore {
+  grid-area: explore;
+  align-self: start;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+@media (hover: hover) {
+  .init-row:hover .arrow-icon {
+    transform: translateX(4px);
+  }
+}
+.init-row:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 8px;
+}
+.init-row:focus-visible .arrow-icon {
+  transform: translateX(4px);
+}
+
+/* Typographic panel until a programme has published work: Cloudy ground (from .svc-block-img),
+   the row number top left, the tagline bottom left. It moves with the existing block hover. */
+.init-panel-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(24px, 3vw, 40px);
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .svc-block:hover .init-panel-inner {
+    transform: scale(1.04);
+  }
+}
+.init-panel-num {
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text-primary);
+}
+.init-panel-tagline {
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  max-width: 90%;
+}
+
+/* Phones: label and status, name, tagline, summary, the visual at 4:3, then the link. */
+@media (max-width: 768px) {
+  .init-row {
+    grid-template-areas:
+      "text"
+      "visual"
+      "explore";
+    grid-template-rows: auto;
+    row-gap: 24px;
+  }
+  .init-row-text {
+    padding-top: 0;
+  }
+  .init-row .svc-block-desc {
+    margin-bottom: 0;
+  }
+  .init-row .init-visual {
+    aspect-ratio: 4 / 3;
+  }
+  .init-panel-tagline {
+    font-size: clamp(24px, 5vw, 32px);
+  }
+}
+
+/* ── Parallel: How it works, the service page numbered rows ── */
+.init-steps {
+  max-width: 780px;
+}
+.init-steps .svc-del-row {
+  border-top: 0;
+}
+.init-steps > div:first-child .svc-del-row {
+  border-top: 1px solid var(--text-muted);
+}
+.init-steps .svc-del-name {
+  font-size: clamp(18px, 2vw, 22px);
+}
+@media (max-width: 767px) {
+  .init-steps .svc-del-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Questions: the accordion trigger sits inside an h3 that adds nothing of its own. */
+.svc-acc-heading {
+  margin: 0;
+  font: inherit;
+}
+
+/* "The work": the /work grid inside the section, and the quiet empty line. */
+.init-work.wp-content {
+  padding-top: 0;
+}
+.init-empty {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── Commons ── */
+.init-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(48px, 6vw, 96px);
+  align-items: start;
+}
+.init-list {
+  gap: 0;
+}
+.init-list .svc-del-item {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--text-muted);
+}
+.init-list .svc-del-item:first-child {
+  border-top: 1px solid var(--text-muted);
+}
+.init-note,
+.init-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 680px;
+}
+.init-note {
+  margin: 24px 0 0;
+}
+.init-text {
+  margin: 0 0 48px;
+}
+.init-criteria {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 32px clamp(24px, 3vw, 40px);
+}
+.init-criterion {
+  border-top: 1px solid var(--text-muted);
+  padding-top: 20px;
+}
+.init-criterion-name {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 12px 0 8px;
+}
+.init-criterion-line {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+@media (max-width: 1023px) {
+  .init-criteria {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 767px) {
+  .init-cols,
+  .init-criteria {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Nominate: the homepage band, one column or two ── */
+.init-band .init-band-heading {
+  margin-bottom: 16px;
+}
+.init-band-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.init-band-col {
+  border-top: 1px solid var(--tb-rule);
+  padding-top: 40px;
+}
+/* Desktop: heading, line and button share rows across the columns, so the buttons line up. */
+@media (min-width: 768px) {
+  .init-band-cols {
+    grid-template-rows: repeat(3, auto);
+  }
+  .init-band-col {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+  .init-band-col > * {
+    align-self: start;
+  }
+}
+.init-band-col:first-child {
+  padding-right: clamp(32px, 4vw, 64px);
+}
+.init-band-col + .init-band-col {
+  border-left: 1px solid var(--tb-rule);
+  padding-left: clamp(32px, 4vw, 64px);
+}
+.init-band-col .tb-body {
+  margin-top: 12px;
+}
+@media (max-width: 767px) {
+  .init-band-cols {
+    grid-template-columns: 1fr;
+  }
+  .init-band-col:first-child {
+    padding-right: 0;
+  }
+  .init-band-col + .init-band-col {
+    border-left: 0;
+    padding-left: 0;
+    margin-top: 48px;
+  }
+}
+
+/* ── Closing on /initiatives: the closing section layout on the light ground ── */
+.init-closing .cta-heading {
+  color: var(--text-primary);
+}
+.init-closing-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 24px 0 0;
+}

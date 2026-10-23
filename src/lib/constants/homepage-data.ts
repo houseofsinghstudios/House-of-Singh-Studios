@@ -1,3 +1,4 @@
+import type { ProjectType } from "@/lib/initiatives/types";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export const HERO = {
@@ -73,6 +74,8 @@ export interface Project {
   label: string;
   sentence: string;
   href: string;
+  // Missing means client work: no label.
+  projectType?: ProjectType;
   color: string;
   accent: string;
   image: string;

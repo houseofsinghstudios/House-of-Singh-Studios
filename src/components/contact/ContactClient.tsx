@@ -8,9 +8,13 @@ import { startHref } from "@/lib/project-planner/start-links";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { NOMINATION_PLACEHOLDER, NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 
-export default function ContactClient() {
+export default function ContactClient({ initialService = "" }: { initialService?: string }) {
   const [submitted, setSubmitted] = useState(false);
+  // A nomination needs no budget, and asks about the business or organisation instead.
+  const [service, setService] = useState(initialService);
+  const nominating = isNomination(service);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -153,7 +157,8 @@ export default function ContactClient() {
                     id="contact-service"
                     name="service"
                     className="contact-input"
-                    defaultValue=""
+                    value={service}
+                    onChange={(e) => setService(e.target.value)}
                   >
                     <option value="" disabled>Select a service</option>
                     <option value="Brand Identity">Brand Identity and Visual Design</option>
@@ -162,28 +167,32 @@ export default function ContactClient() {
                     <option value="Creative Strategy">Creative Strategy and Systems</option>
                     <option value="Multiple Services">Multiple Services</option>
                     <option value="Not sure">Not sure yet</option>
+                    <option value={NOMINATION_SERVICES.parallel}>{NOMINATION_SERVICES.parallel}</option>
+                    <option value={NOMINATION_SERVICES.commons}>{NOMINATION_SERVICES.commons}</option>
                   </select>
                   <span className="focus-line" />
                 </div>
-                <div>
-                  <label htmlFor="contact-budget" className="contact-label">Budget range (CAD)</label>
-                  <select
-                    id="contact-budget"
-                    name="budget"
-                    className="contact-input"
-                    defaultValue=""
-                    aria-describedby="contact-budget-help"
-                  >
-                    <option value="" disabled>Select a range</option>
-                    <option value="$1,000 to $4,000">$1,000 to $4,000</option>
-                    <option value="$4,000 to $10,000">$4,000 to $10,000</option>
-                    <option value="$10,000 to $20,000">$10,000 to $20,000</option>
-                    <option value="$20,000 or more">$20,000 or more</option>
-                    <option value="Not sure yet">Not sure yet</option>
-                  </select>
-                  <span className="focus-line" />
-                  <p id="contact-budget-help" className="contact-helper">Projects start from $1,000.</p>
-                </div>
+                {!nominating && (
+                  <div>
+                    <label htmlFor="contact-budget" className="contact-label">Budget range (CAD)</label>
+                    <select
+                      id="contact-budget"
+                      name="budget"
+                      className="contact-input"
+                      defaultValue=""
+                      aria-describedby="contact-budget-help"
+                    >
+                      <option value="" disabled>Select a range</option>
+                      <option value="$1,000 to $4,000">$1,000 to $4,000</option>
+                      <option value="$4,000 to $10,000">$4,000 to $10,000</option>
+                      <option value="$10,000 to $20,000">$10,000 to $20,000</option>
+                      <option value="$20,000 or more">$20,000 or more</option>
+                      <option value="Not sure yet">Not sure yet</option>
+                    </select>
+                    <span className="focus-line" />
+                    <p id="contact-budget-help" className="contact-helper">Projects start from $1,000.</p>
+                  </div>
+                )}
                 <div>
                   <label htmlFor="contact-message" className="contact-label">Message</label>
                   <textarea
@@ -192,7 +201,7 @@ export default function ContactClient() {
                     required
                     rows={5}
                     className="contact-textarea"
-                    placeholder="Tell us about your project, your timeline, and what you are looking for."
+                    placeholder={nominating ? NOMINATION_PLACEHOLDER : "Tell us about your project, your timeline, and what you are looking for."}
                   />
                   <span className="focus-line" />
                 </div>
