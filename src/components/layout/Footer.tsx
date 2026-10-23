@@ -15,6 +15,7 @@ const STUDIO_LINKS = [
 
 const COMPANY_LINKS = [
   { label: "About", href: "/about" },
+  { label: "Initiatives", href: "/initiatives" },
   { label: "Insights", href: "/insights" },
   { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },

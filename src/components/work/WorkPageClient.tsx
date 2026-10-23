@@ -240,6 +240,11 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
         ))}
       </div>
 
+      <p className="wp-initiatives-note">
+        Some projects are Explorations or Parallel concepts.{" "}
+        <Link href="/initiatives" className="underline underline-offset-4" data-cursor="link">About our initiatives.</Link>
+      </p>
+
       <NextPageLink current="/work" />
 
       {/* ═══ DARK CTA ═══ */}

@@ -13,6 +13,7 @@ const NEXT_MAP: Record<string, { name: string; href: string }> = {
   "/packages": { name: "Contact", href: "/contact" },
   "/insights": { name: "Services", href: "/services" },
   "/careers": { name: "About", href: "/about" },
+  "/initiatives": { name: "Contact", href: "/contact" },
 };
 
 const DEFAULT_NEXT = { name: "Contact", href: "/contact" };
@@ -23,6 +24,7 @@ function getNextPage(pathname: string) {
   if (pathname.startsWith("/services/")) return { name: "Work", href: "/work" };
   if (pathname.startsWith("/work/")) return { name: "Contact", href: "/contact" };
   if (pathname.startsWith("/insights/")) return { name: "Services", href: "/services" };
+  if (pathname.startsWith("/initiatives/")) return { name: "Initiatives", href: "/initiatives" };
   return DEFAULT_NEXT;
 }
 

@@ -437,6 +437,14 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
               View Careers <span className="about-careers-arrow">&rarr;</span>
             </Link>
           </div>
+
+          {/* Initiatives */}
+          <div className="about-careers-cta scroll-reveal-up">
+            <span className="about-careers-text">Beyond client work, the studio runs Parallel and Commons.</span>
+            <Link href="/initiatives" className="about-careers-link about-initiatives-link" data-cursor="link">
+              See our initiatives <span className="about-careers-arrow">&rarr;</span>
+            </Link>
+          </div>
         </div>
       </section>
       <NextPageLink current="/about" />

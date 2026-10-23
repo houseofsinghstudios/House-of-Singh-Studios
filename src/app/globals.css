@@ -826,6 +826,16 @@ body {
   transform: translateY(0);
 }
 
+/* Under the /work grid: one quiet line about Explorations and Parallel concepts. */
+.wp-initiatives-note {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+  padding: clamp(48px, 6vw, 72px) var(--page-px) 0;
+}
+
 /* ── Empty state ── */
 .wp-empty {
   font-family: var(--sans);
@@ -2752,6 +2762,12 @@ body {
   .about-careers-link:hover .about-careers-arrow {
     transform: translateX(4px);
   }
+}
+
+/* Initiatives link: a 44px tall target without moving the row. */
+.about-initiatives-link {
+  padding: 14px 0;
+  margin: -14px 0;
 }
 
 @media (max-width: 768px) {
