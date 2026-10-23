@@ -1,7 +1,9 @@
-// The one strong moment on each Initiatives page: a full bleed inverted band with the same tokens,
-// padding and inverse button as the homepage "(04) Two ways to start" band. One column on a programme
-// page (id="nominate"), two columns, Parallel then Commons, on /initiatives. These bands are the only
-// dark sections on these pages.
+// The strong moments on the Initiatives pages: full bleed inverted bands with the same tokens and
+// inverse button as the homepage "(04) Two ways to start" band. These bands are the only dark
+// sections on these pages.
+// NominateBand (id="nominate"): full size, with an optional "What happens next" column beside the
+// button. light: Parallel's secondary band, about 60% of the padding and the smaller heading size.
+// TakePartBand: two columns, Parallel then Commons, on /initiatives.
 import Button from "@/components/ui/Button";
 import "@/components/homepage/tool-band.css";
 import "./initiatives.css";
@@ -11,6 +13,11 @@ export interface NominateItem {
   text: string;
   button: string;
   href: string;
+}
+
+export interface NextSteps {
+  label: string;
+  items: string[];
 }
 
 function Action({ item }: { item: NominateItem }) {
@@ -23,19 +30,32 @@ function Action({ item }: { item: NominateItem }) {
   );
 }
 
-// A programme page: label, the heading, one line, the button.
-export function NominateBand({ number, item }: { number: string; item: NominateItem }) {
+// A program page: label, the heading, one line, the button, and optionally what happens next.
+export function NominateBand({ number, item, next, light }: { number: string; item: NominateItem; next?: NextSteps; light?: boolean }) {
+  const cls = ["tb", "init-band", next && "init-band--split", light && "init-band--light"].filter(Boolean).join(" ");
   return (
-    <section id="nominate" className="tb init-band" aria-labelledby="nominate-heading">
-      <p className="editorial-label tb-label">({number})</p>
-      <h2 id="nominate-heading" className="tb-heading init-band-heading">{item.heading}</h2>
-      <p className="tb-body">{item.text}</p>
-      <Action item={item} />
+    <section id="nominate" className={cls} aria-labelledby="nominate-heading">
+      <div className="init-band-main">
+        <p className="editorial-label tb-label">({number})</p>
+        <h2 id="nominate-heading" className={light ? "tb-col-heading" : "tb-heading init-band-heading"}>{item.heading}</h2>
+        <p className="tb-body">{item.text}</p>
+        <Action item={item} />
+      </div>
+      {next && (
+        <div className="init-band-next">
+          <p className="editorial-label tb-label">{next.label}</p>
+          <ul className="init-next">
+            {next.items.map((line) => (
+              <li key={line}>{line}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </section>
   );
 }
 
-// /initiatives, (02) Take part: one column per programme.
+// /initiatives, (02) Take part: one column per program.
 export function TakePartBand({ number, heading, items }: { number: string; heading: string; items: NominateItem[] }) {
   return (
     <section className="tb init-band" aria-labelledby="take-part-heading">

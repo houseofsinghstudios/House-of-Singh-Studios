@@ -25,9 +25,10 @@ export function projectTypeLabel(value: unknown): string | null {
 export const INITIATIVE_STATUSES = ["live", "nominations-open", "opening-soon", "by-invitation", "hidden"] as const;
 export type InitiativeStatus = (typeof INITIATIVE_STATUSES)[number];
 
-// The words shown in brackets after the category when no statusLabel override is set.
+// The words shown in brackets on the status line when no statusLabel override is set.
+// A live program with no override shows no status line at all.
 export const STATUS_LABELS: Record<Exclude<InitiativeStatus, "hidden">, string> = {
-  live: "Live",
+  live: "",
   "nominations-open": "Nominations open",
   "opening-soon": "Opening soon",
   "by-invitation": "By invitation",
@@ -76,7 +77,7 @@ export function visibleInitiatives<T extends Pick<Initiative, "status" | "order"
   return list.filter(isVisible).sort((a, b) => a.order - b.order || a.name.localeCompare(b.name));
 }
 
-// The bracketed status text: the override if set, otherwise the default for the status.
+// The bracketed status text: the override if set, otherwise the default for the status (none for live).
 export function statusText(i: Pick<Initiative, "status" | "statusLabel">): string {
   if (i.statusLabel && i.statusLabel.trim()) return i.statusLabel.trim();
   return i.status === "hidden" ? "" : STATUS_LABELS[i.status];

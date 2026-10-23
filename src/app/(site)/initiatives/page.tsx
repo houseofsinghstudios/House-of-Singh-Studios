@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InitiativeHero from "@/components/initiatives/InitiativeHero";
 import InitiativeSection from "@/components/initiatives/InitiativeSection";
@@ -54,17 +53,6 @@ export default async function InitiativesPage() {
       <InitiativeSection id="questions" number={takePart.length > 0 ? "03" : "02"} heading={LANDING.questionsHeading}>
         <InitiativeQuestions questions={LANDING.questions} />
       </InitiativeSection>
-      <section className="init-closing css-reveal" aria-labelledby="closing-heading" style={{ padding: "clamp(100px, 12vw, 160px) var(--page-px)" }}>
-        <div className="cta-centered">
-          <h2 id="closing-heading" className="cta-heading">{LANDING.closing.heading}</h2>
-          <p className="init-closing-text">{LANDING.closing.text}</p>
-          <div className="cta-buttons">
-            <Button href={LANDING.closing.href} variant="primary" data-cursor="link">
-              {LANDING.closing.button}
-            </Button>
-          </div>
-        </div>
-      </section>
       <NextPageLink current="/initiatives" />
     </div>
   );

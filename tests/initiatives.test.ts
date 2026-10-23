@@ -18,8 +18,9 @@ test("visible initiatives: hidden ones are dropped, the rest ordered by order th
   assert.deepEqual(visibleInitiatives(FALLBACK_INITIATIVES).map((i) => i.slug), ["parallel", "commons"], "Foundry is hidden in the fallback");
 });
 
-test("status text: the override wins, otherwise the default words; hidden has none", () => {
-  assert.equal(statusText(make({ status: "live" })), "Live");
+test("status text: the override wins, otherwise the default words; live and hidden have none", () => {
+  assert.equal(statusText(make({ status: "live" })), "", "never (Live)");
+  assert.equal(statusText(make({ status: "live", statusLabel: "Edition 01 underway" })), "Edition 01 underway");
   assert.equal(statusText(make({ status: "nominations-open" })), "Nominations open");
   assert.equal(statusText(make({ status: "nominations-open", statusLabel: "Nominations open for 2027" })), "Nominations open for 2027");
   assert.equal(statusText(make({ status: "opening-soon", statusLabel: "   " })), "Opening soon");

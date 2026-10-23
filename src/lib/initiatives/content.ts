@@ -50,6 +50,9 @@ export const FALLBACK_INITIATIVES: Initiative[] = [
   },
 ];
 
+// The small label above the at a glance rows in a program page hero.
+export const GLANCE_LABEL = "At a glance";
+
 export const LANDING = {
   title: "Initiatives: Parallel and Commons",
   description:
@@ -92,12 +95,6 @@ export const LANDING = {
       a: "Yes. Nominate a business for Parallel or a charity for Commons through our contact form. We read every nomination.",
     },
   ] satisfies Question[],
-  closing: {
-    heading: "Have an idea worth exploring?",
-    text: "We are always glad to hear from founders, businesses and organisations building something meaningful.",
-    button: "Start a Conversation",
-    href: "/contact",
-  },
 };
 
 export const PARALLEL = {
@@ -107,7 +104,13 @@ export const PARALLEL = {
   heading: "One brand. Another possibility.",
   intro:
     "Parallel is where we choose growing businesses we admire and reimagine their brand identity, with their written permission. It is a gift, not a pitch: no cost, no obligation, and the business approves the work before anything is published.",
+  glance: [
+    { label: "Format", value: "An ongoing series" },
+    { label: "Subjects", value: "Exciting, growing brands" },
+    { label: "Selection", value: "Chosen by the studio" },
+  ],
   stepsHeading: "How it works",
+  stepsIntro: "Every edition follows the same five parts.",
   steps: [
     { name: "We choose.", description: "We look for businesses people already love, with a story worth telling. Anyone can nominate one." },
     { name: "We ask.", description: "Nothing begins without the business's written permission." },
@@ -145,6 +148,7 @@ export const COMMONS = {
   heading: "Design for the common good.",
   intro:
     "Commons is our pro bono programme. Each year we give three charities and community organisations professional brand and design work, at no cost, with the same care as any client project.",
+  glance: [{ value: "3 projects a year" }, { value: "Up to 35 hours each" }, { value: "Toronto and the GTA" }],
   offerHeading: "What we offer",
   offer: [
     "Three pro bono projects a year",
@@ -194,5 +198,9 @@ export const COMMONS = {
     text: "Tell us about a charity or community group that deserves great design. Organisations can nominate themselves.",
     button: "Nominate an Organisation",
     href: "/contact?service=commons",
+  },
+  next: {
+    label: "What happens next",
+    items: ["Reviewed as they arrive", "Chosen on five criteria", "Selected organizations announced publicly"],
   },
 };
