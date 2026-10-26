@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import { Link } from "next-view-transitions";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
@@ -9,7 +8,6 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 const NUMBERS = ["01", "02", "03", "04"];
 
 export default function ServicesSection() {
-  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [staggerDone, setStaggerDone] = useState(false);
@@ -60,6 +58,9 @@ export default function ServicesSection() {
   const handleTap = useCallback(
     (index: number, e: React.MouseEvent) => {
       if (!isMobile) return; // Let the <Link> handle it on desktop
+      // Keyboard activation (a click with detail 0) and a tap on "Learn More" follow the link;
+      // any other tap opens or closes the row.
+      if (e.detail === 0 || (e.target as HTMLElement).closest(".svc-mob-learn-more")) return;
       e.preventDefault();
       setActiveIndex((prev) => (prev === index ? null : index));
     },
@@ -72,7 +73,7 @@ export default function ServicesSection() {
       style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
     >
       <div className="css-reveal">
-        <EditorialLabel text="(03) Capabilities" className="mb-6" />
+        <EditorialLabel number="03" text="Capabilities" className="mb-6" />
       </div>
 
       <h2
@@ -106,23 +107,8 @@ export default function ServicesSection() {
                 </h3>
                 <div className="svc-accordion-body">
                   <p className="svc-accordion-desc">{service.sentence}</p>
-                  <span
-                    role="link"
-                    tabIndex={0}
-                    className="svc-mob-learn-more"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      router.push(service.href);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        router.push(service.href);
-                      }
-                    }}
-                  >
+                  {/* Plain text inside the row link, not a control of its own. */}
+                  <span className="svc-mob-learn-more">
                     Learn More <span aria-hidden="true">&rarr;</span>
                   </span>
                 </div>

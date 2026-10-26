@@ -144,6 +144,8 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
 
 function InlineNewsletter() {
   const [email, setEmail] = useState("");
+  // The hidden field only a bot fills in; the API ignores the signup if it is set.
+  const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
@@ -156,7 +158,7 @@ function InlineNewsletter() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "article" }),
+        body: JSON.stringify({ email, source: "article", honeypot }),
       });
       if (!res.ok) throw new Error();
       setStatus("success");
@@ -190,6 +192,18 @@ function InlineNewsletter() {
           disabled={status === "submitting"}
           className="art-newsletter-input"
         />
+        <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+          <label htmlFor="newsletter-honeypot">Do not fill this field</label>
+          <input
+            id="newsletter-honeypot"
+            type="text"
+            name="honeypot"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </div>
         <button
           type="submit"
           disabled={status === "submitting"}
@@ -296,7 +310,7 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
               <ul className="art-takeaways-list">
                 {post.keyTakeaways.map((takeaway, i) => (
                   <li key={i} className="art-takeaways-item">
-                    <span className="art-takeaways-dash">&mdash;</span>
+                    <span className="art-takeaways-dash">&middot;</span>
                     <span>{takeaway}</span>
                   </li>
                 ))}

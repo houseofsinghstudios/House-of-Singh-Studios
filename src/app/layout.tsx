@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 
 // Root layout shared by the website and the Studio: the document, the font and the default
 // metadata only. Site chrome and site CSS live in (site)/layout.tsx so they never reach /studio.
@@ -28,11 +29,12 @@ export const metadata: Metadata = {
     locale: 'en_CA',
     url: siteUrl,
     siteName: 'House of Singh Studios',
-    // images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'House of Singh Studios' }],
+    // The default share image, for pages that set no openGraph of their own (such as the 404).
+    // The twitter card takes its image from here.
+    images: [DEFAULT_SHARE_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
-    // images: ['/og-image.jpg'],
     creator: '@hosdesignstudio',
   },
   // No default canonical: every page sets its own. A root canonical would be inherited by

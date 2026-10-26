@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
     title: 'Terms of Use — House of Singh Studios',
     description: 'Terms of Use for House of Singh Studios Inc.',
     url: 'https://studios.houseofsingh.com/terms',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 
@@ -54,7 +56,7 @@ export default function TermsPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>4. Intellectual property</h2>
           <p style={{ margin: "0 0 12px" }}>
-            All content on this Site — including but not limited to text, graphics, logos, images, case study materials, design work, photography, and code — is the property of House of Singh Studios Inc. or is used with permission from the respective rights holders. This content is protected under Canadian copyright law and international intellectual property agreements.
+            All content on this Site, including but not limited to text, graphics, logos, images, case study materials, design work, photography and code, is the property of House of Singh Studios Inc. or is used with permission from the respective rights holders. This content is protected under Canadian copyright law and international intellectual property agreements.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             The House of Singh Studios name, logo, crest, and any associated marks are trademarks of House of Singh Studios Inc. You may not use these marks without prior written consent.
@@ -76,14 +78,14 @@ export default function TermsPage() {
             If you subscribe to receive communications from us, you consent to receiving occasional emails about our services, insights, and studio updates. You may unsubscribe at any time by clicking the unsubscribe link in any email or by contacting us at {STUDIO_EMAIL}. We comply with Canada&apos;s Anti-Spam Legislation (CASL) and will only send commercial electronic messages with your express or implied consent.
           </p>
 
-          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Third-party links</h2>
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Third party links</h2>
           <p style={{ margin: "0 0 32px" }}>
-            The Site may contain links to third-party websites, including social media platforms and scheduling tools. These links are provided for convenience only. We do not control or endorse these third-party sites and are not responsible for their content, privacy practices, or terms of use. Accessing third-party sites is at your own risk.
+            The Site may contain links to third party websites, including social media platforms and scheduling tools. These links are provided for convenience only. We do not control or endorse these third party sites and are not responsible for their content, privacy practices, or terms of use. Accessing third party sites is at your own risk.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>8. Disclaimer of warranties</h2>
           <p style={{ margin: "0 0 32px" }}>
-            The Site is provided on an &quot;as is&quot; and &quot;as available&quot; basis without warranties of any kind, either express or implied. We do not warrant that the Site will be uninterrupted, error-free, or free from viruses or other harmful components. We make no representations about the accuracy, reliability, or completeness of any content on the Site. Portfolio results and case study outcomes are specific to each client engagement and are not guarantees of future results.
+            The Site is provided on an &quot;as is&quot; and &quot;as available&quot; basis without warranties of any kind, either express or implied. We do not warrant that the Site will be uninterrupted, error free, or free from viruses or other harmful components. We make no representations about the accuracy, reliability, or completeness of any content on the Site. Portfolio results and case study outcomes are specific to each client engagement and are not guarantees of future results.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>9. Limitation of liability</h2>

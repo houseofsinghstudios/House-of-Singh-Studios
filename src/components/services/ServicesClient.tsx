@@ -20,7 +20,7 @@ const BLOCKS = [
       "Brand Naming",
       "Logo System",
       "Typography System",
-      "Color Architecture",
+      "Colour Architecture",
       "Brand Guidelines",
       "Collateral Suite",
       "Packaging Design",
@@ -69,7 +69,7 @@ const BLOCKS = [
       "Interaction Design",
       "Responsive Design",
       "Development Direction",
-      "Post-Launch Support",
+      "Post Launch Support",
     ],
     fallbackImage: null,
     fallbackTags: "Digital Design",
@@ -80,7 +80,7 @@ const BLOCKS = [
     label: "Creative Strategy",
     name: "Creative Strategy and Systems",
     description:
-      "Your team makes brand decisions without a playbook. Marketing, agencies, freelancers — they all interpret your brand differently. We build the framework that lets your team operate without you.",
+      "Your team makes brand decisions without a playbook. Marketing, agencies, freelancers: they all interpret your brand differently. We build the framework that lets your team operate without you.",
     slug: "creative-strategy",
     serviceCategory: "creative-strategy",
     deliverables: [

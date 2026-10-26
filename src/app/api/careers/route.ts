@@ -1,38 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { checkCareers, cleanCareers } from "@/lib/careers";
 
-function stripHtml(str: string): string {
-  return str.replace(/<[^>]*>/g, "").trim();
-}
-
-const rateLimit = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const MAX_REQUESTS = 5;
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now - entry.timestamp > RATE_LIMIT_WINDOW) {
-    rateLimit.set(ip, { count: 1, timestamp: now });
-    return false;
-  }
-  entry.count++;
-  if (entry.count > MAX_REQUESTS) return true;
-  return false;
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimit.entries()) {
-    if (now - entry.timestamp > RATE_LIMIT_WINDOW) rateLimit.delete(ip);
-  }
-}, 5 * 60 * 1000);
+// Five requests a minute per address, the shared in memory limiter.
+const isRateLimited = createRateLimiter(5);
 
 export async function POST(request: NextRequest) {
   try {
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-    if (isRateLimited(ip)) {
+    if (isRateLimited(clientIp(request))) {
       return NextResponse.json(
         { error: "Too many requests. Please try again later." },
         { status: 429 }
@@ -40,20 +16,22 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-
-    const { name, email, role, portfolioUrl, message } = body;
-    if (!name || !email || !role) {
-      return NextResponse.json(
-        { error: "Name, email, and role are required." },
-        { status: 400 }
-      );
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email format." },
-        { status: 400 }
-      );
+    // A filled honeypot is a bot: answer as if it worked, send nothing.
+    if (typeof body.honeypot === "string" && body.honeypot.trim()) {
+      console.log("[careers] honeypot filled, ignored");
+      return NextResponse.json({ success: true });
+    }
+
+    // Cleaned first, then checked: required fields, email format and length caps.
+    const fields = cleanCareers(body);
+    const invalid = checkCareers(fields);
+    if (invalid) {
+      console.log(`[careers] validation failed: ${invalid.toLowerCase()}`);
+      return NextResponse.json({ error: invalid }, { status: 400 });
     }
 
     const target = n8nTarget("N8N_CAREERS_WEBHOOK_URL");
@@ -65,15 +43,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const n8nResponse = await postToN8n(target, {
-      name: stripHtml(String(name)),
-      email: stripHtml(String(email)),
-      role: stripHtml(String(role)),
-      portfolioUrl: portfolioUrl ? stripHtml(String(portfolioUrl)) : "",
-      message: message ? stripHtml(String(message)) : "",
-      source: "careers-page",
-      submittedAt: new Date().toISOString(),
-    });
+    const n8nResponse = await postToN8n(
+      target,
+      { ...fields, source: "careers-page", submittedAt: new Date().toISOString() },
+      10000,
+    );
 
     if (!n8nResponse.ok) {
       console.error("n8n webhook failed:", n8nResponse.status);
@@ -85,6 +59,10 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof Error && error.name === "TimeoutError") {
+      console.error("[careers] n8n webhook timed out after 10 seconds");
+      return NextResponse.json({ error: "Failed to submit application." }, { status: 504 });
+    }
     // Name only: error messages can quote the request body or the webhook host.
     console.error("Career application error:", error instanceof Error ? error.name : "unknown error");
     return NextResponse.json(

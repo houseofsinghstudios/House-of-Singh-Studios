@@ -76,7 +76,7 @@ export default function TestimonialsSection() {
       <div className="testimonials-inner">
         {/* Left column: quote */}
         <div className="testimonials-left">
-          <EditorialLabel text="(06) Testimonials" className="mb-7" />
+          <EditorialLabel number="06" text="Testimonials" className="mb-7" />
 
           <div className="testimonials-quote-wrap">
             {/* Ghost number */}
@@ -96,7 +96,7 @@ export default function TestimonialsSection() {
                   <blockquote className="testimonials-quote">
                     {t.quote}
                   </blockquote>
-                  <p className="testimonials-author">&mdash; {t.author}</p>
+                  <p className="testimonials-author">{t.author}</p>
                 </div>
               ))}
             </div>

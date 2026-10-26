@@ -402,7 +402,7 @@ body {
   font-family: var(--sans);
   font-size: 13px;
   line-height: 1.5;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   max-width: 560px;
   margin: 0;
 }
@@ -1808,14 +1808,14 @@ body {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: rgba(247, 246, 245, 0.45);
+  color: var(--text-muted);
   margin: 0 0 6px;
   font-weight: 400;
 }
 .ft-col-link {
   font-family: var(--sans);
   font-size: 13px;
-  color: rgba(247, 246, 245, 0.5);
+  color: var(--text-muted);
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -1835,7 +1835,7 @@ body {
 .ft-copyright {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.3);
+  color: var(--text-muted);
 }
 .ft-legal {
   display: flex;
@@ -1844,20 +1844,20 @@ body {
 .ft-legal-link {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.4);
+  color: var(--text-muted);
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.2s ease;
 }
 @media (hover: hover) {
   .ft-legal-link:hover {
-    color: rgba(247, 246, 245, 0.6);
+    color: rgba(247, 246, 245, 0.9);
   }
 }
 .ft-top-btn {
   font-family: var(--sans);
   font-size: 11px;
-  color: rgba(247, 246, 245, 0.4);
+  color: var(--text-muted);
   background: none;
   border: none;
   padding: 0;
@@ -1866,7 +1866,7 @@ body {
 }
 @media (hover: hover) {
   .ft-top-btn:hover {
-    color: rgba(247, 246, 245, 0.6);
+    color: rgba(247, 246, 245, 0.9);
   }
 }
 
@@ -1973,7 +1973,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--marble, #A9A6A2);
+  color: var(--text-secondary);
   text-align: center;
   margin: 0;
   position: absolute;
@@ -2633,7 +2633,7 @@ body {
 }
 .about-duel-item--not {
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-decoration: line-through;
   text-decoration-thickness: 1px;
   text-decoration-color: var(--text-muted);
@@ -2807,7 +2807,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: rgba(26, 26, 26, 0.4);
+  color: var(--text-secondary);
   margin-bottom: 8px;
 }
 /* Helper line under a field: the same size and tone as the Brand Pulse and Planner helpers. */
@@ -3535,7 +3535,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  opacity: 0.4;
+  color: var(--text-secondary);
   margin-bottom: 8px;
   display: block;
 }
@@ -5591,7 +5591,7 @@ td a {
 
 .svc-del-item {
   font-size: 13px;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-secondary, #5C5B58);
   transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1),
               padding-left 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   display: flex;
@@ -5599,7 +5599,7 @@ td a {
   gap: 8px;
 }
 .svc-del-item::before {
-  content: '–';
+  content: '·';
   color: var(--marble, #A9A6A2);
   flex-shrink: 0;
 }

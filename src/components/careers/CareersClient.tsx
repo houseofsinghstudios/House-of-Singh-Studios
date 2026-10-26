@@ -190,7 +190,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
     }
   }
 
-  async function handleSubmit() {
+  // The hidden field only a bot fills in. Sent to the API, which ignores the application if set.
+  const [honeypot, setHoneypot] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (!formData.name || !formData.email || !formData.role) return;
 
     setFormState("submitting");
@@ -198,7 +202,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       const res = await fetch("/api/careers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, honeypot }),
       });
       if (res.ok) {
         setFormState("success");
@@ -270,7 +274,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             marginTop: 24,
           }}
         >
-          House of Singh Studios works with a curated network of designers,
+          House of Singh Studios works with a trusted network of designers,
           strategists, and producers. Every engagement assembles the right team
           for the scope. If your work is sharp and your thinking is clear, we
           want to hear from you.
@@ -296,7 +300,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             style={{
               fontFamily: "var(--sans)",
               fontSize: 14,
-              opacity: 0.5,
+              color: "var(--text-secondary)",
               marginBottom: 40,
             }}
           >
@@ -353,7 +357,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           style={{
                             fontFamily: "var(--sans)",
                             fontSize: 13,
-                            opacity: 0.5,
+                            color: "var(--text-secondary)",
                           }}
                         >
                           {role.location}
@@ -417,7 +421,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                   marginBottom: 8,
                                 }}
                               >
-                                — {item}
+                                · {item}
                               </p>
                             ))}
                           </div>
@@ -448,7 +452,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                 marginBottom: 8,
                               }}
                             >
-                              — {item}
+                              · {item}
                             </p>
                           ))}
                         </div>
@@ -479,7 +483,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                 marginBottom: 8,
                               }}
                             >
-                              — {item}
+                              · {item}
                             </p>
                           ))}
                         </div>
@@ -548,7 +552,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: 16,
-                opacity: 0.5,
+                color: "var(--text-secondary)",
                 marginTop: 12,
               }}
             >
@@ -599,7 +603,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontFamily: "var(--sans)",
             fontSize: 16,
             lineHeight: 1.6,
-            opacity: 0.5,
+            color: "var(--text-secondary)",
             maxWidth: 560,
             marginTop: 16,
           }}
@@ -626,7 +630,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 style={{
                   fontFamily: "var(--sans)",
                   fontSize: 16,
-                  opacity: 0.6,
+                  color: "var(--text-secondary)",
                   marginTop: 12,
                 }}
               >
@@ -635,11 +639,15 @@ export default function CareersClient({ roles }: CareersClientProps) {
               </p>
             </div>
           ) : (
-            <>
+            <form onSubmit={handleSubmit} data-clarity-mask="True">
               <div className="careers-form-field">
-                <label className="careers-form-label">Name</label>
+                <label htmlFor="careers-name" className="careers-form-label">Name</label>
                 <input
+                  id="careers-name"
+                  name="name"
                   type="text"
+                  required
+                  autoComplete="name"
                   className="careers-form-input"
                   placeholder="Your full name"
                   value={formData.name}
@@ -649,9 +657,13 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Email</label>
+                <label htmlFor="careers-email" className="careers-form-label">Email</label>
                 <input
+                  id="careers-email"
+                  name="email"
                   type="email"
+                  required
+                  autoComplete="email"
                   className="careers-form-input"
                   placeholder="your@email.com"
                   value={formData.email}
@@ -661,9 +673,12 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Role</label>
+                <label htmlFor="careers-role" className="careers-form-label">Role</label>
                 {roles.length > 0 ? (
                   <select
+                    id="careers-role"
+                    name="role"
+                    required
                     className="careers-form-select"
                     value={formData.role}
                     onChange={(e) =>
@@ -679,7 +694,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   </select>
                 ) : (
                   <input
+                    id="careers-role"
+                    name="role"
                     type="text"
+                    required
                     className="careers-form-input"
                     placeholder="What kind of work do you do?"
                     value={formData.role}
@@ -690,8 +708,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 )}
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Portfolio</label>
+                <label htmlFor="careers-portfolio" className="careers-form-label">Portfolio</label>
                 <input
+                  id="careers-portfolio"
+                  name="portfolioUrl"
                   type="url"
                   className="careers-form-input"
                   placeholder="https://your-portfolio.com"
@@ -705,8 +725,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Message</label>
+                <label htmlFor="careers-message" className="careers-form-label">Message</label>
                 <textarea
+                  id="careers-message"
+                  name="message"
                   className="careers-form-textarea"
                   rows={4}
                   placeholder="Tell us about yourself and the kind of work you want to do."
@@ -716,10 +738,22 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
+              <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+                <label htmlFor="careers-honeypot">Do not fill this field</label>
+                <input
+                  id="careers-honeypot"
+                  type="text"
+                  name="honeypot"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
               <button
+                type="submit"
                 className="careers-submit-btn"
                 disabled={formState === "submitting"}
-                onClick={handleSubmit}
               >
                 {formState === "submitting"
                   ? "Sending..."
@@ -739,7 +773,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   {STUDIO_EMAIL}
                 </p>
               )}
-            </>
+            </form>
           )}
         </div>
       </section>
@@ -763,7 +797,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Senior thinking on every brief.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               No junior designers learning on client projects. Every collaborator brings experience that shapes the work from day one.
             </p>
           </div>
@@ -771,7 +805,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Systems, not chaos.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               Every project moves through defined stages: discovery, strategy, creative direction, production, delivery. You will always know where things stand.
             </p>
           </div>
@@ -779,15 +813,15 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               AI handles production. You handle judgment.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               We use AI for research, asset generation, and workflow management. Creative direction stays human. Your taste, your decisions, your standards.
             </p>
           </div>
           <div className="scroll-reveal-up">
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
-              Remote-first, outcome-driven.
+              Remote first, driven by outcomes.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               We work with specialists across cities and time zones. What matters is the quality of the output and the clarity of the communication.
             </p>
           </div>

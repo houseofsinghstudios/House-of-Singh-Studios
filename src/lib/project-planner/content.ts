@@ -11,7 +11,7 @@ export const PAGE = {
 export const INTRO = {
   eyebrow: "Start a Project",
   heading: "A clearer brief. A better starting point.",
-  text: "Tell us what you're building and what matters most. We'll organise your priorities into a practical first phase brief you can keep, edit or send to the studio.",
+  text: "Tell us what you're building and what matters most. We'll organize your priorities into a practical first phase brief you can keep, edit or send to the studio.",
   trust: "Free to use. No account required. Your contact details are only collected if you choose to send your brief.",
   // Small print under the button. Never claim nothing is sent: completed selections are kept without contact details.
   privacy: "Project selections may be recorded without contact details when a brief is completed, to improve this service.",

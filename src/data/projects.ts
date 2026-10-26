@@ -18,6 +18,8 @@ export interface Project {
   seoDescription: string;
   gradient: string;
   image: string;
+  // The 1200x630 share image (og:image) for Sanity case studies. Missing for the static fallback.
+  shareImage?: string;
   sections: {
     business: ProjectSection;
     challenge: ProjectSection;
@@ -74,7 +76,7 @@ export const projects: Project[] = [
       result: {
         label: "(The Result)",
         paragraphs: [
-          "The identity system gave TEDxToronto a consistent and professional visual presence across every touchpoint. The guidelines enabled a large team to produce on-brand materials independently, reducing revision cycles and maintaining quality throughout the event lifecycle.",
+          "The identity system gave TEDxToronto a consistent and professional visual presence across every touchpoint. The guidelines enabled a large team to produce on brand materials independently, reducing revision cycles and maintaining quality throughout the event lifecycle.",
         ],
       },
     },

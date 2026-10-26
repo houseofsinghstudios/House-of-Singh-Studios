@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import WorkPageClient from "@/components/work/WorkPageClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Work — House of Singh Studios',
     description: 'Brand identities, visual narratives, and digital experiences. View our portfolio.',
     url: 'https://studios.houseofsingh.com/work',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 

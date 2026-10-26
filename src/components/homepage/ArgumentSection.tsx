@@ -60,7 +60,7 @@ export default function ArgumentSection() {
       style={{ padding: "clamp(120px, 14vw, 200px) var(--page-px)" }}
     >
       <div className="argument-content">
-        <EditorialLabel text="(02)" className="mb-8" />
+        <EditorialLabel text="02" className="mb-8" />
 
         <h2 className="argument-headline">
           {HEADLINE_WORDS.map((word, i) => (

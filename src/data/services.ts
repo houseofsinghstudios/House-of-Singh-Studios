@@ -37,11 +37,11 @@ export const services: ServiceData[] = [
     name: "Brand Identity and Visual Design",
     subtitle: "Brand Identity and Visual Design",
     headline: "Your business has grown. Your brand has not kept up.",
-    description: "We build complete visual systems — logo, typography, color architecture, and brand guidelines — that give your business a consistent, professional presence across every touchpoint.",
+    description: "We build complete visual systems: logo, typography, colour architecture and brand guidelines. They give your business a consistent, professional presence across every touchpoint.",
     tagline: "The system behind how your business looks.",
     seoTitle: "Brand Identity and Visual Design",
     seoDescription:
-      "Complete brand identity systems built for established businesses. Logo, typography, color architecture, and brand guidelines that scale.",
+      "Complete brand identity systems built for established businesses. Logo, typography, colour architecture, and brand guidelines that scale.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
     deliverables: [
       {
@@ -52,7 +52,7 @@ export const services: ServiceData[] = [
       {
         name: "Brand Naming",
         description:
-          "Name development, exploration, and validation for new brands or sub-brands.",
+          "Name development, exploration, and validation for new brands or sub brands.",
       },
       {
         name: "Logo System",
@@ -65,7 +65,7 @@ export const services: ServiceData[] = [
           "Font selection, hierarchy, and usage rules that maintain clarity across all media.",
       },
       {
-        name: "Color Architecture",
+        name: "Colour Architecture",
         description:
           "Primary and secondary palettes with specifications for print, digital, and environmental use.",
       },
@@ -150,12 +150,12 @@ export const services: ServiceData[] = [
       {
         name: "Video Production",
         description:
-          "Brand films, campaign videos, and promotional content from concept through post-production.",
+          "Brand films, campaign videos, and promotional content from concept through post production.",
       },
       {
         name: "Short Form Content",
         description:
-          "Instagram Reels, YouTube Shorts, and platform-native video optimized for engagement and brand consistency.",
+          "Instagram Reels, YouTube Shorts, and platform native video optimized for engagement and brand consistency.",
       },
       {
         name: "Social Content Systems",
@@ -220,7 +220,7 @@ export const services: ServiceData[] = [
     headline:
       "Your website exists. But it does not work for your business.",
     description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
-    tagline: "Your highest-traffic brand touchpoint, designed.",
+    tagline: "Your highest traffic brand touchpoint, designed.",
     seoTitle: "Digital Design and Experience",
     seoDescription:
       "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
@@ -239,7 +239,7 @@ export const services: ServiceData[] = [
       {
         name: "Wireframing",
         description:
-          "Low and high-fidelity wireframes that define layout, flow, and functionality before visual design begins.",
+          "Low and high fidelity wireframes that define layout, flow, and functionality before visual design begins.",
       },
       {
         name: "UI Design",
@@ -249,7 +249,7 @@ export const services: ServiceData[] = [
       {
         name: "Interaction Design",
         description:
-          "Hover states, scroll behaviors, transitions, and micro-interactions that make the experience feel intentional.",
+          "Hover states, scroll behaviours, transitions, and micro interactions that make the experience feel intentional.",
       },
       {
         name: "Responsive Design",
@@ -262,7 +262,7 @@ export const services: ServiceData[] = [
           "Design specs, asset handoff, and creative oversight during development. We work with your developers or our partners.",
       },
       {
-        name: "Post-Launch Support",
+        name: "Post Launch Support",
         description:
           "Design iterations, content updates, and visual refinements as your business evolves.",
       },
@@ -276,7 +276,7 @@ export const services: ServiceData[] = [
         step: "01",
         name: "Discovery",
         description:
-          "Auditing your current digital presence, audience behavior, and business goals.",
+          "Auditing your current digital presence, audience behaviour, and business goals.",
       },
       {
         step: "02",
@@ -294,13 +294,13 @@ export const services: ServiceData[] = [
         step: "04",
         name: "Production",
         description:
-          "High-fidelity designs, prototypes, and developer-ready specifications.",
+          "High fidelity designs, prototypes, and specifications ready for developers.",
       },
       {
         step: "05",
         name: "Delivery",
         description:
-          "Design handoff, development oversight, and post-launch iteration support.",
+          "Design handoff, development oversight, and post launch iteration support.",
       },
     ],
     ctaHeading: "Ready to redesign your digital presence?",
@@ -332,7 +332,7 @@ export const services: ServiceData[] = [
       {
         name: "Audience Discovery",
         description:
-          "Research-backed audience profiles, customer journey mapping, and messaging that speaks to buying motivations.",
+          "Audience profiles backed by research, a map of how customers find and choose you, and messaging that speaks to buying motivations.",
       },
       {
         name: "Brand Voice",
@@ -342,7 +342,7 @@ export const services: ServiceData[] = [
       {
         name: "Creative Frameworks",
         description:
-          "Visual and verbal standards that establish what on-brand looks like for every piece of creative output.",
+          "Visual and verbal standards that establish what on brand looks like for every piece of creative output.",
       },
       {
         name: "Content Strategy",

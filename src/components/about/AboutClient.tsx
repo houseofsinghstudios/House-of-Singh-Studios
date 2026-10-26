@@ -22,20 +22,20 @@ const STEPS = [
   { name: "Discovery", desc: "We learn your business, your market, and your goals before we design anything." },
   { name: "Strategy", desc: "We define positioning, audience, and visual direction so every creative decision has a reason behind it." },
   { name: "Creative Direction", desc: "We establish the visual language, tone, and systems that will define how your brand shows up." },
-  { name: "Production", desc: "We build the assets, documentation, and deliverables with AI-assisted quality control at every step." },
+  { name: "Production", desc: "We build the assets, documentation, and deliverables with AI assisted quality control at every step." },
   { name: "Delivery", desc: "You receive a complete brand system with guidelines, files, and the structure to maintain it without us." },
 ];
 
 /* ── Contrast columns ── */
 const WHAT_WE_ARE = [
-  "A structured studio with defined processes and senior-level thinking on every brief.",
-  "AI-powered workflow that delivers faster, with fewer revisions, at lower overhead.",
-  "A curated network that assembles the right specialists for every scope.",
+  "A structured studio with defined processes and senior level thinking on every brief.",
+  "AI powered workflow that delivers faster, with fewer revisions, at lower overhead.",
+  "A trusted network that brings in the right specialists for every scope.",
   "Direct access to decision makers. No account managers. No layers.",
 ];
 
 const WHAT_WE_ARE_NOT = [
-  "Not a traditional agency with bloated teams and six-month timelines.",
+  "Not a traditional agency with bloated teams and six month timelines.",
   "Not an AI tool company. We are a design studio that uses AI internally.",
   "Not a freelancer. We operate as a structured studio, not a solo practitioner.",
   "Not a template shop. Every engagement is built from strategic thinking.",
@@ -139,7 +139,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
 
       {/* ═══ SECTION 02: PROCESS ═══ */}
       <section style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
-        <EditorialLabel text="02 — Process" className="scroll-reveal-up mb-6" />
+        <EditorialLabel number="02" text="Process" className="scroll-reveal-up mb-6" />
 
         <h2
           className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
@@ -209,7 +209,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         }}
       >
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <EditorialLabel text="03 — How We Are Different" className="scroll-reveal-up mb-6" />
+          <EditorialLabel number="03" text="How We Are Different" className="scroll-reveal-up mb-6" />
 
           <h2 className="about-duel-heading">A studio, not an agency.</h2>
 
@@ -257,7 +257,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
 
       {/* ═══ SECTION 06: NETWORK ═══ */}
       <section style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}>
-        <EditorialLabel text="04 — Network" className="scroll-reveal-up mb-6" />
+        <EditorialLabel number="04" text="Network" className="scroll-reveal-up mb-6" />
 
         <h2
           className="css-reveal font-[var(--sans)] font-medium tracking-[-0.02em] text-[color:var(--text-primary)] overflow-hidden max-w-[800px]"
@@ -270,7 +270,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px] scroll-reveal-up"
           style={{ opacity: 0.7 }}
         >
-          The studio works with a curated network of specialists and partners across brand strategy, visual design, video production, photography, development, and content. Each project is staffed deliberately. The right people for the right scope. Every collaborator operates under the same creative standards, documentation practices, and quality systems that define the studio&#39;s output.
+          The studio works with a trusted network of specialists and partners across brand strategy, visual design, video production, photography, development, and content. Each project is staffed deliberately. The right people for the right scope. Every collaborator operates under the same creative standards, documentation practices, and quality systems that define the studio&#39;s output.
         </p>
       </section>
 
@@ -303,7 +303,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
           borderTop: "1px solid var(--text-muted)",
         }}
       >
-        <EditorialLabel text="05 — Founder" className="scroll-reveal-up mb-6" />
+        <EditorialLabel number="05" text="Founder" className="scroll-reveal-up mb-6" />
 
         <div className="about-founder-grid">
           {/* Founder photo */}
@@ -319,7 +319,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
             >
               <Image
                 src={aboutData?.aboutFounderImage?.asset?.url || "/images/studio/studio.jpg"}
-                alt={`${aboutData?.aboutFounderName || "Maninder Singh"} — ${aboutData?.aboutFounderRole || "Founder and Creative Director"}`}
+                alt={`${aboutData?.aboutFounderName || "Maninder Singh"}, ${aboutData?.aboutFounderRole || "Founder and Creative Director"}`}
                 fill
                 sizes="(max-width: 768px) 100vw, 480px"
                 style={{ objectFit: "cover" }}
@@ -358,7 +358,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.7, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
-              {aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI-integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."}
+              {aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."}
             </p>
 
             <p
@@ -375,7 +375,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
               <span
                 className="font-[var(--sans)] text-[13px] uppercase tracking-[0.08em] text-[color:var(--text-primary)]"
               >
-                Explore the full creative journey →{" "}
+                See the wider creative work →{" "}
               </span>
               <a
                 href="https://houseofsingh.com"
@@ -399,7 +399,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
         }}
       >
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <EditorialLabel text="06 — Collaborators" className="scroll-reveal-up mb-6" />
+          <EditorialLabel number="06" text="Collaborators" className="scroll-reveal-up mb-6" />
 
           <h2
             className="css-reveal font-[var(--sans)] font-medium text-[color:var(--text-primary)]"
@@ -417,7 +417,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
             className="font-[var(--sans)] font-normal text-[color:var(--text-secondary)] scroll-reveal-up"
             style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 560, marginBottom: 48 }}
           >
-            The studio works with a curated network of specialists across brand strategy, visual design, video production, photography, development, and content. Each engagement assembles the right team for the scope.
+            The studio works with a trusted network of specialists across brand strategy, visual design, video production, photography, development, and content. Each engagement assembles the right team for the scope.
           </p>
 
           <div className="about-team-grid reveal-stagger-parent">

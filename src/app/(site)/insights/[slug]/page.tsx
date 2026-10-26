@@ -4,7 +4,8 @@ import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
-import { bareTitle, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
+import { shareImageUrl } from "@/lib/sanity/image";
 
 export const revalidate = 60;
 
@@ -31,9 +32,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: studioTitle(bareTitle(post.seoTitle, post.title)),
       description: post.seoDescription || "Insights from House of Singh Studios.",
       url: `https://studios.houseofsingh.com/insights/${slug}`,
-      images: post.featuredImage?.asset?.url
-        ? [{ url: post.featuredImage.asset.url }]
-        : [],
+      // The article's image cropped to 1200x630, never the original upload; the default otherwise.
+      images: post.featuredImage?.asset
+        ? [{ url: shareImageUrl(post.featuredImage), width: 1200, height: 630, alt: post.title }]
+        : [DEFAULT_SHARE_IMAGE],
       type: "article",
       publishedTime: post.publishedAt,
     },

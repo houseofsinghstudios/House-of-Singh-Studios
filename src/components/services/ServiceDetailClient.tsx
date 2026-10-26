@@ -17,9 +17,9 @@ const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
     "This service is for established businesses doing $1M+ in revenue that have outgrown their original branding. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
   "visual-media":
-    "This service is for businesses that have a brand identity but no visual content strategy. Your photography is inconsistent, your video content is ad-hoc, and your social presence does not match your brand positioning. You need a system, not a one-off shoot.",
+    "This service is for businesses that have a brand identity but no visual content strategy. Your photography is inconsistent, your video content is ad hoc, and your social presence does not match your brand positioning. You need a system, not a one off shoot.",
   "digital-design":
-    "This service is for businesses whose website is their highest-traffic touchpoint but does not convert like it should. The design feels dated, the content architecture is unclear, and visitors leave without understanding what you do. You need design direction, not just a developer.",
+    "This service is for businesses whose website is their highest traffic touchpoint but does not convert like it should. The design feels dated, the content architecture is unclear, and visitors leave without understanding what you do. You need design direction, not just a developer.",
   "creative-strategy":
     "This service is for businesses where the brand problem is actually a strategy problem. Your team makes inconsistent creative decisions because there is no framework. You need positioning clarity, creative direction systems, and operational structure before you need more design.",
 };

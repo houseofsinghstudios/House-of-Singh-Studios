@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import ServicesClient from "@/components/services/ServicesClient";
 import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
     title: 'Services — House of Singh Studios',
     description: 'Brand identity, visual media, digital design, and creative strategy. Four capabilities built to solve business problems.',
     url: 'https://studios.houseofsingh.com/services',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 
