@@ -4,6 +4,7 @@ import "server-only";
 import { buildBrief, ENGINE_VERSION, answerLabels, validateAnswers, validBand } from "./engine";
 import { bookingUrl } from "./links";
 import { parsePlacement } from "./start-links";
+import { REFERRAL_LIMITS } from "@/lib/partners/forms";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -76,7 +77,7 @@ export type ParsedEvent =
   | { event: "started"; briefId: string; attribution: ReturnType<typeof attribution> }
   | { event: "call_clicked"; briefId: string; attribution: ReturnType<typeof attribution> }
   | { event: "viewed"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers }
-  | { event: "sent"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers; optional: Optional; contact: Exclude<ReturnType<typeof contact>, string>; honeypot: boolean };
+  | { event: "sent"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers; optional: Optional; contact: Exclude<ReturnType<typeof contact>, string>; honeypot: boolean; hearAbout: string; recommendedBy: string };
 
 // Each event has its own shape. started and call_clicked never need answers.
 export function parseEvent(body: unknown): ParsedEvent | string {
@@ -97,7 +98,17 @@ export function parseEvent(body: unknown): ParsedEvent | string {
   if (typeof opt === "string") return opt;
   const who = contact(b.contact);
   if (typeof who === "string") return who;
-  return { event, ...base, answers: valid.answers, optional: opt, contact: who, honeypot: typeof b.honeypot === "string" && b.honeypot.trim() !== "" };
+  return {
+    event,
+    ...base,
+    answers: valid.answers,
+    optional: opt,
+    contact: who,
+    honeypot: typeof b.honeypot === "string" && b.honeypot.trim() !== "",
+    // "How did you hear about us?" and who recommended us: optional, cut to the contact form's caps.
+    hearAbout: clean(b.hearAbout, REFERRAL_LIMITS.hearAbout),
+    recommendedBy: clean(b.recommendedBy, REFERRAL_LIMITS.recommendedBy),
+  };
 }
 
 // The brief fields n8n receives. No contact details, no free text.
@@ -140,5 +151,7 @@ export function buildPayload(e: ParsedEvent, pricing: Pricing | null, submittedA
     brief: briefFields(e, pricing!, e.optional),
     optional: { investment: e.optional.investment ?? null, website: e.optional.website ?? "", importantDate: e.optional.importantDate ?? "" },
     contact: e.contact,
+    hearAbout: e.hearAbout,
+    recommendedBy: e.recommendedBy,
   };
 }

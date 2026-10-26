@@ -78,3 +78,15 @@ test("each event has its own idempotency key", () => {
   });
   assert.deepEqual(keys, [`${ID}:started`, `${ID}:viewed`, `${ID}:call_clicked`, `${ID}:sent`]);
 });
+
+test("sent carries hearAbout and recommendedBy, cleaned and cut to the contact form's caps", () => {
+  const e = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact, hearAbout: " <i>A partner or agency</i> ", recommendedBy: "r".repeat(200) });
+  assert.ok(typeof e !== "string" && e.event === "sent");
+  if (typeof e === "string" || e.event !== "sent") return;
+  assert.equal(e.hearAbout, "A partner or agency");
+  assert.equal(e.recommendedBy.length, 160);
+  const payload = buildPayload(e, INITIAL, AT) as Record<string, unknown>;
+  assert.equal(payload.hearAbout, "A partner or agency");
+  const none = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact });
+  assert.ok(typeof none !== "string" && none.event === "sent" && none.hearAbout === "" && none.recommendedBy === "");
+});

@@ -311,6 +311,10 @@
 .pp-field {
   margin-top: 24px;
 }
+/* "Who recommended us?" opens with the Planner's field spacing. */
+.pp-hear {
+  --hear-gap: 24px;
+}
 .pp-textarea {
   resize: vertical;
 }

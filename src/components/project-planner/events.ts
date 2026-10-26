@@ -29,6 +29,12 @@ export interface Contact {
   marketingConsent: boolean;
 }
 
+// "How did you hear about us?" and, for a recommendation or a partner, who it was. Both optional.
+export interface Heard {
+  hearAbout: string;
+  recommendedBy: string;
+}
+
 function uuid(): string {
   if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
   const b = crypto.getRandomValues(new Uint8Array(16));
@@ -70,7 +76,7 @@ type EventBody =
   | { event: "started" }
   | { event: "viewed"; answers: Answers }
   | { event: "call_clicked" }
-  | { event: "sent"; answers: Answers; optional: { investment?: BandId; website?: string; importantDate?: string }; contact: Contact; honeypot: string };
+  | { event: "sent"; answers: Answers; optional: { investment?: BandId; website?: string; importantDate?: string }; contact: Contact; honeypot: string } & Heard;
 
 // Resolves true only when the server confirms the event was accepted. Never throws.
 export async function sendEvent(session: Session, body: EventBody): Promise<boolean> {

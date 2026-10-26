@@ -6,12 +6,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { SEND } from "@/lib/project-planner/content";
 import { NOTE_LIMIT } from "@/lib/project-planner/config";
-import { EMAIL_PATTERN, type Contact } from "./events";
+import HearAboutFields from "@/components/contact/HearAboutFields";
+import { EMAIL_PATTERN, type Contact, type Heard } from "./events";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 interface Props {
-  onSend: (contact: Contact, honeypot: string) => Promise<boolean>;
+  onSend: (contact: Contact, honeypot: string, heard: Heard) => Promise<boolean>;
 }
 
 const FIELDS = [
@@ -25,6 +26,7 @@ export default function PlannerSendForm({ onSend }: Props) {
   const [values, setValues] = useState({ name: "", email: "", company: "", location: "", note: "" });
   const [insights, setInsights] = useState(false);
   const [honeypot, setHoneypot] = useState("");
+  const [heard, setHeard] = useState<Heard>({ hearAbout: "", recommendedBy: "" });
   const [errors, setErrors] = useState<Partial<Record<"name" | "email", string>>>({});
   const [status, setStatus] = useState<Status>("idle");
   const sending = status === "sending";
@@ -43,7 +45,7 @@ export default function PlannerSendForm({ onSend }: Props) {
     setErrors(next);
     if (next.name || next.email) return;
     setStatus("sending");
-    const ok = await onSend({ name, email, company: values.company.trim(), location: values.location.trim(), note: values.note.trim(), marketingConsent: insights }, honeypot);
+    const ok = await onSend({ name, email, company: values.company.trim(), location: values.location.trim(), note: values.note.trim(), marketingConsent: insights }, honeypot, heard);
     setStatus(ok ? "success" : "error");
   }
 
@@ -78,6 +80,7 @@ export default function PlannerSendForm({ onSend }: Props) {
         <textarea id="pp-send-note" className="contact-input pp-textarea" rows={4} maxLength={NOTE_LIMIT} value={values.note} onChange={(e) => setValues((v) => ({ ...v, note: e.target.value }))} aria-describedby="pp-send-note-count" disabled={sending} />
         <p id="pp-send-note-count" className="pp-small">{SEND.noteLimit(NOTE_LIMIT - values.note.length)}</p>
       </div>
+      <HearAboutFields idPrefix="pp-send" fieldClass="pp-field pp-hear" disabled={sending} onChange={setHeard} />
       <div className="pp-honeypot" aria-hidden="true">
         <label htmlFor="pp-send-url">Leave empty</label>
         <input id="pp-send-url" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
