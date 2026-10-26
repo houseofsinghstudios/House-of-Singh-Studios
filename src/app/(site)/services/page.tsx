@@ -45,8 +45,8 @@ export default async function ServicesPage() {
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button href="/packages" variant="secondary-inverted" data-cursor="link">
-              View Packages
+            <Button href="/start" variant="secondary-inverted" data-cursor="link">
+              Plan Your Project
             </Button>
           </div>
         </div>

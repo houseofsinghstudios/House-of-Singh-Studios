@@ -202,9 +202,9 @@ export const PRICE_LABELS: Record<PricedService, string> = {
 export const PRICE_CONFIRM = "We'll confirm the investment when we review your brief.";
 export const PRICE_UNSURE = "We'll suggest a realistic first step when we review your brief.";
 export const PRICE_NOTE = "A planning guide, not a quote. Your proposal confirms scope, price and timing. Prices exclude HST.";
-// The published brand package durations. Only when brand identity is the main focus.
+// The brand package durations. Only when brand identity is the main focus.
 export const TIMELINES = {
-  label: "Published package examples, not the timeline for your project.",
+  label: "Package examples, not the timeline for your project.",
   text: (parts: string[]) => `Brand packages typically take ${parts.slice(0, -1).join(", ")} or ${parts[parts.length - 1]}.`,
 };
 

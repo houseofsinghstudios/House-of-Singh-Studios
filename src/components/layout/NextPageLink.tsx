@@ -10,7 +10,6 @@ const NEXT_MAP: Record<string, { name: string; href: string }> = {
   "/about": { name: "Contact", href: "/contact" },
   "/contact": { name: "Work", href: "/work" },
   "/ai": { name: "Services", href: "/services" },
-  "/packages": { name: "Contact", href: "/contact" },
   "/insights": { name: "Services", href: "/services" },
   "/careers": { name: "About", href: "/about" },
   "/initiatives": { name: "Contact", href: "/contact" },

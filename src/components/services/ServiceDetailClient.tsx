@@ -11,6 +11,7 @@ import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { projectTypeLabel } from "@/lib/initiatives/types";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
@@ -32,6 +33,8 @@ export default function ServiceDetailClient({
   projects: ServiceProject[];
 }) {
   const service = getServiceBySlug(slug);
+  // The planner service to preselect. Visual Media spans photo and video, so it opens with none.
+  const planService = slug === "visual-media" ? null : serviceForSiteSlug(slug);
 
   if (!service) return null;
 
@@ -217,8 +220,8 @@ export default function ServiceDetailClient({
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
               Book a Discovery Call
             </Button>
-            <Button href="/packages" variant="secondary-inverted" data-cursor="link">
-              View Packages
+            <Button href={startHref("services", planService)} variant="secondary-inverted" data-cursor="link">
+              Plan a {service.name} Project
             </Button>
           </div>
         </div>

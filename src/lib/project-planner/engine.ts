@@ -126,7 +126,7 @@ function investment(a: Answers, pricing: Pricing): Brief["investment"] {
     const amount = pricing.prices[s];
     return { service: s, label: PRICE_LABELS[s], amount, text: amount ? PRICE_LINES[s].replace("{price}", formatDollars(amount)) : PRICE_CONFIRM };
   });
-  // Published brand package durations: only for brand identity as the main focus, and never for packaging.
+  // Brand package durations: only for brand identity as the main focus, and never for packaging.
   const relevant = a.primary === "identity" && a.start !== "ready";
   const timelines = relevant ? { label: TIMELINES.label, text: TIMELINES.text(BRAND_TIMELINES().map((t) => `${t.timeline} (${t.name})`)) } : null;
   return { ...base, lines, message: null, timelines };
