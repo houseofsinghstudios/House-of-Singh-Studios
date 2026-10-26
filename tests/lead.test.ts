@@ -1,9 +1,9 @@
 // Contact form lead rules. Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
+import { BUDGET_OPTIONS, checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
 
-const valid = { name: "Ada", email: "ada@example.com", service: "Brand Identity", budget: "Under $5,000", message: "Hello." };
+const valid = { name: "Ada", email: "ada@example.com", service: "Brand Identity", budget: "$1,000 to $4,000", message: "Hello." };
 
 test("clean: tags and surrounding whitespace removed, missing values empty", () => {
   assert.equal(cleanField("  <b>Ada</b>  "), "Ada");
@@ -37,4 +37,13 @@ test("lengths: service and budget capped at 80", () => {
 test("reasons never quote the submitted value", () => {
   const secret = "x".repeat(121);
   assert.ok(!(checkLeadLengths({ ...valid, name: secret }) ?? "").includes(secret));
+});
+
+test("budget is optional: missing, null or empty all pass", () => {
+  for (const missing of [undefined, null, ""]) assert.equal(checkLeadLengths({ ...valid, budget: cleanField(missing) }), null, String(missing));
+});
+
+test("budget options: Not sure yet first, then the ranges, each within the 80 character cap", () => {
+  assert.deepEqual([...BUDGET_OPTIONS], ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"]);
+  for (const option of BUDGET_OPTIONS) assert.equal(checkLeadLengths({ ...valid, budget: option }), null, option);
 });

@@ -91,7 +91,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Sanitize text inputs, then check lengths on the cleaned values
+    // Sanitize text inputs, then check lengths on the cleaned values. Service and budget are optional:
+    // a missing or empty value cleans to "", which is valid; only the 80 character cap applies.
     const fields = {
       name: cleanField(name),
       email: cleanField(email),
