@@ -10,7 +10,7 @@ export const revalidate = 3600;
 const baseUrl = "https://studios.houseofsingh.com";
 
 // Static public pages. No lastModified: a build date would claim changes that never happened.
-const staticPages = ["", "/about", "/ai", "/brand-pulse", "/careers", "/contact", "/insights", "/privacy", "/services", "/start", "/terms", "/work"];
+const staticPages = ["", "/about", "/ai", "/brand-pulse", "/careers", "/contact", "/insights", "/partners", "/privacy", "/services", "/start", "/terms", "/work"];
 
 // Published documents only. Drafts and release versions are unpublished and never listed.
 // The legacy fallback projects in src/data/projects.ts are deliberately not listed either.
