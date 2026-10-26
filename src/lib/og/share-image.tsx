@@ -1,4 +1,5 @@
-// Share images (Open Graph and Twitter) for the two lead tools, drawn with next/og at build time.
+// Share images (Open Graph and Twitter) for the homepage and the two lead tools, drawn with next/og
+// at build time, so all three look like one family.
 // Editorial, like the site: Obsidian ground, Mist type, zero radius, generous margins.
 // Inter (400 and 500, Latin) is bundled here for these images only; see fonts/OFL.txt.
 // CSS variables do not reach next/og, so the palette is repeated from the tokens in CLAUDE.md.
@@ -30,10 +31,13 @@ interface ShareImage {
   label: string;
   heading: string;
   line: string;
-  motif: ReactNode;
+  // An optional drawing above the footer line.
+  motif?: ReactNode;
+  // The footer line, bottom left. Defaults to the studio name.
+  footer?: string;
 }
 
-export async function shareImage({ label, heading, line, motif }: ShareImage) {
+export async function shareImage({ label, heading, line, motif, footer = "House of Singh Studios" }: ShareImage) {
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: OBSIDIAN, color: MIST, fontFamily: "Inter", padding: MARGIN }}>
@@ -42,7 +46,7 @@ export async function shareImage({ label, heading, line, motif }: ShareImage) {
         <div style={{ display: "flex", marginTop: 24, fontSize: 28, lineHeight: 1.4, color: MIST_BODY, maxWidth: 940 }}>{line}</div>
         <div style={{ display: "flex", flexGrow: 1 }} />
         {motif}
-        <div style={{ display: "flex", marginTop: 40, fontSize: 20, fontWeight: 500, letterSpacing: "-0.01em" }}>House of Singh Studios</div>
+        <div style={{ display: "flex", marginTop: 40, fontSize: 20, fontWeight: 500, letterSpacing: "-0.01em" }}>{footer}</div>
       </div>
     ),
     { ...SHARE_SIZE, fonts: await fonts() },

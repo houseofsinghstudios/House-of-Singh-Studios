@@ -12,14 +12,17 @@ import { getFeaturedProjects } from "@/lib/sanity/projects";
 
 export const revalidate = 60;
 
+// Search and share text leads with brand identity and design. The share image is the file based
+// opengraph-image.tsx beside this page, in the (home) group so no other page inherits it.
+// Next copies the openGraph title and description into the twitter card.
 export const metadata: Metadata = {
   // absolute: this page sits below the root layout's title template, which would otherwise append the studio name twice.
-  title: { absolute: 'House of Singh Studios — AI Powered Design Studio Toronto' },
-  description: 'A design studio powered by AI systems and led by creative direction. We build brand identities, visual systems, and digital experiences for established businesses.',
+  title: { absolute: 'House of Singh Studios | Brand Identity and Design, Toronto' },
+  description: 'We design brand identities that change how a business is seen, chosen and valued. Websites and visual media from a design studio in Toronto.',
   alternates: { canonical: 'https://studios.houseofsingh.com' },
   openGraph: {
-    title: 'House of Singh Studios — AI Powered Design Studio Toronto',
-    description: 'A design studio powered by AI systems and led by creative direction. We build brand identities, visual systems, and digital experiences for established businesses.',
+    title: 'House of Singh Studios: Brand Identity and Design',
+    description: 'Brand identity that changes how a business is seen, chosen and valued.',
     url: 'https://studios.houseofsingh.com',
   },
 };
