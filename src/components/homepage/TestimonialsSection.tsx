@@ -96,7 +96,7 @@ export default function TestimonialsSection() {
                   <blockquote className="testimonials-quote">
                     {t.quote}
                   </blockquote>
-                  <p className="testimonials-author">&mdash; {t.author}</p>
+                  <p className="testimonials-author">{t.author}</p>
                 </div>
               ))}
             </div>

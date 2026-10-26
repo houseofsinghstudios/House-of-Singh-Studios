@@ -64,7 +64,7 @@ export default function WorkSection({ projects }: WorkSectionProps) {
               {project.label
                 .split(",")
                 .map((tag) => tag.trim())
-                .join(" — ")}
+                .join(" · ")}
             </p>
             <div className="featured-work-text-swap">
               <h3

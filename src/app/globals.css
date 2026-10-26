@@ -5599,7 +5599,7 @@ td a {
   gap: 8px;
 }
 .svc-del-item::before {
-  content: '–';
+  content: '·';
   color: var(--marble, #A9A6A2);
   flex-shrink: 0;
 }

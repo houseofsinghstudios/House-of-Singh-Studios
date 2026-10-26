@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // No "X-Powered-By: Next.js" header: it only tells visitors and scanners which framework runs here.
+  poweredByHeader: false,
   images: {
     formats: ["image/webp"],
     remotePatterns: [

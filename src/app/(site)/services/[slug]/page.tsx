@@ -12,9 +12,9 @@ export const revalidate = 60;
 const serviceSchemaMap: Record<string, { name: string; description: string; breadcrumbName: string; deliverables: string[] }> = {
   "brand-identity": {
     name: "Brand Identity and Visual Design",
-    description: "Logo systems, typography, color architecture, brand guidelines, and visual language that holds across every touchpoint.",
+    description: "Logo systems, typography, colour architecture, brand guidelines, and visual language that holds across every touchpoint.",
     breadcrumbName: "Brand Identity",
-    deliverables: ["Brand Strategy and Positioning", "Logo System", "Typography System", "Color Architecture", "Brand Guidelines"],
+    deliverables: ["Brand Strategy and Positioning", "Logo System", "Typography System", "Colour Architecture", "Brand Guidelines"],
   },
   "visual-media": {
     name: "Visual Media and Content Production",

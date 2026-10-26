@@ -310,7 +310,7 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
               <ul className="art-takeaways-list">
                 {post.keyTakeaways.map((takeaway, i) => (
                   <li key={i} className="art-takeaways-item">
-                    <span className="art-takeaways-dash">&mdash;</span>
+                    <span className="art-takeaways-dash">&middot;</span>
                     <span>{takeaway}</span>
                   </li>
                 ))}

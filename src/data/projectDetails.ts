@@ -86,21 +86,21 @@ export const projectDetails: ProjectDetail[] = [
       heading: "The Business",
       paragraphs: [
         "TEDxToronto is one of Canada\u2019s largest independently organized TEDx events, bringing together thinkers, creators, and leaders to share ideas across disciplines. The organization operates across digital, print, and live event environments with a volunteer-driven creative team of over 40 people.",
-        "The event attracts thousands of attendees annually and produces content that reaches millions online. Every visual touchpoint\u2014from stage design to social media\u2014represents the TEDxToronto brand to a discerning, design-literate audience.",
+        "The event attracts thousands of attendees annually and produces content that reaches millions online. Every visual touchpoint, from stage design to social media, represents the TEDxToronto brand to a discerning, design-literate audience.",
       ],
     },
     challenge: {
       heading: "Fragmented identity across 14 touchpoints",
       paragraphs: [
-        "The event needed a visual identity system that could hold up across stage design, digital content, print materials, social media, signage, attendee badges, and sponsor communications\u201414 distinct touchpoints in total. Each application was being handled by different members of a large volunteer creative team.",
-        "Without a governing system, the brand looked different depending on who made it. The TEDx framework added constraints: the identity had to feel contemporary and bold while respecting global TEDx guidelines. Consistency at this scale required more than a logo file\u2014it required a system built for delegation.",
+        "The event needed a visual identity system that could hold up across stage design, digital content, print materials, social media, signage, attendee badges, and sponsor communications: 14 distinct touchpoints in total. Each application was being handled by different members of a large volunteer creative team.",
+        "Without a governing system, the brand looked different depending on who made it. The TEDx framework added constraints: the identity had to feel contemporary and bold while respecting global TEDx guidelines. Consistency at this scale required more than a logo file. It required a system built for delegation.",
       ],
     },
     approach: {
       heading: "A system built for 40 people to execute independently",
       paragraphs: [
-        "We started with a discovery phase to map every touchpoint, identify the operational constraints, and understand which decisions the creative team needed to make independently versus centrally. Strategy defined the visual direction and established clear parameters\u2014not just what to do, but what not to do.",
-        "The identity system was designed for delegation from the start. Modular components, prescriptive usage rules, and templated formats meant a volunteer with basic design skills could produce on-brand materials without needing creative review. Production included all event collateral, digital assets, and documentation.",
+        "We started with a discovery phase to map every touchpoint, identify the operational constraints, and understand which decisions the creative team needed to make independently versus centrally. Strategy defined the visual direction and established clear parameters: not just what to do, but what not to do.",
+        "The identity system was designed for delegation from the start. Modular components, prescriptive usage rules, and templated formats meant a volunteer with basic design skills could produce on brand materials without needing creative review. Production included all event collateral, digital assets, and documentation.",
       ],
     },
     deliverables: [
@@ -127,7 +127,7 @@ export const projectDetails: ProjectDetail[] = [
       {
         title: "Brand Guidelines",
         description:
-          "Comprehensive documentation enabling 40+ volunteers to produce on-brand work.",
+          "Comprehensive documentation enabling 40+ volunteers to produce on brand work.",
       },
       {
         title: "Creative Direction",
@@ -147,7 +147,7 @@ export const projectDetails: ProjectDetail[] = [
       heading:
         "A visual identity that holds across 14 touchpoints without a single inconsistency.",
       paragraphs: [
-        "The identity system gave TEDxToronto a consistent and professional visual presence across every application. The guidelines enabled a 40-person team to produce on-brand materials independently, reducing revision cycles by an estimated 60% and maintaining quality throughout the event lifecycle.",
+        "The identity system gave TEDxToronto a consistent and professional visual presence across every application. The guidelines enabled a 40-person team to produce on brand materials independently, reducing revision cycles by an estimated 60% and maintaining quality throughout the event lifecycle.",
         "The modular system scaled from a 6-inch badge to a 30-foot stage backdrop without losing coherence. For the first time, every piece of TEDxToronto communication looked like it came from the same organization.",
       ],
       stats: [

@@ -274,7 +274,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             marginTop: 24,
           }}
         >
-          House of Singh Studios works with a curated network of designers,
+          House of Singh Studios works with a trusted network of designers,
           strategists, and producers. Every engagement assembles the right team
           for the scope. If your work is sharp and your thinking is clear, we
           want to hear from you.
@@ -421,7 +421,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                   marginBottom: 8,
                                 }}
                               >
-                                — {item}
+                                · {item}
                               </p>
                             ))}
                           </div>
@@ -452,7 +452,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                 marginBottom: 8,
                               }}
                             >
-                              — {item}
+                              · {item}
                             </p>
                           ))}
                         </div>
@@ -483,7 +483,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                 marginBottom: 8,
                               }}
                             >
-                              — {item}
+                              · {item}
                             </p>
                           ))}
                         </div>
@@ -819,7 +819,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
           </div>
           <div className="scroll-reveal-up">
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
-              Remote-first, outcome-driven.
+              Remote first, driven by outcomes.
             </h3>
             <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               We work with specialists across cities and time zones. What matters is the quality of the output and the clarity of the communication.

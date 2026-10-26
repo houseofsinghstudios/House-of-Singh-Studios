@@ -336,7 +336,7 @@ export default function AILabClient() {
             maxWidth: 480,
           }}
         >
-          Our AI-powered Studio Guide can answer questions about services,
+          Our AI powered Studio Guide can answer questions about services,
           process, and pricing. Coming soon.
         </p>
       </section>
@@ -355,7 +355,7 @@ export default function AILabClient() {
         <div className="cta-centered">
           <p className="cta-label">(Next step)</p>
           <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)", letterSpacing: "-0.025em", whiteSpace: "normal" }}>
-            Ready to see what AI-powered creative direction looks like?
+            Ready to see what AI powered creative direction looks like?
           </h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">

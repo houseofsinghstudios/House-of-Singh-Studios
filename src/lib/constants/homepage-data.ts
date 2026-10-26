@@ -45,7 +45,7 @@ export const SERVICES_SECTION = {
     {
       title: "Brand Identity and Visual Design",
       sentence: "Your brand identity is the first thing your market judges you on. We build complete visual systems that give your business a consistent, professional presence across every touchpoint.",
-      description: "Logo systems, color, typography, brand guidelines, and visual language that holds across every touchpoint.",
+      description: "Logo systems, colour, typography, brand guidelines, and visual language that holds across every touchpoint.",
       href: "/services/brand-identity",
     },
     {
@@ -56,7 +56,7 @@ export const SERVICES_SECTION = {
     },
     {
       title: "Digital Design and Experience",
-      sentence: "Your website is your highest-traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
+      sentence: "Your website is your highest traffic brand touchpoint. We design the visual direction, content architecture, and interface systems that make it work commercially.",
       description: "Website design direction, interface systems, content architecture, and ongoing digital design support.",
       href: "/services/digital-design",
     },

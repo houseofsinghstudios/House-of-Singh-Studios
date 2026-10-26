@@ -75,12 +75,12 @@ export default function PrivacyPage() {
             We will not use your personal information for purposes other than those identified at or before the time of collection without obtaining your consent.
           </p>
 
-          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>4. Third-party services</h2>
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>4. Third party services</h2>
           <p style={{ margin: "0 0 12px" }}>
-            We use the following third-party services to operate our studio. Each processes limited personal information as described:
+            We use the following third party services to operate our studio. Each processes limited personal information as described:
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting and analytics) — collects anonymized usage data including page views and performance metrics. Data is processed in accordance with Vercel&apos;s privacy policy.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting and analytics): collects anonymized usage data including page views and performance metrics. Data is processed in accordance with Vercel&apos;s privacy policy.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed and approximate location. We do not use it for advertising, and we do not send it names, emails or form contents. Visitors in regions with stricter consent rules are measured without analytics cookies.
@@ -89,27 +89,27 @@ export default function PrivacyPage() {
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Microsoft Clarity</strong> (website behaviour analytics): records anonymised page interactions such as clicks and scrolling to help us improve the site. Form fields are masked, so recordings never show what you type. We do not use it for advertising. Visitors in regions with stricter consent rules are measured without cookies.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Airtable</strong> (client relationship management) — stores contact form submissions including name, email, service interest, and project details for lead management.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Airtable</strong> (client relationship management): stores contact form submissions including name, email, service interest, and project details for lead management.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>n8n</strong> (workflow automation) — processes form submissions to route inquiries and send email notifications. Data passes through n8n workflows but is not stored long-term.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>n8n</strong> (workflow automation): processes form submissions to route inquiries and send email notifications. Data passes through n8n workflows but is not stored long term.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cal.com</strong> (scheduling) — collects name and email address when you book a discovery call through our embedded booking system.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cal.com</strong> (scheduling): collects name and email address when you book a discovery call through our embedded booking system.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Sanity</strong> (content management) — manages website content. Does not collect visitor personal information.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Sanity</strong> (content management): manages website content. Does not collect visitor personal information.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude API</strong> (AI processing) — may be used to assist with lead classification, proposal preparation, and content production. Any personal information processed is limited to information you have already provided through our contact form and is not used to train AI models.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude API</strong> (AI processing): may be used to assist with lead classification, proposal preparation, and content production. Any personal information processed is limited to information you have already provided through our contact form and is not used to train AI models.
           </p>
           <p style={{ margin: "0 0 32px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn API</strong> (social media publishing) — used to publish studio content (articles, project announcements, and thought leadership posts) to our official LinkedIn company page. The integration authenticates via OAuth 2.0 using a studio admin account. No client personal information is shared with LinkedIn through this integration. Published content may reference public project outcomes but never identifies clients without prior written consent.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn API</strong> (social media publishing): used to publish studio content (articles, project announcements, and thought leadership posts) to our official LinkedIn company page. The integration authenticates via OAuth 2.0 using a studio admin account. No client personal information is shared with LinkedIn through this integration. Published content may reference public project outcomes but never identifies clients without prior written consent.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>5. Consent</h2>
           <p style={{ margin: "0 0 32px" }}>
-            We obtain your consent before collecting, using, or disclosing your personal information. By submitting the contact form or booking a call, you consent to the collection and use of your information as described in this policy. For marketing communications, we will obtain your explicit opt-in consent. You may withdraw your consent at any time by contacting us at {STUDIO_EMAIL}.
+            We obtain your consent before collecting, using, or disclosing your personal information. By submitting the contact form or booking a call, you consent to the collection and use of your information as described in this policy. For marketing communications, we will obtain your explicit opt in consent. You may withdraw your consent at any time by contacting us at {STUDIO_EMAIL}.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>6. Data retention</h2>
@@ -119,7 +119,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Data security</h2>
           <p style={{ margin: "0 0 32px" }}>
-            We protect personal information with security safeguards appropriate to the sensitivity of the information. Our website uses HTTPS encryption. Access to personal information is limited to authorized personnel. Third-party services are selected based on their security practices and compliance standards. However, no method of transmission over the Internet is completely secure, and we cannot guarantee absolute security.
+            We protect personal information with security safeguards appropriate to the sensitivity of the information. Our website uses HTTPS encryption. Access to personal information is limited to authorized personnel. Third party services are selected based on their security practices and compliance standards. However, no method of transmission over the Internet is completely secure, and we cannot guarantee absolute security.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>8. Your rights under PIPEDA</h2>
@@ -135,7 +135,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>9. International transfers</h2>
           <p style={{ margin: "0 0 32px" }}>
-            Some of our third-party service providers may store or process data outside of Canada, including in the United States. When personal information is transferred outside Canada, it may be subject to the laws of those jurisdictions. We take reasonable steps to ensure that third-party providers maintain comparable levels of protection for your personal information.
+            Some of our third party service providers may store or process data outside of Canada, including in the United States. When personal information is transferred outside Canada, it may be subject to the laws of those jurisdictions. We take reasonable steps to ensure that third party providers maintain comparable levels of protection for your personal information.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>10. Changes to this policy</h2>
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>11. Automated content publishing</h2>
           <p style={{ margin: "0 0 12px" }}>
-            We use automated workflows to publish content to third-party social media platforms on behalf of House of Singh Studios. This content includes articles, project announcements, and thought leadership posts authored or approved by studio personnel.
+            We use automated workflows to publish content to third party social media platforms on behalf of House of Singh Studios. This content includes articles, project announcements, and thought leadership posts authored or approved by studio personnel.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             Automated publishing is performed through authenticated API integrations using OAuth 2.0 credentials tied to studio admin accounts. No client personal information is included in automated posts unless the client has provided prior written consent for public attribution.
@@ -157,15 +157,15 @@ export default function PrivacyPage() {
             All automated publishing workflows are reviewed by studio personnel before activation. Content queues are auditable and can be paused or revoked at any time.
           </p>
 
-          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>12. Third-party social media platforms</h2>
+          <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>12. Third party social media platforms</h2>
           <p style={{ margin: "0 0 12px" }}>
             We maintain official accounts on the following social media platforms. Each platform has its own privacy policy governing how it collects and processes data from users who view or interact with our published content:
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn</strong> — used for publishing studio articles, project announcements, and professional updates to our company page. Governed by LinkedIn&apos;s Privacy Policy and API Terms of Use. We access LinkedIn through their Marketing API with permissions limited to content publishing on our own page.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn</strong>: used for publishing studio articles, project announcements, and professional updates to our company page. Governed by LinkedIn&apos;s Privacy Policy and API Terms of Use. We access LinkedIn through their Marketing API with permissions limited to content publishing on our own page.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Instagram</strong> — used for sharing visual work samples, studio culture, and project highlights. Governed by Meta&apos;s Privacy Policy.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Instagram</strong>: used for sharing visual work samples, studio culture, and project highlights. Governed by Meta&apos;s Privacy Policy.
           </p>
           <p style={{ margin: "0 0 32px" }}>
             We do not scrape, collect, or store personal information from followers or viewers on any social media platform. Our use of platform APIs is limited to publishing our own content and retrieving basic engagement metrics (such as view counts and like counts) in aggregate form.
@@ -173,7 +173,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>13. Contact us</h2>
           <p style={{ margin: "0 0 0" }}>
-            For privacy-related questions, requests, or complaints, contact our designated privacy officer: Maninder Singh, Founder and Creative Director, House of Singh Studios Inc., Toronto, Ontario, Canada. Email: {STUDIO_EMAIL}.
+            For privacy related questions, requests, or complaints, contact our designated privacy officer: Maninder Singh, Founder and Creative Director, House of Singh Studios Inc., Toronto, Ontario, Canada. Email: {STUDIO_EMAIL}.
           </p>
 
         </div>
