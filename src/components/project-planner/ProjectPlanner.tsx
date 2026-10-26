@@ -13,7 +13,7 @@ import PlannerIntro from "./PlannerIntro";
 import PlannerStep, { type StepKey } from "./PlannerStep";
 import PlannerBrief, { type CaseStudyLink } from "./PlannerBrief";
 import PlannerSendForm from "./PlannerSendForm";
-import { sendEvent, startSession, type Contact, type Session } from "./events";
+import { sendEvent, startSession, type Contact, type Heard, type Session } from "./events";
 import "./planner.css";
 
 interface Props {
@@ -119,9 +119,9 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
     requestAnimationFrame(() => document.getElementById("pp-send-heading")?.focus());
   }
 
-  async function onSend(contact: Contact, honeypot: string): Promise<boolean> {
+  async function onSend(contact: Contact, honeypot: string, heard: Heard): Promise<boolean> {
     if (!session.current || !answers) return false;
-    return sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot });
+    return sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot, ...heard });
   }
 
   function startAgain() {

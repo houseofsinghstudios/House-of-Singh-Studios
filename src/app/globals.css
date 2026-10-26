@@ -2895,6 +2895,84 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   }
 }
 
+/* Square ticks: the Project Planner's consent and the contact form's permission. Shared here so
+   both forms draw the same box. */
+.pp-tick,
+.contact-tick {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 24px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.pp-tick input,
+.contact-tick input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 1px 0 0;
+  border: 1px solid var(--text-primary);
+  cursor: pointer;
+}
+.pp-tick input:checked,
+.contact-tick input:checked {
+  background: var(--text-primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23F7F6F5' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") center no-repeat;
+}
+.pp-tick input:focus-visible,
+.contact-tick input:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+.contact-tick {
+  margin-top: 0;
+  font-size: 14px;
+}
+/* Inline field message under a contact field. Space for one line is always kept, so a message
+   never moves the fields below it. */
+.contact-error {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  min-height: 1.5em;
+  margin: 8px 0 0;
+}
+/* Narrow phones: the permission message runs to two lines, so two are kept. */
+@media (max-width: 559px) {
+  .contact-error {
+    min-height: 3em;
+  }
+}
+/* "Who recommended us?" opens under "How did you hear about us?" over 250ms, at once with reduced
+   motion. Collapsed, it takes no space. */
+.hear-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.25s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hear-reveal.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+.hear-reveal-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.hear-reveal-inner > :first-child {
+  margin-top: var(--hear-gap, 32px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hear-reveal {
+    transition: none;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Insights Page — Dash Digital Inspired Editorial
    ═══════════════════════════════════════════════════════════════ */
@@ -3714,13 +3792,14 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-/* The counting digits sit over the final value, which holds the width, so nothing moves. */
+/* The counting digits sit over the final value, which holds the width, so nothing moves. Both fill
+   the cell and align their text to the end: the boxes never move, only the digits inside change. */
 .ai-proof-num-figure {
   display: inline-grid;
-  justify-items: end;
 }
 .ai-proof-num-figure > span {
   grid-area: 1 / 1;
+  text-align: end;
 }
 .ai-proof-num-reserve {
   visibility: hidden;

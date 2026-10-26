@@ -67,7 +67,7 @@ test("ids and shapes are validated; attribution is reduced to safe parts", () =>
   assert.equal(parseEvent(null), "Invalid request");
   const e = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, entryPlacement: "evil" } });
   assert.ok(typeof e !== "string");
-  assert.deepEqual(e.attribution, { source: "news", medium: "email", campaign: "oct", landingPage: "/start", entryPlacement: "direct", referrer: "https://example.com/page" });
+  assert.deepEqual(e.attribution, { source: "news", medium: "email", campaign: "oct", referralCode: "", landingPage: "/start", entryPlacement: "direct", referrer: "https://example.com/page" });
 });
 
 test("each event has its own idempotency key", () => {
@@ -77,4 +77,25 @@ test("each event has its own idempotency key", () => {
     return (buildPayload(e, INITIAL, AT) as { eventIdempotencyKey: string }).eventIdempotencyKey;
   });
   assert.deepEqual(keys, [`${ID}:started`, `${ID}:viewed`, `${ID}:call_clicked`, `${ID}:sent`]);
+});
+
+test("sent carries hearAbout and recommendedBy, cleaned and cut to the contact form's caps", () => {
+  const e = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact, hearAbout: " <i>A partner or agency</i> ", recommendedBy: "r".repeat(200) });
+  assert.ok(typeof e !== "string" && e.event === "sent");
+  if (typeof e === "string" || e.event !== "sent") return;
+  assert.equal(e.hearAbout, "A partner or agency");
+  assert.equal(e.recommendedBy.length, 160);
+  const payload = buildPayload(e, INITIAL, AT) as Record<string, unknown>;
+  assert.equal(payload.hearAbout, "A partner or agency");
+  const none = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact });
+  assert.ok(typeof none !== "string" && none.event === "sent" && none.hearAbout === "" && none.recommendedBy === "");
+});
+
+test("attribution carries a valid referral code and drops anything else", () => {
+  const good = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, referralCode: "NorthPrint" } });
+  const bad = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, referralCode: "north print" } });
+  assert.ok(typeof good !== "string" && typeof bad !== "string");
+  if (typeof good === "string" || typeof bad === "string") return;
+  assert.equal(good.attribution.referralCode, "northprint");
+  assert.equal(bad.attribution.referralCode, "");
 });

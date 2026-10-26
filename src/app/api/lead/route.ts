@@ -1,30 +1,13 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField } from "@/lib/lead";
+import { checkReferralFields, isIntroduction, isPartnership } from "@/lib/partners/forms";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { cleanCampaign } from "@/lib/campaign";
 
-const rateLimit = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const MAX_REQUESTS = 5;
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now - entry.timestamp > RATE_LIMIT_WINDOW) {
-    rateLimit.set(ip, { count: 1, timestamp: now });
-    return false;
-  }
-  entry.count++;
-  if (entry.count > MAX_REQUESTS) return true;
-  return false;
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimit.entries()) {
-    if (now - entry.timestamp > RATE_LIMIT_WINDOW) rateLimit.delete(ip);
-  }
-}, 5 * 60 * 1000);
+// Five leads per address per minute: the limiter the other form routes share.
+const isRateLimited = createRateLimiter(5);
 
 // Shown when the contact form is submitted before JavaScript has loaded, so the browser posts
 // the form itself instead of the page sending JSON. Nothing is read from that post or forwarded.
@@ -64,9 +47,7 @@ export async function POST(request: Request) {
       return new NextResponse(NO_SCRIPT_PAGE, { status: 415, headers: { "content-type": "text/html; charset=utf-8" } });
     }
 
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-    if (isRateLimited(ip)) {
+    if (isRateLimited(clientIp(request))) {
       console.log("[lead] rate limit exceeded");
       return NextResponse.json(
         { success: false, error: "Too many requests. Please try again later." },
@@ -105,7 +86,37 @@ export async function POST(request: Request) {
       console.log(`[lead] validation failed: ${invalid.toLowerCase()}`);
       return NextResponse.json({ success: false, error: invalid }, { status: 400 });
     }
-    const sanitized = { ...fields, source: "contact-form", submittedAt: new Date().toISOString() };
+    // Introductions and partnerships carry their own fields; "How did you hear about us?" is optional on every lead.
+    const referral = {
+      who: cleanField(body.who),
+      contact: cleanField(body.contact),
+      permission: body.permission === true,
+      businessName: cleanField(body.businessName),
+      partnerType: cleanField(body.partnerType),
+      website: cleanField(body.website),
+      hearAbout: cleanField(body.hearAbout),
+      recommendedBy: cleanField(body.recommendedBy),
+    };
+    const referralInvalid = checkReferralFields(fields.service, referral);
+    if (referralInvalid) {
+      console.log(`[lead] validation failed: ${referralInvalid.toLowerCase()}`);
+      return NextResponse.json({ success: false, error: referralInvalid }, { status: 400 });
+    }
+    const sanitized = {
+      ...fields,
+      ...(isIntroduction(fields.service) && {
+        introduction: { clientName: referral.who, clientContact: referral.contact, permission: referral.permission },
+      }),
+      ...(isPartnership(fields.service) && {
+        partnership: { businessName: referral.businessName, partnerType: referral.partnerType, website: referral.website },
+      }),
+      hearAbout: referral.hearAbout,
+      recommendedBy: referral.recommendedBy,
+      // Campaign tags and the partner referral code, cleaned with the browser's own rules.
+      attribution: cleanCampaign(body.attribution),
+      source: "contact-form",
+      submittedAt: new Date().toISOString(),
+    };
 
     const target = n8nTarget("N8N_WEBHOOK_URL");
     if ("missing" in target) {

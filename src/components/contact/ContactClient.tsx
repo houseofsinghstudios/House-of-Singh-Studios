@@ -9,13 +9,21 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
-import { NOMINATION_PLACEHOLDER, NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
+import { resolveCampaign, sessionStore } from "@/lib/campaign";
+import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
+import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messagePlaceholder } from "@/lib/partners/forms";
+import HearAboutFields from "./HearAboutFields";
+import { IntroductionFields, PartnershipFields } from "./ReferralFields";
 
 export default function ContactClient({ initialService = "" }: { initialService?: string }) {
-  const [submitted, setSubmitted] = useState(false);
-  // A suggestion or nomination needs no budget, and asks about the brand or organization instead.
+  // The service that was sent, which picks the thank you; null until then.
+  const [submitted, setSubmitted] = useState<string | null>(null);
+  // A suggestion, nomination, introduction or partnership needs no budget, and asks its own questions instead.
   const [service, setService] = useState(initialService);
   const nominating = isNomination(service);
+  const introducing = isIntroduction(service);
+  const partnering = isPartnership(service);
+  const [permissionError, setPermissionError] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
@@ -39,15 +47,31 @@ export default function ContactClient({ initialService = "" }: { initialService?
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const permission = formData.get("permission") === "on";
+    if (introducing && !permission) {
+      setPermissionError(true);
+      document.getElementById("contact-permission")?.focus();
+      return;
+    }
     setSubmitting(true);
     setError(false);
-    const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get("name"),
       email: formData.get("email"),
       service: formData.get("service"),
       budget: formData.get("budget"),
       message: formData.get("message"),
+      who: formData.get("who"),
+      contact: formData.get("contact"),
+      permission,
+      businessName: formData.get("businessName"),
+      partnerType: formData.get("partnerType"),
+      website: formData.get("website"),
+      hearAbout: formData.get("hearAbout"),
+      recommendedBy: formData.get("recommendedBy"),
+      // Campaign tags and a partner's ?ref= code: this page's, otherwise the visit's first touch.
+      attribution: resolveCampaign(window.location.search, sessionStore()),
       honeypot: formData.get("honeypot"),
     };
     try {
@@ -57,7 +81,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error("Failed");
-      setSubmitted(true);
+      setSubmitted(String(data.service || ""));
     } catch {
       setError(true);
     } finally {
@@ -106,12 +130,12 @@ export default function ContactClient({ initialService = "" }: { initialService?
       <section className="contact-columns px-[var(--page-px)] pb-20">
         {/* LEFT: Form */}
         <div className="contact-col-left">
-          {submitted ? (
+          {submitted !== null ? (
             <p
               className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)]"
               style={{ opacity: 0.7 }}
             >
-              Thank you. We have received your brief.
+              {contactThanks(submitted)}
             </p>
           ) : (
             <>
@@ -131,7 +155,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
               {/* post to /api/lead: a submit before JavaScript loads can never fall back to GET and put details in the URL */}
               <form ref={formRef} method="post" action="/api/lead" onSubmit={handleSubmit} className="flex flex-col gap-8" data-clarity-mask="True">
                 <div>
-                  <label htmlFor="contact-name" className="contact-label">Name</label>
+                  <label htmlFor="contact-name" className="contact-label">{introducing ? FORM_COPY.yourName : "Name"}</label>
                   <input
                     id="contact-name"
                     type="text"
@@ -142,7 +166,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
                   <span className="focus-line" />
                 </div>
                 <div>
-                  <label htmlFor="contact-email" className="contact-label">Email</label>
+                  <label htmlFor="contact-email" className="contact-label">{introducing ? FORM_COPY.yourEmail : "Email"}</label>
                   <input
                     id="contact-email"
                     type="email"
@@ -159,7 +183,10 @@ export default function ContactClient({ initialService = "" }: { initialService?
                     name="service"
                     className="contact-input"
                     value={service}
-                    onChange={(e) => setService(e.target.value)}
+                    onChange={(e) => {
+                      setService(e.target.value);
+                      setPermissionError(false);
+                    }}
                   >
                     <option value="" disabled>Select a service</option>
                     <option value="Brand Identity">Brand Identity and Visual Design</option>
@@ -170,10 +197,14 @@ export default function ContactClient({ initialService = "" }: { initialService?
                     <option value="Not sure">Not sure yet</option>
                     <option value={NOMINATION_SERVICES.parallel}>{NOMINATION_SERVICES.parallel}</option>
                     <option value={NOMINATION_SERVICES.commons}>{NOMINATION_SERVICES.commons}</option>
+                    <option value={PARTNER_SERVICES.introduction}>{PARTNER_SERVICES.introduction}</option>
+                    <option value={PARTNER_SERVICES.partnership}>{PARTNER_SERVICES.partnership}</option>
                   </select>
                   <span className="focus-line" />
                 </div>
-                {!nominating && (
+                {introducing && <IntroductionFields permissionError={permissionError} onPermission={() => setPermissionError(false)} />}
+                {partnering && <PartnershipFields />}
+                {!nominating && !introducing && !partnering && (
                   <div>
                     <label htmlFor="contact-budget" className="contact-label">Budget range (CAD), optional</label>
                     <select
@@ -193,17 +224,20 @@ export default function ContactClient({ initialService = "" }: { initialService?
                   </div>
                 )}
                 <div>
-                  <label htmlFor="contact-message" className="contact-label">Message</label>
+                  <label htmlFor="contact-message" className="contact-label">
+                    Message{introducing && <> {FORM_COPY.optional}</>}
+                  </label>
                   <textarea
                     id="contact-message"
                     name="message"
-                    required
+                    required={!introducing}
                     rows={5}
                     className="contact-textarea"
-                    placeholder={nominating ? NOMINATION_PLACEHOLDER : "Tell us about your project, your timeline, and what you are looking for."}
+                    placeholder={messagePlaceholder(service)}
                   />
                   <span className="focus-line" />
                 </div>
+                <HearAboutFields idPrefix="contact" />
                 <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
                   <label htmlFor="contact-honeypot">Do not fill this field</label>
                   <input id="contact-honeypot" type="text" name="honeypot" tabIndex={-1} autoComplete="off" />

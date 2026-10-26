@@ -1,0 +1,191 @@
+/* ── Partners page ──
+   Layout glue only. Type sizes, colours, rules and motion come from existing site styles: the
+   Services hero, the AI Lab statistics row, the Initiatives sections, numbered rows, accordion and
+   band. Sizes reused here: the accordion title clamp(18px, 2vw, 22px), the section heading
+   clamp(28px, 3.5vw, 40px), body 15px and 14px. Rules are 1px Marble. */
+
+/* Hero actions: the dark button, then the text link with the site arrow. */
+.pt-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+  margin-top: 32px;
+}
+.pt-hero-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+/* Phones: "Introduce a Client" is first and full width. */
+@media (max-width: 767px) {
+  .pt-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pt-hero-actions > div:first-child {
+    display: block !important; /* the button's magnetic wrapper sets inline-block inline */
+  }
+  .pt-hero-actions .btn-primary {
+    width: 100%;
+  }
+  .pt-hero-link {
+    align-self: flex-start;
+  }
+}
+
+/* At a glance: the AI Lab statistics row, four columns, a two by two grid on phones, each line
+   filling the column. */
+.pt-glance-section {
+  padding: 0 var(--page-px);
+}
+.pt-glance {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.pt-glance .ai-proof-text {
+  font-size: 14px;
+  max-width: 260px;
+}
+.pt-glance-fill {
+  width: 100%;
+}
+@media (max-width: 767px) {
+  .pt-page .pt-glance {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pt-page .pt-glance .ai-proof-col {
+    padding: 20px 16px 20px 0;
+    border-left: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .pt-page .pt-glance .ai-proof-col:nth-child(even) {
+    padding: 20px 0 20px 16px;
+    border-left: 1px solid var(--border);
+  }
+  .pt-page .pt-glance .ai-proof-col:nth-last-child(-n + 2) {
+    border-bottom: none;
+  }
+}
+
+/* (01) Your client, in safe hands: three columns between 1px rules, stacked on phones. */
+.pt-safe {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px clamp(24px, 3vw, 48px);
+}
+.pt-safe-item {
+  border-top: 1px solid var(--text-muted);
+  padding-top: 20px;
+}
+.pt-safe-name {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+.pt-safe-line {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+@media (max-width: 767px) {
+  .pt-safe {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* (02) The introduction, ready to send: a 1px ruled box under the numbered rows. */
+.pt-intro {
+  border: 1px solid var(--text-muted);
+  padding: clamp(24px, 3vw, 32px);
+  margin-top: 40px;
+}
+.pt-intro-label {
+  margin: 0 0 16px;
+}
+.pt-intro-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin: 0 0 24px;
+  max-width: 600px;
+}
+.pt-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+/* Copied: the dark button keeps the outlined button's 1.5px edge, so the box keeps its size. */
+.pt-intro .btn-primary {
+  border: 1.5px solid var(--text-primary);
+}
+.pt-intro-hint {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* (03) What it is worth: one large line in the heading style, then body and a small line. */
+.pt-worth-line {
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin: 0 0 20px;
+  max-width: 760px;
+}
+.pt-worth-body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 12px;
+  max-width: 680px;
+}
+.pt-worth-small {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* (04) Who it is for: ruled rows, the profession then the moment; stacked on phones. */
+.pt-who {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--text-muted);
+}
+.pt-who-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 8px clamp(24px, 4vw, 64px);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--text-muted);
+}
+.pt-who-name {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+}
+.pt-who-moment {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+@media (max-width: 767px) {
+  .pt-who-row {
+    grid-template-columns: 1fr;
+  }
+}
