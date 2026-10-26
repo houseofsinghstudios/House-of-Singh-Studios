@@ -67,7 +67,7 @@ test("ids and shapes are validated; attribution is reduced to safe parts", () =>
   assert.equal(parseEvent(null), "Invalid request");
   const e = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, entryPlacement: "evil" } });
   assert.ok(typeof e !== "string");
-  assert.deepEqual(e.attribution, { source: "news", medium: "email", campaign: "oct", landingPage: "/start", entryPlacement: "direct", referrer: "https://example.com/page" });
+  assert.deepEqual(e.attribution, { source: "news", medium: "email", campaign: "oct", referralCode: "", landingPage: "/start", entryPlacement: "direct", referrer: "https://example.com/page" });
 });
 
 test("each event has its own idempotency key", () => {
@@ -89,4 +89,13 @@ test("sent carries hearAbout and recommendedBy, cleaned and cut to the contact f
   assert.equal(payload.hearAbout, "A partner or agency");
   const none = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact });
   assert.ok(typeof none !== "string" && none.event === "sent" && none.hearAbout === "" && none.recommendedBy === "");
+});
+
+test("attribution carries a valid referral code and drops anything else", () => {
+  const good = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, referralCode: "NorthPrint" } });
+  const bad = parseEvent({ event: "started", briefId: ID, attribution: { ...attribution, referralCode: "north print" } });
+  assert.ok(typeof good !== "string" && typeof bad !== "string");
+  if (typeof good === "string" || typeof bad === "string") return;
+  assert.equal(good.attribution.referralCode, "northprint");
+  assert.equal(bad.attribution.referralCode, "");
 });

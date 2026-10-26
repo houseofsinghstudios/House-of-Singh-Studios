@@ -9,6 +9,8 @@ export interface Attribution {
   source: string;
   medium: string;
   campaign: string;
+  // A partner's code from ?ref=, on this page or stored for the visit.
+  referralCode: string;
   landingPage: string;
   entryPlacement: string;
   // Origin and path only: query strings can carry personal details.
@@ -57,13 +59,14 @@ function referrerOriginAndPath(): string {
 export function startSession(): Session {
   const params = new URLSearchParams(window.location.search);
   // This page's campaign tags if it has any, otherwise the visit's first touch tags.
-  const { source, medium, campaign } = resolveCampaign(window.location.search, sessionStore());
+  const { source, medium, campaign, referralCode } = resolveCampaign(window.location.search, sessionStore());
   return {
     briefId: uuid(),
     attribution: {
       source,
       medium,
       campaign,
+      referralCode,
       landingPage: window.location.pathname,
       // Where the visitor came from inside the site, from ?from= on our own links.
       entryPlacement: parsePlacement(params.get("from")),

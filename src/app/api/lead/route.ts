@@ -4,6 +4,7 @@ import { checkLeadLengths, cleanField } from "@/lib/lead";
 import { checkReferralFields, isIntroduction, isPartnership } from "@/lib/partners/forms";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { cleanCampaign } from "@/lib/campaign";
 
 // Five leads per address per minute: the limiter the other form routes share.
 const isRateLimited = createRateLimiter(5);
@@ -111,6 +112,8 @@ export async function POST(request: Request) {
       }),
       hearAbout: referral.hearAbout,
       recommendedBy: referral.recommendedBy,
+      // Campaign tags and the partner referral code, cleaned with the browser's own rules.
+      attribution: cleanCampaign(body.attribution),
       source: "contact-form",
       submittedAt: new Date().toISOString(),
     };

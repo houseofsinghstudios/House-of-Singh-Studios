@@ -129,3 +129,15 @@ test("form copy: no dashes, options within their caps", () => {
   for (const option of HEAR_ABOUT) assert.ok(option.length <= REFERRAL_LIMITS.hearAbout, option);
   for (const option of PARTNER_TYPES) assert.ok(option.length <= REFERRAL_LIMITS.partnerType, option);
 });
+
+test("route: every lead carries attribution with the referral code, cleaned", async () => {
+  const bodies = stubFetch();
+  await post({ ...person, service: "Brand Identity", message: "Hello.", attribution: { source: "news", referralCode: "NorthPrint" } });
+  await post({ ...person, service: "Brand Identity", message: "Hello.", attribution: { referralCode: "north-print", source: "pat@example.com" } });
+  await post({ ...person, service: "Brand Identity", message: "Hello." });
+  assert.deepEqual(bodies.map((b) => b.attribution), [
+    { source: "news", medium: "", campaign: "", referralCode: "northprint" },
+    { source: "", medium: "", campaign: "", referralCode: "" },
+    { source: "", medium: "", campaign: "", referralCode: "" },
+  ]);
+});

@@ -5,6 +5,7 @@ import { buildBrief, ENGINE_VERSION, answerLabels, validateAnswers, validBand } 
 import { bookingUrl } from "./links";
 import { parsePlacement } from "./start-links";
 import { REFERRAL_LIMITS } from "@/lib/partners/forms";
+import { referralCode } from "@/lib/campaign";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -38,6 +39,7 @@ function attribution(v: unknown) {
     source: clean(a.source, 100),
     medium: clean(a.medium, 100),
     campaign: clean(a.campaign, 100),
+    referralCode: referralCode(a.referralCode),
     landingPage: landing.startsWith("/") ? landing.split(/[?#]/)[0] : "",
     entryPlacement: parsePlacement(a.entryPlacement),
     referrer: originAndPath(a.referrer),

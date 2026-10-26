@@ -9,6 +9,8 @@ export interface Attribution {
   source: string;
   medium: string;
   campaign: string;
+  // A partner's code from ?ref=, on this page or stored for the visit.
+  referralCode: string;
   landingPage: string;
   referrer: string;
   // Where the visitor came from inside the site, from ?from= on our own links, else "direct".
@@ -50,13 +52,14 @@ function uuid(): string {
 export function startSession(): PulseSession {
   const params = new URLSearchParams(window.location.search);
   // This page's campaign tags if it has any, otherwise the visit's first touch tags.
-  const { source, medium, campaign } = resolveCampaign(window.location.search, sessionStore());
+  const { source, medium, campaign, referralCode } = resolveCampaign(window.location.search, sessionStore());
   return {
     resultId: uuid(),
     attribution: {
       source,
       medium,
       campaign,
+      referralCode,
       landingPage: window.location.pathname,
       referrer: document.referrer,
       entryPlacement: parsePlacement(params.get("from")),

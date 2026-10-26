@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { createRateLimiter } from "@/lib/rate-limit";
+import { referralCode } from "@/lib/campaign";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
 import { parsePlacement } from "@/lib/brand-pulse/entry";
 import { assessWithActions } from "@/lib/brand-pulse/actions";
@@ -104,6 +105,7 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       source: clean(a.source, 200),
       medium: clean(a.medium, 200),
       campaign: clean(a.campaign, 200),
+      referralCode: referralCode(a.referralCode),
       landingPage: clean(a.landingPage, 500),
       referrer: clean(a.referrer, 500),
       entryPlacement: parsePlacement(a.entryPlacement),

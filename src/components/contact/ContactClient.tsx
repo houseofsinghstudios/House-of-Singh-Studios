@@ -9,6 +9,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
+import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
@@ -69,6 +70,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
       website: formData.get("website"),
       hearAbout: formData.get("hearAbout"),
       recommendedBy: formData.get("recommendedBy"),
+      // Campaign tags and a partner's ?ref= code: this page's, otherwise the visit's first touch.
+      attribution: resolveCampaign(window.location.search, sessionStore()),
       honeypot: formData.get("honeypot"),
     };
     try {
