@@ -11,7 +11,7 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
-import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messagePlaceholder } from "@/lib/partners/forms";
+import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
 import { IntroductionFields, PartnershipFields } from "./ReferralFields";
 
@@ -225,12 +225,12 @@ export default function ContactClient({ initialService = "" }: { initialService?
                 )}
                 <div>
                   <label htmlFor="contact-message" className="contact-label">
-                    Message{introducing && <> {FORM_COPY.optional}</>}
+                    Message{messageOptional(service) && <> {FORM_COPY.optional}</>}
                   </label>
                   <textarea
                     id="contact-message"
                     name="message"
-                    required={!introducing}
+                    required={!messageOptional(service)}
                     rows={5}
                     className="contact-textarea"
                     placeholder={messagePlaceholder(service)}

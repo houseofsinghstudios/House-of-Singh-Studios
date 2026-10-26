@@ -56,7 +56,8 @@ test("an introduction needs who, how to reach them and permission; its message i
   assert.match(checkLeadLengths({ name: "Ada", email: "a@b.co", service: "Brand Identity", budget: "", message: "" }) ?? "", /^Message must be 1/);
 });
 
-test("a partnership needs a business name and what they do; the website is optional", () => {
+test("a partnership needs a business name and what they do; the website and message are optional", () => {
+  assert.equal(checkLeadLengths({ name: "Ada", email: "a@b.co", service: PARTNER_SERVICES.partnership, budget: "", message: "" }), null);
   assert.equal(checkReferralFields(PARTNER_SERVICES.partnership, { ...empty, businessName: "Northprint", partnerType: "Other" }), null);
   assert.match(checkReferralFields(PARTNER_SERVICES.partnership, { ...empty, partnerType: "Other" }) ?? "", /^Business name/);
   assert.match(checkReferralFields(PARTNER_SERVICES.partnership, { ...empty, businessName: "Northprint" }) ?? "", /^What you do/);
@@ -140,4 +141,12 @@ test("route: every lead carries attribution with the referral code, cleaned", as
     { source: "", medium: "", campaign: "", referralCode: "" },
     { source: "", medium: "", campaign: "", referralCode: "" },
   ]);
+});
+
+test("route: a partnership without a message is accepted", async () => {
+  const bodies = stubFetch();
+  const res = await post({ ...partnership, message: "" });
+  assert.equal(res.status, 200);
+  assert.equal(bodies[0].message, "");
+  assert.equal(bodies[0].partnership && (bodies[0].partnership as { businessName: string }).businessName, "Northprint");
 });

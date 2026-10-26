@@ -11,6 +11,8 @@ export const PARTNER_SERVICES = {
 
 export const isIntroduction = (service: string) => service === PARTNER_SERVICES.introduction;
 export const isPartnership = (service: string) => service === PARTNER_SERVICES.partnership;
+// Introductions and partnerships ask their own questions, so their message is optional.
+export const messageOptional = (service: string) => isIntroduction(service) || isPartnership(service);
 
 // The service option to preselect for a ?service= value: a nomination, an introduction, a
 // partnership, or "" for anything else.
