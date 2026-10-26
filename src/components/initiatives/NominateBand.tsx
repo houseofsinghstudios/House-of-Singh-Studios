@@ -3,7 +3,8 @@
 // sections on these pages.
 // NominateBand (id="nominate"): full size, with an optional "What happens next" column beside the
 // button. light: Parallel's secondary band, about 60% of the padding and the smaller heading size.
-// TakePartBand: two columns, Parallel then Commons, on /initiatives.
+// TakePartBand: two columns, Parallel then Commons on /initiatives, and the two ways to act on
+// /partners, where the band has no label or heading of its own and the columns carry the headings.
 import Button from "@/components/ui/Button";
 import "@/components/homepage/tool-band.css";
 import "./initiatives.css";
@@ -13,6 +14,8 @@ export interface NominateItem {
   text: string;
   button: string;
   href: string;
+  // Analytics on /partners: which action the button is and where it sits.
+  track?: { action: string; location: string };
 }
 
 export interface NextSteps {
@@ -23,7 +26,14 @@ export interface NextSteps {
 function Action({ item }: { item: NominateItem }) {
   return (
     <div className="tb-action">
-      <Button href={item.href} variant="primary-inverted" className="tb-button" data-cursor="link">
+      <Button
+        href={item.href}
+        variant="primary-inverted"
+        className="tb-button"
+        data-cursor="link"
+        data-partner-action={item.track?.action}
+        data-partner-location={item.track?.location}
+      >
         {item.button} <span className="tb-arrow" aria-hidden="true">&rarr;</span>
       </Button>
     </div>
@@ -55,16 +65,18 @@ export function NominateBand({ number, item, next, light }: { number: string; it
   );
 }
 
-// /initiatives, (02) Take part: one column per program.
-export function TakePartBand({ number, heading, items }: { number: string; heading: string; items: NominateItem[] }) {
+// /initiatives, (02) Take part: one column per program. Without a number and heading (/partners)
+// the band is named by ariaLabel and each column heading is an h2.
+export function TakePartBand({ number, heading, ariaLabel, items }: { number?: string; heading?: string; ariaLabel?: string; items: NominateItem[] }) {
+  const ColumnHeading = heading ? "h3" : "h2";
   return (
-    <section className="tb init-band" aria-labelledby="take-part-heading">
-      <p className="editorial-label tb-label">({number})</p>
-      <h2 id="take-part-heading" className="tb-heading">{heading}</h2>
+    <section className="tb init-band" {...(heading ? { "aria-labelledby": "take-part-heading" } : { "aria-label": ariaLabel })}>
+      {number && <p className="editorial-label tb-label">({number})</p>}
+      {heading && <h2 id="take-part-heading" className="tb-heading">{heading}</h2>}
       <div className="init-band-cols">
         {items.map((item) => (
           <div key={item.href} className="init-band-col">
-            <h3 className="tb-col-heading">{item.heading}</h3>
+            <ColumnHeading className="tb-col-heading">{item.heading}</ColumnHeading>
             <p className="tb-body">{item.text}</p>
             <Action item={item} />
           </div>

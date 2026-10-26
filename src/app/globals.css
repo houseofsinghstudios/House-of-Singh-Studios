@@ -3714,13 +3714,14 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-/* The counting digits sit over the final value, which holds the width, so nothing moves. */
+/* The counting digits sit over the final value, which holds the width, so nothing moves. Both fill
+   the cell and align their text to the end: the boxes never move, only the digits inside change. */
 .ai-proof-num-figure {
   display: inline-grid;
-  justify-items: end;
 }
 .ai-proof-num-figure > span {
   grid-area: 1 / 1;
+  text-align: end;
 }
 .ai-proof-num-reserve {
   visibility: hidden;

@@ -26,15 +26,18 @@ interface CountUpOptions {
   // Keep the final values when the element is already on screen at load, or the visitor prefers
   // reduced motion. Numbers drop to 0 only while the element is off screen.
   settleIfVisible?: boolean;
+  // Keep the final values for visitors who prefer reduced motion, but still count up when the
+  // element first comes into view, even if it is on screen at load (the Partners page figures).
+  finalIfReducedMotion?: boolean;
 }
 
 export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpOptions) {
-  const { duration, stagger = 0, threshold, sessionKey, settleIfVisible = false } = options;
+  const { duration, stagger = 0, threshold, sessionKey, settleIfVisible = false, finalIfReducedMotion = false } = options;
 
   useEffect(() => {
     const root = ref.current;
     if (!root || (sessionKey && finishedRuns.has(sessionKey))) return;
-    if (settleIfVisible && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if ((settleIfVisible || finalIfReducedMotion) && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const nums = Array.from(root.querySelectorAll<HTMLElement>("[data-count-up]"));
     const bars = Array.from(root.querySelectorAll<HTMLElement>("[data-count-bar]"));
@@ -90,5 +93,5 @@ export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpO
       observer.disconnect();
       rafIds.forEach(cancelAnimationFrame);
     };
-  }, [ref, duration, stagger, threshold, sessionKey, settleIfVisible]);
+  }, [ref, duration, stagger, threshold, sessionKey, settleIfVisible, finalIfReducedMotion]);
 }
