@@ -44,7 +44,7 @@ export default function HeroSection() {
       </div>
 
       <h1 className="sr-only">
-        AI Powered Design Studio Toronto — Brand Identity, Visual Design, Creative Direction
+        House of Singh Studios, Toronto: brand identity, visual design and creative direction
       </h1>
 
       <div>

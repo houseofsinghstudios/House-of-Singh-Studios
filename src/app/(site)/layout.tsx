@@ -47,7 +47,7 @@ export default function SiteLayout({
             "name": "House of Singh Studios",
             "url": "https://studios.houseofsingh.com",
             "logo": "https://studios.houseofsingh.com/hos-studios-logo.svg",
-            "description": "A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.",
+            "description": "Brand identity and design studio in Toronto. We change how businesses are seen, chosen and valued through strategy, identity, digital design and visual media, led by creative direction, with AI built into how the studio works.",
             "email": STUDIO_EMAIL,
             "founder": {
               "@type": "Person",
