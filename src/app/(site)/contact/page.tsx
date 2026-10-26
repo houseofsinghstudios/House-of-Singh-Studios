@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import ContactClient from "@/components/contact/ContactClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { serviceFromQuery } from "@/lib/initiatives/nominations";
+import { contactServiceFromQuery } from "@/lib/partners/forms";
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -18,7 +18,8 @@ export const metadata: Metadata = {
 
 type Props = { searchParams: Promise<{ service?: string | string[] }> };
 
-// ?service=parallel or ?service=commons preselects a nomination; anything else is ignored.
+// ?service=parallel or ?service=commons preselects a nomination, ?service=introduction or
+// ?service=partnership a partner enquiry; anything else is ignored.
 export default async function ContactPage({ searchParams }: Props) {
   const { service } = await searchParams;
   return (
@@ -27,7 +28,7 @@ export default async function ContactPage({ searchParams }: Props) {
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'Contact', url: 'https://studios.houseofsingh.com/contact' },
       ]} />
-      <ContactClient initialService={serviceFromQuery(service)} />
+      <ContactClient initialService={contactServiceFromQuery(service)} />
     </>
   );
 }

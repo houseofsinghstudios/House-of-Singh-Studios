@@ -1,5 +1,5 @@
 // Per IP request limit, the one Brand Pulse introduced, shared by the Brand Pulse, Project Planner,
-// careers and newsletter routes.
+// careers, newsletter and contact lead routes.
 // In memory: each serverless instance keeps its own count, so on Vercel the limit holds per instance,
 // not globally. A burst spread across several instances can exceed it.
 export function createRateLimiter(maxRequests: number, windowMs = 60 * 1000) {

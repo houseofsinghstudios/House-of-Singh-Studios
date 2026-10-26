@@ -350,33 +350,6 @@
   color: var(--text-primary);
   margin: 0 0 12px;
 }
-.pp-tick {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-top: 24px;
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-.pp-tick input {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: 0 0 16px;
-  width: 16px;
-  height: 16px;
-  margin: 1px 0 0;
-  border: 1px solid var(--text-primary);
-  cursor: pointer;
-}
-.pp-tick input:checked {
-  background: var(--text-primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' viewBox='0 0 10 8'%3E%3Cpath d='M1 4l3 3 5-6' stroke='%23F7F6F5' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") center no-repeat;
-}
-.pp-tick input:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
-}
 .pp-honeypot {
   position: absolute;
   left: -9999px;
