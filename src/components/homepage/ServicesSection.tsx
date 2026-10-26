@@ -72,7 +72,7 @@ export default function ServicesSection() {
       style={{ padding: "clamp(80px, 10vw, 140px) var(--page-px)" }}
     >
       <div className="css-reveal">
-        <EditorialLabel text="(03) Capabilities" className="mb-6" />
+        <EditorialLabel number="03" text="Capabilities" className="mb-6" />
       </div>
 
       <h2

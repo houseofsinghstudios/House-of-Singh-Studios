@@ -27,7 +27,7 @@ export default function WorkSection({ projects }: WorkSectionProps) {
           marginBottom: "clamp(32px, 4vw, 48px)",
         }}
       >
-        <EditorialLabel text="(01) Featured Work" />
+        <EditorialLabel number="01" text="Featured Work" />
         <Link href="/work" className="arrow-link no-underline" data-cursor="link">
           <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
             View All Projects <span className="arrow-icon">&rarr;</span>
