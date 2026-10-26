@@ -190,7 +190,11 @@ export default function CareersClient({ roles }: CareersClientProps) {
     }
   }
 
-  async function handleSubmit() {
+  // The hidden field only a bot fills in. Sent to the API, which ignores the application if set.
+  const [honeypot, setHoneypot] = useState("");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     if (!formData.name || !formData.email || !formData.role) return;
 
     setFormState("submitting");
@@ -198,7 +202,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       const res = await fetch("/api/careers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, honeypot }),
       });
       if (res.ok) {
         setFormState("success");
@@ -635,11 +639,15 @@ export default function CareersClient({ roles }: CareersClientProps) {
               </p>
             </div>
           ) : (
-            <>
+            <form onSubmit={handleSubmit} data-clarity-mask="True">
               <div className="careers-form-field">
-                <label className="careers-form-label">Name</label>
+                <label htmlFor="careers-name" className="careers-form-label">Name</label>
                 <input
+                  id="careers-name"
+                  name="name"
                   type="text"
+                  required
+                  autoComplete="name"
                   className="careers-form-input"
                   placeholder="Your full name"
                   value={formData.name}
@@ -649,9 +657,13 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Email</label>
+                <label htmlFor="careers-email" className="careers-form-label">Email</label>
                 <input
+                  id="careers-email"
+                  name="email"
                   type="email"
+                  required
+                  autoComplete="email"
                   className="careers-form-input"
                   placeholder="your@email.com"
                   value={formData.email}
@@ -661,9 +673,12 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Role</label>
+                <label htmlFor="careers-role" className="careers-form-label">Role</label>
                 {roles.length > 0 ? (
                   <select
+                    id="careers-role"
+                    name="role"
+                    required
                     className="careers-form-select"
                     value={formData.role}
                     onChange={(e) =>
@@ -679,7 +694,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   </select>
                 ) : (
                   <input
+                    id="careers-role"
+                    name="role"
                     type="text"
+                    required
                     className="careers-form-input"
                     placeholder="What kind of work do you do?"
                     value={formData.role}
@@ -690,8 +708,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 )}
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Portfolio</label>
+                <label htmlFor="careers-portfolio" className="careers-form-label">Portfolio</label>
                 <input
+                  id="careers-portfolio"
+                  name="portfolioUrl"
                   type="url"
                   className="careers-form-input"
                   placeholder="https://your-portfolio.com"
@@ -705,8 +725,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 />
               </div>
               <div className="careers-form-field">
-                <label className="careers-form-label">Message</label>
+                <label htmlFor="careers-message" className="careers-form-label">Message</label>
                 <textarea
+                  id="careers-message"
+                  name="message"
                   className="careers-form-textarea"
                   rows={4}
                   placeholder="Tell us about yourself and the kind of work you want to do."
@@ -716,10 +738,22 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   }
                 />
               </div>
+              <div style={{ position: "absolute", left: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+                <label htmlFor="careers-honeypot">Do not fill this field</label>
+                <input
+                  id="careers-honeypot"
+                  type="text"
+                  name="honeypot"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
               <button
+                type="submit"
                 className="careers-submit-btn"
                 disabled={formState === "submitting"}
-                onClick={handleSubmit}
               >
                 {formState === "submitting"
                   ? "Sending..."
@@ -739,7 +773,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                   {STUDIO_EMAIL}
                 </p>
               )}
-            </>
+            </form>
           )}
         </div>
       </section>

@@ -1,52 +1,39 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
-
-const rateLimit = new Map<string, { count: number; timestamp: number }>();
-const RATE_LIMIT_WINDOW = 60 * 1000;
-const MAX_REQUESTS = 5;
+import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { cleanField } from "@/lib/lead";
+import { checkSubscribeEmail } from "@/lib/subscribe";
 
 // Signup points the n8n workflow stores in Airtable. Anything else is recorded as the footer.
 const SOURCES = ["footer-subscribe", "article", "brand-pulse"];
 const DEFAULT_SOURCE = "footer-subscribe";
 
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = rateLimit.get(ip);
-  if (!entry || now - entry.timestamp > RATE_LIMIT_WINDOW) {
-    rateLimit.set(ip, { count: 1, timestamp: now });
-    return false;
-  }
-  entry.count++;
-  if (entry.count > MAX_REQUESTS) return true;
-  return false;
-}
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [ip, entry] of rateLimit.entries()) {
-    if (now - entry.timestamp > RATE_LIMIT_WINDOW) rateLimit.delete(ip);
-  }
-}, 5 * 60 * 1000);
+// Five requests a minute per address, the shared in memory limiter.
+const isRateLimited = createRateLimiter(5);
 
 // Logs never include the email address or the webhook URL.
 export async function POST(request: Request) {
   try {
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-    if (isRateLimited(ip)) {
+    if (isRateLimited(clientIp(request))) {
       return NextResponse.json(
         { success: false, error: "Too many requests. Please try again later." },
         { status: 429 }
       );
     }
 
-    const { email, source } = await request.json();
-
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json(
-        { success: false, error: "Invalid email" },
-        { status: 400 }
-      );
+    const body = await request.json();
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
+    }
+    // A filled honeypot is a bot: answer as if it worked, send nothing.
+    if (typeof body.honeypot === "string" && body.honeypot.trim()) {
+      return NextResponse.json({ success: true });
+    }
+    const { source } = body;
+    const email = cleanField(body.email);
+    const invalid = checkSubscribeEmail(email);
+    if (invalid) {
+      return NextResponse.json({ success: false, error: invalid }, { status: 400 });
     }
 
     const target = n8nTarget("N8N_SUBSCRIBE_WEBHOOK_URL");
