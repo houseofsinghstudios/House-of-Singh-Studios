@@ -94,8 +94,9 @@ export default function Header() {
           </Link>
         </div>
 
-        {/* Text Wordmark — visible when scrolled (desktop) or always (mobile) */}
-        <div className="header-wordmark-wrap">
+        {/* Text Wordmark — visible once scrolled, at every width. While hidden at the page top it is
+            inert, like the crest once scrolled, so keyboard focus never lands on it. */}
+        <div className="header-wordmark-wrap" aria-hidden={!scrolled} inert={!scrolled}>
           <Link href="/" className="header-wordmark">
             House of Singh Studios
           </Link>

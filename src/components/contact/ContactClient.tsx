@@ -96,7 +96,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
           Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project.
         </p>
 
-        <p className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] text-[color:var(--text-primary)] mt-4" style={{ opacity: 0.6 }}>
+        <p className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] text-[color:var(--text-secondary)] mt-4">
           {PLACEMENTS.contactLead}{" "}
           <Link href={startHref("contact")} className="underline underline-offset-4">{PLACEMENTS.contactLink}</Link>
         </p>
@@ -228,8 +228,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
           </h2>
 
           <p
-            className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)] mt-4"
-            style={{ opacity: 0.6 }}
+            className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-secondary)] mt-4"
           >
             Book a discovery call. We will discuss your brand, your goals, and whether we are the right fit.
           </p>
@@ -240,15 +239,13 @@ export default function ContactClient({ initialService = "" }: { initialService?
 
           <div className="mt-8">
             <p
-              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)]"
-              style={{ opacity: 0.5 }}
+              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)]"
             >
               Or email us directly
             </p>
             <a
               href={`mailto:${STUDIO_EMAIL}`}
-              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-primary)] hover:underline"
-              style={{ opacity: 0.5 }}
+              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)] hover:underline"
               data-cursor="link"
             >
               {STUDIO_EMAIL}

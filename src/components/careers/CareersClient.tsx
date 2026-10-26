@@ -300,7 +300,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             style={{
               fontFamily: "var(--sans)",
               fontSize: 14,
-              opacity: 0.5,
+              color: "var(--text-secondary)",
               marginBottom: 40,
             }}
           >
@@ -357,7 +357,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           style={{
                             fontFamily: "var(--sans)",
                             fontSize: 13,
-                            opacity: 0.5,
+                            color: "var(--text-secondary)",
                           }}
                         >
                           {role.location}
@@ -552,7 +552,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: 16,
-                opacity: 0.5,
+                color: "var(--text-secondary)",
                 marginTop: 12,
               }}
             >
@@ -603,7 +603,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontFamily: "var(--sans)",
             fontSize: 16,
             lineHeight: 1.6,
-            opacity: 0.5,
+            color: "var(--text-secondary)",
             maxWidth: 560,
             marginTop: 16,
           }}
@@ -630,7 +630,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 style={{
                   fontFamily: "var(--sans)",
                   fontSize: 16,
-                  opacity: 0.6,
+                  color: "var(--text-secondary)",
                   marginTop: 12,
                 }}
               >
@@ -797,7 +797,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Senior thinking on every brief.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               No junior designers learning on client projects. Every collaborator brings experience that shapes the work from day one.
             </p>
           </div>
@@ -805,7 +805,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Systems, not chaos.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               Every project moves through defined stages: discovery, strategy, creative direction, production, delivery. You will always know where things stand.
             </p>
           </div>
@@ -813,7 +813,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               AI handles production. You handle judgment.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               We use AI for research, asset generation, and workflow management. Creative direction stays human. Your taste, your decisions, your standards.
             </p>
           </div>
@@ -821,7 +821,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             <h3 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(22px, 2.8vw, 30px)", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
               Remote-first, outcome-driven.
             </h3>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.6, marginTop: 12 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)", marginTop: 12 }}>
               We work with specialists across cities and time zones. What matters is the quality of the output and the clarity of the communication.
             </p>
           </div>
