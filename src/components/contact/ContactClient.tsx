@@ -8,6 +8,7 @@ import { startHref } from "@/lib/project-planner/start-links";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { BUDGET_OPTIONS } from "@/lib/lead";
 import { NOMINATION_PLACEHOLDER, NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 
 export default function ContactClient({ initialService = "" }: { initialService?: string }) {
@@ -174,7 +175,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
                 </div>
                 {!nominating && (
                   <div>
-                    <label htmlFor="contact-budget" className="contact-label">Budget range (CAD)</label>
+                    <label htmlFor="contact-budget" className="contact-label">Budget range (CAD), optional</label>
                     <select
                       id="contact-budget"
                       name="budget"
@@ -183,11 +184,9 @@ export default function ContactClient({ initialService = "" }: { initialService?
                       aria-describedby="contact-budget-help"
                     >
                       <option value="" disabled>Select a range</option>
-                      <option value="$1,000 to $4,000">$1,000 to $4,000</option>
-                      <option value="$4,000 to $10,000">$4,000 to $10,000</option>
-                      <option value="$10,000 to $20,000">$10,000 to $20,000</option>
-                      <option value="$20,000 or more">$20,000 or more</option>
-                      <option value="Not sure yet">Not sure yet</option>
+                      {BUDGET_OPTIONS.map((range) => (
+                        <option key={range} value={range}>{range}</option>
+                      ))}
                     </select>
                     <span className="focus-line" />
                     <p id="contact-budget-help" className="contact-helper">Projects start from $1,000.</p>

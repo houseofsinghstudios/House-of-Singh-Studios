@@ -47,7 +47,6 @@ export default function ScrollObserver() {
         ".about-process-step:not(.in-view), " +
         ".project-image-inner img:not(.in-view), " +
         ".founder-photo-reveal:not(.in-view), " +
-        ".packages-grid .package-tier:not(.in-view), " +
         ".argument-section .argument-step-row:not(.in-view), " +
         ".argument-section .argument-left:not(.in-view), " +
         ".cta-section-mobile > div:first-child:not(.in-view), " +

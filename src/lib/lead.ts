@@ -2,6 +2,9 @@
 
 export const LEAD_LIMITS = { name: 120, message: 5000, service: 80, budget: 80 } as const;
 
+// The contact form's budget ranges, in display order. The budget is optional: an empty value is valid.
+export const BUDGET_OPTIONS = ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"] as const;
+
 export interface LeadFields {
   name: string;
   email: string;

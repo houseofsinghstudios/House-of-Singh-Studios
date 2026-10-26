@@ -2895,51 +2895,6 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   }
 }
 
-/* ═══════════════════════════════════════════════════════
-   Packages page
-   ═══════════════════════════════════════════════════════ */
-
-.packages-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.package-tier {
-  padding: 48px;
-  border-right: 1px solid rgba(26, 26, 26, 0.1);
-  border-top: 1px solid rgba(26, 26, 26, 0.1);
-}
-.package-tier:first-child {
-  padding-left: 0;
-}
-.package-tier:last-child {
-  border-right: none;
-  padding-right: 0;
-}
-
-.package-tier--recommended {
-  background: var(--bg-shift);
-}
-
-@media (max-width: 1100px) {
-  .packages-grid {
-    grid-template-columns: 1fr;
-  }
-  .package-tier {
-    padding: 48px 0;
-    border-right: none;
-    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
-  }
-  .package-tier:last-child {
-    border-bottom: none;
-  }
-  /* The only tier with a background keeps its content inside it. */
-  .package-tier--recommended {
-    padding-left: clamp(20px, 5vw, 32px);
-    padding-right: clamp(20px, 5vw, 32px);
-  }
-}
-
 /* ═══════════════════════════════════════════════════════════════
    Insights Page — Dash Digital Inspired Editorial
    ═══════════════════════════════════════════════════════════════ */
@@ -4623,22 +4578,6 @@ body.nav-open .header-crest-wrap {
       animation-range: entry 5% entry 35%;
     }
 
-    /* Packages — tier cards staggered */
-    .packages-grid .package-tier:nth-child(1) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .packages-grid .package-tier:nth-child(2) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 5% entry 35%;
-    }
-    .packages-grid .package-tier:nth-child(3) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 10% entry 40%;
-    }
   }
 }
 
@@ -4838,22 +4777,6 @@ td a {
 }
 
 /* Wrapper divs for subscribe inputs inside flex rows */
-/* ── Interaction 19: Recommended Tag Pulse ── */
-.recommended-tag {
-  opacity: 0.4;
-}
-
-@keyframes subtlePulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.65; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .recommended-tag {
-    animation: subtlePulse 3s ease-in-out infinite;
-  }
-}
-
 /* ═══════════════════════════════════════════════════════
    Testimonials Section — Asymmetric Editorial Layout
    ═══════════════════════════════════════════════════════ */
@@ -5121,20 +5044,6 @@ td a {
     .about-team-card:nth-child(4).in-view { transition-delay: 0.18s; }
     .about-team-card:nth-child(5).in-view { transition-delay: 0.24s; }
     .about-team-card:nth-child(6).in-view { transition-delay: 0.3s; }
-
-    /* ── Package tier cards stagger ── */
-    .packages-grid .package-tier {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-                  transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .packages-grid .package-tier.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .packages-grid .package-tier:nth-child(2).in-view { transition-delay: 0.1s; }
-    .packages-grid .package-tier:nth-child(3).in-view { transition-delay: 0.2s; }
 
     /* ── Card image parallax: static in Safari ── */
     .project-image-inner img {

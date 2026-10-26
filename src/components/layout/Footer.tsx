@@ -10,7 +10,7 @@ const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
-  { label: "Packages", href: "/packages" },
+  { label: "Plan Your Project", href: "/start" },
 ];
 
 const COMPANY_LINKS = [

@@ -25,6 +25,8 @@ const nextConfig: NextConfig = {
       // Not in the sitemap: they are addresses to share, not pages.
       { source: "/pulse", destination: "/brand-pulse", statusCode: 301 },
       { source: "/plan", destination: "/start", statusCode: 301 },
+      // The Packages page is retired: pricing now lives in the Project Planner's price guide.
+      { source: "/packages", destination: "/start", statusCode: 301 },
     ];
   },
   async headers() {
