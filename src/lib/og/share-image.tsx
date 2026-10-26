@@ -8,6 +8,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import type { ReactNode } from "react";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 
 export const SHARE_SIZE = { width: 1200, height: 630 };
 export const SHARE_CONTENT_TYPE = "image/png";
@@ -74,4 +75,17 @@ export function BriefMotif() {
       {bar("55%")}
     </div>
   );
+}
+
+// The studio's own share image: the homepage's og:image and the site wide default at
+// /share-image.png, so every page without its own picture shares this one.
+export const STUDIO_SHARE_ALT = DEFAULT_SHARE_IMAGE.alt;
+
+export function studioShareImage() {
+  return shareImage({
+    label: "(HOUSE OF SINGH STUDIOS)",
+    heading: "Clear thinking, made visible.",
+    line: "Brand identity and design. Toronto.",
+    footer: "studios.houseofsingh.com",
+  });
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { getAllPosts } from "@/lib/sanity/queries";
 import InsightsClient from "@/components/insights/InsightsClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Insights — House of Singh Studios',
     description: 'Thinking, frameworks, and perspective on brand, design, and creative systems.',
     url: 'https://studios.houseofsingh.com/insights',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 

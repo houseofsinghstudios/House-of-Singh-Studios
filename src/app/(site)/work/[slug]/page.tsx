@@ -3,7 +3,7 @@ import { getAllProjects, getProjectBySlug, getProjectDetailBySlug } from "@/lib/
 import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { bareTitle, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -30,6 +30,10 @@ export async function generateMetadata({
       title: studioTitle(title),
       description: project.seoDescription,
       url: `https://studios.houseofsingh.com/work/${slug}`,
+      // The project's cover, cropped to 1200x630, with the project title as alt text.
+      images: project.shareImage
+        ? [{ url: project.shareImage, width: 1200, height: 630, alt: project.name }]
+        : [DEFAULT_SHARE_IMAGE],
     },
   };
 }

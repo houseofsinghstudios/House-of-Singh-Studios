@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import ContactClient from "@/components/contact/ContactClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { serviceFromQuery } from "@/lib/initiatives/nominations";
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
     title: 'Contact — House of Singh Studios',
     description: 'Start a conversation. Book a discovery call or send us a message about your project.',
     url: 'https://studios.houseofsingh.com/contact',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 

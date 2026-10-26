@@ -7,7 +7,7 @@ import { COMMONS, PARALLEL } from "@/lib/initiatives/content";
 import { BUILT_PAGES, programmePage, type BuiltPage } from "@/lib/initiatives/pages";
 import { getInitiatives } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
-import { STUDIO_NAME, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, STUDIO_NAME, studioTitle } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: named ? { absolute: title } : title,
     description,
     alternates: { canonical: url },
-    openGraph: { title: named ? title : studioTitle(title), description, url },
+    openGraph: { title: named ? title : studioTitle(title), description, url, images: [DEFAULT_SHARE_IMAGE] },
   };
 }
 

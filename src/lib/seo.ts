@@ -32,3 +32,15 @@ export function bareTitle(...candidates: (string | null | undefined)[]): string 
 export function studioTitle(title: string): string {
   return `${bareTitle(title)} — ${STUDIO_NAME}`;
 }
+
+// The site wide default share image (og:image and the twitter card): the homepage picture, served
+// at /share-image.png. Pages with a picture of their own (case studies, articles, Brand Pulse, the
+// Project Planner and the homepage) use that instead. A page's openGraph replaces the layout's
+// whole openGraph, images included, so every page that sets openGraph names this image itself.
+export const DEFAULT_SHARE_IMAGE = {
+  url: "/share-image.png",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: "House of Singh Studios. Clear thinking, made visible. Brand identity and design studio in Toronto.",
+};

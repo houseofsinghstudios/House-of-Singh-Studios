@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
 import AboutClient from "@/components/about/AboutClient";
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     title: 'About — House of Singh Studios',
     description: 'A multidisciplinary design studio built by Maninder Singh. Design should be structured, intentional, and commercially effective.',
     url: 'https://studios.houseofsingh.com/about',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 

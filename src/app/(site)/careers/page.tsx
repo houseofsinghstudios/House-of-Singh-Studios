@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { getAllRoles } from "@/lib/sanity/queries";
 import CareersClient from "@/components/careers/CareersClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Careers — House of Singh Studios',
     description: 'Join House of Singh Studios. We work with specialists who raise the standard.',
     url: 'https://studios.houseofsingh.com/careers',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 

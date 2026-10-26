@@ -1,5 +1,5 @@
 import { client } from "./client";
-import { urlFor } from "./image";
+import { shareImageUrl, urlFor } from "./image";
 import { disciplineLabel } from "@/lib/disciplines";
 import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
@@ -129,6 +129,17 @@ function sanityImageUrl(img: any): string {
   }
 }
 
+// The case study's share image: its cover cropped to 1200x630, or "" without one.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sanityShareImageUrl(img: any): string {
+  if (!img?.asset) return "";
+  try {
+    return shareImageUrl(img);
+  } catch {
+    return "";
+  }
+}
+
 // ── Sanity page blocks → CaseStudyBlock[] ──
 
 interface RawBlockImage {
@@ -250,6 +261,7 @@ function mapSanityToProject(doc: any, index: number): Project {
     seoDescription: doc.seoDescription || overviewText,
     gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
     image: imageUrl,
+    shareImage: sanityShareImageUrl(doc.featuredImage) || undefined,
     sections: {
       business: {
         label: "(The Business)",

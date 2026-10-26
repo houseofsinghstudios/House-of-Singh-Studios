@@ -18,6 +18,8 @@ export interface Project {
   seoDescription: string;
   gradient: string;
   image: string;
+  // The 1200x630 share image (og:image) for Sanity case studies. Missing for the static fallback.
+  shareImage?: string;
   sections: {
     business: ProjectSection;
     challenge: ProjectSection;

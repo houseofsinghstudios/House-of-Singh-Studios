@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetailClient from "@/components/services/ServiceDetailClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { bareTitle, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
 
 // Same as /services: newly imported projects appear here within a minute, without a deploy.
@@ -57,6 +57,7 @@ export function generateMetadata({
         title: studioTitle(title),
         description: service.seoDescription,
         url: `https://studios.houseofsingh.com/services/${slug}`,
+        images: [DEFAULT_SHARE_IMAGE],
       },
     };
   });

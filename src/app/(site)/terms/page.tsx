@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
     title: 'Terms of Use — House of Singh Studios',
     description: 'Terms of Use for House of Singh Studios Inc.',
     url: 'https://studios.houseofsingh.com/terms',
+    images: [DEFAULT_SHARE_IMAGE],
   },
 };
 
