@@ -31,8 +31,8 @@ interface Role {
 // the build or the request, and refreshes once Sanity is back.
 async function getRoles(): Promise<Role[]> {
   try {
-    // Titles are trimmed here so a stray space typed in Studio never shows on the card,
-    // the apply form or the job posting data.
+    // Titles are trimmed here so a stray space typed in Studio never shows on the card
+    // or in the apply form.
     const roles: Role[] = (await getAllRoles()) || [];
     return roles.map((role) => ({ ...role, title: (role.title || "").trim() }));
   } catch (error) {
@@ -41,48 +41,13 @@ async function getRoles(): Promise<Role[]> {
   }
 }
 
+// No JobPosting structured data: Google requires one posting per page, and roles have no pages
+// of their own. Add it back only with a page per role.
 export default async function CareersPage() {
   const roles = await getRoles();
 
   return (
     <>
-      {roles.length > 0 && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(
-              roles.map((role) => ({
-                "@context": "https://schema.org",
-                "@type": "JobPosting",
-                title: role.title,
-                description: role.summary,
-                datePosted: role.publishedAt,
-                employmentType:
-                  role.type === "full-time"
-                    ? "FULL_TIME"
-                    : role.type === "part-time"
-                      ? "PART_TIME"
-                      : "CONTRACTOR",
-                hiringOrganization: {
-                  "@type": "Organization",
-                  name: "House of Singh Studios",
-                  sameAs: "https://studios.houseofsingh.com",
-                },
-                jobLocation: {
-                  "@type": "Place",
-                  address: {
-                    "@type": "PostalAddress",
-                    addressLocality: "Toronto",
-                    addressRegion: "ON",
-                    addressCountry: "CA",
-                  },
-                },
-                jobLocationType: "TELECOMMUTE",
-              }))
-            ),
-          }}
-        />
-      )}
       <BreadcrumbSchema items={[
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'Careers', url: 'https://studios.houseofsingh.com/careers' },
