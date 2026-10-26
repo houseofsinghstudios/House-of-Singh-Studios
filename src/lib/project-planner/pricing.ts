@@ -7,7 +7,7 @@
 //   request works, no document -> "initial": the owner approved initial prices in config.ts.
 //   published document         -> "sanity": a price shows only when showOnSite is true and the amount
 //                                is a positive number. Brand identity always uses the Brand Foundation
-//                                package price (the Packages page figure); Sanity only says whether to show it.
+//                                package price in src/data/packages.ts; Sanity only says whether to show it.
 import "server-only";
 import { BRAND_IDENTITY_STARTS_FROM, OWNER_APPROVED_INITIAL_PRICING } from "./config";
 import { PRICED_SERVICES, type PricedService, type Pricing } from "./types";

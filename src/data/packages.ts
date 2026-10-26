@@ -1,6 +1,6 @@
-// The brand packages shown on the Packages page. The single source for their prices and timelines:
-// the Project Planner reads the Brand Foundation price and the package durations from here too,
-// so the two pages can never disagree. Prices are CAD, excluding HST.
+// The brand packages: the single source for their prices and timelines. The public Packages page is
+// retired; the Project Planner reads the Brand Foundation price and the package durations from here.
+// Prices are CAD, excluding HST.
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { formatDollars } from "@/lib/money";
 

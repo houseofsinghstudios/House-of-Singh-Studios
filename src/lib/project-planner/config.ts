@@ -3,8 +3,8 @@
 import { BRAND_FOUNDATION, PACKAGE_TIERS } from "@/data/packages";
 import type { BandId, DeliveredId, PricedService, ServiceId } from "./types";
 
-// CAD, excluding HST. Brand identity is not here: it always comes from the Brand Foundation package,
-// the same figure the Packages page shows.
+// CAD, excluding HST. Brand identity is not here: it always comes from the Brand Foundation package
+// in src/data/packages.ts.
 export const OWNER_APPROVED_INITIAL_PRICING: Record<Exclude<PricedService, "identity">, number> = {
   website: 3500,
   photo: 1000,
@@ -15,7 +15,7 @@ export const OWNER_APPROVED_INITIAL_PRICING: Record<Exclude<PricedService, "iden
 
 export const BRAND_IDENTITY_STARTS_FROM = (): number => BRAND_FOUNDATION.startsFrom;
 
-// Package durations, from the Packages page data. Names drop the leading "Brand ".
+// Package durations, from src/data/packages.ts. Names drop the leading "Brand ".
 export const BRAND_TIMELINES = (): { name: string; timeline: string }[] =>
   PACKAGE_TIERS.map((t) => ({ name: t.title.replace(/^Brand /, ""), timeline: t.timeline }));
 
