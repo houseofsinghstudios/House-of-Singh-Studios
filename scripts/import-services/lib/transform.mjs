@@ -9,6 +9,7 @@ export const SERVICE_FIELDS = [
   "number",
   "name",
   "subtitle",
+  "seoH1",
   "headline",
   "description",
   "tagline",
@@ -17,12 +18,15 @@ export const SERVICE_FIELDS = [
   "gradient",
   "deliverables",
   "impact",
+  "localSection",
   "process",
   "ctaHeading",
 ];
 export const DELIVERABLE_FIELDS = ["name", "description"];
 export const IMPACT_FIELDS = ["heading", "body"];
 export const PROCESS_FIELDS = ["step", "name", "description"];
+export const LOCAL_FIELDS = ["heading", "intro", "rows"];
+export const LOCAL_ROW_FIELDS = ["name", "description"];
 
 // Sanity's own keys, and the mirror's only addition (order). Anything else in a document is reported.
 const SYSTEM_KEYS = ["_id", "_type", "_rev", "_createdAt", "_updatedAt", "_key", "_system"];
@@ -43,7 +47,7 @@ export function checkShape(service) {
   };
   exact(service, SERVICE_FIELDS, "service");
   if (problems.length) return problems;
-  strings(service, SERVICE_FIELDS.filter((f) => !["deliverables", "impact", "process"].includes(f)), "service");
+  strings(service, SERVICE_FIELDS.filter((f) => !["deliverables", "impact", "localSection", "process"].includes(f)), "service");
   const list = (key, fields) => {
     if (!Array.isArray(service[key])) return problems.push(`${key} is not a list`);
     service[key].forEach((item, i) => {
@@ -55,6 +59,16 @@ export function checkShape(service) {
   list("process", PROCESS_FIELDS);
   exact(service.impact, IMPACT_FIELDS, "impact");
   if (service.impact && typeof service.impact === "object") strings(service.impact, IMPACT_FIELDS, "impact");
+  const local = service.localSection;
+  exact(local, LOCAL_FIELDS, "localSection");
+  if (local && typeof local === "object" && !Array.isArray(local)) {
+    strings(local, ["heading", "intro"], "localSection");
+    if (!Array.isArray(local.rows)) problems.push("localSection.rows is not a list");
+    else local.rows.forEach((row, i) => {
+      exact(row, LOCAL_ROW_FIELDS, `localSection.rows[${i}]`);
+      if (row && typeof row === "object") strings(row, LOCAL_ROW_FIELDS, `localSection.rows[${i}]`);
+    });
+  }
   return problems;
 }
 
@@ -68,6 +82,7 @@ export function toServiceDocument(service, order) {
     number: service.number,
     name: service.name,
     subtitle: service.subtitle,
+    seoH1: service.seoH1,
     headline: service.headline,
     description: service.description,
     tagline: service.tagline,
@@ -81,6 +96,16 @@ export function toServiceDocument(service, order) {
       description: d.description,
     })),
     impact: { heading: service.impact.heading, body: service.impact.body },
+    localSection: {
+      heading: service.localSection.heading,
+      intro: service.localSection.intro,
+      rows: service.localSection.rows.map((r, i) => ({
+        _type: "serviceLocalRow",
+        _key: `row-${pad(i + 1)}`,
+        name: r.name,
+        description: r.description,
+      })),
+    },
     process: service.process.map((p, i) => ({
       _type: "serviceProcessStep",
       _key: `step-${pad(i + 1)}`,
@@ -101,6 +126,14 @@ export function fromServiceDocument(doc) {
     ...Object.fromEntries(SERVICE_FIELDS.slice(1).map((f) => [f, doc[f]])),
     deliverables: Array.isArray(doc.deliverables) ? doc.deliverables.map((d) => pick(d, DELIVERABLE_FIELDS)) : doc.deliverables,
     impact: pick(doc.impact, IMPACT_FIELDS),
+    localSection:
+      doc.localSection && typeof doc.localSection === "object"
+        ? {
+            heading: doc.localSection.heading,
+            intro: doc.localSection.intro,
+            rows: Array.isArray(doc.localSection.rows) ? doc.localSection.rows.map((r) => pick(r, LOCAL_ROW_FIELDS)) : doc.localSection.rows,
+          }
+        : doc.localSection,
     process: Array.isArray(doc.process) ? doc.process.map((p) => pick(p, PROCESS_FIELDS)) : doc.process,
   };
 }
@@ -135,6 +168,8 @@ export function compareService(service, doc, order) {
   (Array.isArray(doc.deliverables) ? doc.deliverables : []).forEach((d, i) => extra(d, DELIVERABLE_FIELDS, `deliverables[${i}].`));
   (Array.isArray(doc.process) ? doc.process : []).forEach((p, i) => extra(p, PROCESS_FIELDS, `process[${i}].`));
   extra(doc.impact, IMPACT_FIELDS, "impact.");
+  extra(doc.localSection, LOCAL_FIELDS, "localSection.");
+  (Array.isArray(doc.localSection?.rows) ? doc.localSection.rows : []).forEach((r, i) => extra(r, LOCAL_ROW_FIELDS, `localSection.rows[${i}].`));
   return differences;
 }
 
@@ -143,6 +178,7 @@ export function describeService(service) {
   return SERVICE_FIELDS.map((field) => {
     const value = service[field];
     if (Array.isArray(value)) return [field, `${value.length}`];
+    if (field === "localSection" && value && Array.isArray(value.rows)) return [field, `heading, intro and ${value.rows.length} rows`];
     if (value && typeof value === "object") return [field, Object.keys(value).join(" and ")];
     return [field, `${String(value).length} characters`];
   });

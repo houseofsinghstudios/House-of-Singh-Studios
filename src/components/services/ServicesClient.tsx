@@ -130,7 +130,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
             maxWidth: 620,
           }}
         >
-          We solve brand problems for established businesses.
+          We solve brand problems for businesses that have outgrown their brand.
         </h1>
         <p
           className="svc-hero-stagger"

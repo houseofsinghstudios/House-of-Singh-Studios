@@ -105,10 +105,11 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
           (Portfolio)
         </p>
 
-        <h1 className="wp-heading css-reveal" style={{ transitionDelay: "100ms" }}>
-          Work
+        {/* The h1 reads "Work"; the count sits beside it, outside the heading, exactly as before. */}
+        <div className="wp-heading css-reveal" style={{ transitionDelay: "100ms" }}>
+          <h1 className="wp-heading-title">Work</h1>
           <span className="wp-count">({projects.length})</span>
-        </h1>
+        </div>
 
         <p
           className="wp-sub css-reveal"

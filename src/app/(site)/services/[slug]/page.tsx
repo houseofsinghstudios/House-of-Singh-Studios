@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetailClient from "@/components/services/ServiceDetailClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { AREA_SERVED, SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
 
 // Same as /services: newly imported projects appear here within a minute, without a deploy.
@@ -48,13 +49,13 @@ export function generateMetadata({
   return params.then(({ slug }) => {
     const service = getServiceBySlug(slug);
     if (!service) return { title: "Service Not Found" };
-    const title = bareTitle(service.seoTitle, service.name);
+    // seoTitle is complete, studio name included, so the title template adds nothing.
     return {
-      title,
+      title: { absolute: service.seoTitle },
       description: service.seoDescription,
       alternates: { canonical: `https://studios.houseofsingh.com/services/${slug}` },
       openGraph: {
-        title: studioTitle(title),
+        title: service.seoTitle,
         description: service.seoDescription,
         url: `https://studios.houseofsingh.com/services/${slug}`,
         images: [DEFAULT_SHARE_IMAGE],
@@ -89,14 +90,11 @@ export default async function ServiceDetailPage({
               "@context": "https://schema.org",
               "@type": "Service",
               "name": schema.name,
+              "serviceType": SERVICE_TERMS[slug],
               "description": schema.description,
-              "provider": {
-                "@type": "LocalBusiness",
-                "name": "House of Singh Studios",
-                "url": "https://studios.houseofsingh.com"
-              },
+              "provider": orgRef,
               "url": `https://studios.houseofsingh.com/services/${slug}`,
-              "areaServed": ["Toronto", "Canada", "North America"],
+              "areaServed": AREA_SERVED,
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
                 "name": `${schema.name} Deliverables`,

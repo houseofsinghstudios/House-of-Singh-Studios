@@ -56,7 +56,8 @@ If Studio shows a service as an unpublished draft, the tool says so. Studio keep
 | `slug` | Service tab, Web address | The page address, /services/brand-identity |
 | `number` | Service tab, Service number | Not shown today |
 | `name` | Service tab, Service name | The "Plan a … Project" button, Brand Pulse results |
-| `subtitle` | Hero tab, Hero service name | The small line above the heading |
+| `subtitle` | Hero tab, Service label | Not shown today |
+| `seoH1` | Hero tab, Page topic (h1) | The small line above the heading, the page's h1 |
 | `headline` | Hero tab, Hero heading | The large heading |
 | `description` | Hero tab, Hero text | The paragraph under the heading |
 | `tagline` | Not shown yet tab, Tagline | Not shown today |
@@ -65,6 +66,7 @@ If Studio shows a service as an unpublished draft, the tool says so. Studio keep
 | `gradient` | Not shown yet tab, Background gradient | Not shown today |
 | `deliverables` | Deliverables tab | (01) What you get |
 | `impact` | Why it matters tab | (02) Why it matters |
-| `process` | Process steps tab | (04) How we do it |
+| `localSection` | Across the GTA tab | (04) Across the GTA |
+| `process` | Process steps tab | (05) How we do it |
 | `ctaHeading` | Closing call to action tab, Closing heading | The dark Next step section |
 | (position in the code) | Service tab, Order in Studio | Sorts the Studio list only |

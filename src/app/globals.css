@@ -555,6 +555,12 @@ body {
   position: relative;
   display: inline-block;
 }
+.wp-heading-title {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+}
 .wp-count {
   font-family: var(--sans);
   font-weight: 500;

@@ -10,6 +10,7 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
 import ConsentManager from "@/components/consent/ConsentManager";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { ORG_ID } from "@/lib/schema";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
@@ -44,6 +45,7 @@ export default function SiteLayout({
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": ["LocalBusiness", "Organization"],
+            "@id": ORG_ID,
             "name": "House of Singh Studios",
             "url": "https://studios.houseofsingh.com",
             "logo": "https://studios.houseofsingh.com/hos-studios-logo.svg",

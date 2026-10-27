@@ -6,6 +6,7 @@ import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
+import ServiceLocalSection from "./ServiceLocalSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { projectTypeLabel } from "@/lib/initiatives/types";
@@ -54,10 +55,11 @@ export default function ServiceDetailClient({
         <p className="editorial-label css-reveal" style={{ transitionDelay: "0ms", margin: "24px 0 12px" }}>
           (Services)
         </p>
-        <p className="svcd-service-name css-reveal" style={{ transitionDelay: "60ms" }}>
-          {service.subtitle}
-        </p>
-        <h1
+        {/* The page topic is the h1, in the small label style; the large hero line is an h2. */}
+        <h1 className="svcd-service-name css-reveal" style={{ transitionDelay: "60ms" }}>
+          {service.seoH1}
+        </h1>
+        <h2
           className="svcd-headline css-reveal"
           style={{
             transitionDelay: "120ms",
@@ -65,7 +67,7 @@ export default function ServiceDetailClient({
           }}
         >
           {service.headline}
-        </h1>
+        </h2>
         <p className="svcd-hero-body css-reveal" style={{ transitionDelay: "200ms" }}>
           {service.description}
         </p>
@@ -138,12 +140,15 @@ export default function ServiceDetailClient({
         </div>
       </section>
 
-      {/* ═══ (04) HOW WE DO IT — Process Accordion ═══ */}
+      {/* ═══ (04) ACROSS THE GTA ═══ */}
+      <ServiceLocalSection local={service.localSection} number="04" />
+
+      {/* ═══ (05) HOW WE DO IT — Process Accordion ═══ */}
       <section
         style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px)" }}
       >
         <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
-          (04) How we do it
+          (05) How we do it
         </p>
         <h2 className="svcd-process-heading css-reveal" style={{ transitionDelay: "80ms" }}>
           Five stages. One system.
@@ -153,7 +158,7 @@ export default function ServiceDetailClient({
         </div>
       </section>
 
-      {/* ═══ (05) RELATED WORK ═══ */}
+      {/* ═══ (06) RELATED WORK ═══ */}
       {hasRelatedWork && (
         <section
           style={{
@@ -162,7 +167,7 @@ export default function ServiceDetailClient({
           }}
         >
           <p className="editorial-label css-reveal" style={{ margin: "0 0 40px" }}>
-            (05) Related work
+            (06) Related work
           </p>
           <div className="svcd-work-grid">
             {projects.map((work, i) => (

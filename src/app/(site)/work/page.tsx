@@ -7,11 +7,11 @@ import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Work',
+  title: { absolute: 'Brand Identity Portfolio, Toronto | House of Singh Studios' },
   description: 'Brand identities, visual narratives, and digital experiences for businesses ready to show up differently. View our portfolio.',
   alternates: { canonical: 'https://studios.houseofsingh.com/work' },
   openGraph: {
-    title: 'Work — House of Singh Studios',
+    title: 'Brand Identity Portfolio, Toronto | House of Singh Studios',
     description: 'Brand identities, visual narratives, and digital experiences. View our portfolio.',
     url: 'https://studios.houseofsingh.com/work',
     images: [DEFAULT_SHARE_IMAGE],
