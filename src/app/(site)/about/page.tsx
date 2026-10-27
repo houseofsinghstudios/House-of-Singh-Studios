@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
+import { getNetworkMembers } from "@/lib/sanity/network";
 import AboutClient from "@/components/about/AboutClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
@@ -31,14 +32,14 @@ async function getAboutData() {
 }
 
 export default async function AboutPage() {
-  const aboutData = await getAboutData();
+  const [aboutData, networkMembers] = await Promise.all([getAboutData(), getNetworkMembers()]);
   return (
     <>
       <BreadcrumbSchema items={[
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'About', url: 'https://studios.houseofsingh.com/about' },
       ]} />
-      <AboutClient aboutData={aboutData} />
+      <AboutClient aboutData={aboutData} networkMembers={networkMembers} />
     </>
   );
 }

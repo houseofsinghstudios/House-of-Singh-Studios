@@ -7,6 +7,8 @@ import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import type { NetworkCard } from "@/lib/about/network";
+import NetworkGrid from "./NetworkGrid";
 
 interface AboutData {
   aboutStudioImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
@@ -41,16 +43,6 @@ const WHAT_WE_ARE_NOT = [
   "Not a template shop. Every engagement is built from strategic thinking.",
 ];
 
-/* ── Team roles ── */
-const TEAM_ROLES = [
-  "Brand Strategist",
-  "Visual Designer",
-  "Developer",
-  "Photographer",
-  "Content Strategist",
-  "Motion Designer",
-];
-
 /* ── Toronto clock helper ── */
 // The time exists only in the browser: the server renders a placeholder, so the HTML never carries
 // a build time that disagrees with the visitor's clock (that mismatch broke hydration).
@@ -70,7 +62,7 @@ function getTorontoTime(): string {
   }).format(new Date());
 }
 
-export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
+export default function AboutClient({ aboutData, networkMembers = [] }: { aboutData?: AboutData; networkMembers?: NetworkCard[] }) {
   /* ── Clock state ── */
   const clockTime = useSyncExternalStore(subscribeClock, getTorontoTime, noTimeOnServer);
 
@@ -420,15 +412,7 @@ export default function AboutClient({ aboutData }: { aboutData?: AboutData }) {
             The studio works with a trusted network of specialists across brand strategy, visual design, video production, photography, development, and content. Each engagement assembles the right team for the scope.
           </p>
 
-          <div className="about-team-grid reveal-stagger-parent">
-            {TEAM_ROLES.map((role) => (
-              <div key={role} className="about-team-card scroll-reveal-up">
-                <div className="about-team-card-square" />
-                <p className="about-team-card-role">{role}</p>
-                <p className="about-team-card-label">Network</p>
-              </div>
-            ))}
-          </div>
+          <NetworkGrid members={networkMembers} />
 
           {/* Careers CTA */}
           <div className="about-careers-cta scroll-reveal-up">
