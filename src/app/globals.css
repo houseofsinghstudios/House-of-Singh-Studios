@@ -2709,6 +2709,15 @@ body {
   overflow: hidden;
   transition: filter 0.3s ease;
 }
+/* A network member's photo fills the square, cropped around its hotspot, always in black and white.
+   The filter sits on the image, so the square's hover brightness never brings colour back. */
+.about-team-card-photo {
+  position: relative;
+}
+.about-team-photo {
+  object-fit: cover;
+  filter: grayscale(1);
+}
 .about-team-card {
   transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }

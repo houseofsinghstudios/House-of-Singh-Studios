@@ -8,6 +8,7 @@ import siteSettings from "./siteSettings";
 import role from "./role";
 import servicePricing from "./servicePricing";
 import initiative from "./initiative";
+import networkMember from "./networkMember";
 import { blockImage } from "./blocks/shared";
 import blockSplit from "./blocks/blockSplit";
 import blockOffset from "./blocks/blockOffset";
@@ -27,6 +28,7 @@ export const schemaTypes = [
   role,
   servicePricing,
   initiative,
+  networkMember,
   blockImage,
   blockSplit,
   blockOffset,

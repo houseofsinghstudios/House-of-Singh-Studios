@@ -10,6 +10,7 @@
     "import:portfolio": "node scripts/import-portfolio/index.mjs",
     "test": "node --conditions=react-server --import tsx --test \"tests/**/*.test.ts\"",
     "import:roles": "node scripts/import-roles/index.mjs",
+    "import:services": "node --import tsx scripts/import-services/index.mjs",
     "indexnow": "node scripts/indexnow/index.mjs"
   },
   "dependencies": {

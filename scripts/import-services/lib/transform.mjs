@@ -1,0 +1,155 @@
+// The services mirror: ServiceData (src/data/services.ts) to a Sanity "service" document and back,
+// and a field by field comparison of the two. Pure, so it is tested without Sanity.
+// The field lists below must match ServiceData and sanity/schemas/service.ts. If the code gains a
+// field, checkShape stops the import until the schema and this file are updated too.
+
+// ServiceData's fields, in the order the type declares them.
+export const SERVICE_FIELDS = [
+  "slug",
+  "number",
+  "name",
+  "subtitle",
+  "headline",
+  "description",
+  "tagline",
+  "seoTitle",
+  "seoDescription",
+  "gradient",
+  "deliverables",
+  "impact",
+  "process",
+  "ctaHeading",
+];
+export const DELIVERABLE_FIELDS = ["name", "description"];
+export const IMPACT_FIELDS = ["heading", "body"];
+export const PROCESS_FIELDS = ["step", "name", "description"];
+
+// Sanity's own keys, and the mirror's only addition (order). Anything else in a document is reported.
+const SYSTEM_KEYS = ["_id", "_type", "_rev", "_createdAt", "_updatedAt", "_key", "_system"];
+
+export const serviceDocumentId = (slug) => `service-${slug}`;
+const pad = (n) => String(n).padStart(2, "0");
+
+// Every problem with one service's shape, as plain sentences. Empty when it can be mirrored exactly.
+export function checkShape(service) {
+  const problems = [];
+  const exact = (value, fields, where) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return problems.push(`${where} is not an object`);
+    for (const key of Object.keys(value)) if (!fields.includes(key)) problems.push(`${where} has a field the mirror does not know: ${key}`);
+    for (const key of fields) if (!(key in value)) problems.push(`${where} is missing ${key}`);
+  };
+  const strings = (value, fields, where) => {
+    for (const key of fields) if (key in value && typeof value[key] !== "string") problems.push(`${where}.${key} is not text`);
+  };
+  exact(service, SERVICE_FIELDS, "service");
+  if (problems.length) return problems;
+  strings(service, SERVICE_FIELDS.filter((f) => !["deliverables", "impact", "process"].includes(f)), "service");
+  const list = (key, fields) => {
+    if (!Array.isArray(service[key])) return problems.push(`${key} is not a list`);
+    service[key].forEach((item, i) => {
+      exact(item, fields, `${key}[${i}]`);
+      if (item && typeof item === "object") strings(item, fields, `${key}[${i}]`);
+    });
+  };
+  list("deliverables", DELIVERABLE_FIELDS);
+  list("process", PROCESS_FIELDS);
+  exact(service.impact, IMPACT_FIELDS, "impact");
+  if (service.impact && typeof service.impact === "object") strings(service.impact, IMPACT_FIELDS, "impact");
+  return problems;
+}
+
+// order is the service's position in the code, starting at 1. Array keys are fixed by position, so
+// the same code always produces the same document.
+export function toServiceDocument(service, order) {
+  return {
+    _id: serviceDocumentId(service.slug),
+    _type: "service",
+    slug: { _type: "slug", current: service.slug },
+    number: service.number,
+    name: service.name,
+    subtitle: service.subtitle,
+    headline: service.headline,
+    description: service.description,
+    tagline: service.tagline,
+    seoTitle: service.seoTitle,
+    seoDescription: service.seoDescription,
+    gradient: service.gradient,
+    deliverables: service.deliverables.map((d, i) => ({
+      _type: "serviceDeliverable",
+      _key: `deliverable-${pad(i + 1)}`,
+      name: d.name,
+      description: d.description,
+    })),
+    impact: { heading: service.impact.heading, body: service.impact.body },
+    process: service.process.map((p, i) => ({
+      _type: "serviceProcessStep",
+      _key: `step-${pad(i + 1)}`,
+      step: p.step,
+      name: p.name,
+      description: p.description,
+    })),
+    ctaHeading: service.ctaHeading,
+    order,
+  };
+}
+
+// A document read back from Sanity, in ServiceData's shape: Sanity's keys removed, the slug unwrapped.
+export function fromServiceDocument(doc) {
+  const pick = (value, fields) => (value && typeof value === "object" ? Object.fromEntries(fields.map((f) => [f, value[f]])) : value);
+  return {
+    slug: doc.slug && typeof doc.slug === "object" ? doc.slug.current : doc.slug,
+    ...Object.fromEntries(SERVICE_FIELDS.slice(1).map((f) => [f, doc[f]])),
+    deliverables: Array.isArray(doc.deliverables) ? doc.deliverables.map((d) => pick(d, DELIVERABLE_FIELDS)) : doc.deliverables,
+    impact: pick(doc.impact, IMPACT_FIELDS),
+    process: Array.isArray(doc.process) ? doc.process.map((p) => pick(p, PROCESS_FIELDS)) : doc.process,
+  };
+}
+
+// Every difference between the code and a Sanity document, one line each. Empty means identical.
+// Checks values, list lengths and order, the order field, and fields Sanity has that the code does not.
+export function compareService(service, doc, order) {
+  if (!doc) return ["missing from Sanity"];
+  const differences = [];
+  const show = (v) => (v === undefined ? "(empty)" : JSON.stringify(v));
+  const walk = (a, b, path) => {
+    if (Array.isArray(a)) {
+      if (!Array.isArray(b)) return differences.push(`${path}: code has a list of ${a.length}, Sanity has ${show(b)}`);
+      if (a.length !== b.length) differences.push(`${path}: code has ${a.length}, Sanity has ${b.length}`);
+      a.forEach((item, i) => (i < b.length ? walk(item, b[i], `${path}[${i}]`) : null));
+      return;
+    }
+    if (a && typeof a === "object") {
+      if (!b || typeof b !== "object") return differences.push(`${path}: Sanity has ${show(b)}`);
+      for (const key of Object.keys(a)) walk(a[key], b[key], path ? `${path}.${key}` : key);
+      return;
+    }
+    if (a !== b) differences.push(`${path}: code ${show(a)}, Sanity ${show(b)}`);
+  };
+  walk(service, fromServiceDocument(doc), "");
+  if (doc.order !== order) differences.push(`order: expected ${order}, Sanity ${show(doc.order)}`);
+  const extra = (value, fields, where) => {
+    if (!value || typeof value !== "object") return;
+    for (const key of Object.keys(value)) if (!fields.includes(key) && !SYSTEM_KEYS.includes(key)) differences.push(`${where}${key}: in Sanity but not in the code`);
+  };
+  extra(doc, [...SERVICE_FIELDS, "order", "referenceNote"], "");
+  (Array.isArray(doc.deliverables) ? doc.deliverables : []).forEach((d, i) => extra(d, DELIVERABLE_FIELDS, `deliverables[${i}].`));
+  (Array.isArray(doc.process) ? doc.process : []).forEach((p, i) => extra(p, PROCESS_FIELDS, `process[${i}].`));
+  extra(doc.impact, IMPACT_FIELDS, "impact.");
+  return differences;
+}
+
+// One line per field for the dry run: text fields by length, lists by count.
+export function describeService(service) {
+  return SERVICE_FIELDS.map((field) => {
+    const value = service[field];
+    if (Array.isArray(value)) return [field, `${value.length}`];
+    if (value && typeof value === "object") return [field, Object.keys(value).join(" and ")];
+    return [field, `${String(value).length} characters`];
+  });
+}
+
+// Service documents in Sanity that are not part of the mirror (older documents), by id and title.
+export function otherServiceDocuments(docs, slugs) {
+  const ids = new Set(slugs.map(serviceDocumentId));
+  return docs.filter((d) => !ids.has(d._id.replace(/^drafts\./, "")));
+}
