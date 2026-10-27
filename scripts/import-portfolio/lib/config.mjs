@@ -112,7 +112,7 @@ The import needs a Sanity write token.
   3. Name it "Portfolio import", choose Editor permission, and copy the token.
   4. Paste it into .env.import at the project root, after SANITY_WRITE_TOKEN=
 
-Never put the token in .env.local. That file is committed to git.`;
+Never put the token in .env.local. Keep it in .env.import, which only the import tools read.`;
 
 export function requireSanityConfig(env) {
   if (!env) {

@@ -16,7 +16,7 @@ You need Node.js 22 or newer and `npm install` run once.
 
 The roles import uses the same `.env.import` file and Sanity write token as the portfolio import. If you have set that up already, there is nothing more to do. If not, follow "Before you start" in `scripts/import-portfolio/README.md`.
 
-**Never put the token in `.env.local`.** That file is saved to GitHub.
+**Never put the token in `.env.local`.** Keep it in `.env.import`, which is only for the import tools.
 
 ---
 

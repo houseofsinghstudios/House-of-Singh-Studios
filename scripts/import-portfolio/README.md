@@ -41,7 +41,7 @@ The token is a password that lets this tool add case studies to Sanity. Treat it
 
    Leave the other two lines as they are.
 
-**Never put the token in `.env.local`.** That file is saved to GitHub, so anyone who can see the code could see the token. `.env.import` is set up so that git ignores it and it never leaves your computer.
+**Never put the token in `.env.local`.** `.env.local` holds the website's settings for local development; the write token belongs only in `.env.import`. Git ignores both files, so neither leaves your computer.
 
 If a token is ever shared by mistake, delete it in the Sanity **Tokens** page and create a new one.
 
