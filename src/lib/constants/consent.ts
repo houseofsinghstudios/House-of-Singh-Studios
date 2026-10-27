@@ -12,7 +12,6 @@ export const VIEWS_KEY = "hos-consent-views";
 export const ASKED_KEY = "hos-consent-asked";
 
 export const CONSENT_COPY = {
-  footerNotice: "Anonymous analytics. No ads.",
   footerLink: "Privacy choices",
   label: "(Cookies)",
   heading: "May we measure what works?",
