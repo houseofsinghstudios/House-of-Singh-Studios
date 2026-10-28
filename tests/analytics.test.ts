@@ -2,7 +2,7 @@
 // Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { INTERNAL_KEY, configParams, contactEvent, contentGroup, internalFlag, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
+import { INTERNAL_KEY, SENT_KEY, configParams, contactEvent, contentGroup, internalFlag, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, submissionId, syncInternalFlag, track, trackOnce, trackPageView } from "@/lib/analytics";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
@@ -143,4 +143,89 @@ test("internal flag is kept in localStorage across visits", () => {
 test("config: no automatic page view, no signals, traffic_type only on internal browsers", () => {
   assert.deepEqual(configParams(false), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
   assert.deepEqual(configParams(true), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, traffic_type: "internal" });
+});
+
+// ── Once per submission ──
+
+const memoryStore = () => {
+  const m = new Map<string, string>();
+  return { m, getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v) };
+};
+const eventsNamed = (name: string) => calls.filter((c) => c[0] === "event" && c[1] === name).length;
+
+test("one event per successful submission: the same id is never sent twice", () => {
+  calls.length = 0;
+  setAllowed(true);
+  const store = memoryStore();
+  const id = submissionId();
+  assert.equal(trackOnce("generate_lead", id, { lead_type: "contact" }, store), true);
+  assert.equal(trackOnce("generate_lead", id, { lead_type: "contact" }, store), false, "a second success callback");
+  assert.equal(eventsNamed("generate_lead"), 1);
+  // Two real submissions are two events.
+  assert.equal(trackOnce("generate_lead", submissionId(), { lead_type: "contact" }, store), true);
+  assert.equal(eventsNamed("generate_lead"), 2);
+  setAllowed(false);
+});
+
+test("submission ids are random and distinct", () => {
+  const ids = new Set(Array.from({ length: 200 }, submissionId));
+  assert.equal(ids.size, 200);
+  for (const id of ids) assert.match(id, /^[0-9a-f]{32}$/);
+});
+
+test("reloading or going back and forward to a success screen never sends it again", () => {
+  calls.length = 0;
+  setAllowed(true);
+  const store = memoryStore();
+  assert.equal(trackOnce("brand_pulse_complete", "result-1", {}, store), true);
+  // What a reload, or a page restored from the back and forward cache, starts with: the same tab's
+  // sessionStorage. The stored list alone is enough to refuse it, as a fresh page would read it.
+  assert.deepEqual(JSON.parse(store.m.get(SENT_KEY)!), ["brand_pulse_complete:result-1"]);
+  // A fresh page knows only the stored list: an id this page never sent, already in the list, is refused.
+  const reloaded = memoryStore();
+  reloaded.m.set(SENT_KEY, JSON.stringify(["brand_pulse_complete:sent-before-reload"]));
+  assert.equal(trackOnce("brand_pulse_complete", "sent-before-reload", {}, reloaded), false);
+  assert.equal(eventsNamed("brand_pulse_complete"), 1);
+  setAllowed(false);
+});
+
+test("safe under React strict mode: an effect that runs twice sends once", () => {
+  calls.length = 0;
+  setAllowed(true);
+  const store = memoryStore();
+  const effect = () => { trackOnce("brand_pulse_complete", "result-2", {}, store); };
+  effect(); // mount
+  effect(); // strict mode runs the effect again after a simulated unmount
+  assert.equal(eventsNamed("brand_pulse_complete"), 1);
+  setAllowed(false);
+});
+
+test("blocked storage: the page itself still remembers what it sent", () => {
+  calls.length = 0;
+  setAllowed(true);
+  const blocked = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); } };
+  assert.equal(trackOnce("job_application", "app-1", {}, blocked), true);
+  assert.equal(trackOnce("job_application", "app-1", {}, blocked), false);
+  assert.equal(eventsNamed("job_application"), 1);
+  setAllowed(false);
+});
+
+test("without consent nothing is sent, and nothing is marked as sent", () => {
+  calls.length = 0;
+  setAllowed(false);
+  const store = memoryStore();
+  assert.equal(trackOnce("newsletter_signup", "sub-1", {}, store), false);
+  assert.equal(calls.length, 0);
+  assert.equal(store.m.has(SENT_KEY), false);
+  assert.equal(trackOnce("newsletter_signup", "", {}, store), false, "no id, no event");
+});
+
+test("the list of sent submissions stays short", () => {
+  setAllowed(true);
+  const store = memoryStore();
+  for (let i = 0; i < 80; i++) trackOnce("generate_lead", `id-${i}`, {}, store);
+  const list = JSON.parse(store.m.get(SENT_KEY)!);
+  assert.equal(list.length, 50);
+  assert.equal(list.at(-1), "generate_lead:id-79");
+  setAllowed(false);
 });

@@ -10,7 +10,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
-import { contactEvent, track } from "@/lib/analytics";
+import { contactEvent, submissionId, trackOnce } from "@/lib/analytics";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
@@ -28,6 +28,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  // A ref, not state: a second submit can arrive before the disabled button renders.
+  const inFlight = useRef(false);
 
   // Browsers match :focus-visible on text fields and selects even after a mouse click. The focus
   // ring is for keyboard users, so a pointer press holds it back until the next Tab.
@@ -55,6 +57,10 @@ export default function ContactClient({ initialService = "" }: { initialService?
       document.getElementById("contact-permission")?.focus();
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
+    // One id per submission: its event is sent once, whatever happens after.
+    const id = submissionId();
     setSubmitting(true);
     setError(false);
     const data = {
@@ -88,11 +94,12 @@ export default function ContactClient({ initialService = "" }: { initialService?
       // No contact details or message.
       if (!data.honeypot) {
         const { name, params } = contactEvent(String(data.service || ""), data.attribution.referralCode);
-        track(name, params);
+        trackOnce(name, id, params);
       }
     } catch {
       setError(true);
     } finally {
+      inFlight.current = false;
       setSubmitting(false);
     }
   }

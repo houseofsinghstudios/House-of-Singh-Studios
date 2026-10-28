@@ -155,6 +155,57 @@ export function track(event: string, params: EventParams = {}) {
   gtag()?.("event", event, params);
 }
 
+// ── Once per submission ──
+
+// sessionStorage: the submissions already reported in this tab, as "event:id", newest last. A lead
+// or conversion goes once per submission id: a second success callback, a React strict mode double
+// effect, a reload or going back and forward never sends it again.
+export const SENT_KEY = "hos-ga-sent";
+const MAX_SENT = 50;
+const sentHere = new Set<string>();
+
+type SentStore = Pick<Storage, "getItem" | "setItem">;
+
+function sessionStorageOrNull(): SentStore | null {
+  try {
+    return typeof window === "undefined" ? null : window.sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+function readSent(store: SentStore | null): string[] {
+  try {
+    const list: unknown = JSON.parse(store?.getItem(SENT_KEY) ?? "[]");
+    return Array.isArray(list) ? list.filter((x): x is string => typeof x === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+// A new id for one form submission. Random, never derived from what the visitor typed.
+export function submissionId(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Sends the event for this submission unless it has been sent already. Returns whether it was sent.
+export function trackOnce(event: string, id: string, params: EventParams = {}, store: SentStore | null = sessionStorageOrNull()): boolean {
+  if (!id || !gtag()) return false;
+  const key = `${event}:${id}`;
+  const sent = readSent(store);
+  if (sentHere.has(key) || sent.includes(key)) return false;
+  sentHere.add(key);
+  try {
+    store?.setItem(SENT_KEY, JSON.stringify([...sent, key].slice(-MAX_SENT)));
+  } catch {
+    // Storage blocked or full: this page still remembers it.
+  }
+  track(event, params);
+  return true;
+}
+
 // One page view for the current page, after setting it as the page every later event belongs to.
 export function trackPageView(href: string, title: string) {
   const send = gtag();

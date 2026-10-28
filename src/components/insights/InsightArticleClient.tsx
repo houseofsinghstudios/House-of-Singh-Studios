@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useRef, useState, FormEvent } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { PortableText } from "@portabletext/react";
@@ -14,7 +14,7 @@ import { updatedLabel } from "@/lib/article-dates";
 import RgdLink, { RgdText } from "@/components/RgdLink";
 import { linkRgdInBlocks } from "@/lib/rgd";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-import { track } from "@/lib/analytics";
+import { submissionId, trackOnce } from "@/lib/analytics";
 
 interface PostImage {
   asset?: {
@@ -156,10 +156,15 @@ function InlineNewsletter() {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
+  const inFlight = useRef(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email) return;
+    // A ref, not state: a second submit can arrive before the disabled button renders.
+    if (inFlight.current) return;
+    inFlight.current = true;
+    const id = submissionId();
     setStatus("submitting");
     try {
       const res = await fetch("/api/subscribe", {
@@ -170,9 +175,11 @@ function InlineNewsletter() {
       if (!res.ok) throw new Error();
       setStatus("success");
       // Only once the subscription is accepted, and never for the bot trap. No email.
-      if (!honeypot) track("newsletter_signup");
+      if (!honeypot) trackOnce("newsletter_signup", id);
     } catch {
       setStatus("error");
+    } finally {
+      inFlight.current = false;
     }
   }
 

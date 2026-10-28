@@ -17,7 +17,7 @@ import PulseResultView from "./PulseResultView";
 import PulseFollowUp from "./PulseFollowUp";
 import PulseEmailForm from "./PulseEmailForm";
 import { sendEvent, startSession, type LeadContact, type ProfileContact, type PulseSession, type SendStatus } from "./events";
-import { track } from "@/lib/analytics";
+import { trackOnce } from "@/lib/analytics";
 import "./brand-pulse.css";
 
 type Screen = "intro" | "gate" | "question" | "evaluating" | "result";
@@ -140,8 +140,8 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
     const s = session.current;
     if (!complete || !s || sentFor.current === s.resultId) return;
     sentFor.current = s.resultId;
-    // brand_pulse_complete once the server has the result, never before.
-    void sendEvent(s, gate, complete, { event: "completed" }).then((ok) => ok && track("brand_pulse_complete"));
+    // brand_pulse_complete once the server has the result, never before, and once per result id.
+    void sendEvent(s, gate, complete, { event: "completed" }).then((ok) => ok && trackOnce("brand_pulse_complete", s.resultId));
     // Sent alongside, not after: a slow n8n must not hold up the email.
     if (gate !== "none" && contact) void submitLead(contact, "", complete);
     // eslint-disable-next-line react-hooks/exhaustive-deps

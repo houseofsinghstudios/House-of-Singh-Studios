@@ -6,7 +6,7 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
-import { track } from "@/lib/analytics";
+import { submissionId, trackOnce } from "@/lib/analytics";
 
 /* ── Department label map ── */
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -167,6 +167,7 @@ interface CareersClientProps {
 
 export default function CareersClient({ roles }: CareersClientProps) {
   const [expandedRole, setExpandedRole] = useState<string | null>(null);
+  const inFlight = useRef(false);
   const [formState, setFormState] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
@@ -197,6 +198,10 @@ export default function CareersClient({ roles }: CareersClientProps) {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.role) return;
+    // A ref, not state: a second submit can arrive before the disabled button renders.
+    if (inFlight.current) return;
+    inFlight.current = true;
+    const id = submissionId();
 
     setFormState("submitting");
     try {
@@ -208,7 +213,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       if (res.ok) {
         setFormState("success");
         // Kept apart from leads, and never for the bot trap. No name, email or message.
-        if (!honeypot) track("job_application");
+        if (!honeypot) trackOnce("job_application", id);
         setFormData({
           name: "",
           email: "",
@@ -221,6 +226,8 @@ export default function CareersClient({ roles }: CareersClientProps) {
       }
     } catch {
       setFormState("error");
+    } finally {
+      inFlight.current = false;
     }
   }
 
