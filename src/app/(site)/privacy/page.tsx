@@ -83,7 +83,7 @@ export default function PrivacyPage() {
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting and analytics): collects anonymized usage data including page views and performance metrics. Data is processed in accordance with Vercel&apos;s privacy policy.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed and approximate location. We do not use it for advertising, and we do not send it names, emails or form contents. Visitors in regions with stricter consent rules are measured without analytics cookies.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed and approximate location. We do not use it for advertising, and we do not send it names, emails or form contents. It sends nothing until analytics are allowed: visitors in regions with stricter consent rules are not measured unless they turn analytics on in Privacy choices.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Microsoft Clarity</strong> (website behaviour analytics): records anonymised page interactions such as clicks and scrolling to help us improve the site. Form fields are masked, so recordings never show what you type. We do not use it for advertising. Visitors in regions with stricter consent rules are measured without cookies.

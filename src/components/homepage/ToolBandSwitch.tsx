@@ -7,6 +7,7 @@
 // screen, and without JavaScript both panels show stacked.
 
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import { track } from "@/lib/analytics";
 
 const PHONE = "(max-width: 767px)";
 const subscribe = (onChange: () => void) => {
@@ -69,16 +70,15 @@ function useArrival(ref: RefObject<HTMLElement | null>) {
 }
 
 // One Google Analytics event per chip or button click: which tool, chip or button, and the answer
-// or service code. Never personal data. GA only exists on the production site, under its consent.
+// or service code. Never personal data. Sent through src/lib/analytics.ts: nothing without consent.
 function useClickEvents(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
     const onClick = (e: MouseEvent) => {
       const link = (e.target as Element | null)?.closest<HTMLElement>("[data-tb-kind]");
-      const gtag = (window as { gtag?: (...args: unknown[]) => void }).gtag;
-      if (!link || !gtag) return;
-      gtag("event", "tool_band_click", { tool: link.dataset.tbTool, kind: link.dataset.tbKind, value: link.dataset.tbValue || "none" });
+      if (!link) return;
+      track("tool_band_click", { tool: link.dataset.tbTool || "", kind: link.dataset.tbKind || "", value: link.dataset.tbValue || "none" });
     };
     root.addEventListener("click", onClick);
     return () => root.removeEventListener("click", onClick);

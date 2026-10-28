@@ -4,7 +4,7 @@
 // Effective state: a stored choice (valid 12 months) wins; otherwise "denied" in the stricter
 // regions and "granted" elsewhere, which is what the Google Analytics defaults already say.
 
-import { CONSENT_KEY, CONSENT_MAX_AGE_MS, REGION_KEY } from "@/lib/constants/consent";
+import { ANALYTICS_CONSENT_EVENT, CONSENT_KEY, CONSENT_MAX_AGE_MS, REGION_KEY } from "@/lib/constants/consent";
 
 export type ConsentState = "granted" | "denied";
 export interface StoredChoice {
@@ -109,9 +109,11 @@ function deleteClarityCookies() {
   }
 }
 
-// Tells Google Analytics and Clarity. Advertising storage is always denied.
+// Tells Google Analytics and Clarity, then announces the change so the analytics tracker can start
+// or stop. Advertising storage is always denied.
 export function apply(state: ConsentState, w: ConsentWindow = window as ConsentWindow) {
   w.gtag?.("consent", "update", { analytics_storage: state });
   w.clarity?.("consentv2", { ad_Storage: "denied", analytics_Storage: state });
   if (state === "denied") deleteClarityCookies();
+  w.dispatchEvent?.(new CustomEvent(ANALYTICS_CONSENT_EVENT, { detail: state }));
 }

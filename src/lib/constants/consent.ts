@@ -1,5 +1,5 @@
-// Analytics consent: storage keys, lifetime and every visitor facing word. Shared by the server
-// (Google Analytics setup script) and the browser (consent module and its UI).
+// Analytics consent: storage keys, lifetime and every visitor facing word. Shared by the consent
+// module and its UI, the Google Analytics tracker and Microsoft Clarity.
 
 // localStorage: the visitor's own choice, { analytics: "granted" | "denied", decidedAt }.
 export const CONSENT_KEY = "hos-consent";
@@ -10,6 +10,8 @@ export const REGION_KEY = "hos-consent-region";
 // sessionStorage: page views this visit, and whether the ask has already appeared this visit.
 export const VIEWS_KEY = "hos-consent-views";
 export const ASKED_KEY = "hos-consent-asked";
+// Window event sent whenever the visitor changes their analytics choice; detail is the new state.
+export const ANALYTICS_CONSENT_EVENT = "hos:analytics-consent";
 
 export const CONSENT_COPY = {
   footerLink: "Privacy choices",
