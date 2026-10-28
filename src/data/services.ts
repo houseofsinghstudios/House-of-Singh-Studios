@@ -291,6 +291,33 @@ export const services: ServiceData[] = [
           "Final assets, content libraries, and templates your team can use ongoing.",
       },
     ],
+    faqs: [
+      {
+        question: "How much does a corporate video cost?",
+        answer:
+          `A corporate video with House of Singh Studios starts from $2,000 for a short interview or social video. Directed brand films, multi day shoots, extra locations, larger crews or animation increase the cost, and in Toronto, broader brand films commonly run into five figures. Length matters less than shoot days, locations, crew and editing. A well planned shoot can also produce short cut downs for social media, so one budget serves several channels. Get a personal estimate in two minutes with the [Project Planner](/start), or [book a discovery call](${DISCOVERY_CALL_URL}) to scope your video.`,
+      },
+      {
+        question: "How much does product and brand photography cost?",
+        answer:
+          "Product photography on a clean background is usually priced per image, roughly $50 to $150 each in Toronto. Styled product, food and brand photography is usually priced by the half or full day, typically $1,500 to $5,000, depending on styling, locations and retouching. The real cost driver is how many final images you need and where you will use them. One well planned brand shoot can supply your [website](/services/digital-design), social channels and print for months. Projects start from $1,000; [plan your project](/start) for a personal estimate.",
+      },
+      {
+        question: "What is brand photography, and how is it different from stock photos?",
+        answer:
+          "Brand photography is imagery made for one business: your people, spaces, products and the way you work, shot in a style set by your brand. Stock photos are made for everyone, so your competitors can use the same images. Brand photography builds recognition, because every image looks like it belongs to you. It works best when directed by a clear [brand identity](/services/brand-identity), so photography, design and messaging feel like one system. See it in practice in [our work](/work).",
+      },
+      {
+        question: "Who owns the photos and videos, and what are usage rights?",
+        answer:
+          "Under Canadian copyright law, the photographer owns the copyright to commissioned photos unless agreed otherwise, which is why usage rights matter. Many photographers license images by channel or time period and charge again for new uses. We keep it simple: you receive unlimited usage rights for your business, across your website, social media, advertising and print, with no expiry. The studio may show the work in its portfolio, which is standard; if a project is confidential, we agree that at the start. Questions about a specific use? [Ask us directly](/contact).",
+      },
+      {
+        question: "Do you photograph food, products and teams for Toronto businesses?",
+        answer:
+          `Yes. We photograph food and dishes for restaurants and food brands, products for websites and online stores, and team headshots for businesses that want everyone to look consistent, on location across Toronto and the GTA. Every shoot is directed by your brand, so a menu photo, a product shot and a team portrait still feel like one company. Planning a launch? Pair a shoot with [a new website](/services/digital-design) so you go live with real imagery, or [book a discovery call](${DISCOVERY_CALL_URL}) to plan your shoot.`,
+      },
+    ],
     ctaHeading: "Ready to build a content system?",
   },
   {
