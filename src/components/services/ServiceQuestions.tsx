@@ -21,7 +21,7 @@ export default function ServiceQuestions({ faqs, number }: { faqs?: ServiceFaq[]
         Questions, answered
       </h2>
       <div className="css-reveal" style={{ transitionDelay: "160ms" }}>
-        <ServiceDetailAccordion steps={steps} initialOpen={-1} headingLevel="h3" />
+        <ServiceDetailAccordion steps={steps} initialOpen={-1} headingLevel="h3" variant="questions" />
       </div>
     </section>
   );

@@ -2495,6 +2495,19 @@ body {
   .svc-acc-desc {
     padding-left: 0;
   }
+  /* Questions stay interactive on phones: the plus shows, at the size and colour of the homepage
+     services toggle (.svc-mob-plus), and turns to a cross in the text colour when open. */
+  .svc-acc-row--questions .svc-acc-icon {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 400;
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .svc-acc-row--questions.svc-acc-row--open .svc-acc-icon {
+    color: var(--text-primary);
+  }
 }
 
 /* ── Service detail v2: Related Work ── */

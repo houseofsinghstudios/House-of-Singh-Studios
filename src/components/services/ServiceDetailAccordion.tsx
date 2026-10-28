@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
+import { useState, useCallback, useEffect, useId, useRef, type ReactNode } from "react";
 
 interface ProcessStep {
   step: string;
@@ -16,13 +16,19 @@ export default function ServiceDetailAccordion({
   steps,
   initialOpen = 0,
   headingLevel,
+  variant = "process",
 }: {
   steps: ProcessStep[];
   // Which row starts open: the first by default (service pages), -1 for all closed (questions).
   initialOpen?: number;
   // When set, each trigger sits in a heading of that level (questions are h3).
   headingLevel?: "h3";
+  // process: the service steps, every row open and still on phones. questions: rows open and close
+  // on tap at every width, one at a time, with the plus icon showing on phones too.
+  variant?: "process" | "questions";
 }) {
+  const questions = variant === "questions";
+  const baseId = useId();
   const [openIndex, setOpenIndex] = useState(initialOpen);
   const [isMobile, setIsMobile] = useState(false);
   // Each answer's height, measured, so a long answer is never cut off.
@@ -45,12 +51,14 @@ export default function ServiceDetailAccordion({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // Process steps on phones are always open, so a tap does nothing; questions always toggle.
+  const forceOpen = isMobile && !questions;
   const toggle = useCallback(
     (i: number) => {
-      if (isMobile) return;
+      if (forceOpen) return;
       setOpenIndex((prev) => (prev === i ? -1 : i));
     },
-    [isMobile]
+    [forceOpen]
   );
 
   const trigger = (step: ProcessStep, i: number, isOpen: boolean) => (
@@ -59,6 +67,7 @@ export default function ServiceDetailAccordion({
       className="svc-acc-trigger"
       onClick={() => toggle(i)}
       aria-expanded={isOpen}
+      aria-controls={`${baseId}-panel-${i}`}
     >
       <span className="svc-acc-num">{step.step}</span>
       <span className="svc-acc-title">{step.name}</span>
@@ -71,11 +80,11 @@ export default function ServiceDetailAccordion({
   return (
     <div className="svc-accordion-list">
       {steps.map((step, i) => {
-        const isOpen = isMobile || openIndex === i;
+        const isOpen = forceOpen || openIndex === i;
         return (
           <div
             key={step.step}
-            className={`svc-acc-row${isOpen ? " svc-acc-row--open" : ""}`}
+            className={`svc-acc-row${questions ? " svc-acc-row--questions" : ""}${isOpen ? " svc-acc-row--open" : ""}`}
           >
             {headingLevel ? (
               <h3 className="svc-acc-heading">{trigger(step, i, isOpen)}</h3>
@@ -85,6 +94,7 @@ export default function ServiceDetailAccordion({
             {/* A closed panel stays in the page (and the server HTML) but is inert, so nothing in a
                 hidden answer, such as a link, can take keyboard focus. */}
             <div
+              id={`${baseId}-panel-${i}`}
               className="svc-acc-panel"
               inert={!isOpen}
               style={{
