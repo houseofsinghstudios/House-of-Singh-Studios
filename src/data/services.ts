@@ -551,6 +551,33 @@ export const services: ServiceData[] = [
           "Presentation to leadership, team training, and implementation roadmap.",
       },
     ],
+    faqs: [
+      {
+        question: "What is brand strategy, and what does it include?",
+        answer:
+          "Brand strategy is the plan that defines who your business is for, what it stands for and why customers should choose it over the alternatives. It usually includes a brand audit, market positioning, audience profiles, brand voice and messaging, and a creative framework that guides every design and marketing decision. Unlike a marketing strategy, which plans campaigns and channels, brand strategy sets the foundation those campaigns build on. See [the five signs your brand is costing you business](/insights/5-signs-your-brand-is-actively-costing-you-business), or [how strategy shapes a brand identity](/services/brand-identity).",
+      },
+      {
+        question: "What is brand positioning, and how do you write a positioning statement?",
+        answer:
+          `Brand positioning is the specific place your business holds in customers' minds compared with competitors: who you serve, what you do best and why it matters to them. A positioning statement puts that in one sentence, usually in this form: for a defined audience, your business is the choice that delivers a specific benefit, because of a clear reason to believe. Most statements fail by trying to appeal to everyone. A sharp one guides every decision, from your website to your pricing. If yours feels vague, [a discovery call](${DISCOVERY_CALL_URL}) is the quickest way to test it.`,
+      },
+      {
+        question: "What is a brand audit, and when does a business need one?",
+        answer:
+          "A brand audit is a structured review of how your brand looks, sounds and performs across every touchpoint, compared with your competitors and your goals. A business needs one when its visuals look different on every channel, when it is losing work to sharper competitors, before a rebrand, or after a merger or new direction. A full audit covers identity, messaging, website, content and customer perception. For a quick first read, take [the free two minute Brand Pulse check](/brand-pulse), or see [why brands look different everywhere](/insights/why-your-brand-looks-different-everywhere-and-what-it-is-actually-costing-you).",
+      },
+      {
+        question: "What is brand voice, and why does it matter?",
+        answer:
+          "Brand voice is the consistent personality in how your business writes and speaks, while tone adapts that voice to the moment, for example warmer in a welcome email and more precise in a proposal. It matters because customers trust what feels consistent: when your website, sales emails and social posts sound like different companies, credibility drops. A tone of voice document turns this into clear rules your team can follow. Voice works best alongside a consistent [brand identity](/services/brand-identity) and [photography](/services/visual-media), so everything feels like one business.",
+      },
+      {
+        question: "What happens in a brand strategy workshop?",
+        answer:
+          "A brand strategy workshop brings your leadership team together, at your office or on a call, to agree on the essentials: who you serve, how you are different, what you want to be known for and how you should sound. We prepare by reviewing your business, market and competitors, then guide the session with structured exercises, so decisions come from evidence rather than opinion. Afterwards, everything agreed is documented as a framework your team can use. The best preparation is a clear brief; read [how to brief a design studio](/insights/how-to-brief-a-design-studio-so-you-actually-get-what-you-want), or [tell us about your team](/contact).",
+      },
+    ],
     ctaHeading: "Ready to get a strategic framework?",
   },
 ];

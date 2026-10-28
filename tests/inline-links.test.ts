@@ -46,12 +46,9 @@ test("Brand Identity answers: 13 links, the call link from the shared constant, 
   for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
 });
 
-test("FAQPage text: only the services with questions have them, and the plain text equals what is shown", () => {
+test("FAQPage text: every service has questions, and the plain text equals what is shown", () => {
   for (const s of services) {
-    if (!["brand-identity", "visual-media", "digital-design"].includes(s.slug)) {
-      assert.ok(!s.faqs || s.faqs.length === 0, s.slug);
-      continue;
-    }
+    assert.ok(s.faqs && s.faqs.length > 0, s.slug);
     for (const f of s.faqs!) {
       const shown = parseInlineLinks(f.answer).map((p) => p.text).join("");
       assert.equal(plainText(f.answer), shown);
@@ -92,4 +89,15 @@ test("Photography and Video answers: 9 links, both calls from the shared constan
   assert.ok(plainText(faqs[1].answer).endsWith("social channels and print for months. Plan your project for a personal estimate."));
   assert.ok(!plainText(faqs[1].answer).includes("Projects start from"), "no studio starting price in answer 2");
   assert.ok(plainText(faqs[3].answer).endsWith("Questions about a specific use? Ask us directly."));
+});
+
+test("Brand Strategy answers: 9 links, the call from the shared constant, every path a site page", () => {
+  const faqs = services.find((s) => s.slug === "creative-strategy")!.faqs!;
+  assert.equal(faqs.length, 5);
+  const links = faqs.flatMap((f) => parseInlineLinks(f.answer).filter((p) => p.href));
+  assert.equal(links.length, 9);
+  assert.deepEqual(links.filter((l) => isExternal(l.href!)).map((l) => l.href), [DISCOVERY_CALL_URL]);
+  for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
+  assert.ok(plainText(faqs[1].answer).includes("from your website to your pricing"), "pricing here is the client's own");
+  assert.ok(plainText(faqs[4].answer).includes("a clear brief; read how to brief a design studio"), "the semicolon survives");
 });
