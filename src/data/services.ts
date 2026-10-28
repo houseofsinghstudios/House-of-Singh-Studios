@@ -300,7 +300,7 @@ export const services: ServiceData[] = [
       {
         question: "How much does product and brand photography cost?",
         answer:
-          "Product photography on a clean background is usually priced per image, roughly $50 to $150 each in Toronto. Styled product, food and brand photography is usually priced by the half or full day, typically $1,500 to $5,000, depending on styling, locations and retouching. The real cost driver is how many final images you need and where you will use them. One well planned brand shoot can supply your [website](/services/digital-design), social channels and print for months. Projects start from $1,000; [plan your project](/start) for a personal estimate.",
+          "Product photography on a clean background is usually priced per image, roughly $50 to $150 each in Toronto. Styled product, food and brand photography is usually priced by the half or full day, typically $1,500 to $5,000, depending on styling, locations and retouching. The real cost driver is how many final images you need and where you will use them. One well planned brand shoot can supply your [website](/services/digital-design), social channels and print for months. [Plan your project](/start) for a personal estimate.",
       },
       {
         question: "What is brand photography, and how is it different from stock photos?",

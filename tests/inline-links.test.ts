@@ -89,6 +89,7 @@ test("Photography and Video answers: 9 links, both calls from the shared constan
   assert.equal(links.length, 9);
   assert.deepEqual(links.filter((l) => isExternal(l.href!)).map((l) => l.href), [DISCOVERY_CALL_URL, DISCOVERY_CALL_URL]);
   for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
-  assert.ok(plainText(faqs[1].answer).endsWith("Projects start from $1,000; plan your project for a personal estimate."));
+  assert.ok(plainText(faqs[1].answer).endsWith("social channels and print for months. Plan your project for a personal estimate."));
+  assert.ok(!plainText(faqs[1].answer).includes("Projects start from"), "no studio starting price in answer 2");
   assert.ok(plainText(faqs[3].answer).endsWith("Questions about a specific use? Ask us directly."));
 });
