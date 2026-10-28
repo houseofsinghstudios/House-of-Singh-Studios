@@ -174,7 +174,7 @@ export const services: ServiceData[] = [
       {
         question: "How much does branding cost in Canada?",
         answer:
-          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. At House of Singh Studios, projects start from $1,000, and [the Project Planner](/start) gives you a personal estimate in two minutes. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
+          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. [The Project Planner](/start) gives you a personal estimate for your business in two minutes. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
       },
       {
         question: "What does a brand identity package include?",
