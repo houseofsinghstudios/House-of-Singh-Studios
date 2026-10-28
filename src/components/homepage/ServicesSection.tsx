@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
+import { serviceLinkLabel } from "@/lib/linking";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 
 const NUMBERS = ["01", "02", "03", "04"];
@@ -91,6 +92,7 @@ export default function ServicesSection() {
             <Link
               key={service.href}
               href={service.href}
+              aria-label={serviceLinkLabel(service.href.split("/").pop() || "", service.title)}
               className={`svc-accordion-row${isActive ? " svc-mob-active" : ""}`}
               data-cursor="view"
               onClick={(e) => handleTap(i, e)}

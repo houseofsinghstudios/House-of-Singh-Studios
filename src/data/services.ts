@@ -10,11 +10,19 @@ export interface ServiceProcessStep {
   description: string;
 }
 
+// One row in the service page's "Across the GTA" section: a situation, then one line about it.
+export interface ServiceLocalRow {
+  name: string;
+  description: string;
+}
+
 export interface ServiceData {
   slug: string;
   number: string;
   name: string;
   subtitle: string;
+  // The page's h1: what the page is about, with its place. Shown in the small label above the hero line.
+  seoH1: string;
   headline: string;
   description: string;
   tagline: string;
@@ -26,9 +34,19 @@ export interface ServiceData {
     heading: string;
     body: string;
   };
+  // "(04) Across the GTA": where the studio works and who it works with.
+  localSection: {
+    heading: string;
+    intro: string;
+    rows: ServiceLocalRow[];
+  };
   process: ServiceProcessStep[];
   ctaHeading: string;
 }
+
+// The opening of every service page's "Across the GTA" intro; each service adds one sentence.
+const GTA_INTRO =
+  "House of Singh Studios works from Toronto and Mississauga with businesses across the Greater Toronto Area, including Brampton, Oakville, Vaughan and Markham, and with clients across Canada remotely. Meetings happen in person across the GTA or on a call, whichever suits you.";
 
 export const services: ServiceData[] = [
   {
@@ -36,12 +54,13 @@ export const services: ServiceData[] = [
     number: "01",
     name: "Brand Identity and Visual Design",
     subtitle: "Brand Identity and Visual Design",
+    seoH1: "Brand identity design and rebranding in Toronto",
     headline: "Your business has grown. Your brand has not kept up.",
     description: "We build complete visual systems: logo, typography, colour architecture and brand guidelines. They give your business a consistent, professional presence across every touchpoint.",
     tagline: "The system behind how your business looks.",
-    seoTitle: "Brand Identity and Visual Design",
+    seoTitle: "Brand Identity Design Toronto | House of Singh Studios",
     seoDescription:
-      "Complete brand identity systems built for established businesses. Logo, typography, colour architecture, and brand guidelines that scale.",
+      "Brand identity design and rebranding for Toronto and GTA businesses that have outgrown their brand. Strategy, logo systems and guidelines built to last.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
     deliverables: [
       {
@@ -94,6 +113,15 @@ export const services: ServiceData[] = [
       heading: "Your brand is a business asset, not a design exercise.",
       body: "An inconsistent brand costs you clients you never see. They visit your website, check your social presence, compare you to a competitor with sharper visuals, and leave without contacting you. A brand identity system fixes that permanently.",
     },
+    localSection: {
+      heading: "Who we work with across the GTA",
+      intro: `${GTA_INTRO} For brand identity work, that means a new identity or a rebrand shaped around how your business is seen in its own market.`,
+      rows: [
+        { name: "Outgrown the brand it started with", description: "A business that has grown past the identity it launched with, and is losing credibility to competitors who look sharper." },
+        { name: "Preparing to launch", description: "A founder who wants to start with a brand that looks established on day one." },
+        { name: "Repositioning before the next stage", description: "A company entering a new market, service or growth phase that needs the brand to lead." },
+      ],
+    },
     process: [
       {
         step: "01",
@@ -133,13 +161,14 @@ export const services: ServiceData[] = [
     number: "02",
     name: "Visual Media and Content Production",
     subtitle: "Visual Media and Content Production",
+    seoH1: "Brand photography and video production in Toronto",
     headline:
       "Your content looks different on every platform. Nothing connects.",
     description: "We direct and produce brand photography, campaign films, and social content systems. Every piece serves a strategic purpose. Nothing is produced without a clear brief and defined outcome.",
     tagline: "Content with direction, not just production.",
-    seoTitle: "Visual Media and Content Production",
+    seoTitle: "Brand Photography and Video Toronto | House of Singh Studios",
     seoDescription:
-      "Brand photography, campaign films, and social content systems built on strategic intent. Visual production directed by brand strategy.",
+      "Brand photography, video and social content for Toronto and GTA businesses, directed by brand strategy so every image and film works together.",
     gradient: "linear-gradient(135deg, #4A3F35 0%, #2C2419 100%)",
     deliverables: [
       {
@@ -177,6 +206,15 @@ export const services: ServiceData[] = [
       heading:
         "Content that converts starts with direction, not a camera.",
       body: "Most businesses produce content reactively. A post here, a video there, no visual thread connecting them. We fix that by building content systems that are planned, directed, and designed to maintain brand consistency at scale.",
+    },
+    localSection: {
+      heading: "Who we work with across the GTA",
+      intro: `${GTA_INTRO} For photography and video, that means shoots on location at your business, wherever it is in the GTA.`,
+      rows: [
+        { name: "Content that looks different everywhere", description: "Photography and video made ad hoc, with no thread connecting them to the brand." },
+        { name: "A launch that needs real imagery", description: "Products, spaces or people that stock photography cannot represent." },
+        { name: "A team that posts every week", description: "Social content that needs a system, not a scramble." },
+      ],
     },
     process: [
       {
@@ -217,13 +255,14 @@ export const services: ServiceData[] = [
     number: "03",
     name: "Digital Design and Experience",
     subtitle: "Digital Design and Experience",
+    seoH1: "Website design for brands in Toronto",
     headline:
       "Your website exists. But it does not work for your business.",
     description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
     tagline: "Your highest traffic brand touchpoint, designed.",
-    seoTitle: "Digital Design and Experience",
+    seoTitle: "Website Design for Brands, Toronto | House of Singh Studios",
     seoDescription:
-      "Website design direction, content architecture, and interface systems that make your digital presence work commercially.",
+      "Website design for Toronto and GTA businesses whose site no longer sells. Strategy, UX and interface design that turns visits into enquiries.",
     gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
     deliverables: [
       {
@@ -271,6 +310,15 @@ export const services: ServiceData[] = [
       heading: "Your website works 24 hours. It should sell like it.",
       body: "A website that looks good but does not convert is an expensive brochure. We design digital experiences where every page has a job: build trust, demonstrate capability, and move the visitor toward a conversation.",
     },
+    localSection: {
+      heading: "Who we work with across the GTA",
+      intro: `${GTA_INTRO} For website design, that means a site built around the customers you actually serve, wherever they find you.`,
+      rows: [
+        { name: "A website that no longer sells", description: "The business has moved on, the site has not, and enquiries show it." },
+        { name: "A new brand that needs a home", description: "An identity is ready and the website has to carry it with the same care." },
+        { name: "A product or service launch", description: "A new offer that deserves its own clear, convincing pages." },
+      ],
+    },
     process: [
       {
         step: "01",
@@ -310,13 +358,14 @@ export const services: ServiceData[] = [
     number: "04",
     name: "Creative Strategy and Systems",
     subtitle: "Creative Strategy and Systems",
+    seoH1: "Brand strategy and positioning in Toronto",
     headline:
       "Your team makes brand decisions without a playbook. Every output looks different.",
     description: "We build the strategic layer that gives your team the ability to make brand decisions confidently. Positioning workshops, creative direction frameworks, and visual consistency systems.",
     tagline: "Strategy before design. Clarity before everything.",
-    seoTitle: "Creative Strategy and Systems",
+    seoTitle: "Brand Strategy Consultant Toronto | House of Singh Studios",
     seoDescription:
-      "Brand positioning workshops, creative direction frameworks, and visual consistency systems. Strategy that makes everything else work.",
+      "Brand strategy and positioning for Toronto and GTA businesses at a turning point. Audits, workshops and frameworks that make every design decision clear.",
     gradient: "linear-gradient(135deg, #3A3A3A 0%, #1A1A1A 100%)",
     deliverables: [
       {
@@ -358,6 +407,15 @@ export const services: ServiceData[] = [
     impact: {
       heading: "Strategy is what separates a brand from a logo.",
       body: "A logo without strategy is decoration. A brand system without a framework is a collection of files nobody uses correctly. We build the strategic layer that gives your team the ability to make brand decisions confidently, consistently, and without needing external creative support for every choice.",
+    },
+    localSection: {
+      heading: "Who we work with across the GTA",
+      intro: `${GTA_INTRO} For brand strategy, workshops run at your office or on a call, with your leadership team in the room.`,
+      rows: [
+        { name: "Decisions without a playbook", description: "A team making brand choices by instinct, with a different result each time." },
+        { name: "Growth that outpaced the brand", description: "A business whose positioning no longer matches what it sells or who it serves." },
+        { name: "Leadership that needs clarity first", description: "A founder or board that wants the strategy settled before any design begins." },
+      ],
     },
     process: [
       {

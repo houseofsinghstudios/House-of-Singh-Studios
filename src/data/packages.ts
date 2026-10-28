@@ -43,7 +43,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     startsFrom: 10000,
     get price() { return formatDollars(this.startsFrom); },
     description:
-      "For established businesses that need a complete visual identity built to scale.",
+      "For businesses that need a complete visual identity built to scale.",
     includes: [
       "Full discovery and strategy phase",
       "Complete logo system with variations",
@@ -54,7 +54,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     ],
     timeline: "8 to 12 weeks",
     bestFor:
-      "Businesses doing $1M+ that have outgrown their current brand.",
+      "Businesses that have outgrown their current brand.",
     cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
     recommended: true,
   },

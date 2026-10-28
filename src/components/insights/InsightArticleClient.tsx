@@ -10,6 +10,7 @@ import ShareButtons from "@/components/ShareButtons";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
+import { updatedLabel } from "@/lib/article-dates";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 interface PostImage {
@@ -44,6 +45,7 @@ interface Post {
   title: string;
   slug: { current: string };
   publishedAt?: string;
+  _updatedAt?: string;
   category?: string;
   featuredImage?: PostImage;
   keyTakeaways?: string[];
@@ -220,9 +222,11 @@ function InlineNewsletter() {
   );
 }
 
-// endCta is server rendered by the page and placed where the article ends.
-export default function InsightArticleClient({ post, endCta }: { post: Post; endCta?: React.ReactNode }) {
+// endCta and relatedWork are server rendered by the page and placed where the article ends, before
+// the newsletter.
+export default function InsightArticleClient({ post, endCta, relatedWork }: { post: Post; endCta?: React.ReactNode; relatedWork?: React.ReactNode }) {
   const readTime = calculateReadTime(post.body);
+  const updated = updatedLabel(post.publishedAt, post._updatedAt);
 
   // Filter related posts to same category, max 2
   const relatedPosts = (post.relatedPosts || [])
@@ -266,6 +270,12 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
               </>
             )}
           </div>
+          <p className="ins-meta art-meta-line">
+            <Link href="/about" className="art-byline" data-cursor="link">
+              By Maninder Singh RGD, Creative Director
+            </Link>
+          </p>
+          {updated && <p className="ins-meta art-meta-line">{updated}</p>}
 
           <h1 className="art-title">{post.title}</h1>
         </div>
@@ -335,6 +345,8 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
           <div className="art-body">{endCta}</div>
         </section>
       )}
+
+      {relatedWork}
 
       {/* ═══ FOOTER (back + share + newsletter) ═══ */}
       <section style={{ padding: "0 var(--page-px)" }}>

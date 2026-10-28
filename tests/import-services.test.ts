@@ -7,6 +7,8 @@ import { services, type ServiceData } from "@/data/services";
 import {
   DELIVERABLE_FIELDS,
   IMPACT_FIELDS,
+  LOCAL_FIELDS,
+  LOCAL_ROW_FIELDS,
   PROCESS_FIELDS,
   SERVICE_FIELDS,
   checkShape,
@@ -59,6 +61,8 @@ test("the field lists match ServiceData, and the schema lists the same fields in
     s.deliverables.forEach((d) => assert.deepEqual(Object.keys(d), DELIVERABLE_FIELDS));
     s.process.forEach((p) => assert.deepEqual(Object.keys(p), PROCESS_FIELDS));
     assert.deepEqual(Object.keys(s.impact), IMPACT_FIELDS);
+    assert.deepEqual(Object.keys(s.localSection), LOCAL_FIELDS);
+    s.localSection.rows.forEach((r) => assert.deepEqual(Object.keys(r), LOCAL_ROW_FIELDS));
   }
   // The schema module loads Studio's React code, which this runner cannot, so its field names are
   // read from the file in order: the type, then every field, nested ones included, as declared.
@@ -70,6 +74,7 @@ test("the field lists match ServiceData, and the schema lists the same fields in
     ...SERVICE_FIELDS.slice(0, SERVICE_FIELDS.indexOf("deliverables") + 1),
     "serviceDeliverable", ...DELIVERABLE_FIELDS,
     "impact", ...IMPACT_FIELDS,
+    "localSection", "heading", "intro", "rows", "serviceLocalRow", ...LOCAL_ROW_FIELDS,
     "process", "serviceProcessStep", ...PROCESS_FIELDS,
     "ctaHeading",
     "order",
@@ -195,4 +200,18 @@ test("commit then verify: identical; old documents untouched; a later edit in St
 
   await commit(services, client, { log });
   assert.equal(await verify(services, client, { log }), 0, "a second commit restores the copy");
+});
+
+test("transform: the GTA section keeps heading and intro as text and gives each row a type and a fixed key", () => {
+  const doc = toServiceDocument(first, 1);
+  assert.equal(doc.seoH1, "Brand identity design and rebranding in Toronto");
+  assert.equal(doc.localSection.heading, first.localSection.heading);
+  assert.equal(doc.localSection.intro, first.localSection.intro);
+  assert.equal(doc.localSection.rows.length, 3);
+  assert.deepEqual(doc.localSection.rows[2], { _type: "serviceLocalRow", _key: "row-03", ...first.localSection.rows[2] });
+  const changed = clone(doc);
+  changed.localSection.rows[1].name = "Edited";
+  assert.ok(compareService(first, changed, 1).includes(`localSection.rows[1].name: code ${JSON.stringify(first.localSection.rows[1].name)}, Sanity "Edited"`));
+  assert.match(checkShape({ ...first, localSection: { heading: "x", intro: "y" } } as unknown as ServiceData).join(), /localSection is missing rows/);
+  assert.equal(Object.fromEntries(describeService(first)).localSection, "heading, intro and 3 rows");
 });

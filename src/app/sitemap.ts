@@ -3,14 +3,15 @@ import { client } from "@/lib/sanity/client";
 import { services } from "@/data/services";
 import { programmePage } from "@/lib/initiatives/pages";
 import { getInitiatives } from "@/lib/sanity/initiatives";
+import { STATIC_PAGES, staticLastmod } from "@/lib/sitemap-dates";
 
 // Rebuilt hourly, so a newly published project or article appears without a redeploy.
 export const revalidate = 3600;
 
 const baseUrl = "https://studios.houseofsingh.com";
 
-// Static public pages. No lastModified: a build date would claim changes that never happened.
-const staticPages = ["", "/about", "/ai", "/brand-pulse", "/careers", "/contact", "/insights", "/partners", "/privacy", "/services", "/start", "/terms", "/work"];
+// Every URL has a lastModified: code pages from the date map in src/lib/sitemap-dates.ts (never the
+// build date, which would claim changes that never happened), Sanity pages from _updatedAt.
 
 // Published documents only. Drafts and release versions are unpublished and never listed.
 // The legacy fallback projects in src/data/projects.ts are deliberately not listed either.
@@ -47,14 +48,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   };
 
-  staticPages.forEach((path) => add(path));
-  services.forEach((service) => add(`/services/${service.slug}`));
+  STATIC_PAGES.filter((path) => path !== "/initiatives").forEach((path) => add(path, staticLastmod(path)));
+  services.forEach((service) => add(`/services/${service.slug}`, staticLastmod(`/services/${service.slug}`)));
 
   // Initiatives: the landing page and every programme page that renders. Hidden ones never appear.
   const initiatives = await getInitiatives();
-  add("/initiatives");
+  add("/initiatives", staticLastmod("/initiatives"));
   initiatives.forEach((i) => {
-    if (programmePage(i.slug, initiatives)) add(`/initiatives/${i.slug}`);
+    if (programmePage(i.slug, initiatives)) add(`/initiatives/${i.slug}`, staticLastmod(`/initiatives/${i.slug}`));
   });
 
   // If Sanity is unreachable the sitemap still serves the pages above, and retries next hour.

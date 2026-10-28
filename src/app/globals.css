@@ -555,6 +555,12 @@ body {
   position: relative;
   display: inline-block;
 }
+.wp-heading-title {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  margin: 0;
+}
 .wp-count {
   font-family: var(--sans);
   font-weight: 500;
@@ -1326,6 +1332,21 @@ body {
   font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
+}
+/* Services delivered: links in the meta label style, to the service pages the project demonstrates. */
+.cs-service-link {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 3px;
+}
+@media (hover: hover) {
+  .cs-service-link:hover {
+    color: var(--text-primary);
+  }
 }
 
 /* ── Challenge + Approach (two-column with divider) ── */
@@ -2144,6 +2165,52 @@ body {
   color: var(--text-secondary);
   max-width: 560px;
   margin: 24px 0 0;
+}
+
+/* ── Service detail: Related thinking. Two or three article cards in a row between 1px rules,
+   in the /insights card type; the title, one line, then the read time. ── */
+.svcd-thinking {
+  padding: 0 var(--page-px) clamp(48px, 8vw, 96px);
+}
+.svcd-thinking-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px clamp(24px, 3vw, 48px);
+  margin-top: 24px;
+}
+.svcd-thinking-card {
+  border-top: 1px solid var(--text-muted);
+  padding-top: 20px;
+}
+.svcd-thinking-card .ins-card-title {
+  margin: 0;
+}
+.svcd-thinking-line {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+}
+.ins-card .svcd-thinking-meta {
+  margin: 12px 0 0;
+}
+@media (max-width: 767px) {
+  .svcd-thinking-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Related work at the end of an article: the project cards inside the article column. */
+.art-related-work {
+  margin-top: clamp(48px, 6vw, 72px);
+}
+.art-related-services {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  margin-top: 32px;
 }
 
 /* ── Service detail v2: Deliverables ── */
@@ -3055,6 +3122,19 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   letter-spacing: 0.06em;
   color: var(--text-muted);
   margin: 0;
+}
+/* A further line under an article's date line: Updated, and the byline. */
+.ins-meta.art-meta-line {
+  margin-top: 8px;
+}
+.art-byline {
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .art-byline:hover {
+    color: var(--text-secondary);
+  }
 }
 .ins-meta-dot {
   margin: 0 6px;

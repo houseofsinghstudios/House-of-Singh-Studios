@@ -6,6 +6,14 @@ import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
 import { shareImageUrl } from "@/lib/sanity/image";
+import { getProjectCards } from "@/lib/sanity/projects";
+import { relatedWork, servicesForArticle } from "@/lib/linking";
+import RelatedWork from "@/components/insights/RelatedWork";
+import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
+
+type SlugRef = { slug?: { current?: string } } | null;
+const slugsOf = (refs: unknown): string[] =>
+  Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];
 
 export const revalidate = 60;
 
@@ -50,6 +58,10 @@ export default async function InsightArticlePage({ params }: Props) {
     notFound();
   }
 
+  // "Related work": up to two case studies for the article's services (src/lib/linking.ts).
+  const services = servicesForArticle(post.slug.current, slugsOf(post.relatedServices));
+  const work = relatedWork(services, await getProjectCards(), slugsOf(post.relatedCaseStudies));
+
   return (
     <>
       <BreadcrumbSchema items={[
@@ -70,16 +82,10 @@ export default async function InsightArticlePage({ params }: Props) {
                 : post.seoDescription || "Insights from House of Singh Studios.",
             image: post.featuredImage?.asset?.url || "",
             datePublished: post.publishedAt,
-            author: {
-              "@type": "Person",
-              name: "Maninder Singh",
-              url: "https://houseofsingh.com",
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "House of Singh Studios",
-              url: "https://studios.houseofsingh.com",
-            },
+            dateModified: post._updatedAt || post.publishedAt,
+            // The founder and the studio, defined once on every page in the site layout.
+            author: personRef,
+            publisher: orgRef,
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": `https://studios.houseofsingh.com/insights/${post.slug.current}`,
@@ -102,7 +108,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} />
+      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
     </>
   );
 }

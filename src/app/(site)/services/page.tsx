@@ -11,12 +11,12 @@ import PlannerInvite from "@/components/project-planner/PlannerInvite";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: 'Services',
-  description: 'Brand identity, visual media, digital design, and creative strategy. Four capabilities built to solve business problems for established businesses.',
+  title: { absolute: 'Branding and Design Services Toronto | House of Singh Studios' },
+  description: 'Brand identity, visual media, digital design and creative strategy. Four capabilities built to solve business problems for businesses that have outgrown their brand.',
   alternates: { canonical: 'https://studios.houseofsingh.com/services' },
   openGraph: {
-    title: 'Services — House of Singh Studios',
-    description: 'Brand identity, visual media, digital design, and creative strategy. Four capabilities built to solve business problems.',
+    title: 'Branding and Design Services Toronto | House of Singh Studios',
+    description: 'Brand identity, visual media, digital design and creative strategy. Four capabilities built to solve business problems for businesses that have outgrown their brand.',
     url: 'https://studios.houseofsingh.com/services',
     images: [DEFAULT_SHARE_IMAGE],
   },

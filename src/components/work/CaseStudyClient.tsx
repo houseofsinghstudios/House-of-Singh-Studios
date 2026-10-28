@@ -3,17 +3,18 @@
 import type { Project } from "@/data/projects";
 import type { ProjectDetail } from "@/data/projectDetails";
 import { getProjectDetail } from "@/data/projectDetails";
-import CaseStudyTemplate from "@/components/casestudy/CaseStudyTemplate";
+import CaseStudyTemplate, { type ServiceLink } from "@/components/casestudy/CaseStudyTemplate";
 
 interface CaseStudyClientProps {
   project: Project;
   detail: ProjectDetail | null;
+  services?: ServiceLink[];
 }
 
-export default function CaseStudyClient({ project, detail }: CaseStudyClientProps) {
+export default function CaseStudyClient({ project, detail, services = [] }: CaseStudyClientProps) {
   const resolved = detail || getProjectDetail(project.slug);
 
   if (!resolved) return null;
 
-  return <CaseStudyTemplate project={resolved} />;
+  return <CaseStudyTemplate project={resolved} services={services} />;
 }

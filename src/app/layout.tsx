@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     default: 'House of Singh Studios | Brand Identity and Design, Toronto',
     template: '%s — House of Singh Studios',
   },
-  description: 'A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for established businesses.',
+  description: 'A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for businesses that have outgrown their brand.',
   // No default og or twitter title and description: each page's own title and description
   // fill them, and Next copies a page's openGraph title into its twitter card. Defaults set here
   // would make every page share the homepage's social title.
@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en-CA" className={inter.variable}>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />

@@ -1,6 +1,7 @@
 import { client } from "./client";
 import { shareImageUrl, urlFor } from "./image";
 import { disciplineLabel } from "@/lib/disciplines";
+import { coverAlt, projectAlt } from "@/lib/alt-text";
 import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
@@ -172,7 +173,8 @@ function toBlockImage(raw: RawBlockImage | null | undefined, fallbackAlt: string
   if (!id || !width || !height) return null;
   try {
     const src = urlFor({ _id: id }).width(2000).fit("max").auto("format").url();
-    return { src, alt: raw?.alt || fallbackAlt, width, height };
+    // fallbackAlt is the project name: "<project>: <what is shown>".
+    return { src, alt: projectAlt(fallbackAlt, raw?.alt), width, height };
   } catch {
     return null;
   }
@@ -301,13 +303,15 @@ function mapSanityToProject(doc: any, index: number): Project {
 function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
+  // The cover's alt names the project and its primary discipline.
+  const cover = coverAlt(doc.title || "", doc.featuredImage?.alt, Array.isArray(doc.disciplines) && doc.disciplines[0] ? disciplineLabel(doc.disciplines[0]) : "");
 
   // Build gallery images
   const galleryImages: ProjectDetailImage[] = (doc.gallery || [])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .map((img: any) => ({
       src: sanityImageUrl(img),
-      alt: img.alt || doc.title || "",
+      alt: projectAlt(doc.title || "", img.alt),
     }))
     .filter((img: ProjectDetailImage) => img.src);
 
@@ -332,7 +336,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
     summary: overviewText,
     heroImage: {
       src: imageUrl,
-      alt: doc.featuredImage?.alt || doc.title || "",
+      alt: cover,
     },
     overview: {
       heading: "The Business",
@@ -351,7 +355,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
       set1: galleryImages.length > 0
         ? galleryImages
         : imageUrl
-          ? [{ src: imageUrl, alt: doc.title || "" }]
+          ? [{ src: imageUrl, alt: cover }]
           : [],
     },
     result: {
@@ -501,6 +505,23 @@ const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategori
 
 type ServiceCategoryMap = Record<string, ServiceProject[]>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toServiceProject(doc: any): ServiceProject {
+  return {
+    slug: doc.slug || "",
+    name: doc.title || "",
+    subtitle: (
+      doc.industry ||
+      (doc.client && doc.client !== doc.title ? doc.client : "") ||
+      firstSentence(doc.overview) ||
+      ""
+    ).trim(),
+    image: sanityImageUrl(doc.featuredImage),
+    disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
+    projectType: projectType(doc.projectType),
+  };
+}
+
 export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryMap> {
   const empty: ServiceCategoryMap = {
     "brand-identity": [],
@@ -518,19 +539,7 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     docs.forEach((doc: any) => {
       const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
-      const project: ServiceProject = {
-        slug: doc.slug || "",
-        name: doc.title || "",
-        subtitle: (
-          doc.industry ||
-          (doc.client && doc.client !== doc.title ? doc.client : "") ||
-          firstSentence(doc.overview) ||
-          ""
-        ).trim(),
-        image: sanityImageUrl(doc.featuredImage),
-        disciplines: Array.isArray(doc.disciplines) ? doc.disciplines : [],
-        projectType: projectType(doc.projectType),
-      };
+      const project = toServiceProject(doc);
       for (const cat of new Set(categories)) {
         if (grouped[cat]) grouped[cat].push(project);
       }
@@ -539,6 +548,20 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
   } catch (error) {
     console.error("[sanity/projects] Service category fetch failed:", error);
     return empty;
+  }
+}
+
+// Every case study as a card, newest first: the "Related work" row at the end of an article.
+// Empty if Sanity is unreachable, and the row is then hidden.
+export async function getProjectCards(): Promise<ServiceProject[]> {
+  try {
+    const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current)] | order(publishedAt desc) {
+  title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage
+}`);
+    return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
+  } catch (error) {
+    console.error("[sanity/projects] Project cards fetch failed:", error);
+    return [];
   }
 }
 

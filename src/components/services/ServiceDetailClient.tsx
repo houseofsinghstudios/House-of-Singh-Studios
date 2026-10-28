@@ -1,21 +1,22 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import Image from "next/image";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
+import ServiceLocalSection from "./ServiceLocalSection";
+import RelatedThinking from "./RelatedThinking";
+import ProjectCardRow from "@/components/work/ProjectCardRow";
+import type { ArticleCard } from "@/lib/sanity/articles";
 import NextPageLink from "@/components/layout/NextPageLink";
-import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
-import { projectTypeLabel } from "@/lib/initiatives/types";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
-    "This service is for established businesses doing $1M+ in revenue that have outgrown their original branding. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
+    "This service is for businesses that have outgrown the brand they started with. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
   "visual-media":
     "This service is for businesses that have a brand identity but no visual content strategy. Your photography is inconsistent, your video content is ad hoc, and your social presence does not match your brand positioning. You need a system, not a one off shoot.",
   "digital-design":
@@ -27,8 +28,11 @@ const CLIENT_QUALIFIER: Record<string, string> = {
 export default function ServiceDetailClient({
   slug,
   projects,
+  articles = [],
 }: {
   slug: string;
+  // Two or three articles for "Related thinking", chosen in src/lib/linking.ts.
+  articles?: ArticleCard[];
   // Sanity case studies that list this service. The section is hidden when there are none.
   projects: ServiceProject[];
 }) {
@@ -54,10 +58,11 @@ export default function ServiceDetailClient({
         <p className="editorial-label css-reveal" style={{ transitionDelay: "0ms", margin: "24px 0 12px" }}>
           (Services)
         </p>
-        <p className="svcd-service-name css-reveal" style={{ transitionDelay: "60ms" }}>
-          {service.subtitle}
-        </p>
-        <h1
+        {/* The page topic is the h1, in the small label style; the large hero line is an h2. */}
+        <h1 className="svcd-service-name css-reveal" style={{ transitionDelay: "60ms" }}>
+          {service.seoH1}
+        </h1>
+        <h2
           className="svcd-headline css-reveal"
           style={{
             transitionDelay: "120ms",
@@ -65,7 +70,7 @@ export default function ServiceDetailClient({
           }}
         >
           {service.headline}
-        </h1>
+        </h2>
         <p className="svcd-hero-body css-reveal" style={{ transitionDelay: "200ms" }}>
           {service.description}
         </p>
@@ -138,12 +143,16 @@ export default function ServiceDetailClient({
         </div>
       </section>
 
-      {/* ═══ (04) HOW WE DO IT — Process Accordion ═══ */}
+      {/* ═══ (04) ACROSS THE GTA ═══ */}
+      <ServiceLocalSection local={service.localSection} number="04" />
+      <RelatedThinking articles={articles} />
+
+      {/* ═══ (05) HOW WE DO IT — Process Accordion ═══ */}
       <section
         style={{ padding: "clamp(48px, 8vw, 96px) var(--page-px)" }}
       >
         <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
-          (04) How we do it
+          (05) How we do it
         </p>
         <h2 className="svcd-process-heading css-reveal" style={{ transitionDelay: "80ms" }}>
           Five stages. One system.
@@ -153,7 +162,7 @@ export default function ServiceDetailClient({
         </div>
       </section>
 
-      {/* ═══ (05) RELATED WORK ═══ */}
+      {/* ═══ (06) RELATED WORK ═══ */}
       {hasRelatedWork && (
         <section
           style={{
@@ -162,39 +171,9 @@ export default function ServiceDetailClient({
           }}
         >
           <p className="editorial-label css-reveal" style={{ margin: "0 0 40px" }}>
-            (05) Related work
+            (06) Related work
           </p>
-          <div className="svcd-work-grid">
-            {projects.map((work, i) => (
-              <Link
-                key={work.slug}
-                href={`/work/${work.slug}`}
-                className="svcd-work-card css-reveal"
-                data-cursor="view"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="svcd-work-img reveal-clip">
-                  {work.image && (
-                    <Image
-                      src={work.image}
-                      alt={work.name}
-                      fill
-                      sizes="(max-width: 767px) 100vw, 50vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                  )}
-                </div>
-                <p className="svcd-work-name">{work.name}</p>
-                {(work.subtitle || projectTypeLabel(work.projectType)) && (
-                  <p className="svcd-work-cat">
-                    <ProjectTypeLabel type={work.projectType} />
-                    {projectTypeLabel(work.projectType) && work.subtitle ? " · " : ""}
-                    {work.subtitle}
-                  </p>
-                )}
-              </Link>
-            ))}
-          </div>
+          <ProjectCardRow projects={projects} />
         </section>
       )}
 

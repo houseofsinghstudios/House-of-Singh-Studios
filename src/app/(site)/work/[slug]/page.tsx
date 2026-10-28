@@ -4,6 +4,9 @@ import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
+import { servicesForDisciplines } from "@/lib/linking";
+import { SERVICE_TERMS, orgRef } from "@/lib/schema";
+import { disciplineLabel } from "@/lib/disciplines";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -48,6 +51,8 @@ export default async function CaseStudyPage({
   if (!project) notFound();
 
   const detail = await getProjectDetailBySlug(slug);
+  // "Services delivered": the service pages this project demonstrates, from its discipline tags.
+  const services = servicesForDisciplines(project.disciplines).map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }));
 
   return (
     <>
@@ -56,7 +61,27 @@ export default async function CaseStudyPage({
         { name: 'Work', url: 'https://studios.houseofsingh.com/work' },
         { name: project.name, url: `https://studios.houseofsingh.com/work/${slug}` },
       ]} />
-      <CaseStudyClient project={project} detail={detail} />
+      {/* The project as a creative work by the studio. Exploration projects say so in their genre. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CreativeWork",
+            name: project.name,
+            description: project.seoDescription || project.description,
+            ...(project.shareImage || project.image ? { image: project.shareImage || project.image } : {}),
+            creator: orgRef,
+            about: { "@type": "Thing", name: project.name },
+            genre: [
+              ...(project.projectType === "exploration" ? ["Exploration"] : []),
+              ...(project.disciplines || []).map(disciplineLabel),
+            ],
+            url: `https://studios.houseofsingh.com/work/${slug}`,
+          }),
+        }}
+      />
+      <CaseStudyClient project={project} detail={detail} services={services} />
     </>
   );
 }
