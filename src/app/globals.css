@@ -3115,6 +3115,10 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   color: var(--text-muted);
   margin: 0;
 }
+/* A further line under an article's date line: Updated, and the byline. */
+.ins-meta.art-meta-line {
+  margin-top: 8px;
+}
 .ins-meta-dot {
   margin: 0 6px;
   opacity: 0.5;

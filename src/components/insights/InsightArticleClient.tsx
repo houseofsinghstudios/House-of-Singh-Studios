@@ -10,6 +10,7 @@ import ShareButtons from "@/components/ShareButtons";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
+import { updatedLabel } from "@/lib/article-dates";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 interface PostImage {
@@ -44,6 +45,7 @@ interface Post {
   title: string;
   slug: { current: string };
   publishedAt?: string;
+  _updatedAt?: string;
   category?: string;
   featuredImage?: PostImage;
   keyTakeaways?: string[];
@@ -224,6 +226,7 @@ function InlineNewsletter() {
 // the newsletter.
 export default function InsightArticleClient({ post, endCta, relatedWork }: { post: Post; endCta?: React.ReactNode; relatedWork?: React.ReactNode }) {
   const readTime = calculateReadTime(post.body);
+  const updated = updatedLabel(post.publishedAt, post._updatedAt);
 
   // Filter related posts to same category, max 2
   const relatedPosts = (post.relatedPosts || [])
@@ -267,6 +270,7 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
               </>
             )}
           </div>
+          {updated && <p className="ins-meta art-meta-line">{updated}</p>}
 
           <h1 className="art-title">{post.title}</h1>
         </div>

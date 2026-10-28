@@ -9,6 +9,7 @@ import { shareImageUrl } from "@/lib/sanity/image";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
 import RelatedWork from "@/components/insights/RelatedWork";
+import { orgRef, personRef } from "@/lib/schema";
 
 type SlugRef = { slug?: { current?: string } } | null;
 const slugsOf = (refs: unknown): string[] =>
@@ -81,16 +82,10 @@ export default async function InsightArticlePage({ params }: Props) {
                 : post.seoDescription || "Insights from House of Singh Studios.",
             image: post.featuredImage?.asset?.url || "",
             datePublished: post.publishedAt,
-            author: {
-              "@type": "Person",
-              name: "Maninder Singh",
-              url: "https://houseofsingh.com",
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "House of Singh Studios",
-              url: "https://studios.houseofsingh.com",
-            },
+            dateModified: post._updatedAt || post.publishedAt,
+            // The founder and the studio, defined once on every page in the site layout.
+            author: personRef,
+            publisher: orgRef,
             mainEntityOfPage: {
               "@type": "WebPage",
               "@id": `https://studios.houseofsingh.com/insights/${post.slug.current}`,
