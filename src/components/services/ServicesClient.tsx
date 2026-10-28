@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Link } from "next-view-transitions";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
+import { serviceLinkLabel } from "@/lib/linking";
 import type { ServiceProject } from "@/lib/sanity/projects";
 
 const BLOCKS = [
@@ -168,6 +169,7 @@ export default function ServicesClient({ projectsByCategory }: Props) {
               </ul>
               <Link
                 href={`/services/${block.slug}`}
+                aria-label={serviceLinkLabel(block.slug, "Learn More")}
                 className="svc-block-btn"
                 style={{ marginTop: 32 }}
                 data-cursor="link"

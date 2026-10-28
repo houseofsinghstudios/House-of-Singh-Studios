@@ -1,15 +1,15 @@
 "use client";
 
 import { Link } from "next-view-transitions";
-import Image from "next/image";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
 import ServiceLocalSection from "./ServiceLocalSection";
+import RelatedThinking from "./RelatedThinking";
+import ProjectCardRow from "@/components/work/ProjectCardRow";
+import type { ArticleCard } from "@/lib/sanity/articles";
 import NextPageLink from "@/components/layout/NextPageLink";
-import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
-import { projectTypeLabel } from "@/lib/initiatives/types";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
@@ -28,8 +28,11 @@ const CLIENT_QUALIFIER: Record<string, string> = {
 export default function ServiceDetailClient({
   slug,
   projects,
+  articles = [],
 }: {
   slug: string;
+  // Two or three articles for "Related thinking", chosen in src/lib/linking.ts.
+  articles?: ArticleCard[];
   // Sanity case studies that list this service. The section is hidden when there are none.
   projects: ServiceProject[];
 }) {
@@ -142,6 +145,7 @@ export default function ServiceDetailClient({
 
       {/* ═══ (04) ACROSS THE GTA ═══ */}
       <ServiceLocalSection local={service.localSection} number="04" />
+      <RelatedThinking articles={articles} />
 
       {/* ═══ (05) HOW WE DO IT — Process Accordion ═══ */}
       <section
@@ -169,37 +173,7 @@ export default function ServiceDetailClient({
           <p className="editorial-label css-reveal" style={{ margin: "0 0 40px" }}>
             (06) Related work
           </p>
-          <div className="svcd-work-grid">
-            {projects.map((work, i) => (
-              <Link
-                key={work.slug}
-                href={`/work/${work.slug}`}
-                className="svcd-work-card css-reveal"
-                data-cursor="view"
-                style={{ transitionDelay: `${i * 100}ms` }}
-              >
-                <div className="svcd-work-img reveal-clip">
-                  {work.image && (
-                    <Image
-                      src={work.image}
-                      alt={work.name}
-                      fill
-                      sizes="(max-width: 767px) 100vw, 50vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                  )}
-                </div>
-                <p className="svcd-work-name">{work.name}</p>
-                {(work.subtitle || projectTypeLabel(work.projectType)) && (
-                  <p className="svcd-work-cat">
-                    <ProjectTypeLabel type={work.projectType} />
-                    {projectTypeLabel(work.projectType) && work.subtitle ? " · " : ""}
-                    {work.subtitle}
-                  </p>
-                )}
-              </Link>
-            ))}
-          </div>
+          <ProjectCardRow projects={projects} />
         </section>
       )}
 

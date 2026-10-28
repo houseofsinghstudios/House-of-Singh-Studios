@@ -14,10 +14,18 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import { serviceForCaseStudy, startHref } from "@/lib/project-planner/start-links";
 
+// A service page this project demonstrates, with descriptive link text.
+export interface ServiceLink {
+  href: string;
+  label: string;
+}
+
 export default function CaseStudyTemplate({
   project,
+  services = [],
 }: {
   project: ProjectDetail;
+  services?: ServiceLink[];
 }) {
   const metaItems = [
     { label: "Client", value: project.name },
@@ -123,6 +131,18 @@ export default function CaseStudyTemplate({
               (01) Overview
             </p>
             <OverviewMeta items={metaItems} />
+            {services.length > 0 && (
+              <div className="cs-meta-item cs-services-delivered">
+                <span className="cs-meta-label">Services delivered</span>
+                <span className="dtags">
+                  {services.map((s) => (
+                    <Link key={s.href} href={s.href} className="dtag cs-service-link" data-cursor="link">
+                      {s.label}
+                    </Link>
+                  ))}
+                </span>
+              </div>
+            )}
           </div>
           <div className="cs-overview-right">
             <h2

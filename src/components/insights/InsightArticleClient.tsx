@@ -220,8 +220,9 @@ function InlineNewsletter() {
   );
 }
 
-// endCta is server rendered by the page and placed where the article ends.
-export default function InsightArticleClient({ post, endCta }: { post: Post; endCta?: React.ReactNode }) {
+// endCta and relatedWork are server rendered by the page and placed where the article ends, before
+// the newsletter.
+export default function InsightArticleClient({ post, endCta, relatedWork }: { post: Post; endCta?: React.ReactNode; relatedWork?: React.ReactNode }) {
   const readTime = calculateReadTime(post.body);
 
   // Filter related posts to same category, max 2
@@ -335,6 +336,8 @@ export default function InsightArticleClient({ post, endCta }: { post: Post; end
           <div className="art-body">{endCta}</div>
         </section>
       )}
+
+      {relatedWork}
 
       {/* ═══ FOOTER (back + share + newsletter) ═══ */}
       <section style={{ padding: "0 var(--page-px)" }}>

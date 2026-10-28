@@ -4,6 +4,7 @@
 import { Link } from "next-view-transitions";
 import { SERVICE_LINES } from "@/lib/brand-pulse/content";
 import type { Level, Result } from "@/lib/brand-pulse/types";
+import { serviceLinkLabel } from "@/lib/linking";
 import "./brand-pulse.css";
 
 interface Props {
@@ -62,12 +63,12 @@ export default function PulseResultView({ result, stage = 3, locked = false }: P
         <div className="bp-services bp-reveal">
           <p>
             {SERVICE_LINES.recommended}{" "}
-            <Link href={`/services/${result.service.slug}`} className="bp-link">{result.service.name}</Link>
+            <Link href={`/services/${result.service.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.service.slug, result.service.name)}>{result.service.name}</Link>
           </p>
           {result.alsoService && (
             <p>
               {SERVICE_LINES.also}{" "}
-              <Link href={`/services/${result.alsoService.slug}`} className="bp-link">{result.alsoService.name}</Link>
+              <Link href={`/services/${result.alsoService.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.alsoService.slug, result.alsoService.name)}>{result.alsoService.name}</Link>
             </p>
           )}
         </div>

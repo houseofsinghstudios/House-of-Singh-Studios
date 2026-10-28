@@ -6,6 +6,8 @@ import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { AREA_SERVED, SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
+import { getArticleCards } from "@/lib/sanity/articles";
+import { articleLine, relatedThinking } from "@/lib/linking";
 
 // Same as /services: newly imported projects appear here within a minute, without a deploy.
 export const revalidate = 60;
@@ -74,7 +76,10 @@ export default async function ServiceDetailPage({
   if (!service) notFound();
   const schema = serviceSchemaMap[slug];
   // Real case studies from Sanity that list this service. Empty if none, or if Sanity is unreachable.
-  const projects = (await getAllProjectsGroupedByService())[slug] || [];
+  const [grouped, articleCards] = await Promise.all([getAllProjectsGroupedByService(), getArticleCards()]);
+  const projects = grouped[slug] || [];
+  // "Related thinking": two or three articles chosen by slug in src/lib/linking.ts.
+  const articles = relatedThinking(slug, articleCards).map((a) => ({ ...a, line: articleLine(a.slug, a.line) }));
   return (
     <>
       <BreadcrumbSchema items={[
@@ -107,7 +112,7 @@ export default async function ServiceDetailPage({
           }}
         />
       )}
-      <ServiceDetailClient slug={slug} projects={projects} />
+      <ServiceDetailClient slug={slug} projects={projects} articles={articles} />
     </>
   );
 }

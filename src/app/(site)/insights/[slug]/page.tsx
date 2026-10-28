@@ -6,6 +6,13 @@ import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
 import { shareImageUrl } from "@/lib/sanity/image";
+import { getProjectCards } from "@/lib/sanity/projects";
+import { relatedWork, servicesForArticle } from "@/lib/linking";
+import RelatedWork from "@/components/insights/RelatedWork";
+
+type SlugRef = { slug?: { current?: string } } | null;
+const slugsOf = (refs: unknown): string[] =>
+  Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];
 
 export const revalidate = 60;
 
@@ -49,6 +56,10 @@ export default async function InsightArticlePage({ params }: Props) {
   if (!post) {
     notFound();
   }
+
+  // "Related work": up to two case studies for the article's services (src/lib/linking.ts).
+  const services = servicesForArticle(post.slug.current, slugsOf(post.relatedServices));
+  const work = relatedWork(services, await getProjectCards(), slugsOf(post.relatedCaseStudies));
 
   return (
     <>
@@ -102,7 +113,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} />
+      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} />} />
     </>
   );
 }

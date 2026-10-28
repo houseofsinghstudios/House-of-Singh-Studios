@@ -96,6 +96,7 @@ export async function getPostBySlug(slug: string) {
       seoTitle,
       seoDescription,
       publishedAt,
+      _updatedAt,
       "previousPost": *[_type == "post" && publishedAt < ^.publishedAt] | order(publishedAt desc) [0] {
         title,
         slug,
