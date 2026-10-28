@@ -4,7 +4,7 @@ import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
-import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, articleTitles } from "@/lib/seo";
 import { shareImageUrl } from "@/lib/sanity/image";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
@@ -29,15 +29,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Post Not Found" };
   }
 
+  // The SEO title, when set, is the whole search and social title; otherwise the article title
+  // with the studio name. The twitter card copies the openGraph title.
+  const titles = articleTitles(post.seoTitle, post.title);
   return {
-    // The SEO title when set, otherwise the article title: the same choice og makes below.
-    title: bareTitle(post.seoTitle, post.title),
+    title: titles.title,
     description:
       post.seoDescription ||
       "Insights from House of Singh Studios.",
     alternates: { canonical: `https://studios.houseofsingh.com/insights/${slug}` },
     openGraph: {
-      title: studioTitle(bareTitle(post.seoTitle, post.title)),
+      title: titles.social,
       description: post.seoDescription || "Insights from House of Singh Studios.",
       url: `https://studios.houseofsingh.com/insights/${slug}`,
       // The article's image cropped to 1200x630, never the original upload; the default otherwise.

@@ -1,4 +1,5 @@
 // Brand Pulse intro screen. Rendered inside the BrandPulse client flow.
+import { RgdText } from "@/components/RgdLink";
 import { INTRO } from "@/lib/brand-pulse/content";
 
 interface Props {
@@ -28,7 +29,7 @@ export default function PulseIntro({ headingLevel: Heading, startLabel, onStart 
             <li key={item}>{item}</li>
           ))}
         </ul>
-        <p className="bp-trust">{INTRO.trust}</p>
+        <p className="bp-trust"><RgdText text={INTRO.trust} /></p>
       </div>
     </div>
   );
