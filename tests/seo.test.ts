@@ -34,3 +34,21 @@ test("a title that is only the studio name, or blank, falls back to the next can
 test("a studio name in the middle of a title is left alone", () => {
   assert.equal(bareTitle("Why House of Singh Studios uses AI", "x"), "Why House of Singh Studios uses AI");
 });
+
+test("articles: an SEO title is the whole title, exactly as written; without one the studio name is added once", async () => {
+  const { articleTitles } = await import("@/lib/seo");
+  assert.deepEqual(articleTitles("Branding Agency Pricing Toronto (2026): What Agencies Charge", "Branding Agency Pricing in Toronto"), {
+    title: { absolute: "Branding Agency Pricing Toronto (2026): What Agencies Charge" },
+    social: "Branding Agency Pricing Toronto (2026): What Agencies Charge",
+  });
+  assert.deepEqual(articleTitles("  Why Your Brand Looks Different Everywhere | House of Singh Studios  ", "x"), {
+    title: { absolute: "Why Your Brand Looks Different Everywhere | House of Singh Studios" },
+    social: "Why Your Brand Looks Different Everywhere | House of Singh Studios",
+  }, "kept as written, only trimmed");
+  for (const none of [undefined, null, "", "   "]) {
+    assert.deepEqual(articleTitles(none, "How to Brief a Design Studio"), {
+      title: "How to Brief a Design Studio",
+      social: "How to Brief a Design Studio — House of Singh Studios",
+    }, String(none));
+  }
+});
