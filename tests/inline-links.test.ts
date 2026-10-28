@@ -46,9 +46,9 @@ test("Brand Identity answers: 13 links, the call link from the shared constant, 
   for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
 });
 
-test("FAQPage text: only Brand Identity has questions, and the plain text equals what is shown", () => {
+test("FAQPage text: only Brand Identity and Website Design have questions, and the plain text equals what is shown", () => {
   for (const s of services) {
-    if (s.slug !== "brand-identity") {
+    if (!["brand-identity", "digital-design"].includes(s.slug)) {
       assert.ok(!s.faqs || s.faqs.length === 0, s.slug);
       continue;
     }
@@ -58,4 +58,26 @@ test("FAQPage text: only Brand Identity has questions, and the plain text equals
       assert.doesNotMatch(plainText(f.answer), /\]\(|https?:\/\//, "no markup or addresses left in the plain text");
     }
   }
+});
+
+test("question marks inside an answer are ordinary text, beside links", () => {
+  const text = "Ask: Who will design my site? Who writes the content? See [our work](/work)?";
+  assert.deepEqual(parseInlineLinks(text), [
+    { text: "Ask: Who will design my site? Who writes the content? See " },
+    { text: "our work", href: "/work" },
+    { text: "?" },
+  ]);
+  assert.equal(plainText(text), "Ask: Who will design my site? Who writes the content? See our work?");
+});
+
+test("Website Design answers: 12 links, both calls from the shared constant, every path a site page", () => {
+  const faqs = services.find((s) => s.slug === "digital-design")!.faqs!;
+  assert.equal(faqs.length, 6);
+  const links = faqs.flatMap((f) => parseInlineLinks(f.answer).filter((p) => p.href));
+  assert.equal(links.length, 12);
+  assert.deepEqual(links.filter((l) => isExternal(l.href!)).map((l) => l.href), [DISCOVERY_CALL_URL, DISCOVERY_CALL_URL]);
+  for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
+  const five = plainText(faqs[4].answer);
+  assert.ok(five.includes("Who will actually design my site? Is there a strategy phase before design? Who writes the content?"), "the questions inside answer 5 survive");
+  assert.ok(!/\]\(|\)\]/.test(five));
 });

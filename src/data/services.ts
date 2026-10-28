@@ -394,6 +394,38 @@ export const services: ServiceData[] = [
           "Design handoff, development oversight, and post launch iteration support.",
       },
     ],
+    faqs: [
+      {
+        question: "How much does a website cost in Canada?",
+        answer:
+          "A business website in Canada typically costs $3,000 to $12,000 from a freelancer, $12,000 to $45,000 from a design studio, and $45,000 and beyond from a large agency, before HST. Template builders can cost under $3,000, plus your own time. What changes the price is how much strategy, custom design and content goes in. Website design cost in Toronto sits toward the top of the Canadian range. For a full breakdown, read [how much a website costs in Canada](/insights/how-much-does-a-website-cost-in-canada), or get a personal estimate in two minutes with the [Project Planner](/start).",
+      },
+      {
+        question: "How long does it take to build a website?",
+        answer:
+          `A template website can be live within days. A freelance build usually takes four to eight weeks, and a studio project eight to sixteen weeks, most of it spent on strategy, structure, design and content rather than code. A website redesign takes a similar time, depending on how much is rethought. If your brand needs work too, plan [brand identity](/services/brand-identity) first, so the site is designed once, not twice. The fastest way to a clear timeline is a [30 minute discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "How much does a website redesign cost?",
+        answer:
+          "A website redesign that keeps your structure and content and refreshes the design costs less than a new site. A redesign that rethinks strategy, structure, content and design costs about the same as building a new website, because it effectively is one. Redesign when the site still serves your business but looks dated or converts poorly; start fresh when the business, audience or offer has changed. Not sure where your brand stands first? The two minute [Brand Pulse check](/brand-pulse) shows you, or [tell us about your current site](/contact).",
+      },
+      {
+        question: "Squarespace, Wix or WordPress: which is best for a business website?",
+        answer:
+          "Squarespace is the easiest to manage and suits simple sites with strong visuals. Wix is flexible for small businesses that want to build themselves. WordPress is the most extensible but needs ongoing maintenance and security care. Shopify is the standard for online stores. A business outgrows templates when it needs a distinctive design, faster pages, deeper search performance or connected systems. That is when a custom build with a modern content system pays off. If you are weighing the cost of each route, [read our website cost guide](/insights/how-much-does-a-website-cost-in-canada).",
+      },
+      {
+        question: "How do I choose a web design company in Toronto?",
+        answer:
+          `Look at work similar to what you need, then ask every web design company the same questions: Who will actually design my site? Is there a strategy phase before design? Who writes the content? Will I own the site and be able to update it? What happens after launch? A studio that answers all five clearly is worth more than a cheaper quote that answers two. See [our work](/work), read [how to brief a design studio](/insights/how-to-brief-a-design-studio-so-you-actually-get-what-you-want), and bring your questions to a [discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "Will I own my website, and can my team update it?",
+        answer:
+          "You should own your domain, your content and your design files outright, with accounts set up in your business's name, never the designer's. We build every site on a content management system, so your team can edit pages, publish articles and add projects without calling anyone, and we hand over documentation and a walkthrough at launch. If your current site is held in someone else's account, that is worth fixing before anything else. [Plan your project](/start) to see what a handover includes, or [ask us directly](/contact).",
+      },
+    ],
     ctaHeading: "Ready to redesign your digital presence?",
   },
   {

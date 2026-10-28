@@ -49,10 +49,10 @@ test("every title and h1 names Toronto; titles carry the studio name once", () =
   }
 });
 
-test("questions: each ends with a question mark and has an answer; only Brand Identity has them for now", () => {
+test("questions: each ends with a question mark and has an answer; Brand Identity and Website Design have them", () => {
   for (const s of services) for (const f of s.faqs || []) {
     assert.ok(f.question.endsWith("?"), f.question);
     assert.ok(plainText(f.answer).trim().length > 0, f.question);
   }
-  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity"]);
+  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity", "digital-design"]);
 });
