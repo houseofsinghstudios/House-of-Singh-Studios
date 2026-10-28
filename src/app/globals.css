@@ -2488,12 +2488,35 @@ body {
   margin: 0;
   padding: 0 0 20px 44px;
 }
+/* Answers to questions read as body text: about 70 characters a line past the indent that lines up
+   with the question, the service page body size, and a little more room before the next row.
+   Inter's 0 is wider than an average letter, so 55ch measures about 70 characters of text. */
+.svc-acc-row--questions .svc-acc-desc {
+  box-sizing: content-box;
+  max-width: 55ch;
+  font-size: 16px;
+  line-height: 1.65;
+  padding-bottom: 32px;
+}
 @media (max-width: 767px) {
   .svc-acc-icon {
     display: none;
   }
   .svc-acc-desc {
     padding-left: 0;
+  }
+  /* Questions stay interactive on phones: the plus shows, at the size and colour of the homepage
+     services toggle (.svc-mob-plus), and turns to a cross in the text colour when open. */
+  .svc-acc-row--questions .svc-acc-icon {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 400;
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+                color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .svc-acc-row--questions.svc-acc-row--open .svc-acc-icon {
+    color: var(--text-primary);
   }
 }
 

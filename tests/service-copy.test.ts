@@ -35,6 +35,19 @@ test("clients by situation: no established businesses, no revenue figures", () =
   }
 });
 
+test("price only where it is asked: a dollar figure only in answers to cost questions", () => {
+  const asked: string[] = [];
+  for (const s of services) for (const f of s.faqs || []) {
+    const figure = /\$\s?\d|\d\s?(dollars|CAD)\b/i.test(plainText(f.answer));
+    if (/cost|how much/i.test(f.question)) { if (figure) asked.push(f.question); continue; }
+    assert.ok(!figure, `${s.slug}: "${f.question}" names a price but does not ask about one`);
+  }
+  assert.ok(asked.length >= 4, "the cost questions still answer with figures");
+  const branding = services.find((s) => s.slug === "brand-identity")!.faqs!.find((f) => f.question === "How much does branding cost in Canada?")!;
+  assert.doesNotMatch(plainText(branding.answer), /projects start from/i, "no studio starting price");
+  assert.ok(plainText(branding.answer).includes("The Project Planner gives you a personal estimate for your business in two minutes."));
+});
+
 test("Canadian spelling", () => {
   for (const [path, text] of COPY) assert.doesNotMatch(text, /\bcolor|organis|\bcenter\b|programme|\bfavor|\bbehavior/i, path);
 });
@@ -50,10 +63,10 @@ test("every title and h1 names Toronto; titles carry the studio name once", () =
   }
 });
 
-test("questions: each ends with a question mark and has an answer; three services have them so far", () => {
+test("questions: each ends with a question mark and has an answer; all four services have them", () => {
   for (const s of services) for (const f of s.faqs || []) {
     assert.ok(f.question.endsWith("?"), f.question);
     assert.ok(plainText(f.answer).trim().length > 0, f.question);
   }
-  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity", "visual-media", "digital-design"]);
+  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity", "visual-media", "digital-design", "creative-strategy"]);
 });

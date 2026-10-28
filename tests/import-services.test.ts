@@ -223,7 +223,9 @@ test("transform: the GTA section keeps heading and intro as text and gives each 
 
 test("questions: optional; written to Sanity only when the code has them, and compared both ways", () => {
   const withFaqs = services.find((s) => s.faqs && s.faqs.length > 0)!;
-  const without = services.find((s) => !s.faqs)!;
+  // Every service has questions now, so one without is made by leaving them out.
+  const without = clone(services.find((s) => s.slug === "creative-strategy")!);
+  delete without.faqs;
   assert.equal(withFaqs.slug, "brand-identity");
   const doc = toServiceDocument(withFaqs, 1);
   assert.equal(doc.faqs.length, 6);
