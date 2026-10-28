@@ -69,7 +69,7 @@ export const services: ServiceData[] = [
     headline: "Your business has grown. Your brand has not kept up.",
     description: "We build complete visual systems: logo, typography, colour architecture and brand guidelines. They give your business a consistent, professional presence across every touchpoint.",
     tagline: "The system behind how your business looks.",
-    seoTitle: "Brand Identity Design Toronto | House of Singh Studios",
+    seoTitle: "Branding and Brand Identity, Toronto | House of Singh Studios",
     seoDescription:
       "Brand identity design and rebranding for Toronto and GTA businesses that have outgrown their brand. Strategy, logo systems and guidelines built to last.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
@@ -303,7 +303,7 @@ export const services: ServiceData[] = [
       "Your website exists. But it does not work for your business.",
     description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
     tagline: "Your highest traffic brand touchpoint, designed.",
-    seoTitle: "Website Design for Brands, Toronto | House of Singh Studios",
+    seoTitle: "Website Design Toronto | House of Singh Studios",
     seoDescription:
       "Website design for Toronto and GTA businesses whose site no longer sells. Strategy, UX and interface design that turns visits into enquiries.",
     gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
