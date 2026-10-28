@@ -11,10 +11,9 @@ export const STUDIO_PROFILES = {
 };
 
 export const FOUNDER_PROFILES = {
-  // TODO: Maninder Singh's RGD member profile URL, once confirmed.
-  rgd: "",
-  // TODO: Maninder Singh's personal LinkedIn URL, once confirmed.
-  linkedin: "",
+  // Maninder Singh's RGD member profile: every visible "RGD" on the site links here (RgdLink).
+  rgd: "https://rgd.ca/members/profile/manindersingh",
+  linkedin: "https://www.linkedin.com/in/manindersingh333",
 };
 
 export const profileUrls = (profiles: Record<string, string>): string[] => Object.values(profiles).filter(Boolean);

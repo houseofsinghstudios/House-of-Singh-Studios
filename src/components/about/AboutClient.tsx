@@ -8,6 +8,7 @@ import EditorialLabel from "@/components/ui/EditorialLabel";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import type { NetworkCard } from "@/lib/about/network";
+import { RgdText } from "@/components/RgdLink";
 import NetworkGrid from "./NetworkGrid";
 
 interface AboutData {
@@ -336,7 +337,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
                 lineHeight: 1.15,
               }}
             >
-              {aboutData?.aboutFounderName || "Maninder Singh"}
+              <RgdText text={aboutData?.aboutFounderName || "Maninder Singh"} />
             </h2>
 
             <p
@@ -350,14 +351,14 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.7, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
-              {aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."}
+              <RgdText text={aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."} />
             </p>
 
             <p
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
               style={{ opacity: 0.5, marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
-              {aboutData?.aboutFounderBioSecondary || "Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling."}
+              <RgdText text={aboutData?.aboutFounderBioSecondary || "Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling."} />
             </p>
 
             <p

@@ -1789,6 +1789,32 @@ body {
   }
 }
 
+/* The RGD credential link (RgdLink): exactly the surrounding text, underlined on hover, with the
+   site's focus outline for keyboards. */
+.rgd-link {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-decoration: none;
+}
+/* The doubled class outranks the body link hover colour (p a:hover), so hover only underlines. */
+@media (hover: hover) {
+  a.rgd-link.rgd-link:hover {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+.rgd-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+/* Headings clip their overflow for the reveal, so there the outline sits just inside the link. */
+:is(h1, h2, h3) .rgd-link:focus-visible {
+  outline-offset: -2px;
+}
+
 /* ═══ Footer ═══ */
 .ft-footer {
   background: var(--text-primary);

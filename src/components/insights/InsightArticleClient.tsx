@@ -11,6 +11,8 @@ import type { PortableTextReactComponents } from "@portabletext/react";
 import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
 import { updatedLabel } from "@/lib/article-dates";
+import RgdLink, { RgdText } from "@/components/RgdLink";
+import { linkRgdInBlocks } from "@/lib/rgd";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 interface PostImage {
@@ -97,6 +99,8 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
       <em style={{ fontStyle: "italic" }}>{children}</em>
     ),
     code: ({ children }: any) => <code className="art-code">{children}</code>,
+    // A standalone "RGD" in the text, never one already inside a link (see linkRgdInBlocks).
+    rgdLink: () => <RgdLink />,
     link: ({ children, value }: any) => {
       const href = value?.href || "";
       const isExternal = href.startsWith("http");
@@ -270,10 +274,13 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
               </>
             )}
           </div>
+          {/* Two separate links side by side, never one inside the other. */}
           <p className="ins-meta art-meta-line">
+            By{" "}
             <Link href="/about" className="art-byline" data-cursor="link">
-              By Maninder Singh RGD, Creative Director
-            </Link>
+              Maninder Singh
+            </Link>{" "}
+            <RgdLink />, Creative Director
           </p>
           {updated && <p className="ins-meta art-meta-line">{updated}</p>}
 
@@ -321,7 +328,7 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
                 {post.keyTakeaways.map((takeaway, i) => (
                   <li key={i} className="art-takeaways-item">
                     <span className="art-takeaways-dash">&middot;</span>
-                    <span>{takeaway}</span>
+                    <span><RgdText text={takeaway} /></span>
                   </li>
                 ))}
               </ul>
@@ -334,7 +341,7 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
       {post.body && (
         <section className="art-body-section">
           <div className="art-body">
-            <PortableText value={post.body} components={portableTextComponents} />
+            <PortableText value={linkRgdInBlocks(post.body)} components={portableTextComponents} />
           </div>
         </section>
       )}
