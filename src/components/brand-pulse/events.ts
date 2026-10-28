@@ -4,6 +4,7 @@
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement, type EntryPlacement } from "@/lib/brand-pulse/entry";
 import type { Answers, Feedback, Gate, TeamSize } from "@/lib/brand-pulse/types";
+import type { LeadSource } from "@/lib/lead-source";
 
 export interface Attribution {
   source: string;
@@ -70,8 +71,8 @@ export function startSession(): PulseSession {
 type EventBody =
   | { event: "completed" }
   | { event: "feedback"; feedback: Feedback }
-  | { event: "lead"; contact: LeadContact; honeypot?: string }
-  | { event: "profile"; contact: ProfileContact; honeypot?: string };
+  | { event: "lead"; contact: LeadContact; honeypot?: string; leadSource: LeadSource | null }
+  | { event: "profile"; contact: ProfileContact; honeypot?: string; leadSource: LeadSource | null };
 
 // Resolves true only when the server confirms n8n accepted the event. Never throws.
 export async function sendEvent(session: PulseSession, gate: Gate, answers: Answers, body: EventBody): Promise<boolean> {

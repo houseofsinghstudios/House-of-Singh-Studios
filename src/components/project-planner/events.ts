@@ -4,6 +4,7 @@
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement } from "@/lib/project-planner/start-links";
 import type { Answers, BandId } from "@/lib/project-planner/types";
+import type { LeadSource } from "@/lib/lead-source";
 
 export interface Attribution {
   source: string;
@@ -79,7 +80,7 @@ type EventBody =
   | { event: "started" }
   | { event: "viewed"; answers: Answers }
   | { event: "call_clicked" }
-  | { event: "sent"; answers: Answers; optional: { investment?: BandId; website?: string; importantDate?: string }; contact: Contact; honeypot: string } & Heard;
+  | { event: "sent"; answers: Answers; optional: { investment?: BandId; website?: string; importantDate?: string }; contact: Contact; honeypot: string; leadSource: LeadSource | null } & Heard;
 
 // Resolves true only when the server confirms the event was accepted. Never throws.
 export async function sendEvent(session: Session, body: EventBody): Promise<boolean> {

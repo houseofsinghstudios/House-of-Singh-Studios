@@ -8,6 +8,7 @@ import { assessWithActions } from "@/lib/brand-pulse/actions";
 import { ENGINE_VERSION } from "@/lib/brand-pulse/engine";
 import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { FEEDBACK_IDS, GATES, QUESTION_ORDER, TEAM_SIZE_IDS, type Answers, type Feedback, type Gate, type TeamSize } from "@/lib/brand-pulse/types";
+import { cleanLeadSource } from "@/lib/lead-source";
 
 // Brand Pulse events. The result is always recomputed here with the same rule based engine:
 // whatever result the browser might send is ignored.
@@ -76,6 +77,7 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
   const share = shareUrl(answers);
   const contact = fields.contact;
   const a = (body.attribution && typeof body.attribution === "object" ? body.attribution : {}) as Record<string, unknown>;
+  const leadSource = cleanLeadSource(body.leadSource);
   return {
     event,
     resultId: body.resultId as string,
@@ -101,6 +103,8 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
     },
     ...(contact ? { contact } : {}),
     ...(fields.feedback ? { feedback: fields.feedback } : {}),
+    // With an email or details only: where the session began (landing_page, referrer, utm_*).
+    ...(contact && leadSource ? { leadSource } : {}),
     attribution: {
       source: clean(a.source, 200),
       medium: clean(a.medium, 200),

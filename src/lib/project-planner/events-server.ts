@@ -6,6 +6,7 @@ import { bookingUrl } from "./links";
 import { parsePlacement } from "./start-links";
 import { REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { referralCode } from "@/lib/campaign";
+import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -79,7 +80,7 @@ export type ParsedEvent =
   | { event: "started"; briefId: string; attribution: ReturnType<typeof attribution> }
   | { event: "call_clicked"; briefId: string; attribution: ReturnType<typeof attribution> }
   | { event: "viewed"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers }
-  | { event: "sent"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers; optional: Optional; contact: Exclude<ReturnType<typeof contact>, string>; honeypot: boolean; hearAbout: string; recommendedBy: string };
+  | { event: "sent"; briefId: string; attribution: ReturnType<typeof attribution>; answers: Answers; optional: Optional; contact: Exclude<ReturnType<typeof contact>, string>; honeypot: boolean; hearAbout: string; recommendedBy: string; leadSource: LeadSource | null };
 
 // Each event has its own shape. started and call_clicked never need answers.
 export function parseEvent(body: unknown): ParsedEvent | string {
@@ -110,6 +111,8 @@ export function parseEvent(body: unknown): ParsedEvent | string {
     // "How did you hear about us?" and who recommended us: optional, cut to the contact form's caps.
     hearAbout: clean(b.hearAbout, REFERRAL_LIMITS.hearAbout),
     recommendedBy: clean(b.recommendedBy, REFERRAL_LIMITS.recommendedBy),
+    // Where the session began (landing_page, referrer, utm_*), cleaned with the browser's rules.
+    leadSource: cleanLeadSource(b.leadSource),
   };
 }
 
@@ -155,5 +158,6 @@ export function buildPayload(e: ParsedEvent, pricing: Pricing | null, submittedA
     contact: e.contact,
     hearAbout: e.hearAbout,
     recommendedBy: e.recommendedBy,
+    ...(e.leadSource && { leadSource: e.leadSource }),
   };
 }

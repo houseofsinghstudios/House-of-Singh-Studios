@@ -10,6 +10,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
+import { readLeadSource } from "@/lib/lead-source";
 import { contactEvent, submissionId, trackOnce } from "@/lib/analytics";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
@@ -79,6 +80,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
       recommendedBy: formData.get("recommendedBy"),
       // Campaign tags and a partner's ?ref= code: this page's, otherwise the visit's first touch.
       attribution: resolveCampaign(window.location.search, sessionStore()),
+      // Where this session began: landing page, referring domain, campaign tags (session only).
+      leadSource: readLeadSource(sessionStore()),
       honeypot: formData.get("honeypot"),
     };
     try {
