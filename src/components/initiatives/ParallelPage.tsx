@@ -2,7 +2,8 @@
 // (02) the work, (03) Questions, (04) the lighter suggest band.
 import type { Project } from "@/data/projects";
 import NextPageLink from "@/components/layout/NextPageLink";
-import { PARALLEL } from "@/lib/initiatives/content";
+import InlineLinks from "@/components/InlineLinks";
+import { PARALLEL, QUESTIONS_NOTE } from "@/lib/initiatives/content";
 import InitiativeHero from "./InitiativeHero";
 import InitiativeSection from "./InitiativeSection";
 import InitiativeWork from "./InitiativeWork";
@@ -20,7 +21,7 @@ export default function ParallelPage({ projects }: { projects: Project[] }) {
       <InitiativeSection id="the-work" number="02" heading={PARALLEL.workHeading}>
         <InitiativeWork projects={projects} empty={PARALLEL.workEmpty} />
       </InitiativeSection>
-      <InitiativeSection id="questions" number="03" heading={PARALLEL.questionsHeading}>
+      <InitiativeSection id="questions" number="03" heading={PARALLEL.questionsHeading} note={<InlineLinks text={QUESTIONS_NOTE} />}>
         <InitiativeQuestions questions={PARALLEL.questions} />
       </InitiativeSection>
       <NominateBand number="04" item={PARALLEL.nominate} light />

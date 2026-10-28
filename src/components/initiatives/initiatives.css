@@ -99,6 +99,18 @@
     gap: 32px;
   }
 }
+/* Questions sections: a note under the heading in the left column, with the accordion beside both.
+   The note comes after the accordion in the page, so on phones it simply stacks last; here it is
+   placed back under the heading, as close to it as an intro is. */
+@media (min-width: 768px) {
+  .init-split--note {
+    grid-template-rows: auto 1fr;
+    row-gap: 0;
+  }
+  .init-split--note > .init-split-head { grid-column: 1; grid-row: 1; }
+  .init-split--note > .init-split-body { grid-column: 2; grid-row: 1 / span 2; }
+  .init-split--note > .init-split-note { grid-column: 1; grid-row: 2; }
+}
 
 /* ── (01) Programs: Services page block rows ── */
 .init-row {
