@@ -77,6 +77,53 @@ export function isDiscoveryCallHref(href: string): boolean {
   }
 }
 
+// ── Internal traffic ──
+
+// localStorage: "1" while this browser belongs to the studio. Visiting any page with ?hos_internal=1
+// sets it and ?hos_internal=0 clears it; it lasts until cleared, on any network or device. While set,
+// GA4 is configured with traffic_type "internal", which the property's internal traffic filter removes.
+export const INTERNAL_KEY = "hos-internal";
+export const INTERNAL_PARAM = "hos_internal";
+
+type FlagStore = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+// The flag after this address: the query parameter decides if present, otherwise what was stored.
+export function internalFlag(search: string, stored: boolean): boolean {
+  const value = new URLSearchParams(search).get(INTERNAL_PARAM);
+  if (value === "1") return true;
+  if (value === "0") return false;
+  return stored;
+}
+
+// Reads the stored flag, applies this address's parameter, stores the result and returns it.
+export function syncInternalFlag(search: string, store: FlagStore | null): boolean {
+  let stored = false;
+  try {
+    stored = store?.getItem(INTERNAL_KEY) === "1";
+  } catch {
+    // Storage blocked: the parameter still applies to this page.
+  }
+  const next = internalFlag(search, stored);
+  try {
+    if (next) store?.setItem(INTERNAL_KEY, "1");
+    else store?.removeItem(INTERNAL_KEY);
+  } catch {
+    // Storage blocked: nothing to keep.
+  }
+  return next;
+}
+
+// The GA4 config: page views are sent by the tracker, no Google signals or ad personalization, and
+// traffic_type "internal" on the studio's own browsers.
+export function configParams(internal: boolean): EventParams {
+  return {
+    send_page_view: false,
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    ...(internal ? { traffic_type: "internal" } : {}),
+  };
+}
+
 // ── The gate ──
 
 let allowed = false;

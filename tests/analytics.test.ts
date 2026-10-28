@@ -2,7 +2,7 @@
 // Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { contactLeadType, contentGroup, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, track, trackPageView } from "@/lib/analytics";
+import { INTERNAL_KEY, configParams, contactLeadType, contentGroup, internalFlag, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
@@ -113,4 +113,33 @@ test("discovery call links, with or without the notes added to them", () => {
   assert.equal(isDiscoveryCallHref("https://cal.com/houseofsinghstudios/other-call"), false);
   assert.equal(isDiscoveryCallHref("https://studios.houseofsingh.com/contact"), false);
   assert.equal(isDiscoveryCallHref("/start"), false);
+});
+
+test("internal flag: ?hos_internal=1 sets it, ?hos_internal=0 clears it, otherwise it stays", () => {
+  assert.equal(internalFlag("?hos_internal=1", false), true);
+  assert.equal(internalFlag("?hos_internal=0", true), false);
+  assert.equal(internalFlag("?utm_source=x&hos_internal=1", false), true);
+  assert.equal(internalFlag("", true), true);
+  assert.equal(internalFlag("?hos_internal=yes", false), false, "only 1 and 0 count");
+  assert.equal(internalFlag("?hos_internal=yes", true), true);
+});
+
+test("internal flag is kept in localStorage across visits", () => {
+  const m = new Map<string, string>();
+  const store = { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v), removeItem: (k: string) => void m.delete(k) };
+  assert.equal(syncInternalFlag("?hos_internal=1", store), true);
+  assert.equal(m.get(INTERNAL_KEY), "1");
+  assert.equal(syncInternalFlag("", store), true, "a later visit without the parameter keeps it");
+  assert.equal(syncInternalFlag("?hos_internal=0", store), false);
+  assert.equal(m.has(INTERNAL_KEY), false);
+  assert.equal(syncInternalFlag("", store), false);
+  // Blocked storage: the parameter still counts for this page, nothing throws.
+  const blocked = { getItem: () => { throw new Error("blocked"); }, setItem: () => { throw new Error("blocked"); }, removeItem: () => { throw new Error("blocked"); } };
+  assert.equal(syncInternalFlag("?hos_internal=1", blocked), true);
+  assert.equal(syncInternalFlag("", null), false);
+});
+
+test("config: no automatic page view, no signals, traffic_type only on internal browsers", () => {
+  assert.deepEqual(configParams(false), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
+  assert.deepEqual(configParams(true), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, traffic_type: "internal" });
 });
