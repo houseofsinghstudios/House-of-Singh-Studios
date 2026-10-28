@@ -2304,7 +2304,8 @@ body {
 .svc-del-num {
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-muted);
+  /* Gunmetal, as .svc-acc-num: Marble failed AA here at 1.89:1. */
+  color: var(--text-secondary);
   letter-spacing: 0.06em;
   min-width: 28px;
   flex-shrink: 0;
@@ -2500,7 +2501,10 @@ body {
   text-align: center;
 }
 .svc-acc-row--questions .svc-acc-desc {
-  max-width: none;
+  /* The text itself (content box, without the indent or gutter) stops at 680px on large screens,
+     about 81 characters a line; at 1440 and below it is narrower anyway. */
+  box-sizing: content-box;
+  max-width: 680px;
   font-size: 16px;
   line-height: 1.65;
   padding-right: calc(16px + var(--acc-icon));
