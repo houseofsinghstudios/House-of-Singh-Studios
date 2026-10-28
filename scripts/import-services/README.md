@@ -68,5 +68,6 @@ If Studio shows a service as an unpublished draft, the tool says so. Studio keep
 | `impact` | Why it matters tab | (02) Why it matters |
 | `localSection` | Across the GTA tab | (04) Across the GTA |
 | `process` | Process steps tab | (05) How we do it |
+| `faqs` (optional) | Questions tab | (07) Questions, after Related work. Links in answers are written as `[text](/path)` |
 | `ctaHeading` | Closing call to action tab, Closing heading | The dark Next step section |
 | (position in the code) | Service tab, Order in Studio | Sorts the Studio list only |

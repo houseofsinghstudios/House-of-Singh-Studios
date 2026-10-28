@@ -1,3 +1,5 @@
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+
 export interface ServiceDeliverable {
   name: string;
   description: string;
@@ -14,6 +16,13 @@ export interface ServiceProcessStep {
 export interface ServiceLocalRow {
   name: string;
   description: string;
+}
+
+// One question on a service page. The answer is plain text; links are written in it as
+// [visible text](/path) or [visible text](https://...), nothing else.
+export interface ServiceFaq {
+  question: string;
+  answer: string;
 }
 
 export interface ServiceData {
@@ -41,6 +50,8 @@ export interface ServiceData {
     rows: ServiceLocalRow[];
   };
   process: ServiceProcessStep[];
+  // "Questions, answered", after Related work. A service without questions shows no section.
+  faqs?: ServiceFaq[];
   ctaHeading: string;
 }
 
@@ -152,6 +163,38 @@ export const services: ServiceData[] = [
         name: "Delivery",
         description:
           "Complete system with guidelines, files, and structure to maintain it.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is brand identity, and how is it different from a logo?",
+        answer:
+          "Brand identity is the complete visual and verbal system that makes a business recognisable: its logo, typography, colour, imagery, tone of voice and the rules that hold them together. A logo is one part of that system. A logo tells people your name; a brand identity tells them who you are, consistently, everywhere they meet you. See [what a complete brand identity system includes](/insights/what-a-brand-identity-system-actually-includes-and-why-a-logo-is-not-enough), or explore [the brand identity systems in our work](/work).",
+      },
+      {
+        question: "How much does branding cost in Canada?",
+        answer:
+          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. At House of Singh Studios, projects start from $1,000, and [the Project Planner](/start) gives you a personal estimate in two minutes. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
+      },
+      {
+        question: "What does a brand identity package include?",
+        answer:
+          "A complete brand identity package includes brand strategy, a logo system with variations, typography, a colour palette, brand guidelines and the everyday applications your business needs, such as stationery, presentation templates and social media templates. Some also cover packaging, signage or [brand photography direction](/services/visual-media). Two packages at the same price can contain very different work, so always ask what is included before comparing. We scope every package to what your business actually needs: [plan your project](/start), or [tell us what you are working on](/contact).",
+      },
+      {
+        question: "What should brand guidelines include?",
+        answer:
+          "Brand guidelines should include how to use your logo, your colour palette with exact values for print and screen, typography and hierarchy, photography and imagery style, tone of voice, and real examples of the brand applied. Good guidelines are written for the people who use them, so your team and suppliers produce consistent work without having to ask. Every brand identity we deliver includes guidelines your team can actually use, and if your current brand has none, our [brand strategy and systems work](/services/creative-strategy) can create them.",
+      },
+      {
+        question: "What are the steps to rebrand a business, and how long does it take?",
+        answer:
+          `A rebrand moves through five stages: discovery, to understand the business and its market; strategy, to define positioning and audience; creative direction, where the new identity takes shape; production, where every asset is built; and delivery, with guidelines and files your team can use. A focused rebrand takes four to six weeks, a complete identity system eight to twelve weeks, and a rebrand rolled out across signage, print and [your website](/services/digital-design) twelve to sixteen weeks or more. The first step is a [30 minute discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "Should I rebrand or refresh my brand?",
+        answer:
+          "Refresh if your brand still reflects who you are but looks dated or inconsistent: you keep the recognition you have built and tighten the system around it. Rebrand if your business has changed, moved into new markets or outgrown its positioning, so the brand no longer tells the truth about it. A refresh usually costs 30 to 50 percent of a full rebrand, and a well planned rollout keeps your existing customers with you either way. Not sure which you need? The two minute [Brand Pulse check](/brand-pulse) shows where your brand stands, and our guide to [rebrand or refresh](/insights/rebrand-or-refresh-how-established-businesses-should-decide) walks through the decision.",
       },
     ],
     ctaHeading: "Ready to fix your brand identity?",

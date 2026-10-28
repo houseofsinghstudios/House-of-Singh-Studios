@@ -7,6 +7,7 @@ import ServiceDeliverableRow from "./ServiceDeliverableRow";
 import ServiceDetailAccordion from "./ServiceDetailAccordion";
 import ServiceLocalSection from "./ServiceLocalSection";
 import RelatedThinking from "./RelatedThinking";
+import ServiceQuestions from "./ServiceQuestions";
 import ProjectCardRow from "@/components/work/ProjectCardRow";
 import type { ArticleCard } from "@/lib/sanity/articles";
 import NextPageLink from "@/components/layout/NextPageLink";
@@ -176,6 +177,9 @@ export default function ServiceDetailClient({
           <ProjectCardRow projects={projects} />
         </section>
       )}
+
+      {/* ═══ (07) QUESTIONS, or (06) when there is no Related work. Nothing without questions. ═══ */}
+      <ServiceQuestions faqs={service.faqs} number={hasRelatedWork ? "07" : "06"} />
 
       <NextPageLink current={`/services/${slug}`} />
 
