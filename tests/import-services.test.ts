@@ -9,6 +9,8 @@ import {
   IMPACT_FIELDS,
   LOCAL_FIELDS,
   LOCAL_ROW_FIELDS,
+  FAQ_FIELDS,
+  OPTIONAL_FIELDS,
   PROCESS_FIELDS,
   SERVICE_FIELDS,
   checkShape,
@@ -57,7 +59,9 @@ const OLD = [
 
 test("the field lists match ServiceData, and the schema lists the same fields in the same order", () => {
   for (const s of services) {
-    assert.deepEqual(Object.keys(s), SERVICE_FIELDS, s.slug);
+    assert.deepEqual(Object.keys(s), SERVICE_FIELDS.filter((f) => f in s), s.slug);
+    assert.ok(SERVICE_FIELDS.filter((f) => !(f in s)).every((f) => OPTIONAL_FIELDS.includes(f)), `${s.slug} misses a required field`);
+    (s.faqs || []).forEach((f) => assert.deepEqual(Object.keys(f), FAQ_FIELDS));
     s.deliverables.forEach((d) => assert.deepEqual(Object.keys(d), DELIVERABLE_FIELDS));
     s.process.forEach((p) => assert.deepEqual(Object.keys(p), PROCESS_FIELDS));
     assert.deepEqual(Object.keys(s.impact), IMPACT_FIELDS);
@@ -76,6 +80,7 @@ test("the field lists match ServiceData, and the schema lists the same fields in
     "impact", ...IMPACT_FIELDS,
     "localSection", "heading", "intro", "rows", "serviceLocalRow", ...LOCAL_ROW_FIELDS,
     "process", "serviceProcessStep", ...PROCESS_FIELDS,
+    "faqs", "serviceFaq", ...FAQ_FIELDS,
     "ctaHeading",
     "order",
     "orderAsc",
@@ -214,4 +219,24 @@ test("transform: the GTA section keeps heading and intro as text and gives each 
   assert.ok(compareService(first, changed, 1).includes(`localSection.rows[1].name: code ${JSON.stringify(first.localSection.rows[1].name)}, Sanity "Edited"`));
   assert.match(checkShape({ ...first, localSection: { heading: "x", intro: "y" } } as unknown as ServiceData).join(), /localSection is missing rows/);
   assert.equal(Object.fromEntries(describeService(first)).localSection, "heading, intro and 3 rows");
+});
+
+test("questions: optional; written to Sanity only when the code has them, and compared both ways", () => {
+  const withFaqs = services.find((s) => s.faqs && s.faqs.length > 0)!;
+  const without = services.find((s) => !s.faqs)!;
+  assert.equal(withFaqs.slug, "brand-identity");
+  const doc = toServiceDocument(withFaqs, 1);
+  assert.equal(doc.faqs.length, 6);
+  assert.deepEqual(doc.faqs[0], { _type: "serviceFaq", _key: "faq-01", ...withFaqs.faqs![0] });
+  assert.ok(!("faqs" in toServiceDocument(without, 2)), "no faqs field at all without questions");
+  assert.deepEqual(fromServiceDocument(toServiceDocument(without, 2)), without);
+  assert.deepEqual(compareService(without, toServiceDocument(without, 2), 2), []);
+  const extraFaqs = { ...toServiceDocument(without, 2), faqs: doc.faqs };
+  assert.ok(compareService(without, extraFaqs, 2).includes("faqs: in Sanity but not in the code"));
+  const edited = clone(doc);
+  edited.faqs[4].answer = "Changed.";
+  assert.equal(compareService(withFaqs, edited, 1).filter((d) => d.startsWith("faqs[4].answer")).length, 1);
+  assert.match(checkShape({ ...without, faqs: [{ question: "Q?" }] } as unknown as ServiceData).join(), /faqs\[0\] is missing answer/);
+  assert.equal(Object.fromEntries(describeService(without)).faqs, "none");
+  assert.equal(Object.fromEntries(describeService(withFaqs)).faqs, "6");
 });

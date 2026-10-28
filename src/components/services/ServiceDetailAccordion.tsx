@@ -1,12 +1,16 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef, type ReactNode } from "react";
 
 interface ProcessStep {
   step: string;
   name: string;
-  description: string;
+  // Plain text, or text with links (service page questions).
+  description: ReactNode;
 }
+
+// An open panel is at least this tall, as it always was; a longer answer opens to its full height.
+const OPEN_MIN = 200;
 
 export default function ServiceDetailAccordion({
   steps,
@@ -21,6 +25,17 @@ export default function ServiceDetailAccordion({
 }) {
   const [openIndex, setOpenIndex] = useState(initialOpen);
   const [isMobile, setIsMobile] = useState(false);
+  // Each answer's height, measured, so a long answer is never cut off.
+  const [heights, setHeights] = useState<number[]>([]);
+  const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  useEffect(() => {
+    const els = descRefs.current;
+    const measure = () => setHeights(els.map((el) => el?.offsetHeight ?? 0));
+    const ro = new ResizeObserver(measure);
+    els.forEach((el) => el && ro.observe(el));
+    return () => ro.disconnect();
+  }, [steps.length]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -67,14 +82,17 @@ export default function ServiceDetailAccordion({
             ) : (
               trigger(step, i, isOpen)
             )}
+            {/* A closed panel stays in the page (and the server HTML) but is inert, so nothing in a
+                hidden answer, such as a link, can take keyboard focus. */}
             <div
               className="svc-acc-panel"
+              inert={!isOpen}
               style={{
-                maxHeight: isOpen ? 200 : 0,
+                maxHeight: isOpen ? Math.max(OPEN_MIN, heights[i] ?? 0) : 0,
                 opacity: isOpen ? 1 : 0,
               }}
             >
-              <p className="svc-acc-desc">{step.description}</p>
+              <p className="svc-acc-desc" ref={(el) => { descRefs.current[i] = el; }}>{step.description}</p>
             </div>
           </div>
         );

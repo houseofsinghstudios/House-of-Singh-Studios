@@ -17,11 +17,11 @@ export const revalidate = 60;
 // Next copies the openGraph title and description into the twitter card.
 export const metadata: Metadata = {
   // absolute: this page sits below the root layout's title template, which would otherwise append the studio name twice.
-  title: { absolute: 'House of Singh Studios | Brand Identity and Design, Toronto' },
+  title: { absolute: 'House of Singh Studios | Branding and Design Studio, Toronto' },
   description: 'We design brand identities that change how a business is seen, chosen and valued. Websites and visual media from a design studio in Toronto.',
   alternates: { canonical: 'https://studios.houseofsingh.com' },
   openGraph: {
-    title: 'House of Singh Studios: Brand Identity and Design',
+    title: 'House of Singh Studios | Branding and Design Studio, Toronto',
     description: 'Brand identity that changes how a business is seen, chosen and valued.',
     url: 'https://studios.houseofsingh.com',
   },

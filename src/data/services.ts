@@ -1,3 +1,5 @@
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+
 export interface ServiceDeliverable {
   name: string;
   description: string;
@@ -14,6 +16,13 @@ export interface ServiceProcessStep {
 export interface ServiceLocalRow {
   name: string;
   description: string;
+}
+
+// One question on a service page. The answer is plain text; links are written in it as
+// [visible text](/path) or [visible text](https://...), nothing else.
+export interface ServiceFaq {
+  question: string;
+  answer: string;
 }
 
 export interface ServiceData {
@@ -41,6 +50,8 @@ export interface ServiceData {
     rows: ServiceLocalRow[];
   };
   process: ServiceProcessStep[];
+  // "Questions, answered", after Related work. A service without questions shows no section.
+  faqs?: ServiceFaq[];
   ctaHeading: string;
 }
 
@@ -58,7 +69,7 @@ export const services: ServiceData[] = [
     headline: "Your business has grown. Your brand has not kept up.",
     description: "We build complete visual systems: logo, typography, colour architecture and brand guidelines. They give your business a consistent, professional presence across every touchpoint.",
     tagline: "The system behind how your business looks.",
-    seoTitle: "Brand Identity Design Toronto | House of Singh Studios",
+    seoTitle: "Branding and Brand Identity, Toronto | House of Singh Studios",
     seoDescription:
       "Brand identity design and rebranding for Toronto and GTA businesses that have outgrown their brand. Strategy, logo systems and guidelines built to last.",
     gradient: "linear-gradient(135deg, #3D3D3D 0%, #1A1A1A 100%)",
@@ -152,6 +163,38 @@ export const services: ServiceData[] = [
         name: "Delivery",
         description:
           "Complete system with guidelines, files, and structure to maintain it.",
+      },
+    ],
+    faqs: [
+      {
+        question: "What is brand identity, and how is it different from a logo?",
+        answer:
+          "Brand identity is the complete visual and verbal system that makes a business recognisable: its logo, typography, colour, imagery, tone of voice and the rules that hold them together. A logo is one part of that system. A logo tells people your name; a brand identity tells them who you are, consistently, everywhere they meet you. See [what a complete brand identity system includes](/insights/what-a-brand-identity-system-actually-includes-and-why-a-logo-is-not-enough), or explore [the brand identity systems in our work](/work).",
+      },
+      {
+        question: "How much does branding cost in Canada?",
+        answer:
+          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. At House of Singh Studios, projects start from $1,000, and [the Project Planner](/start) gives you a personal estimate in two minutes. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
+      },
+      {
+        question: "What does a brand identity package include?",
+        answer:
+          "A complete brand identity package includes brand strategy, a logo system with variations, typography, a colour palette, brand guidelines and the everyday applications your business needs, such as stationery, presentation templates and social media templates. Some also cover packaging, signage or [brand photography direction](/services/visual-media). Two packages at the same price can contain very different work, so always ask what is included before comparing. We scope every package to what your business actually needs: [plan your project](/start), or [tell us what you are working on](/contact).",
+      },
+      {
+        question: "What should brand guidelines include?",
+        answer:
+          "Brand guidelines should include how to use your logo, your colour palette with exact values for print and screen, typography and hierarchy, photography and imagery style, tone of voice, and real examples of the brand applied. Good guidelines are written for the people who use them, so your team and suppliers produce consistent work without having to ask. Every brand identity we deliver includes guidelines your team can actually use, and if your current brand has none, our [brand strategy and systems work](/services/creative-strategy) can create them.",
+      },
+      {
+        question: "What are the steps to rebrand a business, and how long does it take?",
+        answer:
+          `A rebrand moves through five stages: discovery, to understand the business and its market; strategy, to define positioning and audience; creative direction, where the new identity takes shape; production, where every asset is built; and delivery, with guidelines and files your team can use. A focused rebrand takes four to six weeks, a complete identity system eight to twelve weeks, and a rebrand rolled out across signage, print and [your website](/services/digital-design) twelve to sixteen weeks or more. The first step is a [30 minute discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "Should I rebrand or refresh my brand?",
+        answer:
+          "Refresh if your brand still reflects who you are but looks dated or inconsistent: you keep the recognition you have built and tighten the system around it. Rebrand if your business has changed, moved into new markets or outgrown its positioning, so the brand no longer tells the truth about it. A refresh usually costs 30 to 50 percent of a full rebrand, and a well planned rollout keeps your existing customers with you either way. Not sure which you need? The two minute [Brand Pulse check](/brand-pulse) shows where your brand stands, and our guide to [rebrand or refresh](/insights/rebrand-or-refresh-how-established-businesses-should-decide) walks through the decision.",
       },
     ],
     ctaHeading: "Ready to fix your brand identity?",
@@ -260,7 +303,7 @@ export const services: ServiceData[] = [
       "Your website exists. But it does not work for your business.",
     description: "We design the visual direction, content architecture, and interface systems for websites and digital platforms. Your site should work as hard as your sales team.",
     tagline: "Your highest traffic brand touchpoint, designed.",
-    seoTitle: "Website Design for Brands, Toronto | House of Singh Studios",
+    seoTitle: "Website Design Toronto | House of Singh Studios",
     seoDescription:
       "Website design for Toronto and GTA businesses whose site no longer sells. Strategy, UX and interface design that turns visits into enquiries.",
     gradient: "linear-gradient(135deg, #2C3D4A 0%, #1A2530 100%)",
@@ -349,6 +392,38 @@ export const services: ServiceData[] = [
         name: "Delivery",
         description:
           "Design handoff, development oversight, and post launch iteration support.",
+      },
+    ],
+    faqs: [
+      {
+        question: "How much does a website cost in Canada?",
+        answer:
+          "A business website in Canada typically costs $3,000 to $12,000 from a freelancer, $12,000 to $45,000 from a design studio, and $45,000 and beyond from a large agency, before HST. Template builders can cost under $3,000, plus your own time. What changes the price is how much strategy, custom design and content goes in. Website design cost in Toronto sits toward the top of the Canadian range. For a full breakdown, read [how much a website costs in Canada](/insights/how-much-does-a-website-cost-in-canada), or get a personal estimate in two minutes with the [Project Planner](/start).",
+      },
+      {
+        question: "How long does it take to build a website?",
+        answer:
+          `A template website can be live within days. A freelance build usually takes four to eight weeks, and a studio project eight to sixteen weeks, most of it spent on strategy, structure, design and content rather than code. A website redesign takes a similar time, depending on how much is rethought. If your brand needs work too, plan [brand identity](/services/brand-identity) first, so the site is designed once, not twice. The fastest way to a clear timeline is a [30 minute discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "How much does a website redesign cost?",
+        answer:
+          "A website redesign that keeps your structure and content and refreshes the design costs less than a new site. A redesign that rethinks strategy, structure, content and design costs about the same as building a new website, because it effectively is one. Redesign when the site still serves your business but looks dated or converts poorly; start fresh when the business, audience or offer has changed. Not sure where your brand stands first? The two minute [Brand Pulse check](/brand-pulse) shows you, or [tell us about your current site](/contact).",
+      },
+      {
+        question: "Squarespace, Wix or WordPress: which is best for a business website?",
+        answer:
+          "Squarespace is the easiest to manage and suits simple sites with strong visuals. Wix is flexible for small businesses that want to build themselves. WordPress is the most extensible but needs ongoing maintenance and security care. Shopify is the standard for online stores. A business outgrows templates when it needs a distinctive design, faster pages, deeper search performance or connected systems. That is when a custom build with a modern content system pays off. If you are weighing the cost of each route, [read our website cost guide](/insights/how-much-does-a-website-cost-in-canada).",
+      },
+      {
+        question: "How do I choose a web design company in Toronto?",
+        answer:
+          `Look at work similar to what you need, then ask every web design company the same questions: Who will actually design my site? Is there a strategy phase before design? Who writes the content? Will I own the site and be able to update it? What happens after launch? A studio that answers all five clearly is worth more than a cheaper quote that answers two. See [our work](/work), read [how to brief a design studio](/insights/how-to-brief-a-design-studio-so-you-actually-get-what-you-want), and bring your questions to a [discovery call](${DISCOVERY_CALL_URL}).`,
+      },
+      {
+        question: "Will I own my website, and can my team update it?",
+        answer:
+          "You should own your domain, your content and your design files outright, with accounts set up in your business's name, never the designer's. We build every site on a content management system, so your team can edit pages, publish articles and add projects without calling anyone, and we hand over documentation and a walkthrough at launch. If your current site is held in someone else's account, that is worth fixing before anything else. [Plan your project](/start) to see what a handover includes, or [ask us directly](/contact).",
       },
     ],
     ctaHeading: "Ready to redesign your digital presence?",
