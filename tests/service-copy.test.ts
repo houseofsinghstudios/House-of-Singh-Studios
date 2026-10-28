@@ -43,16 +43,17 @@ test("every title and h1 names Toronto; titles carry the studio name once", () =
   for (const s of services) {
     assert.match(s.seoTitle, /Toronto/, s.slug);
     assert.match(s.seoH1, /Toronto$/, s.slug);
-    assert.equal(s.seoTitle.split("House of Singh Studios").length, 2, s.slug);
+    // The studio name once: "House of Singh Studios", or "House of Singh" where the title is long.
+    assert.equal(s.seoTitle.split("House of Singh").length, 2, s.slug);
     assert.equal(s.localSection.rows.length, 3, s.slug);
     assert.ok(s.localSection.intro.startsWith("House of Singh Studios works from Toronto and Mississauga"), s.slug);
   }
 });
 
-test("questions: each ends with a question mark and has an answer; Brand Identity and Website Design have them", () => {
+test("questions: each ends with a question mark and has an answer; three services have them so far", () => {
   for (const s of services) for (const f of s.faqs || []) {
     assert.ok(f.question.endsWith("?"), f.question);
     assert.ok(plainText(f.answer).trim().length > 0, f.question);
   }
-  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity", "digital-design"]);
+  assert.deepEqual(services.filter((s) => s.faqs && s.faqs.length > 0).map((s) => s.slug), ["brand-identity", "visual-media", "digital-design"]);
 });
