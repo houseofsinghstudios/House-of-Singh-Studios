@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
+import { track } from "@/lib/analytics";
 
 /* ── Department label map ── */
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -206,6 +207,8 @@ export default function CareersClient({ roles }: CareersClientProps) {
       });
       if (res.ok) {
         setFormState("success");
+        // Kept apart from leads, and never for the bot trap. No name, email or message.
+        if (!honeypot) track("job_application");
         setFormData({
           name: "",
           email: "",

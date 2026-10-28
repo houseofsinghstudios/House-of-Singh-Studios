@@ -14,6 +14,7 @@ import { updatedLabel } from "@/lib/article-dates";
 import RgdLink, { RgdText } from "@/components/RgdLink";
 import { linkRgdInBlocks } from "@/lib/rgd";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { track } from "@/lib/analytics";
 
 interface PostImage {
   asset?: {
@@ -168,6 +169,8 @@ function InlineNewsletter() {
       });
       if (!res.ok) throw new Error();
       setStatus("success");
+      // Only once the subscription is accepted, and never for the bot trap. No email.
+      if (!honeypot) track("newsletter_signup");
     } catch {
       setStatus("error");
     }

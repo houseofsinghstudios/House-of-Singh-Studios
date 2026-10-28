@@ -11,7 +11,8 @@
 // Page views are sent here, one per route, never by gtag itself (send_page_view is off; the GA4
 // stream's "page changes based on browser history events" must be off too). Each one first sets
 // page_location, page_path, page_title and content_group, so every later event belongs to the page
-// the visitor is on. Events go through src/lib/analytics.ts, which sends nothing without consent.
+// the visitor is on. Events go through src/lib/analytics.ts, which sends nothing without consent;
+// discovery call clicks are picked up here, anywhere on the site.
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
@@ -19,7 +20,7 @@ import { GA_MEASUREMENT_ID } from "@/lib/constants/analytics";
 import { CLARITY_HOST } from "@/lib/constants/clarity";
 import { ANALYTICS_CONSENT_EVENT } from "@/lib/constants/consent";
 import { effectiveState, isStrictRegion, readChoice, type ConsentState } from "@/lib/consent";
-import { isAllowed, setAllowed, trackPageView } from "@/lib/analytics";
+import { isAllowed, isDiscoveryCallHref, setAllowed, track, trackPageView } from "@/lib/analytics";
 
 type GtagWindow = Window & { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] } & Record<string, unknown>;
 
@@ -94,6 +95,22 @@ export default function GoogleAnalytics() {
     if (!isAllowed() || !sent.current || sent.current.href === window.location.href) return;
     whenTitleSettles(sent.current.title, pageView.current);
   }, [pathname]);
+
+  // discovery_call_click: any click on a link to the discovery call (DISCOVERY_CALL_URL, also with
+  // the notes Brand Pulse and the Project Planner add), including a middle click to a new tab.
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.type === "auxclick" && e.button !== 1) return;
+      const link = (e.target as Element | null)?.closest?.<HTMLAnchorElement>("a[href]");
+      if (link && isDiscoveryCallHref(link.href)) track("discovery_call_click", { page_path: window.location.pathname });
+    };
+    document.addEventListener("click", onClick, true);
+    document.addEventListener("auxclick", onClick, true);
+    return () => {
+      document.removeEventListener("click", onClick, true);
+      document.removeEventListener("auxclick", onClick, true);
+    };
+  }, []);
 
   return null;
 }

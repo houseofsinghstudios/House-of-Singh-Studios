@@ -14,6 +14,7 @@ import PlannerStep, { type StepKey } from "./PlannerStep";
 import PlannerBrief, { type CaseStudyLink } from "./PlannerBrief";
 import PlannerSendForm from "./PlannerSendForm";
 import { sendEvent, startSession, type Contact, type Heard, type Session } from "./events";
+import { leadParams, track } from "@/lib/analytics";
 import "./planner.css";
 
 interface Props {
@@ -121,7 +122,10 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
 
   async function onSend(contact: Contact, honeypot: string, heard: Heard): Promise<boolean> {
     if (!session.current || !answers) return false;
-    return sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot, ...heard });
+    const ok = await sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot, ...heard });
+    // Only once the server has accepted the brief, and never for the bot trap. No contact details.
+    if (ok && !honeypot) track("generate_lead", leadParams("project_planner", answers.primary, session.current.attribution.referralCode));
+    return ok;
   }
 
   function startAgain() {

@@ -2,7 +2,10 @@
 // Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { contentGroup, pageContext, setAllowed, track, trackPageView } from "@/lib/analytics";
+import { contactLeadType, contentGroup, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, track, trackPageView } from "@/lib/analytics";
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { PARTNER_SERVICES } from "@/lib/partners/forms";
+import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
 import { apply } from "@/lib/consent";
 import { ANALYTICS_CONSENT_EVENT } from "@/lib/constants/consent";
 
@@ -71,4 +74,43 @@ test("a consent change is announced, so the tracker can start or stop", () => {
   apply("granted", w as unknown as Window);
   apply("denied", w as unknown as Window);
   assert.deepEqual(seen, ["granted", "denied"]);
+});
+
+test("lead type from the contact form's service", () => {
+  assert.equal(contactLeadType("Brand Identity"), "contact");
+  assert.equal(contactLeadType(NOMINATION_SERVICES.commons), "contact");
+  assert.equal(contactLeadType(""), "contact");
+  assert.equal(contactLeadType(PARTNER_SERVICES.introduction), "partner_introduction");
+  assert.equal(contactLeadType(PARTNER_SERVICES.partnership), "partner_application");
+});
+
+test("generate_lead parameters: type, the chosen service if any, whether a referral came with it", () => {
+  assert.deepEqual(leadParams("contact", "Brand Identity", ""), { lead_type: "contact", service: "Brand Identity", has_referral: false });
+  assert.deepEqual(leadParams("contact", NOMINATION_SERVICES.commons, "acme"), { lead_type: "contact", service: "Commons nomination (pro bono)", has_referral: true });
+  assert.deepEqual(leadParams("project_planner", "identity", "ref12"), { lead_type: "project_planner", service: "identity", has_referral: true });
+  assert.deepEqual(leadParams("contact", "", ""), { lead_type: "contact", has_referral: false });
+  // Partner leads: the choice is the lead type, so no service.
+  assert.deepEqual(leadParams("partner_introduction", PARTNER_SERVICES.introduction, ""), { lead_type: "partner_introduction", has_referral: false });
+  assert.deepEqual(leadParams("partner_application", PARTNER_SERVICES.partnership, "x9"), { lead_type: "partner_application", has_referral: true });
+});
+
+test("a service that could be personal data is never sent", () => {
+  for (const bad of ["jane@example.com", "Call 416 555 0100", "x".repeat(41), "<script>", 42, null, undefined]) {
+    assert.equal(safeService(bad), "", String(bad));
+  }
+  assert.equal(safeService(" Digital Design "), "Digital Design");
+});
+
+test("lead parameters never carry a name, email, phone number or message", () => {
+  const params = leadParams("contact", "Jane Doe jane@example.com 4165550100", "");
+  assert.deepEqual(params, { lead_type: "contact", has_referral: false });
+});
+
+test("discovery call links, with or without the notes added to them", () => {
+  assert.equal(isDiscoveryCallHref(DISCOVERY_CALL_URL), true);
+  assert.equal(isDiscoveryCallHref(`${DISCOVERY_CALL_URL}?notes=Brand%20Pulse%20result`), true);
+  assert.equal(isDiscoveryCallHref(`${DISCOVERY_CALL_URL}/`), true);
+  assert.equal(isDiscoveryCallHref("https://cal.com/houseofsinghstudios/other-call"), false);
+  assert.equal(isDiscoveryCallHref("https://studios.houseofsingh.com/contact"), false);
+  assert.equal(isDiscoveryCallHref("/start"), false);
 });

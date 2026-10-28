@@ -10,6 +10,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
+import { contactLeadType, leadParams, track } from "@/lib/analytics";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
@@ -82,6 +83,11 @@ export default function ContactClient({ initialService = "" }: { initialService?
       });
       if (!res.ok) throw new Error("Failed");
       setSubmitted(String(data.service || ""));
+      // Only once the lead is accepted, and never for the bot trap. No contact details or message.
+      if (!data.honeypot) {
+        const service = String(data.service || "");
+        track("generate_lead", leadParams(contactLeadType(service), service, data.attribution.referralCode));
+      }
     } catch {
       setError(true);
     } finally {

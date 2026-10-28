@@ -7,6 +7,9 @@
 // any event sent after it, a click or a lead, is credited to the page the visitor is on, not to the
 // page they landed on.
 
+import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { PARTNER_SERVICES } from "@/lib/partners/forms";
+
 type Gtag = (...args: unknown[]) => void;
 type GtagWindow = Window & { gtag?: Gtag; dataLayer?: unknown[] };
 
@@ -37,6 +40,41 @@ export function contentGroup(pathname: string): string {
 export function pageContext(href: string, title: string) {
   const url = new URL(href);
   return { page_location: url.href, page_path: url.pathname, page_title: title, content_group: contentGroup(url.pathname) };
+}
+
+// ── Leads (sent only once the API has confirmed success) ──
+
+export type LeadType = "contact" | "project_planner" | "partner_introduction" | "partner_application";
+
+// The contact form's service decides the lead type: the two partner choices are partner leads.
+export function contactLeadType(service: string): LeadType {
+  if (service === PARTNER_SERVICES.introduction) return "partner_introduction";
+  if (service === PARTNER_SERVICES.partnership) return "partner_application";
+  return "contact";
+}
+
+// A service is a choice from a list (a select value or a planner code), never typed text. Anything
+// that does not look like one (digits, @, very long) is dropped rather than sent.
+export function safeService(value: unknown): string {
+  return typeof value === "string" && /^[A-Za-z][A-Za-z ()_-]{0,39}$/.test(value.trim()) ? value.trim() : "";
+}
+
+// generate_lead's parameters: the lead type, the service if one was chosen (partner leads have
+// none: their choice is the lead type), and whether a partner's referral code came with it.
+export function leadParams(leadType: LeadType, service: unknown, referralCode: string): EventParams {
+  const s = leadType === "partner_introduction" || leadType === "partner_application" ? "" : safeService(service);
+  return { lead_type: leadType, ...(s ? { service: s } : {}), has_referral: Boolean(referralCode) };
+}
+
+// Any link to the discovery call booking page, with or without a query string.
+export function isDiscoveryCallHref(href: string): boolean {
+  try {
+    const target = new URL(DISCOVERY_CALL_URL);
+    const url = new URL(href, target);
+    return url.origin === target.origin && url.pathname.replace(/\/$/, "") === target.pathname.replace(/\/$/, "");
+  } catch {
+    return false;
+  }
 }
 
 // ── The gate ──
