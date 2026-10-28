@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
       { source: "/plan", destination: "/start", statusCode: 301 },
       // The Packages page is retired: pricing now lives in the Project Planner's price guide.
       { source: "/packages", destination: "/start", statusCode: 301 },
+      // Case studies that were removed but are still indexed. Query strings carry over.
+      { source: "/work/meridian", destination: "/work", statusCode: 301 },
+      { source: "/work/soulbound", destination: "/work", statusCode: 301 },
+      { source: "/work/test", destination: "/work", statusCode: 301 },
     ];
   },
   async headers() {

@@ -1,6 +1,7 @@
 import { client } from "./client";
 import { shareImageUrl, urlFor } from "./image";
 import { disciplineLabel } from "@/lib/disciplines";
+import { coverAlt, projectAlt } from "@/lib/alt-text";
 import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
@@ -172,7 +173,8 @@ function toBlockImage(raw: RawBlockImage | null | undefined, fallbackAlt: string
   if (!id || !width || !height) return null;
   try {
     const src = urlFor({ _id: id }).width(2000).fit("max").auto("format").url();
-    return { src, alt: raw?.alt || fallbackAlt, width, height };
+    // fallbackAlt is the project name: "<project>: <what is shown>".
+    return { src, alt: projectAlt(fallbackAlt, raw?.alt), width, height };
   } catch {
     return null;
   }
@@ -301,13 +303,15 @@ function mapSanityToProject(doc: any, index: number): Project {
 function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
+  // The cover's alt names the project and its primary discipline.
+  const cover = coverAlt(doc.title || "", doc.featuredImage?.alt, Array.isArray(doc.disciplines) && doc.disciplines[0] ? disciplineLabel(doc.disciplines[0]) : "");
 
   // Build gallery images
   const galleryImages: ProjectDetailImage[] = (doc.gallery || [])
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .map((img: any) => ({
       src: sanityImageUrl(img),
-      alt: img.alt || doc.title || "",
+      alt: projectAlt(doc.title || "", img.alt),
     }))
     .filter((img: ProjectDetailImage) => img.src);
 
@@ -332,7 +336,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
     summary: overviewText,
     heroImage: {
       src: imageUrl,
-      alt: doc.featuredImage?.alt || doc.title || "",
+      alt: cover,
     },
     overview: {
       heading: "The Business",
@@ -351,7 +355,7 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
       set1: galleryImages.length > 0
         ? galleryImages
         : imageUrl
-          ? [{ src: imageUrl, alt: doc.title || "" }]
+          ? [{ src: imageUrl, alt: cover }]
           : [],
     },
     result: {

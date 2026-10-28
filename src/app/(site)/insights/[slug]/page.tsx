@@ -9,7 +9,7 @@ import { shareImageUrl } from "@/lib/sanity/image";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
 import RelatedWork from "@/components/insights/RelatedWork";
-import { orgRef, personRef } from "@/lib/schema";
+import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
 
 type SlugRef = { slug?: { current?: string } } | null;
 const slugsOf = (refs: unknown): string[] =>
@@ -108,7 +108,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} />} />
+      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
     </>
   );
 }

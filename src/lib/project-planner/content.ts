@@ -161,7 +161,7 @@ export const DEPENDENCY_NOTE = "Final website visuals may depend on the approved
 
 // Never a promise of revenue, sales or rankings.
 export const SUCCESS: Record<GoalId, string> = {
-  credibility: "Customers see an established business at first glance.",
+  credibility: "Customers see a credible business at first glance.",
   clarity: "People understand what you offer within seconds.",
   differentiation: "You are recognisable among similar businesses.",
   launch: "Everything needed for launch is ready on time.",

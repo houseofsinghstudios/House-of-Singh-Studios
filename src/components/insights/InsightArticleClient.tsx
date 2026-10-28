@@ -270,6 +270,11 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
               </>
             )}
           </div>
+          <p className="ins-meta art-meta-line">
+            <Link href="/about" className="art-byline" data-cursor="link">
+              By Maninder Singh RGD, Creative Director
+            </Link>
+          </p>
           {updated && <p className="ins-meta art-meta-line">{updated}</p>}
 
           <h1 className="art-title">{post.title}</h1>

@@ -104,7 +104,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
           className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px] mt-6"
           style={{ opacity: 0.7 }}
         >
-          House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for established businesses. The studio was founded on a direct premise: design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human.
+          House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for businesses that have outgrown their brand. The studio was founded on a direct premise: design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human.
         </p>
 
         {/* Location + Live Clock */}

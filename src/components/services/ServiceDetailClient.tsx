@@ -16,7 +16,7 @@ import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
-    "This service is for established businesses doing $1M+ in revenue that have outgrown their original branding. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
+    "This service is for businesses that have outgrown the brand they started with. Your visual identity is inconsistent across channels. You know you need professional design but you have been burned by agencies before. You value expertise and clarity over flash.",
   "visual-media":
     "This service is for businesses that have a brand identity but no visual content strategy. Your photography is inconsistent, your video content is ad hoc, and your social presence does not match your brand positioning. You need a system, not a one off shoot.",
   "digital-design":
