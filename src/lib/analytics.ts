@@ -8,6 +8,7 @@
 // page they landed on.
 
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
 
 type Gtag = (...args: unknown[]) => void;
@@ -44,13 +45,20 @@ export function pageContext(href: string, title: string) {
 
 // ── Leads (sent only once the API has confirmed success) ──
 
-export type LeadType = "contact" | "project_planner" | "partner_introduction" | "partner_application";
+export type LeadType = "contact" | "project_planner" | "partner_introduction";
 
-// The contact form's service decides the lead type: the two partner choices are partner leads.
-export function contactLeadType(service: string): LeadType {
-  if (service === PARTNER_SERVICES.introduction) return "partner_introduction";
-  if (service === PARTNER_SERVICES.partnership) return "partner_application";
-  return "contact";
+// What a contact form submission is. Only a prospective paying client is a lead: an enquiry about
+// the studio's services, or a client a partner introduces. A Commons nomination (pro bono), a
+// Parallel suggestion (a brand for the studio to reimagine) and a partner's own application are
+// not, so each has its own event, without parameters.
+export type ContactEventName = "generate_lead" | "commons_nomination" | "parallel_suggestion" | "partner_application";
+
+export function contactEvent(service: string, referralCode: string): { name: ContactEventName; params: EventParams } {
+  if (service === NOMINATION_SERVICES.commons) return { name: "commons_nomination", params: {} };
+  if (service === NOMINATION_SERVICES.parallel) return { name: "parallel_suggestion", params: {} };
+  if (service === PARTNER_SERVICES.partnership) return { name: "partner_application", params: {} };
+  const type: LeadType = service === PARTNER_SERVICES.introduction ? "partner_introduction" : "contact";
+  return { name: "generate_lead", params: leadParams(type, service, referralCode) };
 }
 
 // A service is a choice from a list (a select value or a planner code), never typed text. Anything
@@ -59,10 +67,10 @@ export function safeService(value: unknown): string {
   return typeof value === "string" && /^[A-Za-z][A-Za-z ()_-]{0,39}$/.test(value.trim()) ? value.trim() : "";
 }
 
-// generate_lead's parameters: the lead type, the service if one was chosen (partner leads have
-// none: their choice is the lead type), and whether a partner's referral code came with it.
+// generate_lead's parameters: the lead type, the service if one was chosen (an introduction has
+// none: its choice is the lead type), and whether a partner's referral code came with it.
 export function leadParams(leadType: LeadType, service: unknown, referralCode: string): EventParams {
-  const s = leadType === "partner_introduction" || leadType === "partner_application" ? "" : safeService(service);
+  const s = leadType === "partner_introduction" ? "" : safeService(service);
   return { lead_type: leadType, ...(s ? { service: s } : {}), has_referral: Boolean(referralCode) };
 }
 
