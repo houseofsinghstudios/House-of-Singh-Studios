@@ -4,7 +4,8 @@
 // left out and the sections after it move up a number.
 import type { Project } from "@/data/projects";
 import NextPageLink from "@/components/layout/NextPageLink";
-import { COMMONS } from "@/lib/initiatives/content";
+import InlineLinks from "@/components/InlineLinks";
+import { COMMONS, QUESTIONS_NOTE } from "@/lib/initiatives/content";
 import type { Recognition } from "@/lib/initiatives/types";
 import InitiativeHero from "./InitiativeHero";
 import InitiativeSection from "./InitiativeSection";
@@ -50,7 +51,7 @@ export default function CommonsPage({ projects, recognitions }: { projects: Proj
           <InitiativeWork projects={projects} />
         </InitiativeSection>
       )}
-      <InitiativeSection id="questions" number={num(5)} heading={COMMONS.questionsHeading}>
+      <InitiativeSection id="questions" number={num(5)} heading={COMMONS.questionsHeading} note={<InlineLinks text={QUESTIONS_NOTE} />}>
         <InitiativeQuestions questions={COMMONS.questions} />
       </InitiativeSection>
       <NominateBand number={num(6)} item={COMMONS.nominate} next={COMMONS.next} />

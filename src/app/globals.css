@@ -2446,7 +2446,8 @@ body {
 .svc-acc-num {
   font-size: 12px;
   font-weight: 500;
-  color: var(--text-muted);
+  /* Gunmetal: 6.29:1 on the page and 5.30:1 on the open tint (Marble failed AA at 2.25:1). */
+  color: var(--text-secondary);
   letter-spacing: 0.06em;
   min-width: 28px;
   flex-shrink: 0;
@@ -2488,15 +2489,27 @@ body {
   margin: 0;
   padding: 0 0 20px 44px;
 }
-/* Answers to questions read as body text: about 70 characters a line past the indent that lines up
-   with the question, the service page body size, and a little more room before the next row.
-   Inter's 0 is wider than an average letter, so 55ch measures about 70 characters of text. */
+/* Answers to questions read as body text across the row: from the indent that lines up with the
+   question to a right gutter as wide as the icon column (the trigger's 16px gap and the icon), so
+   the text never runs under the plus. A little more room before the next row. */
+.svc-acc-row--questions {
+  --acc-icon: 12px;
+}
+.svc-acc-row--questions .svc-acc-icon {
+  width: var(--acc-icon);
+  text-align: center;
+}
 .svc-acc-row--questions .svc-acc-desc {
-  box-sizing: content-box;
-  max-width: 55ch;
+  max-width: none;
   font-size: 16px;
   line-height: 1.65;
+  padding-right: calc(16px + var(--acc-icon));
   padding-bottom: 32px;
+}
+@media (min-width: 1024px) {
+  .svc-acc-row--questions .svc-acc-desc {
+    font-size: 17px;
+  }
 }
 @media (max-width: 767px) {
   .svc-acc-icon {
@@ -2507,6 +2520,9 @@ body {
   }
   /* Questions stay interactive on phones: the plus shows, at the size and colour of the homepage
      services toggle (.svc-mob-plus), and turns to a cross in the text colour when open. */
+  .svc-acc-row--questions {
+    --acc-icon: 15px;
+  }
   .svc-acc-row--questions .svc-acc-icon {
     display: inline-block;
     font-family: var(--sans);

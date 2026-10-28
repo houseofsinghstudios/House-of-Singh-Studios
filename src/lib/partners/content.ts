@@ -71,6 +71,8 @@ export const WHO = {
 };
 
 export const QUESTIONS_HEADING = "Questions";
+// Offered under the Questions heading.
+export const PARTNERS_EMAIL = "partners@houseofsingh.com";
 
 export const QUESTIONS: Question[] = [
   {

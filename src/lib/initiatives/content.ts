@@ -53,6 +53,9 @@ export const FALLBACK_INITIATIVES: Initiative[] = [
 // The small label above the at a glance rows in a program page hero.
 export const GLANCE_LABEL = "At a glance";
 
+// Under the Questions heading on the landing, Parallel and Commons pages.
+export const QUESTIONS_NOTE = "Have a question that is not here? [Get in touch](/contact).";
+
 export const LANDING = {
   title: "Initiatives: Parallel and Commons",
   description:

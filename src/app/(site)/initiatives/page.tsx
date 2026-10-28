@@ -6,7 +6,8 @@ import InitiativeSection from "@/components/initiatives/InitiativeSection";
 import InitiativeQuestions from "@/components/initiatives/InitiativeQuestions";
 import ProgrammeRows, { type ProgrammeRow } from "@/components/initiatives/ProgrammeRows";
 import { TakePartBand } from "@/components/initiatives/NominateBand";
-import { LANDING } from "@/lib/initiatives/content";
+import InlineLinks from "@/components/InlineLinks";
+import { LANDING, QUESTIONS_NOTE } from "@/lib/initiatives/content";
 import { linksToPage } from "@/lib/initiatives/pages";
 import { visibleInitiatives, type ProjectType } from "@/lib/initiatives/types";
 import { getInitiatives } from "@/lib/sanity/initiatives";
@@ -50,7 +51,7 @@ export default async function InitiativesPage() {
         <ProgrammeRows rows={rows} />
       </InitiativeSection>
       {takePart.length > 0 && <TakePartBand number="02" heading={LANDING.takePartHeading} items={takePart} />}
-      <InitiativeSection id="questions" number={takePart.length > 0 ? "03" : "02"} heading={LANDING.questionsHeading}>
+      <InitiativeSection id="questions" number={takePart.length > 0 ? "03" : "02"} heading={LANDING.questionsHeading} note={<InlineLinks text={QUESTIONS_NOTE} />}>
         <InitiativeQuestions questions={LANDING.questions} />
       </InitiativeSection>
       <NextPageLink current="/initiatives" />

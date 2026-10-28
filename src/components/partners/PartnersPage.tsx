@@ -7,7 +7,7 @@ import InitiativeSection from "@/components/initiatives/InitiativeSection";
 import InitiativeQuestions from "@/components/initiatives/InitiativeQuestions";
 import NumberedRows from "@/components/initiatives/NumberedRows";
 import { TakePartBand } from "@/components/initiatives/NominateBand";
-import { BAND, HOW, QUESTIONS, QUESTIONS_HEADING, SAFE, WHO, WORTH } from "@/lib/partners/content";
+import { BAND, HOW, PARTNERS_EMAIL, QUESTIONS, QUESTIONS_HEADING, SAFE, WHO, WORTH } from "@/lib/partners/content";
 import PartnersHero from "./PartnersHero";
 import PartnerStats from "./PartnerStats";
 import IntroductionBox from "./IntroductionBox";
@@ -73,7 +73,12 @@ export default function PartnersPage() {
       <InitiativeSection id="who" number="04" heading={WHO.heading}>
         <Who />
       </InitiativeSection>
-      <InitiativeSection id="questions" number="05" heading={QUESTIONS_HEADING}>
+      <InitiativeSection
+        id="questions"
+        number="05"
+        heading={QUESTIONS_HEADING}
+        note={<>Have a question that is not here? <a href={`mailto:${PARTNERS_EMAIL}`} className="art-link">Email {PARTNERS_EMAIL}</a>.</>}
+      >
         <InitiativeQuestions questions={QUESTIONS} />
       </InitiativeSection>
       <TakePartBand ariaLabel="Introduce a client or become a partner" items={band} />
