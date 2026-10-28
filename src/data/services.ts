@@ -209,7 +209,7 @@ export const services: ServiceData[] = [
       "Your content looks different on every platform. Nothing connects.",
     description: "We direct and produce brand photography, campaign films, and social content systems. Every piece serves a strategic purpose. Nothing is produced without a clear brief and defined outcome.",
     tagline: "Content with direction, not just production.",
-    seoTitle: "Brand Photography and Video Toronto | House of Singh Studios",
+    seoTitle: "Photography and Video Production Toronto | House of Singh",
     seoDescription:
       "Brand photography, video and social content for Toronto and GTA businesses, directed by brand strategy so every image and film works together.",
     gradient: "linear-gradient(135deg, #4A3F35 0%, #2C2419 100%)",
