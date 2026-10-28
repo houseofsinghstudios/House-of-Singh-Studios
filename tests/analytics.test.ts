@@ -2,7 +2,7 @@
 // Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { INTERNAL_KEY, SENT_KEY, configParams, contactEvent, contentGroup, internalFlag, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, submissionId, syncInternalFlag, track, trackOnce, trackPageView } from "@/lib/analytics";
+import { DEBUG_KEY, INTERNAL_KEY, SENT_KEY, configParams, contactEvent, contentGroup, flagFromSearch, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, submissionId, syncDebugFlag, syncInternalFlag, track, trackOnce, trackPageView } from "@/lib/analytics";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
@@ -117,12 +117,12 @@ test("discovery call links, with or without the notes added to them", () => {
 });
 
 test("internal flag: ?hos_internal=1 sets it, ?hos_internal=0 clears it, otherwise it stays", () => {
-  assert.equal(internalFlag("?hos_internal=1", false), true);
-  assert.equal(internalFlag("?hos_internal=0", true), false);
-  assert.equal(internalFlag("?utm_source=x&hos_internal=1", false), true);
-  assert.equal(internalFlag("", true), true);
-  assert.equal(internalFlag("?hos_internal=yes", false), false, "only 1 and 0 count");
-  assert.equal(internalFlag("?hos_internal=yes", true), true);
+  assert.equal(flagFromSearch("?hos_internal=1", "hos_internal", false), true);
+  assert.equal(flagFromSearch("?hos_internal=0", "hos_internal", true), false);
+  assert.equal(flagFromSearch("?utm_source=x&hos_internal=1", "hos_internal", false), true);
+  assert.equal(flagFromSearch("", "hos_internal", true), true);
+  assert.equal(flagFromSearch("?hos_internal=yes", "hos_internal", false), false, "only 1 and 0 count");
+  assert.equal(flagFromSearch("?hos_internal=yes", "hos_internal", true), true);
 });
 
 test("internal flag is kept in localStorage across visits", () => {
@@ -140,9 +140,30 @@ test("internal flag is kept in localStorage across visits", () => {
   assert.equal(syncInternalFlag("", null), false);
 });
 
-test("config: no automatic page view, no signals, traffic_type only on internal browsers", () => {
-  assert.deepEqual(configParams(false), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
-  assert.deepEqual(configParams(true), { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false, traffic_type: "internal" });
+test("config: no automatic page view, no signals, traffic_type only on internal browsers, debug_mode only while debugging", () => {
+  const base = { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false };
+  assert.deepEqual(configParams(false), base);
+  assert.deepEqual(configParams(true), { ...base, traffic_type: "internal" });
+  assert.deepEqual(configParams(false, true), { ...base, debug_mode: true });
+  assert.deepEqual(configParams(true, true), { ...base, traffic_type: "internal", debug_mode: true });
+  assert.ok(!("debug_mode" in configParams(true, false)), "never debug_mode: false, which GA would read as on");
+});
+
+test("debug flag: ?hos_debug=1 for this session, ?hos_debug=0 off, kept in its own key", () => {
+  const m = new Map<string, string>();
+  const session = { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v), removeItem: (k: string) => void m.delete(k) };
+  assert.equal(syncDebugFlag("", session), false);
+  assert.equal(syncDebugFlag("?hos_debug=1", session), true);
+  assert.equal(m.get(DEBUG_KEY), "1");
+  assert.equal(syncDebugFlag("", session), true, "later pages in the session stay in debug");
+  assert.equal(syncDebugFlag("?hos_debug=0", session), false);
+  assert.equal(m.has(DEBUG_KEY), false);
+  // A new session starts with an empty sessionStorage, so debug is off again.
+  const next = new Map<string, string>();
+  assert.equal(syncDebugFlag("", { getItem: (k: string) => next.get(k) ?? null, setItem: () => {}, removeItem: () => {} }), false);
+  // The two flags never touch each other's key.
+  assert.equal(syncInternalFlag("?hos_debug=1", session), false);
+  assert.equal(m.has(INTERNAL_KEY), false);
 });
 
 // ── Once per submission ──

@@ -15,7 +15,8 @@
 // discovery call clicks are picked up here, anywhere on the site.
 //
 // Internal traffic: ?hos_internal=1 on any page marks this browser as the studio's (?hos_internal=0
-// clears it); while marked, the config carries traffic_type "internal".
+// clears it); while marked, the config carries traffic_type "internal". ?hos_debug=1 turns on GA4's
+// debug_mode for this tab's session (?hos_debug=0 turns it off), so events show in DebugView.
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
@@ -23,7 +24,7 @@ import { GA_MEASUREMENT_ID } from "@/lib/constants/analytics";
 import { CLARITY_HOST } from "@/lib/constants/clarity";
 import { ANALYTICS_CONSENT_EVENT } from "@/lib/constants/consent";
 import { effectiveState, isStrictRegion, readChoice, type ConsentState } from "@/lib/consent";
-import { configParams, isAllowed, isDiscoveryCallHref, setAllowed, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
+import { configParams, isAllowed, isDiscoveryCallHref, setAllowed, syncDebugFlag, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
 
 type GtagWindow = Window & { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] } & Record<string, unknown>;
 
@@ -31,7 +32,7 @@ type GtagWindow = Window & { gtag?: (...args: unknown[]) => void; dataLayer?: un
 const DISABLE_KEY = `ga-disable-${GA_MEASUREMENT_ID}`;
 
 // The official snippet, run once consent is granted: queue, consent, config, then the tag.
-function startGtag(w: GtagWindow, internal: boolean) {
+function startGtag(w: GtagWindow, internal: boolean, debug: boolean) {
   if (w.gtag) return;
   w.dataLayer = w.dataLayer || [];
   w.gtag = function gtag() {
@@ -41,7 +42,7 @@ function startGtag(w: GtagWindow, internal: boolean) {
   };
   w.gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" });
   w.gtag("js", new Date());
-  w.gtag("config", GA_MEASUREMENT_ID, configParams(internal));
+  w.gtag("config", GA_MEASUREMENT_ID, configParams(internal, debug));
   const tag = document.createElement("script");
   tag.async = true;
   tag.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -60,9 +61,9 @@ function whenTitleSettles(previous: string, send: () => void) {
   window.setTimeout(check, 50);
 }
 
-function safeLocalStorage(): Storage | null {
+function safeStorage(kind: "localStorage" | "sessionStorage"): Storage | null {
   try {
-    return window.localStorage;
+    return window[kind];
   } catch {
     return null;
   }
@@ -84,12 +85,13 @@ export default function GoogleAnalytics() {
     if (window.location.hostname !== CLARITY_HOST) return;
     const w = window as unknown as GtagWindow;
     // Read on every full page load, whatever the consent: the flag is kept for later visits too.
-    const internal = syncInternalFlag(window.location.search, safeLocalStorage());
+    const internal = syncInternalFlag(window.location.search, safeStorage("localStorage"));
+    const debug = syncDebugFlag(window.location.search, safeStorage("sessionStorage"));
     const follow = (state: ConsentState) => {
       w[DISABLE_KEY] = state !== "granted";
       setAllowed(state === "granted");
       if (state !== "granted") return;
-      startGtag(w, internal);
+      startGtag(w, internal, debug);
       sent.current = null;
       pageView.current();
     };
