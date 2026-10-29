@@ -4,7 +4,7 @@ import { getPostBySlug } from "@/lib/sanity/queries";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
-import { DEFAULT_SHARE_IMAGE, articleTitles } from "@/lib/seo";
+import { articleTitles, DEFAULT_SHARE_IMAGE, SITE_OG } from "@/lib/seo";
 import { shareImageUrl } from "@/lib/sanity/image";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
@@ -39,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Insights from House of Singh Studios.",
     alternates: { canonical: `https://studios.houseofsingh.com/insights/${slug}` },
     openGraph: {
+      ...SITE_OG,
       title: titles.social,
       description: post.seoDescription || "Insights from House of Singh Studios.",
       url: `https://studios.houseofsingh.com/insights/${slug}`,

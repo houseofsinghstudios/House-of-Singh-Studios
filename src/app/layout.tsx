@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 
 // Root layout shared by the website and the Studio: the document, the font and the default
 // metadata only. Site chrome and site CSS live in (site)/layout.tsx so they never reach /studio.
@@ -25,10 +25,8 @@ export const metadata: Metadata = {
   // fill them, and Next copies a page's openGraph title into its twitter card. Defaults set here
   // would make every page share the homepage's social title.
   openGraph: {
-    type: 'website',
-    locale: 'en_CA',
+    ...WEBSITE_OG,
     url: siteUrl,
-    siteName: 'House of Singh Studios',
     // The default share image, for pages that set no openGraph of their own (such as the 404).
     // The twitter card takes its image from here.
     images: [DEFAULT_SHARE_IMAGE],

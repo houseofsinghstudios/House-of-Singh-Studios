@@ -53,11 +53,12 @@ test("articles: an SEO title is the whole title, exactly as written; without one
   }
 });
 
-test("og:type on every page: each page openGraph spreads WEBSITE_OG first, articles say article", async () => {
+test("og:type, og:locale and og:site_name on every page: WEBSITE_OG, or SITE_OG and article on articles", async () => {
   const { readFileSync, readdirSync } = await import("node:fs");
   const { join } = await import("node:path");
-  const { WEBSITE_OG } = await import("@/lib/seo");
-  assert.deepEqual(WEBSITE_OG, { type: "website" });
+  const { SITE_OG, WEBSITE_OG } = await import("@/lib/seo");
+  assert.deepEqual(SITE_OG, { locale: "en_CA", siteName: "House of Singh Studios" });
+  assert.deepEqual(WEBSITE_OG, { type: "website", locale: "en_CA", siteName: "House of Singh Studios" });
   // A page's openGraph replaces the layout's, type included, so each one must carry its own.
   const pages: string[] = [];
   const walk = (dir: string) => {
@@ -73,10 +74,21 @@ test("og:type on every page: each page openGraph spreads WEBSITE_OG first, artic
   for (const p of withOg) {
     const src = readFileSync(p, "utf8");
     if (p.includes(join("insights", "[slug]"))) {
-      assert.match(src, /type: "article"/, p);
+      assert.match(src, /openGraph: \{\s*\.\.\.SITE_OG,/, p);
+      assert.equal(src.match(/type: "article"/g)?.length, 1, p);
       assert.doesNotMatch(src, /WEBSITE_OG/, p);
     } else {
       assert.match(src, /openGraph: \{\s*\.\.\.WEBSITE_OG,/, p);
     }
+    // Spread first and set nowhere else on the page, so each tag renders exactly once.
+    assert.doesNotMatch(src, /\b(locale|siteName): /, p);
+    assert.equal(src.match(/openGraph: \{/g)?.length, 1, p);
   }
+});
+
+test("the root layout's openGraph spreads WEBSITE_OG too, for pages without their own", async () => {
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync("src/app/layout.tsx", "utf8");
+  assert.match(src, /openGraph: \{\s*\.\.\.WEBSITE_OG,/);
+  assert.doesNotMatch(src, /\b(type|locale|siteName): '/);
 });

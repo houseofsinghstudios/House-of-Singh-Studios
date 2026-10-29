@@ -45,9 +45,11 @@ export const DEFAULT_SHARE_IMAGE = {
   alt: "House of Singh Studios. Clear thinking, made visible. Brand identity and design studio in Toronto.",
 };
 
-// og:type for every page except articles. A page's openGraph replaces the layout's whole openGraph,
-// type included, so every page that sets openGraph spreads this first. Articles set "article".
-export const WEBSITE_OG = { type: "website" } as const;
+// The openGraph fields every page carries. A page's openGraph replaces the layout's whole openGraph,
+// so every page that sets one spreads these first: WEBSITE_OG on every page except articles, which
+// spread SITE_OG and set type "article" themselves.
+export const SITE_OG = { locale: "en_CA", siteName: STUDIO_NAME } as const;
+export const WEBSITE_OG = { type: "website", ...SITE_OG } as const;
 
 // Article titles: an SEO title set in Sanity is the complete search title, used exactly as written
 // (absolute, so the template adds nothing), and the social title too. Without one, the article
