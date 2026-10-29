@@ -36,6 +36,15 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 13 | Homepage, "Two ways to start", a chip | `tool_band_click` | `tool`, `kind` chip, `value` the answer or service |
 | 14 | /partners, a call to action; then Copy Text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
 
+## Network panel: what each collect request contains
+
+In the browser's developer tools, Network, filter by `collect`. Each hit is a request to `…google-analytics.com/g/collect`; its parameters are in the query string, or one hit per line in the request body when several are batched.
+
+- [ ] The first page: one hit with `en=page_view`, `dl` the full address, `dt` the page title, `ep.content_group` (for example `careers`) and `ep.page_path` (for example `/careers`). There is no second page view for the same page.
+- [ ] Each click to another page: one more `en=page_view` with the new `dl`, `dt`, `ep.content_group` and `ep.page_path`.
+- [ ] Every other event (`tool_band_click`, `generate_lead` and the rest) carries the same `dl`, `ep.content_group` and `ep.page_path` of the page it happened on, plus its own `ep.` parameters (for example `ep.lead_type=contact`).
+- [ ] A `page_view` hit **without** `ep.content_group` is not the site's: it is GA's own history page view. Turn off "Page changes based on browser history events" (see Before you start).
+
 ## Check it never fires twice
 
 - [ ] After any success message, reload the page: no second event.
