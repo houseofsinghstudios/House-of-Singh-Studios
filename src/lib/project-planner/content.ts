@@ -5,7 +5,7 @@ import type { BandId, GoalId, PricedService, ServiceId, TimingId } from "./types
 
 export const PAGE = {
   title: "Plan Your Project",
-  description: "Build a first phase brief for your project in a few minutes, before you share any contact details.",
+  description: "Plan your project in a few minutes: build a first phase brief and see a price guide, all before you share any contact details.",
 };
 
 export const INTRO = {

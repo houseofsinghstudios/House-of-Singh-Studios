@@ -9,7 +9,7 @@ export const PARTNER_HREF = "/contact?service=partnership";
 export const PARTNERS = {
   title: "Partners",
   description:
-    "Introduce a client to House of Singh Studios and receive 10 percent of their first project's fee. A partner program for agencies, developers, printers, photographers and advisors in Toronto.",
+    "Introduce a client to House of Singh Studios and receive 10 percent of their first project's fee. For agencies, developers, printers and photographers.",
   label: "Partners",
   heading: "Good work travels by recommendation.",
   intro:

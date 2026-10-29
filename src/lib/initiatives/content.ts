@@ -59,7 +59,7 @@ export const QUESTIONS_NOTE = "Have a question that is not here? [Get in touch](
 export const LANDING = {
   title: "Initiatives: Parallel and Commons",
   description:
-    "Work House of Singh Studios does for its own reasons: Parallel, a series reimagining exciting brands, and Commons, pro bono design for charities and community organizations in Toronto.",
+    "Parallel, our series reimagining real brands with their permission, and Commons, our pro bono design program for Toronto community organizations.",
   label: "Initiatives",
   heading: "Beyond the brief.",
   intro:
@@ -103,7 +103,7 @@ export const LANDING = {
 export const PARALLEL = {
   title: "Parallel: Brand Identity Concepts by House of Singh Studios",
   description:
-    "Parallel is a studio series by House of Singh Studios that reimagines exciting brands. Same business, a different direction, and the thinking behind every choice.",
+    "Parallel is a House of Singh Studios series that reimagines real brands with their permission: a new direction, and the thinking behind every choice.",
   heading: "One brand. Another possibility.",
   intro:
     "Parallel is a studio series. We choose exciting brands and reimagine them from the ground up. Same business, a different direction. Each edition shows how we think, what we see, and where a brand could go.",
@@ -140,9 +140,9 @@ export const PARALLEL = {
 };
 
 export const COMMONS = {
-  title: "Commons: Pro Bono Design and Branding in Toronto",
+  title: "Commons: Pro Bono Design in Toronto",
   description:
-    "Commons is the pro bono design program of House of Singh Studios: three pro bono branding and design projects a year for charities and community organizations in Toronto.",
+    "Through Commons, House of Singh Studios takes on three pro bono brand and design projects a year for Toronto charities and community organizations.",
   heading: "Design for the common good.",
   intro:
     "Commons is our pro bono design program. Each year, three charities and community organizations receive professional brand and design work. No fee. The same standard as our paid work.",

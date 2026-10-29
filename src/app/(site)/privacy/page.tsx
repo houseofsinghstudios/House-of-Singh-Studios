@@ -5,11 +5,11 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy Policy for House of Singh Studios Inc.',
+  description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
   alternates: { canonical: 'https://studios.houseofsingh.com/privacy' },
   openGraph: {
     title: 'Privacy Policy — House of Singh Studios',
-    description: 'Privacy Policy for House of Singh Studios Inc.',
+    description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
     url: 'https://studios.houseofsingh.com/privacy',
     images: [DEFAULT_SHARE_IMAGE],
   },

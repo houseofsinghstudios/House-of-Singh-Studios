@@ -12,11 +12,11 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: { absolute: 'Branding and Design Services Toronto | House of Singh Studios' },
-  description: 'Brand identity, visual media, digital design and creative strategy. Four capabilities built to solve business problems for businesses that have outgrown their brand.',
+  description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
   alternates: { canonical: 'https://studios.houseofsingh.com/services' },
   openGraph: {
     title: 'Branding and Design Services Toronto | House of Singh Studios',
-    description: 'Brand identity, visual media, digital design and creative strategy. Four capabilities built to solve business problems for businesses that have outgrown their brand.',
+    description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
     url: 'https://studios.houseofsingh.com/services',
     images: [DEFAULT_SHARE_IMAGE],
   },

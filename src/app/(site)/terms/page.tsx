@@ -5,11 +5,11 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
-  description: 'Terms of Use for House of Singh Studios Inc.',
+  description: 'Terms of Use for House of Singh Studios Inc., covering use of this website, intellectual property, enquiries and the Ontario law that applies.',
   alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
   openGraph: {
     title: 'Terms of Use — House of Singh Studios',
-    description: 'Terms of Use for House of Singh Studios Inc.',
+    description: 'Terms of Use for House of Singh Studios Inc., covering use of this website, intellectual property, enquiries and the Ontario law that applies.',
     url: 'https://studios.houseofsingh.com/terms',
     images: [DEFAULT_SHARE_IMAGE],
   },
