@@ -5,7 +5,7 @@ import { PAGE } from "@/lib/project-planner/content";
 import { loadPublishedPricing } from "@/lib/project-planner/pricing";
 import { parseBegin, parseService } from "@/lib/project-planner/start-links";
 import { getPlannerCaseStudies } from "@/lib/sanity/projects";
-import { studioTitle } from "@/lib/seo";
+import { studioTitle, WEBSITE_OG } from "@/lib/seo";
 
 const URL = "https://studios.houseofsingh.com/start";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: PAGE.title,
   description: PAGE.description,
   alternates: { canonical: URL },
-  openGraph: { title: studioTitle(PAGE.title), description: PAGE.description, url: URL },
+  openGraph: { ...WEBSITE_OG, title: studioTitle(PAGE.title), description: PAGE.description, url: URL },
 };
 
 type Props = { searchParams: Promise<{ service?: string | string[]; begin?: string | string[] }> };

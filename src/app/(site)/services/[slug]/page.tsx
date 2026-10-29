@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetailClient from "@/components/services/ServiceDetailClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { AREA_SERVED, SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
 import { getArticleCards } from "@/lib/sanity/articles";
@@ -57,6 +57,7 @@ export function generateMetadata({
       description: service.seoDescription,
       alternates: { canonical: `https://studios.houseofsingh.com/services/${slug}` },
       openGraph: {
+        ...WEBSITE_OG,
         title: service.seoTitle,
         description: service.seoDescription,
         url: `https://studios.houseofsingh.com/services/${slug}`,

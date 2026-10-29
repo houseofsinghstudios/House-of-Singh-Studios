@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
   alternates: { canonical: 'https://studios.houseofsingh.com/privacy' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Privacy Policy — House of Singh Studios',
     description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
     url: 'https://studios.houseofsingh.com/privacy',

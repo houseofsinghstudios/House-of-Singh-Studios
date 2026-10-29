@@ -52,3 +52,31 @@ test("articles: an SEO title is the whole title, exactly as written; without one
     }, String(none));
   }
 });
+
+test("og:type on every page: each page openGraph spreads WEBSITE_OG first, articles say article", async () => {
+  const { readFileSync, readdirSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const { WEBSITE_OG } = await import("@/lib/seo");
+  assert.deepEqual(WEBSITE_OG, { type: "website" });
+  // A page's openGraph replaces the layout's, type included, so each one must carry its own.
+  const pages: string[] = [];
+  const walk = (dir: string) => {
+    for (const e of readdirSync(dir, { withFileTypes: true })) {
+      const p = join(dir, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name === "page.tsx") pages.push(p);
+    }
+  };
+  walk(join(process.cwd(), "src/app/(site)"));
+  const withOg = pages.filter((p) => readFileSync(p, "utf8").includes("openGraph: {"));
+  assert.ok(withOg.length >= 17, `${withOg.length} pages set openGraph`);
+  for (const p of withOg) {
+    const src = readFileSync(p, "utf8");
+    if (p.includes(join("insights", "[slug]"))) {
+      assert.match(src, /type: "article"/, p);
+      assert.doesNotMatch(src, /WEBSITE_OG/, p);
+    } else {
+      assert.match(src, /openGraph: \{\s*\.\.\.WEBSITE_OG,/, p);
+    }
+  }
+});

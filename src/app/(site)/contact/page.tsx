@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import ContactClient from "@/components/contact/ContactClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { contactServiceFromQuery } from "@/lib/partners/forms";
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description: 'Start a conversation with House of Singh Studios. Book a discovery call or send us a message about your project.',
   alternates: { canonical: 'https://studios.houseofsingh.com/contact' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Contact — House of Singh Studios',
     description: 'Start a conversation. Book a discovery call or send us a message about your project.',
     url: 'https://studios.houseofsingh.com/contact',

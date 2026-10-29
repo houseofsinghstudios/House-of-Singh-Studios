@@ -7,7 +7,7 @@ import { decode } from "@/lib/brand-pulse/codec";
 import { parsePrefill } from "@/lib/brand-pulse/entry";
 import { INTRO, PAGE, SHARED } from "@/lib/brand-pulse/content";
 import { assess } from "@/lib/brand-pulse/engine";
-import { studioTitle } from "@/lib/seo";
+import { studioTitle, WEBSITE_OG } from "@/lib/seo";
 
 const URL = "https://studios.houseofsingh.com/brand-pulse";
 
@@ -20,7 +20,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
     title: PAGE.title,
     description: PAGE.description,
     alternates: { canonical: URL },
-    openGraph: { title: studioTitle(PAGE.title), description: PAGE.description, url: URL },
+    openGraph: { ...WEBSITE_OG, title: studioTitle(PAGE.title), description: PAGE.description, url: URL },
     ...(r !== undefined ? { robots: { index: false, follow: true } } : {}),
   };
 }

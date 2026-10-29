@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
 import { getNetworkMembers } from "@/lib/sanity/network";
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description: 'A multidisciplinary design studio built by Maninder Singh. Design should be structured, intentional, and commercially effective.',
   alternates: { canonical: 'https://studios.houseofsingh.com/about' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'About — House of Singh Studios',
     description: 'A multidisciplinary design studio built by Maninder Singh. Design should be structured, intentional, and commercially effective.',
     url: 'https://studios.houseofsingh.com/about',

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import ServicesClient from "@/components/services/ServicesClient";
 import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
   alternates: { canonical: 'https://studios.houseofsingh.com/services' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Branding and Design Services Toronto | House of Singh Studios',
     description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
     url: 'https://studios.houseofsingh.com/services',

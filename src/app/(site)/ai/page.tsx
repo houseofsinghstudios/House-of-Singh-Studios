@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import AILabClient from "@/components/ai/AILabClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 
@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: 'How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human.',
   alternates: { canonical: 'https://studios.houseofsingh.com/ai' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'AI Lab — House of Singh Studios',
     description: 'How AI powers House of Singh Studios. Faster delivery, sharper consistency, creative direction that stays human.',
     url: 'https://studios.houseofsingh.com/ai',
