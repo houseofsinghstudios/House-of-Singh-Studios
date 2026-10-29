@@ -5,6 +5,7 @@ import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement } from "@/lib/project-planner/start-links";
 import type { Answers, BandId } from "@/lib/project-planner/types";
 import type { LeadSource } from "@/lib/lead-source";
+import { originAndPath } from "@/lib/referrer";
 
 export interface Attribution {
   source: string;
@@ -47,16 +48,6 @@ function uuid(): string {
   return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
 }
 
-function referrerOriginAndPath(): string {
-  try {
-    if (!document.referrer) return "";
-    const u = new URL(document.referrer);
-    return `${u.origin}${u.pathname}`;
-  } catch {
-    return "";
-  }
-}
-
 export function startSession(): Session {
   const params = new URLSearchParams(window.location.search);
   // This page's campaign tags if it has any, otherwise the visit's first touch tags.
@@ -71,7 +62,8 @@ export function startSession(): Session {
       landingPage: window.location.pathname,
       // Where the visitor came from inside the site, from ?from= on our own links.
       entryPlacement: parsePlacement(params.get("from")),
-      referrer: referrerOriginAndPath(),
+      // Origin and path only: query strings can carry personal details.
+      referrer: originAndPath(document.referrer),
     },
   };
 }

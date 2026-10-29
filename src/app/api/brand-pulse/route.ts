@@ -9,6 +9,7 @@ import { ENGINE_VERSION } from "@/lib/brand-pulse/engine";
 import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { FEEDBACK_IDS, GATES, QUESTION_ORDER, TEAM_SIZE_IDS, type Answers, type Feedback, type Gate, type TeamSize } from "@/lib/brand-pulse/types";
 import { cleanLeadSource } from "@/lib/lead-source";
+import { originAndPath } from "@/lib/referrer";
 
 // Brand Pulse events. The result is always recomputed here with the same rule based engine:
 // whatever result the browser might send is ignored.
@@ -111,7 +112,8 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       campaign: clean(a.campaign, 200),
       referralCode: referralCode(a.referralCode),
       landingPage: clean(a.landingPage, 500),
-      referrer: clean(a.referrer, 500),
+      // Origin and path only, whatever the browser sent.
+      referrer: originAndPath(a.referrer),
       entryPlacement: parsePlacement(a.entryPlacement),
     },
   };

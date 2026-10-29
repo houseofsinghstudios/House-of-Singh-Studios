@@ -5,6 +5,7 @@ import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement, type EntryPlacement } from "@/lib/brand-pulse/entry";
 import type { Answers, Feedback, Gate, TeamSize } from "@/lib/brand-pulse/types";
 import type { LeadSource } from "@/lib/lead-source";
+import { originAndPath } from "@/lib/referrer";
 
 export interface Attribution {
   source: string;
@@ -62,7 +63,8 @@ export function startSession(): PulseSession {
       campaign,
       referralCode,
       landingPage: window.location.pathname,
-      referrer: document.referrer,
+      // Origin and path only: query strings can carry personal details.
+      referrer: originAndPath(document.referrer),
       entryPlacement: parsePlacement(params.get("from")),
     },
   };

@@ -7,6 +7,7 @@ import { parsePlacement } from "./start-links";
 import { REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { referralCode } from "@/lib/campaign";
 import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
+import { originAndPath } from "@/lib/referrer";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -20,18 +21,6 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const clean = (v: unknown, max: number): string => (typeof v === "string" ? v.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, max) : "");
-
-// Origin and path only. Query strings and fragments can carry personal details.
-function originAndPath(v: unknown): string {
-  const raw = clean(v, 500);
-  if (!raw) return "";
-  try {
-    const u = new URL(raw);
-    return /^https?:$/.test(u.protocol) ? `${u.origin}${u.pathname}`.slice(0, 300) : "";
-  } catch {
-    return "";
-  }
-}
 
 function attribution(v: unknown) {
   const a = (v && typeof v === "object" ? v : {}) as Record<string, unknown>;
