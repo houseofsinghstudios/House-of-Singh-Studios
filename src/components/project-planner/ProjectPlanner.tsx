@@ -14,6 +14,9 @@ import PlannerStep, { type StepKey } from "./PlannerStep";
 import PlannerBrief, { type CaseStudyLink } from "./PlannerBrief";
 import PlannerSendForm from "./PlannerSendForm";
 import { sendEvent, startSession, type Contact, type Heard, type Session } from "./events";
+import { leadParams, trackOnce } from "@/lib/analytics";
+import { sessionStore } from "@/lib/campaign";
+import { readLeadSource } from "@/lib/lead-source";
 import "./planner.css";
 
 interface Props {
@@ -121,7 +124,12 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
 
   async function onSend(contact: Contact, honeypot: string, heard: Heard): Promise<boolean> {
     if (!session.current || !answers) return false;
-    return sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot, ...heard });
+    // The brief goes with where this session began (session only).
+    const ok = await sendEvent(session.current, { event: "sent", answers, optional, contact, honeypot, ...heard, leadSource: readLeadSource(sessionStore()) });
+    // Only once the server has accepted the brief, and never for the bot trap. No contact details.
+    // Once per brief: sending the same brief again is never a second lead.
+    if (ok && !honeypot) trackOnce("generate_lead", session.current.briefId, leadParams("project_planner", answers.primary, session.current.attribution.referralCode));
+    return ok;
   }
 
   function startAgain() {

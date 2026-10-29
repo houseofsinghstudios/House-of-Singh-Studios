@@ -10,6 +10,8 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
+import { readLeadSource } from "@/lib/lead-source";
+import { contactEvent, submissionId, trackOnce } from "@/lib/analytics";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
@@ -27,6 +29,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  // A ref, not state: a second submit can arrive before the disabled button renders.
+  const inFlight = useRef(false);
 
   // Browsers match :focus-visible on text fields and selects even after a mouse click. The focus
   // ring is for keyboard users, so a pointer press holds it back until the next Tab.
@@ -54,6 +58,10 @@ export default function ContactClient({ initialService = "" }: { initialService?
       document.getElementById("contact-permission")?.focus();
       return;
     }
+    if (inFlight.current) return;
+    inFlight.current = true;
+    // One id per submission: its event is sent once, whatever happens after.
+    const id = submissionId();
     setSubmitting(true);
     setError(false);
     const data = {
@@ -72,6 +80,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
       recommendedBy: formData.get("recommendedBy"),
       // Campaign tags and a partner's ?ref= code: this page's, otherwise the visit's first touch.
       attribution: resolveCampaign(window.location.search, sessionStore()),
+      // Where this session began: landing page, referring domain, campaign tags (session only).
+      leadSource: readLeadSource(sessionStore()),
       honeypot: formData.get("honeypot"),
     };
     try {
@@ -82,9 +92,17 @@ export default function ContactClient({ initialService = "" }: { initialService?
       });
       if (!res.ok) throw new Error("Failed");
       setSubmitted(String(data.service || ""));
+      // Only once the submission is accepted, and never for the bot trap. A lead only for a
+      // prospective client; nominations, suggestions and partner applications have their own events.
+      // No contact details or message.
+      if (!data.honeypot) {
+        const { name, params } = contactEvent(String(data.service || ""), data.attribution.referralCode);
+        trackOnce(name, id, params);
+      }
     } catch {
       setError(true);
     } finally {
+      inFlight.current = false;
       setSubmitting(false);
     }
   }

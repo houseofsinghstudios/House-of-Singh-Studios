@@ -17,6 +17,9 @@ import PulseResultView from "./PulseResultView";
 import PulseFollowUp from "./PulseFollowUp";
 import PulseEmailForm from "./PulseEmailForm";
 import { sendEvent, startSession, type LeadContact, type ProfileContact, type PulseSession, type SendStatus } from "./events";
+import { trackOnce } from "@/lib/analytics";
+import { sessionStore } from "@/lib/campaign";
+import { readLeadSource } from "@/lib/lead-source";
 import "./brand-pulse.css";
 
 type Screen = "intro" | "gate" | "question" | "evaluating" | "result";
@@ -127,7 +130,8 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
     if (!session.current || lead === "sending") return;
     setContact(c);
     setLead("sending");
-    const ok = await sendEvent(session.current, gate, forAnswers, { event: "lead", contact: c, honeypot });
+    // The email goes with where this session began (session only).
+    const ok = await sendEvent(session.current, gate, forAnswers, { event: "lead", contact: c, honeypot, leadSource: readLeadSource(sessionStore()) });
     setLead(ok ? "success" : "error");
     setUnlocked(true);
   }
@@ -139,7 +143,8 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
     const s = session.current;
     if (!complete || !s || sentFor.current === s.resultId) return;
     sentFor.current = s.resultId;
-    void sendEvent(s, gate, complete, { event: "completed" });
+    // brand_pulse_complete once the server has the result, never before, and once per result id.
+    void sendEvent(s, gate, complete, { event: "completed" }).then((ok) => ok && trackOnce("brand_pulse_complete", s.resultId));
     // Sent alongside, not after: a slow n8n must not hold up the email.
     if (gate !== "none" && contact) void submitLead(contact, "", complete);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,7 +156,7 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
 
   async function submitProfile(c: ProfileContact, honeypot: string) {
     if (!session.current || !complete) return false;
-    return sendEvent(session.current, gate, complete, { event: "profile", contact: c, honeypot });
+    return sendEvent(session.current, gate, complete, { event: "profile", contact: c, honeypot, leadSource: readLeadSource(sessionStore()) });
   }
 
   function sendFeedback(feedback: Feedback) {

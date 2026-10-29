@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="legal-updated" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: October 22, 2026
+          Last updated: October 29, 2026
         </p>
 
         <div className="legal-body" style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -46,10 +46,13 @@ export default function PrivacyPage() {
             We may collect the following types of personal information:
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information you provide directly:</strong> name, email address, phone number, company name, project details, service interest, and budget range when you submit our contact form, book a discovery call, or subscribe to our communications.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information you provide directly:</strong> name, email address, phone number, company name, project details, service interest, and budget range when you submit our contact form, book a discovery call, or subscribe to our communications. If you introduce a client to us as a partner, we also receive the name and contact details you give us for that client, which you confirm you have their permission to share.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information collected automatically:</strong> IP address, browser type, device information, pages visited, time spent on pages, referring URL, and general geographic location through analytics tools and server logs.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>How your visit began, sent with an enquiry:</strong> when you send us a form (the contact form, the Project Planner, a partner introduction or application, or ask for your Brand Pulse result by email), we also receive how your visit to our website began. That means the first page you opened, the website that sent you (its domain only, such as google.com), and any campaign tags in that first link. Your browser keeps this for the current tab only, and it is never sent unless you submit a form.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information collected automatically, when analytics are allowed:</strong> browser type, device information, pages visited, time spent on pages, the website that referred you, and general geographic location, through Google Analytics and Microsoft Clarity. We also record a few actions that matter to us: sending an enquiry or a brief, completing Brand Pulse, applying for a role, subscribing, clicking a link to book a call, and choices in the tools on our homepage. These record the kind of action (for example, which service you chose) and the page it happened on, never your name, email address, phone number or message. Our hosting provider&apos;s server logs also record IP addresses for security and to limit abuse of our forms.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             Brand Pulse answers are kept anonymously to improve the check. Contact details are only stored if you choose to share them.
@@ -58,7 +61,7 @@ export default function PrivacyPage() {
             When you complete the Project Planner, we keep your project selections without your name or contact details, to understand what visitors need. Contact details are stored only if you choose to send your brief.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cookies and similar technologies:</strong> we use cookies and similar tracking technologies to understand how visitors interact with our website. You can control cookie preferences through your browser settings.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cookies and similar technologies:</strong> Google Analytics and Microsoft Clarity set their cookies only once analytics are allowed, and turning analytics off removes them. Our website also keeps a few small items in your browser: your analytics choice, for 12 months; and, for the current tab only, cleared when you close it, how your visit began (see above), any campaign tags, and a note of forms already counted, so a reload never counts one twice. Our own team&apos;s browsers also carry a marker that keeps our visits out of our statistics, and a temporary marker used to test our measurement. You can also clear or block cookies and stored items in your browser settings.
           </p>
           <p style={{ margin: "0 0 32px" }}>
             You can change your analytics choice at any time using Privacy choices at the bottom of every page. Advertising cookies are never used.
@@ -80,28 +83,31 @@ export default function PrivacyPage() {
             We use the following third party services to operate our studio. Each processes limited personal information as described:
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting and analytics): collects anonymized usage data including page views and performance metrics. Data is processed in accordance with Vercel&apos;s privacy policy.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Vercel</strong> (website hosting): hosts our website and measures how quickly its pages load (Speed Insights), without cookies. Its server logs record IP addresses for security. Data is processed in accordance with Vercel&apos;s privacy policy.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed and approximate location. We do not use it for advertising, and we do not send it names, emails or form contents. Visitors in regions with stricter consent rules are measured without analytics cookies.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Google Analytics</strong> (website analytics): measures how visitors use our website, such as pages viewed, the actions listed above and approximate location. It sends nothing until analytics are allowed: visitors in regions with stricter consent rules are not measured unless they turn analytics on in Privacy choices, and turning them off stops it. We do not use it for advertising, Google signals are off, and we never send it names, email addresses, phone numbers or messages. Detailed Google Analytics data is kept for 14 months, then deleted; summary reports without individual data may be kept longer.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Microsoft Clarity</strong> (website behaviour analytics): records anonymised page interactions such as clicks and scrolling to help us improve the site. Form fields are masked, so recordings never show what you type. We do not use it for advertising. Visitors in regions with stricter consent rules are measured without cookies.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Microsoft Clarity</strong> (website behaviour analytics): records anonymized page interactions such as clicks and scrolling to help us improve the site. Form fields are masked, so recordings never show what you type. We do not use it for advertising. Like Google Analytics, it sends nothing until analytics are allowed: visitors in regions with stricter consent rules are not recorded unless they turn analytics on in Privacy choices, and turning them off stops it and removes its cookies.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Airtable</strong> (client relationship management): stores contact form submissions including name, email, service interest, and project details for lead management.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Airtable</strong> (client relationship management): stores what you send us through our website: enquiries, partner introductions and applications, and nominations (your name, email address, the details you give us and how your visit to our website began); Project Planner briefs (your selections, with your contact details only if you send your brief); Brand Pulse results (your answers, with your email address and details only if you share them); job applications; and newsletter signups. We use it to reply to you and to manage our work with you.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>n8n</strong> (workflow automation): processes form submissions to route inquiries and send email notifications. Data passes through n8n workflows but is not stored long term.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>n8n</strong> (workflow automation): processes form submissions, including how your visit began, to route enquiries and send email notifications. Data passes through n8n workflows but is not stored long term.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cal.com</strong> (scheduling): collects name and email address when you book a discovery call through our embedded booking system.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Zoho Mail</strong> (email): hosts our studio email addresses and sends the emails our website triggers: your Brand Pulse result or Project Planner brief when you ask for it, confirmations of applications and introductions, a follow up after an enquiry, and notifications to our team. It processes your name, email address and the content of those emails.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Sanity</strong> (content management): manages website content. Does not collect visitor personal information.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Cal.com</strong> (scheduling): when you book a discovery call, our booking links open Cal.com in a new tab, where you give your name and email address. If you book from your Brand Pulse result or Project Planner brief, the link also carries a short summary of your result or brief so we can prepare for the call; it never includes your name or email address.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude API</strong> (AI processing): may be used to assist with lead classification, proposal preparation, and content production. Any personal information processed is limited to information you have already provided through our contact form and is not used to train AI models.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Sanity</strong> (content management): manages our website content and delivers its images. Like any web server, its image service receives your IP address in order to send them; we do not send it any other information about you.
+          </p>
+          <p style={{ margin: "0 0 12px" }}>
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Anthropic Claude</strong> (AI assistance): our team may use it to help draft proposals and content, which can include details from your enquiry. Anthropic does not use this information to train its models. Our website and its forms send nothing to it automatically.
           </p>
           <p style={{ margin: "0 0 32px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>LinkedIn API</strong> (social media publishing): used to publish studio content (articles, project announcements, and thought leadership posts) to our official LinkedIn company page. The integration authenticates via OAuth 2.0 using a studio admin account. No client personal information is shared with LinkedIn through this integration. Published content may reference public project outcomes but never identifies clients without prior written consent.
@@ -114,7 +120,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>6. Data retention</h2>
           <p style={{ margin: "0 0 32px" }}>
-            We retain personal information only as long as necessary to fulfill the purposes for which it was collected, or as required by law. Contact form submissions are retained for the duration of the business relationship and for a reasonable period afterward, up to a maximum of seven years from last contact unless a longer period is required by law. Analytics data is retained in anonymized form. You may request deletion of your personal information at any time.
+            We retain personal information only as long as necessary to fulfill the purposes for which it was collected, or as required by law. Contact form submissions are retained for the duration of the business relationship and for a reasonable period afterward, up to a maximum of seven years from last contact unless a longer period is required by law. Detailed Google Analytics data is kept for 14 months, then deleted; summary reports without individual data may be kept longer. Microsoft Clarity keeps session recordings for 30 days, except a small sample and any recordings we save, which it keeps for up to 13 months. Heatmaps and click data are kept for 13 months. Items our website keeps in your browser for the current tab are cleared when you close it; your analytics choice lasts 12 months. You may request deletion of your personal information at any time.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>7. Data security</h2>

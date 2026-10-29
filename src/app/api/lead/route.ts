@@ -5,6 +5,7 @@ import { checkReferralFields, isIntroduction, isPartnership } from "@/lib/partne
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanCampaign } from "@/lib/campaign";
+import { cleanLeadSource } from "@/lib/lead-source";
 
 // Five leads per address per minute: the limiter the other form routes share.
 const isRateLimited = createRateLimiter(5);
@@ -102,6 +103,7 @@ export async function POST(request: Request) {
       console.log(`[lead] validation failed: ${referralInvalid.toLowerCase()}`);
       return NextResponse.json({ success: false, error: referralInvalid }, { status: 400 });
     }
+    const leadSource = cleanLeadSource(body.leadSource);
     const sanitized = {
       ...fields,
       ...(isIntroduction(fields.service) && {
@@ -114,6 +116,8 @@ export async function POST(request: Request) {
       recommendedBy: referral.recommendedBy,
       // Campaign tags and the partner referral code, cleaned with the browser's own rules.
       attribution: cleanCampaign(body.attribution),
+      // Where the session began (landing_page, referrer, utm_*), cleaned with the browser's rules.
+      ...(leadSource && { leadSource }),
       source: "contact-form",
       submittedAt: new Date().toISOString(),
     };
