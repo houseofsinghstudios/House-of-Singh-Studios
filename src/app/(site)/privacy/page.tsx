@@ -39,7 +39,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>1. Who we are</h2>
           <p style={{ margin: "0 0 32px" }}>
-            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio incorporated in Ontario, Canada. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at {STUDIO_EMAIL}.
+            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio federally incorporated in Canada and based in Toronto, Ontario. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at {STUDIO_EMAIL}.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>2. What personal information we collect</h2>
