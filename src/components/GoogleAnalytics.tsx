@@ -24,25 +24,15 @@ import { GA_MEASUREMENT_ID } from "@/lib/constants/analytics";
 import { CLARITY_HOST } from "@/lib/constants/clarity";
 import { ANALYTICS_CONSENT_EVENT } from "@/lib/constants/consent";
 import { effectiveState, isStrictRegion, readChoice, type ConsentState } from "@/lib/consent";
-import { configParams, isAllowed, isDiscoveryCallHref, setAllowed, syncDebugFlag, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
+import { isAllowed, isDiscoveryCallHref, setAllowed, startGtag, syncDebugFlag, syncInternalFlag, track, trackPageView } from "@/lib/analytics";
 
 type GtagWindow = Window & { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] } & Record<string, unknown>;
 
 // GA's own switch: while true, gtag.js sends nothing, including its automatic events.
 const DISABLE_KEY = `ga-disable-${GA_MEASUREMENT_ID}`;
 
-// The official snippet, run once consent is granted: queue, consent, config, then the tag.
-function startGtag(w: GtagWindow, internal: boolean, debug: boolean) {
-  if (w.gtag) return;
-  w.dataLayer = w.dataLayer || [];
-  w.gtag = function gtag() {
-    // gtag.js reads the arguments object itself, as in Google's snippet.
-    // eslint-disable-next-line prefer-rest-params
-    w.dataLayer!.push(arguments);
-  };
-  w.gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" });
-  w.gtag("js", new Date());
-  w.gtag("config", GA_MEASUREMENT_ID, configParams(internal, debug));
+// The gtag.js tag itself, added once consent is granted (src/lib/analytics.ts startGtag).
+function loadTag() {
   const tag = document.createElement("script");
   tag.async = true;
   tag.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
@@ -91,7 +81,7 @@ export default function GoogleAnalytics() {
       w[DISABLE_KEY] = state !== "granted";
       setAllowed(state === "granted");
       if (state !== "granted") return;
-      startGtag(w, internal, debug);
+      startGtag(w, internal, debug, loadTag);
       sent.current = null;
       pageView.current();
     };
