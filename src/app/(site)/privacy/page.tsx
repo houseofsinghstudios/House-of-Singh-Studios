@@ -1,15 +1,16 @@
 import { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
-  description: 'Privacy Policy for House of Singh Studios Inc.',
+  description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
   alternates: { canonical: 'https://studios.houseofsingh.com/privacy' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Privacy Policy — House of Singh Studios',
-    description: 'Privacy Policy for House of Singh Studios Inc.',
+    description: 'How House of Singh Studios Inc. collects, uses and protects personal information: enquiries, analytics, the services we use and your choices.',
     url: 'https://studios.houseofsingh.com/privacy',
     images: [DEFAULT_SHARE_IMAGE],
   },
@@ -38,7 +39,7 @@ export default function PrivacyPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>1. Who we are</h2>
           <p style={{ margin: "0 0 32px" }}>
-            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio incorporated in Ontario, Canada. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at {STUDIO_EMAIL}.
+            House of Singh Studios Inc. (&quot;we,&quot; &quot;us,&quot; or &quot;the Studio&quot;) is a design studio federally incorporated in Canada and based in Toronto, Ontario. We operate the website studios.houseofsingh.com. Our designated privacy contact is Maninder Singh, Founder, reachable at {STUDIO_EMAIL}.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>2. What personal information we collect</h2>

@@ -9,6 +9,7 @@ import ProofSection from "@/components/homepage/ProofSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
 import { getFeaturedProjects } from "@/lib/sanity/projects";
+import { WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
   description: 'We design brand identities that change how a business is seen, chosen and valued. Websites and visual media from a design studio in Toronto.',
   alternates: { canonical: 'https://studios.houseofsingh.com' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'House of Singh Studios | Branding and Design Studio, Toronto',
     description: 'Brand identity that changes how a business is seen, chosen and valued.',
     url: 'https://studios.houseofsingh.com',

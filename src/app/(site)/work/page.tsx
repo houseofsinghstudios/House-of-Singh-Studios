@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import WorkPageClient from "@/components/work/WorkPageClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description: 'Brand identities, visual narratives, and digital experiences for businesses ready to show up differently. View our portfolio.',
   alternates: { canonical: 'https://studios.houseofsingh.com/work' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Brand Identity Portfolio, Toronto | House of Singh Studios',
     description: 'Brand identities, visual narratives, and digital experiences. View our portfolio.',
     url: 'https://studios.houseofsingh.com/work',

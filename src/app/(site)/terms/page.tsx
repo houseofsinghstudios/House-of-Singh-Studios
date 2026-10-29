@@ -1,15 +1,16 @@
 import { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 
 export const metadata: Metadata = {
   title: 'Terms of Use',
-  description: 'Terms of Use for House of Singh Studios Inc.',
+  description: 'Terms of Use for House of Singh Studios Inc., covering use of this website, intellectual property, enquiries and the Ontario law that applies.',
   alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Terms of Use — House of Singh Studios',
-    description: 'Terms of Use for House of Singh Studios Inc.',
+    description: 'Terms of Use for House of Singh Studios Inc., covering use of this website, intellectual property, enquiries and the Ontario law that applies.',
     url: 'https://studios.houseofsingh.com/terms',
     images: [DEFAULT_SHARE_IMAGE],
   },
@@ -31,7 +32,7 @@ export default function TermsPage() {
           Terms of Use
         </h1>
         <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: October 23, 2026
+          Last updated: October 29, 2026
         </p>
 
         <div style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -43,7 +44,7 @@ export default function TermsPage() {
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>2. About House of Singh Studios</h2>
           <p style={{ margin: "0 0 32px" }}>
-            House of Singh Studios Inc. is a design studio incorporated in Ontario, Canada. The Site serves as an informational platform for our design services. It does not facilitate transactions, process payments, or constitute an offer to contract. All project engagements are governed by separate written agreements between the Studio and the client.
+            House of Singh Studios Inc. is a design studio federally incorporated in Canada and based in Toronto, Ontario. The Site serves as an informational platform for our design services. It does not facilitate transactions, process payments, or constitute an offer to contract. All project engagements are governed by separate written agreements between the Studio and the client.
           </p>
 
           <h2 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(18px, 1.5vw, 22px)", color: "var(--text-primary)", margin: "0 0 12px", letterSpacing: "-0.01em" }}>3. Use of the Site</h2>

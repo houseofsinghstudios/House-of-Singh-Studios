@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { getAllRoles } from "@/lib/sanity/queries";
 import CareersClient from "@/components/careers/CareersClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -8,11 +8,12 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Careers',
-  description: 'Join House of Singh Studios. We work with specialists who raise the standard.',
+  description: 'Freelance and contract roles in brand design, photography, video and editing with House of Singh Studios, in Toronto, the GTA or remotely.',
   alternates: { canonical: 'https://studios.houseofsingh.com/careers' },
   openGraph: {
+    ...WEBSITE_OG,
     title: 'Careers — House of Singh Studios',
-    description: 'Join House of Singh Studios. We work with specialists who raise the standard.',
+    description: 'Freelance and contract roles in brand design, photography, video and editing with House of Singh Studios, in Toronto, the GTA or remotely.',
     url: 'https://studios.houseofsingh.com/careers',
     images: [DEFAULT_SHARE_IMAGE],
   },

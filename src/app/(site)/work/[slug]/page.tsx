@@ -3,7 +3,7 @@ import { getAllProjects, getProjectBySlug, getProjectDetailBySlug } from "@/lib/
 import CaseStudyClient from "@/components/work/CaseStudyClient";
 import { notFound } from "next/navigation";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
-import { DEFAULT_SHARE_IMAGE, bareTitle, studioTitle } from "@/lib/seo";
+import { bareTitle, DEFAULT_SHARE_IMAGE, studioTitle, WEBSITE_OG } from "@/lib/seo";
 import { servicesForDisciplines } from "@/lib/linking";
 import { SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { disciplineLabel } from "@/lib/disciplines";
@@ -30,6 +30,7 @@ export async function generateMetadata({
     description: project.seoDescription,
     alternates: { canonical: `https://studios.houseofsingh.com/work/${slug}` },
     openGraph: {
+      ...WEBSITE_OG,
       title: studioTitle(title),
       description: project.seoDescription,
       url: `https://studios.houseofsingh.com/work/${slug}`,

@@ -12,7 +12,7 @@ import { linksToPage } from "@/lib/initiatives/pages";
 import { visibleInitiatives, type ProjectType } from "@/lib/initiatives/types";
 import { getInitiatives } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
-import { DEFAULT_SHARE_IMAGE, studioTitle } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, studioTitle, WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: LANDING.title,
   description: LANDING.description,
   alternates: { canonical: URL },
-  openGraph: { title: studioTitle(LANDING.title), description: LANDING.description, url: URL, images: [DEFAULT_SHARE_IMAGE] },
+  openGraph: { ...WEBSITE_OG, title: studioTitle(LANDING.title), description: LANDING.description, url: URL, images: [DEFAULT_SHARE_IMAGE] },
 };
 
 // Program slugs that are also project types: their newest published case study fills the row.
