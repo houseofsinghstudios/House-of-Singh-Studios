@@ -3,9 +3,10 @@
 // (src/components/GoogleAnalytics.tsx) only starts gtag once consent is granted and opens the gate
 // below; every page view and event passes through it.
 //
-// Every page view first sets the page it belongs to (location, path, title and content group), so
-// any event sent after it, a click or a lead, is credited to the page the visitor is on, not to the
-// page they landed on.
+// Every page view and every event carries the page it belongs to as its own parameters (location,
+// path, title and content group), so a click or a lead is credited to the page the visitor is on,
+// not to the page they landed on. They are sent on each event rather than only with gtag's set
+// command, which does not add custom parameters such as content_group to the hits.
 
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
@@ -159,9 +160,19 @@ function gtag(): Gtag | null {
   return (window as GtagWindow).gtag ?? null;
 }
 
-// One event. Never personal data: names, emails, phone numbers and messages never go in params.
+// The page the visitor is on now. Empty outside a browser.
+function currentPage(): EventParams {
+  try {
+    return pageContext(window.location.href, document.title);
+  } catch {
+    return {};
+  }
+}
+
+// One event, with the current page's context. Never personal data: names, emails, phone numbers
+// and messages never go in params.
 export function track(event: string, params: EventParams = {}) {
-  gtag()?.("event", event, params);
+  gtag()?.("event", event, { ...currentPage(), ...params });
 }
 
 // ── Once per submission ──
@@ -215,10 +226,12 @@ export function trackOnce(event: string, id: string, params: EventParams = {}, s
   return true;
 }
 
-// One page view for the current page, after setting it as the page every later event belongs to.
+// One page view, carrying its page context as its own parameters. The set call also offers that
+// context to gtag's automatic events; nothing here depends on it.
 export function trackPageView(href: string, title: string) {
   const send = gtag();
   if (!send) return;
-  send("set", pageContext(href, title));
-  send("event", "page_view");
+  const page = pageContext(href, title);
+  send("set", page);
+  send("event", "page_view", page);
 }

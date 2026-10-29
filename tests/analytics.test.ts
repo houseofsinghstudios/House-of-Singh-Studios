@@ -68,6 +68,31 @@ test("each page view sets its page first, so later events belong to it, not the 
   setAllowed(false);
 });
 
+test("the page view carries its page context as its own parameters, content_group included", () => {
+  calls.length = 0;
+  setAllowed(true);
+  trackPageView("https://studios.houseofsingh.com/careers", "Careers");
+  const view = calls.find((c) => c[0] === "event" && c[1] === "page_view")!;
+  // On the event itself, not only through set: gtag does not add set's custom parameters to hits.
+  assert.deepEqual(view[2], { page_location: "https://studios.houseofsingh.com/careers", page_path: "/careers", page_title: "Careers", content_group: "careers" });
+  setAllowed(false);
+});
+
+test("every event carries the page the visitor is on; its own parameters win", () => {
+  calls.length = 0;
+  setAllowed(true);
+  const w = (globalThis as unknown as { window: { location: Record<string, string> } }).window;
+  const doc = (globalThis as unknown as { document: Record<string, unknown> }).document;
+  w.location.href = "https://studios.houseofsingh.com/";
+  Object.defineProperty(doc, "title", { value: "Home", configurable: true });
+  track("tool_band_click", { tool: "pulse", kind: "chip", value: "never" });
+  track("discovery_call_click", { page_path: "/contact" });
+  assert.deepEqual(calls[0], ["event", "tool_band_click", { page_location: "https://studios.houseofsingh.com/", page_path: "/", page_title: "Home", content_group: "home", tool: "pulse", kind: "chip", value: "never" }]);
+  assert.equal((calls[1][2] as Record<string, string>).page_path, "/contact");
+  delete w.location.href;
+  setAllowed(false);
+});
+
 test("a consent change is announced, so the tracker can start or stop", () => {
   const seen: string[] = [];
   const w = { dispatchEvent: (e: Event) => { if (e.type === ANALYTICS_CONSENT_EVENT) seen.push((e as CustomEvent).detail); return true; } };
