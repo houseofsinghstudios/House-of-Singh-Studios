@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
-import ServicesClient from "@/components/services/ServicesClient";
+import ServiceBlocks from "@/components/services/ServiceBlocks";
 import NextPageLink from "@/components/layout/NextPageLink";
 import Button from "@/components/ui/Button";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -31,7 +31,7 @@ export default async function ServicesPage() {
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'Services', url: 'https://studios.houseofsingh.com/services' },
       ]} />
-      <ServicesClient projectsByCategory={projectsByCategory} />
+      <ServiceBlocks projectsByCategory={projectsByCategory} />
       <PlannerInvite />
       <NextPageLink current="/services" />
       <section

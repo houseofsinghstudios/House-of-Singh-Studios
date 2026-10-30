@@ -82,7 +82,7 @@ test("a missing or malformed id is not sent; the submission still goes through",
 });
 
 test("the three forms send the id with every submission", () => {
-  for (const file of ["src/components/contact/ContactClient.tsx", "src/components/careers/CareersClient.tsx", "src/components/insights/InsightArticleClient.tsx"]) {
+  for (const file of ["src/components/contact/ContactClient.tsx", "src/components/careers/CareersClient.tsx", "src/components/insights/ArticleNewsletter.tsx"]) {
     const src = readFileSync(file, "utf8");
     assert.match(src, /submissionId: id \}\)/, file);
     assert.match(src, /submission\.idFor\(/, file);

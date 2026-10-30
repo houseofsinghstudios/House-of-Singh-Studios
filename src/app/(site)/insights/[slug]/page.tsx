@@ -2,11 +2,12 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
-import InsightArticleClient from "@/components/insights/InsightArticleClient";
+import InsightArticle from "@/components/insights/InsightArticle";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { articleTitles, DEFAULT_SHARE_IMAGE, SITE_OG } from "@/lib/seo";
-import { shareImageUrl } from "@/lib/sanity/image";
+import { insightImageUrl, shareImageUrl } from "@/lib/sanity/image";
+import type { SanityImageSource } from "@sanity/image-url";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
 import RelatedWork from "@/components/insights/RelatedWork";
@@ -14,6 +15,19 @@ import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
 import { jsonLd } from "@/lib/json-ld";
 
 type SlugRef = { slug?: { current?: string } } | null;
+type WithImage = { asset?: unknown } & SanityImageSource;
+
+// The image URLs, built here so no Sanity code reaches the browser: the hero, every image in the
+// text and every related post's card, each as a plain src string beside the image it came from.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const withImageUrls = (post: any) => ({
+  ...post,
+  featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage) } : post.featuredImage,
+  body: post.body?.map((block: any) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
+  relatedPosts: post.relatedPosts?.map((rp: any) =>
+    rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage) } } : rp),
+});
+/* eslint-enable @typescript-eslint/no-explicit-any */
 const slugsOf = (refs: unknown): string[] =>
   Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];
 
@@ -121,7 +135,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={post} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
+      <InsightArticle post={withImageUrls(post)} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
     </>
   );
 }

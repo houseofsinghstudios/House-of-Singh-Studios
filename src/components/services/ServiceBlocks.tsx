@@ -1,5 +1,5 @@
-"use client";
-
+// The /services hero and the four service blocks, rendered on the server. Only each block's rotating
+// project card (ServiceProjectCard) runs in the browser.
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import DisciplineTags from "@/components/work/DisciplineTags";
@@ -103,7 +103,7 @@ interface Props {
   projectsByCategory?: Record<string, ServiceProject[]>;
 }
 
-export default function ServicesClient({ projectsByCategory }: Props) {
+export default function ServiceBlocks({ projectsByCategory }: Props) {
   return (
     <>
       {/* ═══ HERO ═══ */}

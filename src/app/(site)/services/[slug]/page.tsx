@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { services, getServiceBySlug } from "@/data/services";
-import ServiceDetailClient from "@/components/services/ServiceDetailClient";
+import ServiceDetail from "@/components/services/ServiceDetail";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { AREA_SERVED, SERVICE_TERMS, orgRef } from "@/lib/schema";
@@ -114,7 +114,7 @@ export default async function ServiceDetailPage({
           }}
         />
       )}
-      <ServiceDetailClient slug={slug} projects={projects} articles={articles} />
+      <ServiceDetail slug={slug} projects={projects} articles={articles} />
     </>
   );
 }

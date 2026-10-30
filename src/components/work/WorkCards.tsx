@@ -6,15 +6,23 @@ import type { Project } from "@/data/projects";
 import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
 import { disciplineLabel } from "@/lib/disciplines";
 
+// What a card shows. The /work page sends only these fields to the browser, never a case study's
+// text (see workCard).
+export type WorkCard = Pick<Project, "slug" | "name" | "image" | "workType" | "shortDescription" | "disciplines" | "projectType">;
+
+export function workCard({ slug, name, image, workType, shortDescription, disciplines, projectType }: Project): WorkCard {
+  return { slug, name, image, workType, shortDescription, disciplines, projectType };
+}
+
 const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
 };
 
-export function projectImage(project: Project): string {
+export function projectImage(project: WorkCard): string {
   return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
 }
 
-export function projectTags(project: Project): DisciplineTag[] {
+export function projectTags(project: WorkCard): DisciplineTag[] {
   if (project.disciplines && project.disciplines.length > 0) {
     return project.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) }));
   }
@@ -25,7 +33,7 @@ export function projectTags(project: Project): DisciplineTag[] {
 }
 
 interface CardProps {
-  project: Project;
+  project: WorkCard;
   onSelect?: (value: string) => void;
 }
 

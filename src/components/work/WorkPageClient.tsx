@@ -3,18 +3,17 @@
 import { useState, useMemo, useCallback, useRef } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import type { Project } from "@/data/projects";
 import type { DisciplineFilter } from "@/lib/sanity/projects";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import DisciplineTags from "@/components/work/DisciplineTags";
-import { WorkGridCard, WorkMobileCard, projectImage, projectTags } from "@/components/work/WorkCards";
+import { WorkGridCard, WorkMobileCard, projectImage, projectTags, type WorkCard } from "@/components/work/WorkCards";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 type ViewMode = "list" | "grid";
 
 interface WorkPageClientProps {
-  projects: Project[];
+  projects: WorkCard[];
   filters: DisciplineFilter[];
 }
 
