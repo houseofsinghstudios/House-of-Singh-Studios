@@ -4,6 +4,8 @@ import { EMAIL_MAX, isEmail } from "./form-input";
 
 export const CAREERS_LIMITS = { name: 120, email: 254, role: 120, portfolioUrl: 500, message: 5000 } as const;
 
+const WEB_ADDRESS = /^https?:\/\//i;
+
 export interface CareersFields {
   name: string;
   email: string;
@@ -32,5 +34,8 @@ export function checkCareers(f: CareersFields): string | null {
   for (const key of Object.keys(CAREERS_LIMITS) as (keyof CareersFields)[]) {
     if (f[key].length > CAREERS_LIMITS[key]) return `${labels[key]} must be at most ${CAREERS_LIMITS[key].toLocaleString("en-US")} characters`;
   }
+  // The portfolio is optional; when given it must be a web address, so it can never become a
+  // "javascript:" or other link in an email or in Airtable.
+  if (f.portfolioUrl && !WEB_ADDRESS.test(f.portfolioUrl)) return "Portfolio URL must start with http:// or https://";
   return null;
 }

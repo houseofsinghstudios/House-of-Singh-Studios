@@ -2,7 +2,7 @@
 import { messageOptional } from "@/lib/partners/forms";
 import { capRaw, stripTags } from "@/lib/form-input";
 
-export const LEAD_LIMITS = { name: 120, message: 5000, service: 80, budget: 80 } as const;
+export const LEAD_LIMITS = { name: 120, email: 254, message: 5000, service: 80, budget: 80 } as const;
 
 // The contact form's budget ranges, in display order. The budget is optional: an empty value is valid.
 export const BUDGET_OPTIONS = ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"] as const;
@@ -27,6 +27,7 @@ export function cleanField(value: unknown, max: number): string {
 // An introduction's or partnership's message is optional; every other lead needs one.
 export function checkLeadLengths(fields: LeadFields): string | null {
   if (fields.name.length < 1 || fields.name.length > LEAD_LIMITS.name) return `Name must be 1 to ${LEAD_LIMITS.name} characters`;
+  if (fields.email.length > LEAD_LIMITS.email) return `Email must be at most ${LEAD_LIMITS.email} characters`;
   if (fields.message.length > LEAD_LIMITS.message) return `Message must be at most ${LEAD_LIMITS.message.toLocaleString("en-US")} characters`;
   if (fields.message.length < 1 && !messageOptional(fields.service)) return `Message must be 1 to ${LEAD_LIMITS.message.toLocaleString("en-US")} characters`;
   if (fields.service.length > LEAD_LIMITS.service) return `Service must be at most ${LEAD_LIMITS.service} characters`;

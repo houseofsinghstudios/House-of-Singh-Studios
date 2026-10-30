@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
-import { EMAIL_MAX, isEmail } from "@/lib/form-input";
+import { isEmail } from "@/lib/form-input";
 import { bodyTooLarge, readBodyText } from "@/lib/request-body";
 import { checkReferralFields, isIntroduction, isPartnership, REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     // a missing or empty value cleans to "", which is valid; only the 80 character cap applies.
     const fields = {
       name: cleanField(name, LEAD_LIMITS.name),
-      email: cleanField(email, EMAIL_MAX),
+      email: cleanField(email, LEAD_LIMITS.email),
       service: cleanField(service, LEAD_LIMITS.service),
       budget: cleanField(budget, LEAD_LIMITS.budget),
       message: cleanField(message, LEAD_LIMITS.message),

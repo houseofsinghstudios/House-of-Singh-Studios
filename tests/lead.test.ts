@@ -47,3 +47,11 @@ test("budget options: Not sure yet first, then the ranges, each within the 80 ch
   assert.deepEqual([...BUDGET_OPTIONS], ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"]);
   for (const option of BUDGET_OPTIONS) assert.equal(checkLeadLengths({ ...valid, budget: option }), null, option);
 });
+
+test("lengths: the email is capped at 254, with a short reason", () => {
+  assert.equal(LEAD_LIMITS.email, 254);
+  const at = `${"a".repeat(254 - "@example.com".length)}@example.com`;
+  assert.equal(checkLeadLengths({ ...valid, email: cleanField(at, LEAD_LIMITS.email) }), null);
+  const over = `a${at}`;
+  assert.equal(checkLeadLengths({ ...valid, email: cleanField(over, LEAD_LIMITS.email) }), "Email must be at most 254 characters");
+});
