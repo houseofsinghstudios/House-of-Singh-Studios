@@ -4,19 +4,24 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { HERO } from "@/lib/constants/homepage-data";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Cycle words every 3 seconds
+  const reduceMotion = useMediaQuery(REDUCED_MOTION);
+  const shownIndex = reduceMotion ? 0 : currentIndex;
+
+  // Cycle words every 3 seconds. With reduced motion the first word stays.
   useEffect(() => {
+    if (reduceMotion) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % HERO.cycleWords.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [reduceMotion]);
 
   // Scroll-driven fade for scroll indicator
   const onScroll = useCallback(() => {
@@ -57,12 +62,12 @@ export default function HeroSection() {
           <span style={{ display: "block" }}>
             <span className="hero-cycle-inline">
               <span className="hero-cycle-sizer">
-                {HERO.cycleWords[currentIndex]}
+                {HERO.cycleWords[shownIndex]}
               </span>
               {HERO.cycleWords.map((word, i) => (
                 <span
                   key={word}
-                  className={`hero-cycle-fade${i === currentIndex ? " hero-cycle-visible" : ""}`}
+                  className={`hero-cycle-fade${i === shownIndex ? " hero-cycle-visible" : ""}`}
                 >
                   {word}
                 </span>

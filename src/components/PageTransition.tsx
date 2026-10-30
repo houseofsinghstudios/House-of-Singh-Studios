@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { REDUCED_MOTION } from "@/lib/use-media-query";
 
 export default function PageTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -17,7 +18,8 @@ export default function PageTransition() {
       return;
     }
 
-    if (supportsVT) return;
+    // Browsers with view transitions use the CSS page change; with reduced motion, no overlay slide.
+    if (supportsVT || window.matchMedia(REDUCED_MOTION).matches) return;
 
     const el = overlayRef.current;
     if (!el) return;

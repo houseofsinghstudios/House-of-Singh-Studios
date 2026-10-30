@@ -6,6 +6,9 @@ import { useCallback, useSyncExternalStore } from "react";
 
 const notOnServer = () => false;
 
+// The visitor has asked for less motion (operating system or browser setting).
+export const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+
 export function useMediaQuery(query: string): boolean {
   const subscribe = useCallback(
     (onChange: () => void) => {

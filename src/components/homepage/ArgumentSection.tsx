@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 
 const HEADLINE_WORDS = [
   "Your", "business", "has", "evolved.", "Your", "brand", "has", "not."
@@ -15,12 +16,20 @@ export default function ArgumentSection() {
   const wordsRef = useRef<HTMLSpanElement[]>([]);
   const payoffRef = useRef<HTMLSpanElement[]>([]);
 
+  const reduceMotion = useMediaQuery(REDUCED_MOTION);
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const allWords = [...wordsRef.current, ...payoffRef.current].filter(Boolean);
     const totalWords = allWords.length;
+
+    // Reduced motion: every word at full strength from the start, nothing tied to the scroll.
+    if (reduceMotion) {
+      for (const word of allWords) word.style.opacity = "1";
+      return;
+    }
 
     function onScroll() {
       if (!section) return;
@@ -51,7 +60,7 @@ export default function ArgumentSection() {
     onScroll();
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <section
