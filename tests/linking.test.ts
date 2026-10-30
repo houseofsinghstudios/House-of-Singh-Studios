@@ -108,3 +108,16 @@ test("/services: each Learn More link carries its topic as hidden text, and no a
   assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
   assert.match(link, /Learn More<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
 });
+
+test("header logo and footer social links: their name is their text, not an aria-label", async () => {
+  const { readFileSync } = await import("node:fs");
+  const header = readFileSync("src/components/layout/Header.tsx", "utf8");
+  const crest = header.slice(header.indexOf('<div className="header-crest-wrap"'), header.indexOf("</Link>", header.indexOf('<div className="header-crest-wrap"')));
+  assert.doesNotMatch(crest, /aria-label=/);
+  assert.match(crest, /alt="House of Singh Studios"/, "the crest's alt is the link text");
+  const footer = readFileSync("src/components/layout/Footer.tsx", "utf8");
+  const social = footer.slice(footer.indexOf("{SOCIAL.map("), footer.indexOf("</a>", footer.indexOf("{SOCIAL.map(")));
+  assert.doesNotMatch(social, /aria-label=/);
+  assert.match(social, /<span className="sr-only">\{`House of Singh Studios on \$\{social\.name\}`\}<\/span>/);
+  assert.match(social, /aria-hidden="true"/, "the icon stays hidden");
+});

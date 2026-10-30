@@ -87,10 +87,12 @@ export default function Footer({ consentEnabled = false }: { consentEnabled?: bo
             </p>
             <div className="ft-social-icons">
               {SOCIAL.map((social) => (
-                <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={`House of Singh Studios on ${social.name}`}>
+                <a key={social.name} href={social.href} target="_blank" rel="noopener noreferrer">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     {social.icon}
                   </svg>
+                  {/* Hidden text, not an aria-label, so the link has text for crawlers and the same name for everyone. */}
+                  <span className="sr-only">{`House of Singh Studios on ${social.name}`}</span>
                 </a>
               ))}
             </div>
