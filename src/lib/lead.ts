@@ -1,5 +1,6 @@
 // Contact form lead: field cleaning and length rules for /api/lead. Pure, so it can be tested.
 import { messageOptional } from "@/lib/partners/forms";
+import { capRaw, stripTags } from "@/lib/form-input";
 
 export const LEAD_LIMITS = { name: 120, message: 5000, service: 80, budget: 80 } as const;
 
@@ -14,10 +15,12 @@ export interface LeadFields {
   message: string;
 }
 
-// Removes tags and surrounding whitespace. A missing or empty value becomes an empty string.
-export function cleanField(value: unknown): string {
+// Removes tags and surrounding whitespace. A missing or empty value becomes an empty string. The raw
+// value is first cut at twice the field's limit (src/lib/form-input.ts), so the length checks still
+// reject an over-long value and nothing ever scans more than that.
+export function cleanField(value: unknown, max: number): string {
   if (!value) return "";
-  return String(value).replace(/<[^>]*>/g, "").trim();
+  return stripTags(capRaw(value, max)).trim();
 }
 
 // Lengths are checked after cleaning. The reason is short and never quotes the submitted value.

@@ -3,6 +3,7 @@ import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
 import { loadPublishedPricing } from "@/lib/project-planner/pricing";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 
 // Project Planner events: started, viewed, call_clicked, sent. The brief is always recomputed here
 // with the same rule based engine and the server's own prices; whatever the browser sends is ignored.
@@ -24,7 +25,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
-    const body: unknown = await request.json().catch(() => null);
+    // Over 64 KB is refused before anything is parsed.
+    const text = await readBodyText(request);
+    if (text === null) return bodyTooLarge();
+    const body: unknown = parseJson(text);
     const parsed = parseEvent(body);
     if (typeof parsed === "string") {
       console.log(`[project-planner] rejected: ${parsed.toLowerCase()}`);

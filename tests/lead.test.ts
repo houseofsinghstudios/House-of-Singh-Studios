@@ -6,11 +6,11 @@ import { BUDGET_OPTIONS, checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib
 const valid = { name: "Ada", email: "ada@example.com", service: "Brand Identity", budget: "$1,000 to $4,000", message: "Hello." };
 
 test("clean: tags and surrounding whitespace removed, missing values empty", () => {
-  assert.equal(cleanField("  <b>Ada</b>  "), "Ada");
-  assert.equal(cleanField(undefined), "");
-  assert.equal(cleanField(null), "");
-  assert.equal(cleanField(""), "");
-  assert.equal(cleanField(42), "42");
+  assert.equal(cleanField("  <b>Ada</b>  ", LEAD_LIMITS.name), "Ada");
+  assert.equal(cleanField(undefined, LEAD_LIMITS.name), "");
+  assert.equal(cleanField(null, LEAD_LIMITS.name), "");
+  assert.equal(cleanField("", LEAD_LIMITS.name), "");
+  assert.equal(cleanField(42, LEAD_LIMITS.name), "42");
 });
 
 test("lengths: a normal lead passes, service and budget may be empty", () => {
@@ -20,10 +20,10 @@ test("lengths: a normal lead passes, service and budget may be empty", () => {
 });
 
 test("lengths: name 1 to 120 and message 1 to 5,000, measured after cleaning", () => {
-  assert.match(checkLeadLengths({ ...valid, name: cleanField("   ") }) ?? "", /^Name/);
-  assert.match(checkLeadLengths({ ...valid, name: cleanField("<i></i>") }) ?? "", /^Name/);
+  assert.match(checkLeadLengths({ ...valid, name: cleanField("   ", LEAD_LIMITS.name) }) ?? "", /^Name/);
+  assert.match(checkLeadLengths({ ...valid, name: cleanField("<i></i>", LEAD_LIMITS.name) }) ?? "", /^Name/);
   assert.match(checkLeadLengths({ ...valid, name: "a".repeat(121) }) ?? "", /^Name/);
-  assert.equal(checkLeadLengths({ ...valid, name: cleanField(`  ${"a".repeat(120)}  `) }), null);
+  assert.equal(checkLeadLengths({ ...valid, name: cleanField(`  ${"a".repeat(120)}  `, LEAD_LIMITS.name) }), null);
   assert.match(checkLeadLengths({ ...valid, message: "" }) ?? "", /^Message must be 1 to 5,000/);
   assert.match(checkLeadLengths({ ...valid, message: "m".repeat(5001) }) ?? "", /^Message/);
 });
@@ -40,7 +40,7 @@ test("reasons never quote the submitted value", () => {
 });
 
 test("budget is optional: missing, null or empty all pass", () => {
-  for (const missing of [undefined, null, ""]) assert.equal(checkLeadLengths({ ...valid, budget: cleanField(missing) }), null, String(missing));
+  for (const missing of [undefined, null, ""]) assert.equal(checkLeadLengths({ ...valid, budget: cleanField(missing, LEAD_LIMITS.budget) }), null, String(missing));
 });
 
 test("budget options: Not sure yet first, then the ranges, each within the 80 character cap", () => {

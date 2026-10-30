@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { checkCareers, cleanCareers } from "@/lib/careers";
+import { bodyTooLarge, readBodyText } from "@/lib/request-body";
 
 // Five requests a minute per address, the shared in memory limiter.
 const isRateLimited = createRateLimiter(5);
@@ -15,7 +16,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    // Over 64 KB is refused before anything is parsed.
+    const text = await readBodyText(request);
+    if (text === null) return bodyTooLarge();
+    const body = JSON.parse(text);
     if (!body || typeof body !== "object") {
       return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     }

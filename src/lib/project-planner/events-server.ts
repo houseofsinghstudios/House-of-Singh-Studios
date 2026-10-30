@@ -8,6 +8,7 @@ import { REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { referralCode } from "@/lib/campaign";
 import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
+import { capRaw, isEmail, stripTags } from "@/lib/form-input";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -18,9 +19,9 @@ export type PlannerEvent = (typeof PLANNER_EVENTS)[number];
 export const STATUS_RANK: Record<PlannerEvent, number | null> = { started: 1, viewed: 2, sent: 3, call_clicked: null };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const clean = (v: unknown, max: number): string => (typeof v === "string" ? v.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, max) : "");
+// Cut before cleaning (src/lib/form-input.ts), so nothing ever scans more than twice the limit.
+const clean = (v: unknown, max: number): string =>
+  typeof v === "string" ? stripTags(capRaw(v, max)).replace(/\s+/g, " ").trim().slice(0, max) : "";
 
 function attribution(v: unknown) {
   const a = (v && typeof v === "object" ? v : {}) as Record<string, unknown>;
@@ -61,7 +62,7 @@ function contact(v: unknown) {
   const name = clean(c.name, 100);
   const email = clean(c.email, 254);
   if (!name) return "Name required";
-  if (!EMAIL.test(email)) return "Invalid email";
+  if (!isEmail(email)) return "Invalid email";
   return { name, email, company: clean(c.company, 120), location: clean(c.location, 120), note: clean(c.note, 500), marketingConsent: c.marketingConsent === true };
 }
 

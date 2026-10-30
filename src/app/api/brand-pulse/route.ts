@@ -10,6 +10,8 @@ import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { FEEDBACK_IDS, GATES, QUESTION_ORDER, TEAM_SIZE_IDS, type Answers, type Feedback, type Gate, type TeamSize } from "@/lib/brand-pulse/types";
 import { cleanLeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
+import { capRaw, isEmail, stripTags } from "@/lib/form-input";
+import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 
 // Brand Pulse events. The result is always recomputed here with the same rule based engine:
 // whatever result the browser might send is ignored.
@@ -20,14 +22,14 @@ const EVENTS = ["completed", "lead", "profile", "feedback"] as const;
 type PulseEvent = (typeof EVENTS)[number];
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // A full visit sends up to four events (completed, feedback, lead, profile), so a quick retake
 // needs more room than the contact form. The lead, careers and subscribe routes stay at 5.
 const isRateLimited = createRateLimiter(20);
 
+// Cut before cleaning (src/lib/form-input.ts), so nothing ever scans more than twice the limit.
 function clean(value: unknown, max: number): string {
-  return typeof value === "string" ? value.replace(/<[^>]*>/g, "").trim().slice(0, max) : "";
+  return typeof value === "string" ? stripTags(capRaw(value, max)).trim().slice(0, max) : "";
 }
 
 // "Company.com/About" becomes "https://company.com/About". Returns null when it is not a web address.
@@ -46,7 +48,7 @@ function normaliseWebsite(value: unknown): string | null {
 
 function cleanEmail(value: unknown): string | null {
   const email = clean(value, 254);
-  return EMAIL.test(email) ? email : null;
+  return isEmail(email) ? email : null;
 }
 
 type Contact =
@@ -128,7 +130,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
-    const body: unknown = await request.json().catch(() => null);
+    // Over 64 KB is refused before anything is parsed.
+    const text = await readBodyText(request);
+    if (text === null) return bodyTooLarge();
+    const body: unknown = parseJson(text);
     if (!body || typeof body !== "object") return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
     const b = body as Record<string, unknown>;
 
