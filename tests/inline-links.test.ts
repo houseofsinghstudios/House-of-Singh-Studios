@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { isExternal, parseInlineLinks, plainText } from "@/lib/inline-links";
 import { services } from "@/data/services";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { QUESTIONS_NOTE } from "@/lib/initiatives/content";
 
 test("an internal link", () => {
   assert.deepEqual(parseInlineLinks("Read [the guide](/insights/a-guide) first."), [
@@ -100,4 +101,50 @@ test("Brand Strategy answers: 9 links, the call from the shared constant, every 
   for (const l of links) if (!isExternal(l.href!)) assert.match(l.href!, /^\/(insights|work|start|contact|services|brand-pulse)(\/[a-z0-9-]+)?$/, l.href);
   assert.ok(plainText(faqs[1].answer).includes("from your website to your pricing"), "pricing here is the client's own");
   assert.ok(plainText(faqs[4].answer).includes("a clear brief; read how to brief a design studio"), "the semicolon survives");
+});
+
+// Protocol relative and backslash addresses: browsers open "//host" and "/\host" on another site,
+// so neither is ever an internal link; they stay as plain text.
+test("//address and /\\address are never internal links; they stay as text", () => {
+  for (const href of ["//evil.example", "//evil.example/path", "/\\evil.example", "/\\/evil.example"]) {
+    const text = `Read [this](${href}) now.`;
+    const parts = parseInlineLinks(text);
+    assert.deepEqual(parts, [{ text }], href);
+    assert.equal(plainText(text), text, href);
+  }
+  // Other schemes were never links, and still are not.
+  for (const href of ["javascript:alert(1)", "data:text/html,hi", "mailto:a@b.co", "ftp://x.example"]) {
+    assert.deepEqual(parseInlineLinks(`[x](${href})`), [{ text: `[x](${href})` }], href);
+  }
+  assert.equal(isExternal("//evil.example"), false);
+  assert.equal(isExternal("https://cal.com/x"), true);
+  assert.equal(isExternal("http://example.com"), true);
+});
+
+test("every existing answer and note parses exactly as it did with the old pattern", () => {
+  const OLD = /\[([^\]\n]+)\]\(((?:\/|https?:\/\/)[^\s()]*)\)/g;
+  const oldParse = (text: string) => {
+    const out: { text: string; href?: string }[] = [];
+    let last = 0;
+    for (const m of text.matchAll(OLD)) {
+      const at = m.index ?? 0;
+      if (at > last) out.push({ text: text.slice(last, at) });
+      out.push({ text: m[1], href: m[2] });
+      last = at + m[0].length;
+    }
+    if (last < text.length) out.push({ text: text.slice(last) });
+    return out;
+  };
+  const texts = [
+    ...services.flatMap((s) => (s.faqs ?? []).map((f) => f.answer)),
+    QUESTIONS_NOTE,
+    `Have a question that is not here? [Book a 30 minute discovery call](${DISCOVERY_CALL_URL}).`,
+  ];
+  let links = 0;
+  for (const t of texts) {
+    const now = parseInlineLinks(t);
+    assert.deepEqual(now, oldParse(t), t.slice(0, 60));
+    links += now.filter((p) => p.href).length;
+  }
+  assert.ok(links >= 20, `${links} links checked`);
 });

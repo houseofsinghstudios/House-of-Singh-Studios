@@ -1,8 +1,10 @@
 // Links written as text inside a plain answer: [visible text](/path) or [visible text](https://...).
 // Nothing else is markup. Brackets that are not followed by a path or a web address stay as text.
 // Pure, so it is tested without React; the page renders the segments with InlineLinks.
+// A path is "/" not followed by "/" or "\": "//host" and "/\host" are addresses on another site that
+// browsers open as such, so they are never treated as internal and stay as text.
 
-const LINK = /\[([^\]\n]+)\]\(((?:\/|https?:\/\/)[^\s()]*)\)/g;
+const LINK = /\[([^\]\n]+)\]\(((?:\/(?![/\\])|https?:\/\/)[^\s()]*)\)/g;
 
 export type InlineSegment = { text: string; href?: string };
 
