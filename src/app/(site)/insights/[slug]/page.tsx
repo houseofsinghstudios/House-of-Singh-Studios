@@ -10,6 +10,7 @@ import { insightImageUrl, shareImageUrl } from "@/lib/sanity/image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
+import { relatedPostsFor } from "@/lib/related-posts";
 import RelatedWork from "@/components/insights/RelatedWork";
 import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
 import { jsonLd } from "@/lib/json-ld";
@@ -19,12 +20,13 @@ type WithImage = { asset?: unknown } & SanityImageSource;
 
 // The image URLs, built here so no Sanity code reaches the browser: the hero, every image in the
 // text and every related post's card, each as a plain src string beside the image it came from.
+// The related posts are the editor's choice, or the latest others (src/lib/related-posts.ts).
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const withImageUrls = (post: any) => ({
+const withImageUrls = ({ chosenPosts, latestPosts, ...post }: any) => ({
   ...post,
   featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage) } : post.featuredImage,
   body: post.body?.map((block: any) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
-  relatedPosts: post.relatedPosts?.map((rp: any) =>
+  relatedPosts: relatedPostsFor<any>(chosenPosts, latestPosts, post).map((rp: any) =>
     rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage) } } : rp),
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */

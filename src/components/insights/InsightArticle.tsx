@@ -197,7 +197,7 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
       <ArticleAdjacent previousPost={post.previousPost} nextPost={post.nextPost} />
 
       {/* ═══ RELATED POSTS ═══ */}
-      <ArticleRelated related={post.relatedPosts || []} category={post.category} />
+      <ArticleRelated posts={post.relatedPosts || []} />
 
       <NextPageLink current={`/insights/${post.slug.current}`} />
 

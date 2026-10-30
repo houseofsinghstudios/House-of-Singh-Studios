@@ -159,7 +159,7 @@ export default defineType({
       name: "relatedPosts",
       title: "Related Posts",
       description:
-        "Select 2-3 related posts to show at the bottom of this article.",
+        "Choose up to two articles to show at the end of this one, in this order. Leave empty to show the latest articles, the same category first.",
       type: "array",
       of: [
         defineArrayMember({
@@ -167,7 +167,7 @@ export default defineType({
           to: [{ type: "post" }],
         }),
       ],
-      validation: (rule) => rule.max(3),
+      validation: (rule) => rule.max(2).unique(),
     }),
     defineField({
       name: "relatedServices",

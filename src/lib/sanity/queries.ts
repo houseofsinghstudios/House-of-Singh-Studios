@@ -51,6 +51,21 @@ export async function getAllPosts() {
   ), () => []);
 }
 
+// A related post card: title, date, category and image.
+const relatedCardFields = `_id,
+        title,
+        slug,
+        publishedAt,
+        category,
+        featuredImage {
+          ...,
+          asset-> {
+            _id,
+            url,
+            metadata { dimensions, lqip }
+          }
+        }`;
+
 export async function getPostBySlug(slug: string) {
   return readSanity(`article "${slug}"`, () => client.fetch(
     `*[_type == "post" && slug.current == $slug][0] {
@@ -95,20 +110,13 @@ export async function getPostBySlug(slug: string) {
         slug,
         category
       },
-      "relatedPosts": *[_type == "post" && _id != ^._id] | order(publishedAt desc) [0...3] {
-        _id,
-        title,
-        slug,
-        publishedAt,
-        category,
-        featuredImage {
-          ...,
-          asset-> {
-            _id,
-            url,
-            metadata { dimensions, lqip }
-          }
-        }
+      // The editor's hand picked related posts, in their order, and the latest three others as the
+      // fallback; src/lib/related-posts.ts decides which are shown.
+      "chosenPosts": relatedPosts[]-> {
+        ${relatedCardFields}
+      },
+      "latestPosts": *[_type == "post" && _id != ^._id] | order(publishedAt desc) [0...3] {
+        ${relatedCardFields}
       }
     }`,
     { slug }
