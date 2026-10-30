@@ -10,7 +10,7 @@ import InlineLinks from "@/components/InlineLinks";
 import { LANDING, QUESTIONS_NOTE } from "@/lib/initiatives/content";
 import { linksToPage } from "@/lib/initiatives/pages";
 import { visibleInitiatives, type ProjectType } from "@/lib/initiatives/types";
-import { getInitiatives } from "@/lib/sanity/initiatives";
+import { getInitiativesForPage } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
 import { DEFAULT_SHARE_IMAGE, studioTitle, WEBSITE_OG } from "@/lib/seo";
 
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 const TYPED: ProjectType[] = ["parallel", "commons"];
 
 export default async function InitiativesPage() {
-  const all = await getInitiatives();
+  const all = await getInitiativesForPage();
   const visible = visibleInitiatives(all);
   const projects = await getProjectsByType(TYPED);
   const rows: ProgrammeRow[] = visible.map((initiative) => ({

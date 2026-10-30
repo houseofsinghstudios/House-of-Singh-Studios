@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
+import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
 import InsightArticleClient from "@/components/insights/InsightArticleClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
@@ -15,7 +16,15 @@ type SlugRef = { slug?: { current?: string } } | null;
 const slugsOf = (refs: unknown): string[] =>
   Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];
 
+// Incremental static regeneration: every published article is generated ahead and refreshed at
+// most once a minute. An article published later is generated on its first visit. If Sanity fails
+// during a refresh, the last good version keeps being served (src/lib/sanity/resilience.ts).
 export const revalidate = 60;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return (await getPublishedArticleSlugs()).map((slug) => ({ slug }));
+}
 
 type Props = {
   params: Promise<{ slug: string }>;

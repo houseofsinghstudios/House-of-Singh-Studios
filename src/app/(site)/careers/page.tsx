@@ -30,18 +30,13 @@ interface Role {
   publishedAt?: string;
 }
 
-// If Sanity is unreachable the page renders its "No open roles" state instead of failing
-// the build or the request, and refreshes once Sanity is back.
+// A failed read follows readSanity (in getAllRoles): while building the page renders its "No open
+// roles" state; at runtime the last good page stays until Sanity is back.
 async function getRoles(): Promise<Role[]> {
-  try {
-    // Titles are trimmed here so a stray space typed in Studio never shows on the card
-    // or in the apply form.
-    const roles: Role[] = (await getAllRoles()) || [];
-    return roles.map((role) => ({ ...role, title: (role.title || "").trim() }));
-  } catch (error) {
-    console.warn("[careers] Sanity fetch failed, rendering with no roles:", error instanceof Error ? error.name : "unknown error");
-    return [];
-  }
+  // Titles are trimmed here so a stray space typed in Studio never shows on the card
+  // or in the apply form.
+  const roles: Role[] = (await getAllRoles()) || [];
+  return roles.map((role) => ({ ...role, title: (role.title || "").trim() }));
 }
 
 // No JobPosting structured data: Google requires one posting per page, and roles have no pages

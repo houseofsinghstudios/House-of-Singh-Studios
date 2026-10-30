@@ -5,7 +5,7 @@ import ParallelPage from "@/components/initiatives/ParallelPage";
 import CommonsPage from "@/components/initiatives/CommonsPage";
 import { COMMONS, PARALLEL } from "@/lib/initiatives/content";
 import { BUILT_PAGES, programmePage, type BuiltPage } from "@/lib/initiatives/pages";
-import { getInitiatives } from "@/lib/sanity/initiatives";
+import { getInitiativesForPage } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
 import { DEFAULT_SHARE_IMAGE, STUDIO_NAME, studioTitle, WEBSITE_OG } from "@/lib/seo";
 
@@ -24,7 +24,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const initiative = programmePage(slug, await getInitiatives());
+  const initiative = programmePage(slug, await getInitiativesForPage());
   if (!initiative) return {};
   const copy = COPY[initiative.slug];
   const title = initiative.seoTitle || copy.title;
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProgrammePage({ params }: Props) {
   const { slug } = await params;
-  const initiative = programmePage(slug, await getInitiatives());
+  const initiative = programmePage(slug, await getInitiativesForPage());
   if (!initiative) notFound();
   const projects = (await getProjectsByType([initiative.slug]))[initiative.slug];
 

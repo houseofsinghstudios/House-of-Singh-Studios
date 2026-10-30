@@ -3,6 +3,7 @@ import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { client } from "@/lib/sanity/client";
 import { aboutPageQuery } from "@/lib/sanity/queries";
 import { getNetworkMembers } from "@/lib/sanity/network";
+import { readSanity } from "@/lib/sanity/resilience";
 import AboutClient from "@/components/about/AboutClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
@@ -22,15 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
-// If Sanity is unreachable the page renders with AboutClient's built-in copy instead of
-// failing the build or the request, and refreshes once Sanity is back.
+// A failed read follows readSanity: while building (or without Sanity) the page renders with
+// AboutClient's built-in copy; at runtime the last good page stays until Sanity is back.
 async function getAboutData() {
-  try {
-    return await client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } });
-  } catch (error) {
-    console.warn("[about] Sanity fetch failed, rendering with fallback content:", error instanceof Error ? error.name : "unknown error");
-    return undefined;
-  }
+  return readSanity("about page", () => client.fetch(aboutPageQuery, {}, { next: { revalidate: 60 } }), () => undefined);
 }
 
 export default async function AboutPage() {

@@ -1,4 +1,5 @@
 import { client } from "./client";
+import { readSanity } from "./resilience";
 
 export async function getAllServices() {
   return client.fetch(
@@ -32,9 +33,10 @@ export async function getServiceBySlug(slug: string) {
   );
 }
 
+// A failed read in getAllPosts, getPostBySlug and getAllRoles follows readSanity (./resilience): the fallback only
+// while building or without Sanity; at runtime the error is rethrown so the last good page stays.
 export async function getAllPosts() {
-  try {
-    const posts = await client.fetch(
+  return readSanity("articles", () => client.fetch(
       // Card fields only: the whole list is sent to the browser for the filters, so the article
       // bodies stay on the server (the read time is worked out here from them).
       `*[_type == "post"] | order(featured desc, publishedAt desc) {
@@ -46,16 +48,11 @@ export async function getAllPosts() {
         "readingTime": round(length(pt::text(body)) / 5 / 200),
         publishedAt
       }`
-    );
-    return posts;
-  } catch (error) {
-    console.error('Sanity fetch error:', error);
-    return [];
-  }
+  ), () => []);
 }
 
 export async function getPostBySlug(slug: string) {
-  return client.fetch(
+  return readSanity(`article "${slug}"`, () => client.fetch(
     `*[_type == "post" && slug.current == $slug][0] {
       _id,
       title,
@@ -115,7 +112,8 @@ export async function getPostBySlug(slug: string) {
       }
     }`,
     { slug }
-  );
+    // Never a fallback "not found" for a failed read: the error stands, even while building.
+  ), (error) => { throw error; });
 }
 
 export async function getAllPackages() {
@@ -181,7 +179,7 @@ export const aboutPageQuery = `*[_type == "siteSettings"][0]{
 }`;
 
 export async function getAllRoles() {
-  return client.fetch(
+  return readSanity("open roles", () => client.fetch(
     `*[_type == "role" && isActive == true] | order(order asc, publishedAt desc) {
       _id,
       title,
@@ -196,7 +194,7 @@ export async function getAllRoles() {
       niceToHave,
       publishedAt
     }`
-  );
+  ), () => []);
 }
 
 export async function getRoleBySlug(slug: string) {

@@ -1,7 +1,8 @@
 // Network members for /about, published and switched on, in their order. Refreshes every 60 seconds
 // like the rest of the page. Never asks for internalName. An empty list (none yet, or Sanity
-// unreachable) means the page shows its six placeholder cards.
+// unreachable while building) means the page shows its six placeholder cards.
 import { client } from "./client";
+import { readSanity } from "./resilience";
 import { urlFor } from "./image";
 import { toNetworkCards, type NetworkCard } from "@/lib/about/network";
 
@@ -14,13 +15,14 @@ const networkMembersQuery = `*[_type == "networkMember" && showOnWebsite == true
 const PHOTO_EDGE = 800;
 
 export async function getNetworkMembers(): Promise<NetworkCard[]> {
-  try {
-    const docs = await client.fetch(networkMembersQuery, {}, { next: { revalidate: 60 } });
-    return toNetworkCards(docs, (photo) =>
-      urlFor(photo as Parameters<typeof urlFor>[0]).width(PHOTO_EDGE).height(PHOTO_EDGE).fit("crop").auto("format").url()
-    );
-  } catch (error) {
-    console.warn("[about] network members fetch failed, showing placeholders:", error instanceof Error ? error.name : "unknown error");
-    return [];
-  }
+  return readSanity(
+    "network members",
+    async () => {
+      const docs = await client.fetch(networkMembersQuery, {}, { next: { revalidate: 60 } });
+      return toNetworkCards(docs, (photo) =>
+        urlFor(photo as Parameters<typeof urlFor>[0]).width(PHOTO_EDGE).height(PHOTO_EDGE).fit("crop").auto("format").url()
+      );
+    },
+    () => []
+  );
 }
