@@ -95,7 +95,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
       >
         <p
           data-hero-label
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-muted)]"
+          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-label)]"
         >
           (About)
         </p>
@@ -169,7 +169,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
               className="about-process-step scroll-reveal-up"
             >
               <div className="about-process-step-left">
-                <span className="about-process-ghost">{String(i + 1).padStart(2, "0")}</span>
+                <span className="about-process-ghost" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
                 <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)] about-process-name">
                   {step.name}
                 </p>
@@ -177,7 +177,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
               <div>
                 <p
                   className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)]"
-                  style={{ opacity: 0.6 }}
+                  style={{ opacity: 0.7 }}
                 >
                   {step.desc}
                 </p>
@@ -352,7 +352,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
 
             <p
               className="font-[var(--sans)] font-normal text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.5, marginTop: 4, marginBottom: 24 }}
+              style={{ opacity: 0.7, marginTop: 4, marginBottom: 24 }}
             >
               {aboutData?.aboutFounderRole || "Founder and Creative Director"}
             </p>
@@ -366,7 +366,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
 
             <p
               className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.5, marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
+              style={{ opacity: 0.7, marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
               <RgdText text={aboutData?.aboutFounderBioSecondary || "Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling."} />
             </p>

@@ -173,6 +173,7 @@ export default function CaseStudyTemplate({
         <>
       {/* ═══ SECTION 4: CHALLENGE + APPROACH ═══ */}
       <section
+        className="surface-cloudy"
         style={{
           background: "var(--bg-shift)",
           padding: "clamp(64px, 8vw, 120px) var(--page-px)",
@@ -222,6 +223,7 @@ export default function CaseStudyTemplate({
 
       {/* ═══ SECTION 8: RESULT ═══ */}
       <section
+        className="surface-cloudy"
         style={{
           background: "var(--bg-shift)",
           padding: "clamp(64px, 8vw, 120px) var(--page-px)",

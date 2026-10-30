@@ -19,6 +19,9 @@
   --text-secondary: #5C5B58;
   --text-muted: #A9A6A2;
   --text-faint: #A9A6A2;
+  /* Accessible Ash: small text on light backgrounds (4.64:1 on Silver Mist). Marble Ash stays for
+     hairlines, borders and decorative shapes, and for text on dark backgrounds (6.6:1 on Obsidian). */
+  --text-label: #716F6C;
   --border: #E5E3E0;
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
@@ -38,12 +41,20 @@
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-text-faint: var(--text-faint);
+  --color-text-label: var(--text-label);
   --color-border: var(--border);
   --color-obsidian: #22211F;
   --color-gunmetal: #5C5B58;
   --color-marble: #A9A6A2;
   --color-cloudy: #E5E3E0;
   --color-mist: #F7F6F5;
+}
+
+/* Cloudy White panels: Accessible Ash is only 3.91:1 here, so small text uses Gunmetal (5.3:1). */
+.surface-cloudy,
+.testimonials-section,
+.svc-block-img-placeholder {
+  --text-label: var(--text-secondary);
 }
 
 html {
@@ -67,7 +78,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0;
 }
 
@@ -354,14 +365,14 @@ body {
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
   transition: color 0.3s ease;
   padding-top: 32px;
   border-right: 1px solid var(--border);
 }
 @media (hover: hover) {
   .svc-accordion-row:hover .svc-accordion-num {
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
 }
 .svc-accordion-content {
@@ -470,7 +481,7 @@ body {
     font-family: var(--sans);
     font-size: 22px;
     font-weight: 400;
-    color: var(--text-muted);
+    color: var(--text-label);
     transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1),
                 color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     display: inline-block;
@@ -566,7 +577,7 @@ body {
   font-weight: 500;
   font-size: clamp(14px, 2vw, 18px);
   letter-spacing: 0.02em;
-  color: var(--text-muted);
+  color: var(--text-label);
   position: absolute;
   top: 0;
   right: -2em;
@@ -595,7 +606,7 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-decoration: none;
   background: none;
   border: none;
@@ -691,7 +702,7 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1;
-  color: var(--text-muted);
+  color: var(--text-label);
   display: inline-block;
   transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
               color 0.2s ease;
@@ -711,7 +722,7 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: var(--text-label);
   background: none;
   border: none;
   padding: 0;
@@ -723,7 +734,7 @@ body {
 }
 @media (hover: hover) {
   .wf-view:hover {
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
 }
 .wf-sep {
@@ -760,7 +771,7 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
   background: none;
   border: none;
   padding: 6px 0;
@@ -790,7 +801,7 @@ body {
 }
 @media (hover: hover) {
   .wf-item:hover {
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
 }
 /* Responsive: below 1024px use 2-column grid with cell borders */
@@ -846,7 +857,7 @@ body {
 .wp-empty {
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-align: center;
   padding: 80px 0;
   margin: 0;
@@ -909,7 +920,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
   white-space: nowrap;
   justify-content: flex-end;
   transition: color 0.3s ease;
@@ -934,7 +945,7 @@ body {
     letter-spacing: -0.01em;
   }
   .wp-list-row:hover .wp-list-cat {
-    color: var(--text-secondary);
+    color: var(--text-primary);
   }
   .wp-list-row:hover .wp-list-arrow {
     opacity: 1;
@@ -1088,7 +1099,7 @@ body {
 }
 /* Tags as plain text (a card without the /work filters) look like the filter tags at rest. */
 .wp-grid-meta span.dtag:not(.ptype, .dtag-more) {
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 .wp-grid-cat-tag {
   position: relative;
@@ -1097,7 +1108,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--text-label);
   background: none;
   border: none;
   padding: 0;
@@ -1208,7 +1219,7 @@ body {
   gap: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -1222,7 +1233,7 @@ body {
 }
 .cs-hero-meta {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-label);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin: 32px 0 16px;
@@ -1328,7 +1339,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 .cs-meta-value {
   font-size: 14px;
@@ -1404,7 +1415,7 @@ body {
   display: block;
   font-size: 32px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-label);
   letter-spacing: -0.02em;
   line-height: 1;
   margin-bottom: 12px;
@@ -1447,7 +1458,7 @@ body {
 }
 .cs-stat-label {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-top: 6px;
@@ -1607,7 +1618,7 @@ body {
 .cs-block-caption {
   font-size: 13px;
   line-height: 1.5;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-align: left;
   margin: 12px 0 0;
 }
@@ -1758,7 +1769,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 .next-page-anchor {
   display: flex;
@@ -1775,7 +1786,7 @@ body {
   line-height: 1;
 }
 .next-page-arrow {
-  color: var(--text-muted);
+  color: var(--text-label);
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   flex-shrink: 0;
 }
@@ -2148,7 +2159,7 @@ body {
   gap: 6px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -2172,7 +2183,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0 0 16px;
 }
 
@@ -2252,7 +2263,7 @@ body {
 .svcd-del-badge {
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
   border: 1px solid var(--text-muted);
   padding: 2px 8px;
   text-transform: uppercase;
@@ -2467,7 +2478,7 @@ body {
 
 .svc-acc-icon {
   font-size: 16px;
-  color: var(--text-muted);
+  color: var(--text-label);
   flex-shrink: 0;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   line-height: 1;
@@ -2580,7 +2591,7 @@ body {
 
 .svcd-work-cat {
   font-size: 11px;
-  color: var(--text-muted);
+  color: var(--text-label);
   letter-spacing: 0.02em;
   margin: 2px 0 0;
 }
@@ -2722,7 +2733,7 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 /* Equal width digits, so the time never changes width as it ticks or when it first appears. */
 .about-clock-time {
@@ -2770,7 +2781,7 @@ body {
   color: var(--text-primary);
 }
 .about-duel-header--not {
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 .about-duel-list {
   list-style: none;
@@ -2884,7 +2895,7 @@ body {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin-top: 4px;
 }
 
@@ -3039,7 +3050,7 @@ select.contact-input option {
   border-bottom-color: transparent;
 }
 .contact-textarea::placeholder {
-  color: rgba(26, 26, 26, 0.45);
+  color: var(--text-label);
 }
 /* Visible focus for keyboard users: the field's own bottom line becomes a 2px Obsidian rule.
    The second pixel is an inset shadow, so the field keeps its size. No box, no outline.
@@ -3178,7 +3189,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 .ins-empty {
   font-family: var(--sans);
   font-size: 14px;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0;
 }
 
@@ -3191,7 +3202,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0;
 }
 /* A further line under an article's date line: Updated, and the byline. */
@@ -3356,7 +3367,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-family: var(--sans);
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-label);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -3418,7 +3429,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   padding: clamp(28px, 3.5vw, 40px) 0;
 }
 .art-takeaways-label {
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0 0 20px;
 }
 .art-takeaways-list {
@@ -3535,7 +3546,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 .art-caption {
   font-family: var(--sans);
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin-top: 8px;
 }
 
@@ -3559,7 +3570,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
   margin-right: 4px;
 }
 .share-btn {
@@ -3611,18 +3622,27 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   min-width: 160px;
   transition: border-color 0.3s ease;
 }
+.art-newsletter-input::placeholder {
+  color: var(--text-label);
+  opacity: 1;
+}
 .art-newsletter-submit {
   font-family: var(--sans);
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-primary);
+  color: var(--text-label);
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
   transition: opacity 0.3s ease;
   white-space: nowrap;
+}
+@media (hover: hover) {
+  .art-newsletter-submit:hover:not(:disabled) {
+    color: var(--text-primary);
+  }
 }
 .art-newsletter-success {
   font-family: var(--sans);
@@ -3633,7 +3653,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 .art-newsletter-error {
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 8px 0 0;
 }
 
@@ -3663,7 +3683,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 0;
 }
 .art-nav-arrow {
@@ -3765,7 +3785,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 .role-card-toggle {
   font-family: var(--sans);
   font-size: 18px;
-  opacity: 0.4;
+  color: var(--text-label);
   transition: transform 0.3s ease;
   line-height: 1;
 }
@@ -3828,8 +3848,8 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 
 .careers-form-input::placeholder,
 .careers-form-textarea::placeholder {
-  color: var(--text-primary);
-  opacity: 0.45;
+  color: var(--text-label);
+  opacity: 1;
 }
 
 .careers-form-select {
@@ -3923,11 +3943,11 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 .ai-compare-trad {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-label);
   line-height: 1.5;
   padding-right: 24px;
 }
@@ -4008,7 +4028,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 }
 .ai-proof-source {
   font-size: 10px;
-  color: var(--text-muted);
+  color: var(--text-label);
   font-style: italic;
   margin: 0;
 }
@@ -4186,7 +4206,8 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  opacity: 0.4;
+  /* Silver Mist at 65 percent on Obsidian: 7:1, still the quiet label look. */
+  opacity: 0.65;
   margin: 0 0 24px;
 }
 .cta-heading {
@@ -4680,7 +4701,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   padding-top: 32px;
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-label);
 }
 
 /* ── Responsive: Desktop 1081+ ── */
@@ -5151,7 +5172,7 @@ td a {
   margin: 0;
 }
 .testimonials-counter span {
-  color: var(--text-muted);
+  color: var(--text-label);
   font-weight: 400;
 }
 .testimonials-progress-track {
@@ -5595,7 +5616,7 @@ td a {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: var(--text-label);
   margin: 12px 0 0;
 }
 .featured-work-text-swap {
@@ -5692,7 +5713,7 @@ td a {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: var(--text-label);
   white-space: nowrap;
   transition: color 0.3s ease;
 }
@@ -5779,14 +5800,14 @@ td a {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
   margin: 0 0 16px;
   transition: color 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) {
   .svc-block:hover .svc-block-label {
-    color: var(--text-secondary, #5C5B58);
+    color: var(--text-primary);
   }
 }
 
@@ -5841,7 +5862,7 @@ td a {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
   margin: 0 0 14px;
 }
 
@@ -5917,7 +5938,7 @@ td a {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
 }
 
 .svc-block-card {
@@ -5935,7 +5956,7 @@ td a {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: var(--text-muted, #A9A6A2);
+  color: var(--text-label);
   margin: 0;
 }
 

@@ -27,7 +27,7 @@ export default function ProofSection() {
           font-weight: 400;
           text-transform: uppercase;
           letter-spacing: 0.12em;
-          color: var(--text-muted, #A9A6A2);
+          color: var(--text-label, #716F6C);
           margin: 0 0 24px;
         }
         .proof-grid {
