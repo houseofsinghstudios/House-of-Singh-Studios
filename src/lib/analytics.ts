@@ -39,10 +39,39 @@ export function contentGroup(pathname: string): string {
   return GROUPS.find(([pattern]) => pattern.test(pathname))?.[1] ?? "other";
 }
 
-// What a page view sets before it is sent, so later events carry the same page.
+// The query parameters page_location may carry: campaign tags and the site's own parameters. Anything
+// else (an email address a mailing tool added, a token, the ?hos_internal and ?hos_debug flags) is
+// dropped, and so is any value with an "@" in it, so no personal detail reaches Google Analytics.
+const LOCATION_PARAMS = new Set(["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "ref", "from", "service", "begin", "q", "r", "category"]);
+
+const decodePart = (part: string) => {
+  try {
+    return decodeURIComponent(part.replace(/\+/g, " "));
+  } catch {
+    return part;
+  }
+};
+
+// The address with only the known parameters, each exactly as it was written, in its order.
+export function cleanLocation(url: URL): string {
+  const kept = url.search
+    .slice(1)
+    .split("&")
+    .filter((part) => {
+      if (!part) return false;
+      const at = part.indexOf("=");
+      const key = decodePart(at === -1 ? part : part.slice(0, at));
+      const value = at === -1 ? "" : decodePart(part.slice(at + 1));
+      return LOCATION_PARAMS.has(key) && !value.includes("@");
+    });
+  return `${url.origin}${url.pathname}${kept.length ? `?${kept.join("&")}` : ""}${url.hash}`;
+}
+
+// What a page view sets before it is sent, so later events carry the same page. page_path is the
+// path only; page_location keeps only the known query parameters (cleanLocation).
 export function pageContext(href: string, title: string) {
   const url = new URL(href);
-  return { page_location: url.href, page_path: url.pathname, page_title: title, content_group: contentGroup(url.pathname) };
+  return { page_location: cleanLocation(url), page_path: url.pathname, page_title: title, content_group: contentGroup(url.pathname) };
 }
 
 // ── Leads (sent only once the API has confirmed success) ──

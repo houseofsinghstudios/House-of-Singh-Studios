@@ -14,7 +14,8 @@ import { updatedLabel } from "@/lib/article-dates";
 import RgdLink, { RgdText } from "@/components/RgdLink";
 import { linkRgdInBlocks } from "@/lib/rgd";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-import { submissionId, trackOnce } from "@/lib/analytics";
+import { trackOnce } from "@/lib/analytics";
+import { createSubmissionKeeper } from "@/lib/submission-id";
 
 interface PostImage {
   asset?: {
@@ -157,6 +158,8 @@ function InlineNewsletter() {
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const inFlight = useRef(false);
+  // The submission id: the same for retries of the same signup, so n8n can drop a duplicate.
+  const [submission] = useState(() => createSubmissionKeeper());
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -164,15 +167,16 @@ function InlineNewsletter() {
     // A ref, not state: a second submit can arrive before the disabled button renders.
     if (inFlight.current) return;
     inFlight.current = true;
-    const id = submissionId();
+    const id = submission.idFor({ email, source: "article", honeypot });
     setStatus("submitting");
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "article", honeypot }),
+        body: JSON.stringify({ email, source: "article", honeypot, submissionId: id }),
       });
       if (!res.ok) throw new Error();
+      submission.done();
       setStatus("success");
       // Only once the subscription is accepted, and never for the bot trap. No email.
       if (!honeypot) trackOnce("newsletter_signup", id);

@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanField } from "@/lib/lead";
 import { checkSubscribeEmail, SUBSCRIBE_EMAIL_MAX } from "@/lib/subscribe";
-import { bodyTooLarge, readBodyText } from "@/lib/request-body";
+import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
+import { cleanSubmissionId } from "@/lib/form-input";
+import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
+
+const log = routeLog("subscribe");
 
 // Signup points the n8n workflow stores in Airtable. Anything else is recorded as the footer.
 const SOURCES = ["footer-subscribe", "article", "brand-pulse"];
@@ -16,56 +19,61 @@ const isRateLimited = createRateLimiter(5);
 export async function POST(request: Request) {
   try {
     if (isRateLimited(clientIp(request))) {
-      return NextResponse.json(
-        { success: false, error: "Too many requests. Please try again later." },
-        { status: 429 }
-      );
+      return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }
 
     // Over 64 KB is refused before anything is parsed.
     const text = await readBodyText(request);
     if (text === null) return bodyTooLarge();
-    const body = JSON.parse(text);
+    // Not JSON (or not an object): a 400, like every form route.
+    const body = parseJson(text) as Record<string, unknown> | null;
     if (!body || typeof body !== "object") {
-      return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
+      return json({ success: false, error: "Invalid request" }, 400);
     }
     // A filled honeypot is a bot: answer as if it worked, send nothing.
     if (typeof body.honeypot === "string" && body.honeypot.trim()) {
-      return NextResponse.json({ success: true });
+      return json({ success: true });
     }
     const { source } = body;
     const email = cleanField(body.email, SUBSCRIBE_EMAIL_MAX);
     const invalid = checkSubscribeEmail(email);
     if (invalid) {
-      return NextResponse.json({ success: false, error: invalid }, { status: 400 });
+      return json({ success: false, error: invalid }, 400);
     }
 
+    const submissionId = cleanSubmissionId(body.submissionId);
     const target = n8nTarget("N8N_SUBSCRIBE_WEBHOOK_URL");
     if ("missing" in target) {
-      console.error(`[subscribe] ${target.missing} is not configured`);
-      return NextResponse.json({ success: false }, { status: 500 });
+      log.error(`${target.missing} is not configured`);
+      return json({ success: false }, 500);
     }
 
     const response = await postToN8n(
       target,
-      { email, source: SOURCES.includes(source) ? source : DEFAULT_SOURCE, subscribedAt: new Date().toISOString() },
+      {
+        email,
+        source: typeof source === "string" && SOURCES.includes(source) ? source : DEFAULT_SOURCE,
+        // The form's id for this signup, the same on a retry, for de-duplication in n8n.
+        ...(submissionId && { submissionId }),
+        subscribedAt: new Date().toISOString(),
+      },
       10000,
     );
 
     // n8n answers only after storing and alerting, so a non 2xx status is a real failure.
     if (!response.ok) {
-      console.error(`[subscribe] n8n webhook failed with status ${response.status}`);
-      return NextResponse.json({ success: false }, { status: 500 });
+      log.error(`n8n webhook failed with status ${response.status}`);
+      return json({ success: false }, N8N_FAILED);
     }
 
-    return NextResponse.json({ success: true });
+    return json({ success: true });
   } catch (err) {
     if (err instanceof Error && err.name === "TimeoutError") {
-      console.error("[subscribe] n8n webhook timed out after 10 seconds");
-      return NextResponse.json({ success: false }, { status: 504 });
+      log.error("n8n webhook timed out after 10 seconds");
+      return json({ success: false }, 504);
     }
     // Name only: error messages can quote the request body.
-    console.error("[subscribe] request failed:", err instanceof Error ? err.name : "unknown error");
-    return NextResponse.json({ success: false }, { status: 500 });
+    log.error(`request failed: ${errorName(err)}`);
+    return json({ success: false }, 500);
   }
 }

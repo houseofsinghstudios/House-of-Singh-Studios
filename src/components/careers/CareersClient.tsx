@@ -6,7 +6,8 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
-import { submissionId, trackOnce } from "@/lib/analytics";
+import { trackOnce } from "@/lib/analytics";
+import { createSubmissionKeeper } from "@/lib/submission-id";
 
 /* ── Department label map ── */
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -168,6 +169,8 @@ interface CareersClientProps {
 export default function CareersClient({ roles }: CareersClientProps) {
   const [expandedRole, setExpandedRole] = useState<string | null>(null);
   const inFlight = useRef(false);
+  // The submission id: the same for retries of the same application, so n8n can drop a duplicate.
+  const [submission] = useState(() => createSubmissionKeeper());
   const [formState, setFormState] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
@@ -201,16 +204,17 @@ export default function CareersClient({ roles }: CareersClientProps) {
     // A ref, not state: a second submit can arrive before the disabled button renders.
     if (inFlight.current) return;
     inFlight.current = true;
-    const id = submissionId();
+    const id = submission.idFor({ ...formData, honeypot });
 
     setFormState("submitting");
     try {
       const res = await fetch("/api/careers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, honeypot }),
+        body: JSON.stringify({ ...formData, honeypot, submissionId: id }),
       });
       if (res.ok) {
+        submission.done();
         setFormState("success");
         // Kept apart from leads, and never for the bot trap. No name, email or message.
         if (!honeypot) trackOnce("job_application", id);

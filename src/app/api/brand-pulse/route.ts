@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { referralCode } from "@/lib/campaign";
@@ -12,6 +11,9 @@ import { cleanLeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
 import { capRaw, isEmail, stripTags } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
+import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
+
+const log = routeLog("brand-pulse");
 
 // Brand Pulse events. The result is always recomputed here with the same rule based engine:
 // whatever result the browser might send is ignored.
@@ -126,58 +128,58 @@ export async function POST(request: Request) {
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";
     if (isRateLimited(ip)) {
-      console.log("[brand-pulse] rate limit exceeded");
-      return NextResponse.json({ success: false, error: "Too many requests. Please try again later." }, { status: 429 });
+      log.info("rate limit exceeded");
+      return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }
 
     // Over 64 KB is refused before anything is parsed.
     const text = await readBodyText(request);
     if (text === null) return bodyTooLarge();
     const body: unknown = parseJson(text);
-    if (!body || typeof body !== "object") return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
+    if (!body || typeof body !== "object") return json({ success: false, error: "Invalid request" }, 400);
     const b = body as Record<string, unknown>;
 
     const event = b.event as PulseEvent;
-    if (!EVENTS.includes(event)) return NextResponse.json({ success: false, error: "Invalid event" }, { status: 400 });
-    if (typeof b.resultId !== "string" || !UUID.test(b.resultId)) return NextResponse.json({ success: false, error: "Invalid resultId" }, { status: 400 });
-    if (!GATES.includes(b.gate as Gate)) return NextResponse.json({ success: false, error: "Invalid gate" }, { status: 400 });
+    if (!EVENTS.includes(event)) return json({ success: false, error: "Invalid event" }, 400);
+    if (typeof b.resultId !== "string" || !UUID.test(b.resultId)) return json({ success: false, error: "Invalid resultId" }, 400);
+    if (!GATES.includes(b.gate as Gate)) return json({ success: false, error: "Invalid gate" }, 400);
     if (!isValidAnswers(b.answers)) {
-      console.log(`[brand-pulse] ${event}: invalid answers`);
-      return NextResponse.json({ success: false, error: "Invalid answers" }, { status: 400 });
+      log.info(`${event}: invalid answers`);
+      return json({ success: false, error: "Invalid answers" }, 400);
     }
     const fields = eventFields(event, b);
     if (typeof fields === "string") {
-      console.log(`[brand-pulse] ${event}: ${fields.toLowerCase()}`);
-      return NextResponse.json({ success: false, error: fields }, { status: 400 });
+      log.info(`${event}: ${fields.toLowerCase()}`);
+      return json({ success: false, error: fields }, 400);
     }
 
     if (typeof b.honeypot === "string" && b.honeypot.trim()) {
-      console.log(`[brand-pulse] ${event}: honeypot filled, ignored`);
-      return NextResponse.json({ success: true });
+      log.info(`${event}: honeypot filled, ignored`);
+      return json({ success: true });
     }
 
     const target = n8nTarget("N8N_BRAND_PULSE_WEBHOOK_URL");
     if ("missing" in target) {
-      console.error(`[brand-pulse] ${target.missing} is not configured`);
-      return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
+      log.error(`${target.missing} is not configured`);
+      return json({ success: false, error: "Server configuration error" }, 500);
     }
 
     const response = await postToN8n(target, buildPayload(event, b, b.answers, fields), 10000);
 
     if (!response.ok) {
-      console.error(`[brand-pulse] ${event}: n8n webhook failed with status ${response.status}`);
-      return NextResponse.json({ success: false }, { status: 502 });
+      log.error(`${event}: n8n webhook failed with status ${response.status}`);
+      return json({ success: false }, N8N_FAILED);
     }
 
-    console.log(`[brand-pulse] ${event}: forwarded to n8n`);
-    return NextResponse.json({ success: true });
+    log.info(`${event}: forwarded to n8n`);
+    return json({ success: true });
   } catch (err) {
     if (err instanceof Error && err.name === "TimeoutError") {
-      console.error("[brand-pulse] n8n webhook timed out after 10 seconds");
-      return NextResponse.json({ success: false }, { status: 504 });
+      log.error("n8n webhook timed out after 10 seconds");
+      return json({ success: false }, 504);
     }
     // Name only: error messages can quote the request body or the webhook host.
-    console.error("[brand-pulse] request failed:", err instanceof Error ? err.name : "unknown error");
-    return NextResponse.json({ success: false }, { status: 500 });
+    log.error(`request failed: ${errorName(err)}`);
+    return json({ success: false }, 500);
   }
 }

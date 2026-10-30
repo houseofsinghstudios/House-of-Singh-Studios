@@ -11,7 +11,8 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { BUDGET_OPTIONS } from "@/lib/lead";
 import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { readLeadSource } from "@/lib/lead-source";
-import { contactEvent, submissionId, trackOnce } from "@/lib/analytics";
+import { contactEvent, trackOnce } from "@/lib/analytics";
+import { createSubmissionKeeper } from "@/lib/submission-id";
 import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations";
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
@@ -31,6 +32,8 @@ export default function ContactClient({ initialService = "" }: { initialService?
   const formRef = useRef<HTMLFormElement>(null);
   // A ref, not state: a second submit can arrive before the disabled button renders.
   const inFlight = useRef(false);
+  // The submission id: the same for retries of the same content, so n8n can drop a duplicate.
+  const [submission] = useState(() => createSubmissionKeeper());
 
   // Browsers match :focus-visible on text fields and selects even after a mouse click. The focus
   // ring is for keyboard users, so a pointer press holds it back until the next Tab.
@@ -60,8 +63,6 @@ export default function ContactClient({ initialService = "" }: { initialService?
     }
     if (inFlight.current) return;
     inFlight.current = true;
-    // One id per submission: its event is sent once, whatever happens after.
-    const id = submissionId();
     setSubmitting(true);
     setError(false);
     const data = {
@@ -84,13 +85,17 @@ export default function ContactClient({ initialService = "" }: { initialService?
       leadSource: readLeadSource(sessionStore()),
       honeypot: formData.get("honeypot"),
     };
+    // One id per submission, kept for a retry of the same content: n8n receives it as submissionId,
+    // and its analytics event is sent once, whatever happens after.
+    const id = submission.idFor(data);
     try {
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, submissionId: id }),
       });
       if (!res.ok) throw new Error("Failed");
+      submission.done();
       setSubmitted(String(data.service || ""));
       // Only once the submission is accepted, and never for the bot trap. A lead only for a
       // prospective client; nominations, suggestions and partner applications have their own events.
