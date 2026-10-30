@@ -109,7 +109,7 @@ test("/services: each Learn More link carries its topic as hidden text, and no a
   assert.equal(serviceLinkTopic("creative-strategy"), " about brand strategy and positioning in Toronto");
   assert.equal(serviceLinkTopic("unknown"), "");
   const { readFileSync } = await import("node:fs");
-  const src = readFileSync("src/components/services/ServicesClient.tsx", "utf8");
+  const src = readFileSync("src/components/services/ServiceBlocks.tsx", "utf8");
   const link = src.slice(src.indexOf("<Link"), src.indexOf("</Link>"));
   assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
   assert.match(link, /Learn More<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");

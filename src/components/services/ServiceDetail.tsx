@@ -1,5 +1,5 @@
-"use client";
-
+// A service page, rendered on the server. The browser runs only its interactive parts: the process
+// and questions accordions (ServiceDetailAccordion) and the buttons.
 import { Link } from "next-view-transitions";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
@@ -26,7 +26,7 @@ const CLIENT_QUALIFIER: Record<string, string> = {
     "This service is for businesses where the brand problem is actually a strategy problem. Your team makes inconsistent creative decisions because there is no framework. You need positioning clarity, creative direction systems, and operational structure before you need more design.",
 };
 
-export default function ServiceDetailClient({
+export default function ServiceDetail({
   slug,
   projects,
   articles = [],
