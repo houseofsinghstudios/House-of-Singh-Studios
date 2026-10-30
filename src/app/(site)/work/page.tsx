@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import WorkPageClient from "@/components/work/WorkPageClient";
+import { workCard } from "@/components/work/WorkCards";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
 };
 
 export default async function WorkPage() {
-  const projects = await getAllProjects();
+  // Card fields only: the grid shows titles, tags and images, so the case study text stays here.
+  const projects = (await getAllProjects()).map(workCard);
   const filters = getWorkTypeFilters();
 
   return (
