@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useId, useRef, type ReactNode } from "react";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 interface ProcessStep {
   step: string;
@@ -30,7 +31,7 @@ export default function ServiceDetailAccordion({
   const questions = variant === "questions";
   const baseId = useId();
   const [openIndex, setOpenIndex] = useState(initialOpen);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 767px)");
   // Each answer's height, measured, so a long answer is never cut off.
   const [heights, setHeights] = useState<number[]>([]);
   const descRefs = useRef<(HTMLParagraphElement | null)[]>([]);
@@ -42,14 +43,6 @@ export default function ServiceDetailAccordion({
     els.forEach((el) => el && ro.observe(el));
     return () => ro.disconnect();
   }, [steps.length]);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    setIsMobile(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
 
   // Process steps on phones are always open, so a tap does nothing; questions always toggle.
   const forceOpen = isMobile && !questions;

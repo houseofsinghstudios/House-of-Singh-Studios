@@ -11,9 +11,17 @@ import type { NetworkCard } from "@/lib/about/network";
 import { RgdText } from "@/components/RgdLink";
 import NetworkGrid from "./NetworkGrid";
 
+// A Sanity image as aboutPageQuery returns it. Crop values are fractions of the original trimmed
+// from each edge.
+interface AboutImage {
+  asset: { _id: string; url: string; metadata?: { lqip?: string } };
+  hotspot?: { x: number; y: number };
+  crop?: { top: number; bottom: number; left: number; right: number };
+}
+
 interface AboutData {
-  aboutStudioImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
-  aboutFounderImage?: { asset: { _id: string; url: string; metadata?: { lqip?: string } }; hotspot?: { x: number; y: number }; crop?: any };
+  aboutStudioImage?: AboutImage;
+  aboutFounderImage?: AboutImage;
   aboutFounderName?: string;
   aboutFounderRole?: string;
   aboutFounderBio?: string;

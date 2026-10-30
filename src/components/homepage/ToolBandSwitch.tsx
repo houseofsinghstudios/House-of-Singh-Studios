@@ -6,17 +6,11 @@
 // The panels arrive server rendered. Showing and hiding is CSS, so hydration changes nothing on
 // screen, and without JavaScript both panels show stacked.
 
-import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode, type RefObject } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode, type RefObject } from "react";
 import { track } from "@/lib/analytics";
+import { useMediaQuery } from "@/lib/use-media-query";
 
 const PHONE = "(max-width: 767px)";
-const subscribe = (onChange: () => void) => {
-  const mq = window.matchMedia(PHONE);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-};
-const isPhone = () => window.matchMedia(PHONE).matches;
-const notOnServer = () => false;
 
 const TABS = [
   { id: "pulse", label: "Not sure what's wrong" },
@@ -87,7 +81,7 @@ function useClickEvents(ref: RefObject<HTMLElement | null>) {
 
 export default function ToolBandSwitch({ pulse, planner }: { pulse: ReactNode; planner: ReactNode }) {
   const [selected, setSelected] = useState<TabId>("pulse");
-  const phone = useSyncExternalStore(subscribe, isPhone, notOnServer);
+  const phone = useMediaQuery(PHONE);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rootRef = useRef<HTMLDivElement>(null);
   useArrival(rootRef);

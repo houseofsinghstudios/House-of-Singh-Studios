@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 
 export default function FooterReveal() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -37,12 +38,14 @@ export default function FooterReveal() {
   return (
     <div className="ft-reveal" ref={sectionRef}>
       <div className="ft-reveal-inner" ref={innerRef}>
-        <img
+        {/* next/image as in the header: the SVG unoptimized (next/image does not resize SVG). */}
+        <Image
           src="/hos-studios-logo.svg"
           alt="House of Singh Studios"
           className="ft-reveal-crest"
           width={120}
           height={99}
+          unoptimized
         />
         <p className="ft-reveal-tagline">
           Directed by humans. Accelerated by AI.

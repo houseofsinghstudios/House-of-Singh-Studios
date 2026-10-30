@@ -3,7 +3,7 @@
 # so breaking changes are reviewed one at a time. Security updates are separate from this
 # schedule: they open as soon as an advisory is published, as long as Dependabot alerts and
 # security updates are switched on in the repository settings (Settings, Code security).
-# There are no GitHub Actions workflows in this repository, so only npm is listed.
+# The CI workflow (.github/workflows/ci.yml) pins its actions to major versions; only npm is listed.
 version: 2
 updates:
   - package-ecosystem: "npm"
