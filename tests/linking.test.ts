@@ -11,6 +11,7 @@ import {
   relatedThinking,
   relatedWork,
   serviceLinkLabel,
+  serviceLinkTopic,
   servicesForArticle,
   servicesForDisciplines,
 } from "@/lib/linking";
@@ -93,4 +94,17 @@ test("every related article has a one line summary in house style; new articles 
   }
   assert.equal(articleLine(ARTICLES[1], "fallback"), ARTICLE_LINES["rebrand-or-refresh"]);
   assert.equal(articleLine("a-new-article", "Its SEO description."), "Its SEO description.");
+});
+
+test("/services: each Learn More link carries its topic as hidden text, and no aria-label", async () => {
+  assert.equal(serviceLinkTopic("brand-identity"), " about brand identity design and rebranding in Toronto");
+  assert.equal(serviceLinkTopic("visual-media"), " about brand photography and video production in Toronto");
+  assert.equal(serviceLinkTopic("digital-design"), " about website design for brands in Toronto");
+  assert.equal(serviceLinkTopic("creative-strategy"), " about brand strategy and positioning in Toronto");
+  assert.equal(serviceLinkTopic("unknown"), "");
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync("src/components/services/ServicesClient.tsx", "utf8");
+  const link = src.slice(src.indexOf("<Link"), src.indexOf("</Link>"));
+  assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
+  assert.match(link, /Learn More<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
 });

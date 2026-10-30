@@ -282,6 +282,8 @@ export const QUIET_LINKS = {
 
 export const SHARED = {
   button: "Take the Check Yourself",
+  // The page's main heading for a shared result, visually hidden: the result's own title is an h2.
+  hiddenHeading: "Brand Pulse result",
 };
 
 export const ARTICLE_CTA = {

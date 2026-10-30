@@ -165,6 +165,10 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
 
   return (
     <div ref={rootRef} className={`bp-root${leaving ? " is-leaving" : ""}`}>
+      {/* Where the check is the page (h1), its main heading lives in the intro. Whenever the intro is
+          not on screen (a link that starts at a question, or a flow already under way), the same
+          words stay as a visually hidden h1, so the page always has exactly one. */}
+      {headingLevel === "h1" && screen !== "intro" && <h1 className="sr-only">{INTRO.heading}</h1>}
       <div key={screen === "question" ? `q${step}` : screen} className="bp-screen">
         {screen === "intro" && <PulseIntro headingLevel={headingLevel} startLabel={startLabel} onStart={start} />}
 

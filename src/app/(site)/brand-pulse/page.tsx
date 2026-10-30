@@ -41,6 +41,7 @@ export default async function BrandPulsePage({ searchParams }: Props) {
         {shared ? (
           // A shared result: the answers come from the link, with no personal data and no reading screen.
           <div className="bp-root">
+            <h1 className="sr-only">{SHARED.hiddenHeading}</h1>
             <p className="editorial-label bp-label">{INTRO.label}</p>
             <PulseResultView result={assess(shared)} />
             <div className="bp-shared-actions">
