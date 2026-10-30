@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { TESTIMONIALS } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);
@@ -30,16 +31,19 @@ export default function TestimonialsSection() {
     goTo((active - 1 + total) % total);
   }, [active, total, goTo]);
 
-  // Auto-rotate
+  // Auto-rotate, except with reduced motion: then the slides change only when the visitor asks.
+  const reduceMotion = useMediaQuery(REDUCED_MOTION);
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = undefined;
+    if (reduceMotion) return;
     timerRef.current = setInterval(() => {
       setActive((prev) => {
         const nextIdx = (prev + 1) % total;
         return nextIdx;
       });
     }, 6000);
-  }, [total]);
+  }, [total, reduceMotion]);
 
   const stopTimer = useCallback(() => {
     if (timerRef.current) {

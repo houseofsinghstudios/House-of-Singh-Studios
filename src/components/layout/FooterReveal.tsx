@@ -2,15 +2,24 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 
 export default function FooterReveal() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useMediaQuery(REDUCED_MOTION);
 
   useEffect(() => {
     const section = sectionRef.current;
     const inner = innerRef.current;
     if (!section || !inner) return;
+
+    // Reduced motion: the crest shows as it ends after the scroll, fully revealed and at full size.
+    if (reduceMotion) {
+      inner.style.clipPath = "circle(80% at 50% 50%)";
+      inner.style.transform = "scale(1)";
+      return;
+    }
 
     function onScroll() {
       if (!section || !inner) return;
@@ -33,7 +42,7 @@ export default function FooterReveal() {
     onScroll();
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <div className="ft-reveal" ref={sectionRef}>

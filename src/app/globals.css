@@ -1269,11 +1269,13 @@ body {
 .cs-hero-image-reveal {
   /* Longer duration for cinematic effect — override default reveal-clip */
 }
-@supports (animation-timeline: view()) {
-  .cs-hero-image-reveal {
-    animation: revealCurtainWipe 1.0s cubic-bezier(0.77, 0, 0.175, 1) both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 40%;
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .cs-hero-image-reveal {
+      animation: revealCurtainWipe 1.0s cubic-bezier(0.77, 0, 0.175, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
   }
 }
 
@@ -4462,6 +4464,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   }
 }
 
+
 /* ═══════════════════════════════════════════════════════
    UI/UX A: Global Micro-Interactions
    ═══════════════════════════════════════════════════════ */
@@ -5986,3 +5989,66 @@ td a {
   }
 }
 
+/* ═══════════════════════════════════════════════════════
+   Reduced motion (kept last, so it wins over every rule above)
+   ═══════════════════════════════════════════════════════ */
+/* ── Reduced motion: every element in its final state at once; nothing moves on its own ──
+   Covers the entrances, loops and page changes that are not inside a no-preference block above.
+   Hover and focus feedback (colour fades, small zooms) still responds to the pointer. */
+@media (prefers-reduced-motion: reduce) {
+  /* Entrances that start hidden and play on load */
+  .wp-list-row,
+  .wp-list-preview,
+  .wp-grid-card,
+  .svc-hero-stagger {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  /* Loops and the mobile menu's entrance */
+  .scroll-thumb,
+  .scroll-indicator-pulse,
+  .about-clock-colon,
+  .mobile-nav-panel {
+    animation: none;
+  }
+  /* The hero word and the testimonials change without a fade (their JS stops the auto rotation) */
+  .hero-cycle-fade,
+  .testimonials-slide,
+  .testimonials-ghost-number {
+    transition: none;
+  }
+  /* The Argument's words at full strength from the start, not brightened by the scroll */
+  .argument-word {
+    opacity: 1;
+    transition: none;
+  }
+  /* The header changes state on scroll (crest to wordmark, shrinking) at once, without sliding */
+  .site-header,
+  .header-crest-wrap,
+  .header-wordmark-wrap {
+    transition: none;
+  }
+  /* The footer crest shows fully revealed and at full size, as it ends after the scroll */
+  .ft-reveal-inner {
+    clip-path: circle(80% at 50% 50%);
+    transform: none;
+  }
+  /* Page changes: an instant swap, no fade, slide or morph */
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+/* Mobile homepage service rows: visible at once. Their stagger waits for the scroll observer's
+   in-view class, which never comes when motion is reduced. */
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .svc-accordion-row {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
