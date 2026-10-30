@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
-import InsightArticleClient from "@/components/insights/InsightArticleClient";
+import InsightArticle from "@/components/insights/InsightArticle";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { articleTitles, DEFAULT_SHARE_IMAGE, SITE_OG } from "@/lib/seo";
@@ -135,7 +135,7 @@ export default async function InsightArticlePage({ params }: Props) {
           }),
         }}
       />
-      <InsightArticleClient post={withImageUrls(post)} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
+      <InsightArticle post={withImageUrls(post)} endCta={<BrandPulseArticleCta />} relatedWork={<RelatedWork projects={work} services={services.map((s) => ({ href: `/services/${s}`, label: SERVICE_TERMS[s] }))} />} />
     </>
   );
 }
