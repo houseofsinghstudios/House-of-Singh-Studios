@@ -30,3 +30,24 @@ export async function getArticleCards(): Promise<ArticleCard[]> {
     return [];
   }
 }
+
+// Every published article for /llms.txt, newest first: its title and the description its page uses.
+// Published means what the sitemap counts: a slug, and not a draft or a release version.
+const llmsArticlesQuery = `*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+  title,
+  "slug": slug.current,
+  "description": seoDescription
+}`;
+
+export async function getLlmsArticles(): Promise<{ slug: string; title: string; description: string | null }[]> {
+  try {
+    const docs: unknown = await client.fetch(llmsArticlesQuery, {}, { next: { revalidate: 3600 } });
+    if (!Array.isArray(docs)) return [];
+    return docs
+      .filter((d) => d && typeof d.slug === "string" && typeof d.title === "string")
+      .map((d) => ({ slug: d.slug, title: d.title, description: typeof d.description === "string" && d.description.trim() ? d.description : null }));
+  } catch (error) {
+    console.error("[sanity/articles] llms.txt articles fetch failed:", error instanceof Error ? error.name : "unknown error");
+    return [];
+  }
+}

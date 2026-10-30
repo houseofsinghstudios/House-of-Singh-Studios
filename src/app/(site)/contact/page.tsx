@@ -3,10 +3,11 @@ import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import ContactClient from "@/components/contact/ContactClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { contactServiceFromQuery } from "@/lib/partners/forms";
+import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Start a conversation with House of Singh Studios. Book a discovery call or send us a message about your project.',
+  description: PAGE_DESCRIPTIONS.contact,
   alternates: { canonical: 'https://studios.houseofsingh.com/contact' },
   openGraph: {
     ...WEBSITE_OG,

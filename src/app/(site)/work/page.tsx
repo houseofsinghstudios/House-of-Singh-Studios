@@ -3,12 +3,13 @@ import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import WorkPageClient from "@/components/work/WorkPageClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { getAllProjects, getWorkTypeFilters } from "@/lib/sanity/projects";
+import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: { absolute: 'Brand Identity Portfolio, Toronto | House of Singh Studios' },
-  description: 'Brand identities, visual narratives, and digital experiences for businesses ready to show up differently. View our portfolio.',
+  description: PAGE_DESCRIPTIONS.work,
   alternates: { canonical: 'https://studios.houseofsingh.com/work' },
   openGraph: {
     ...WEBSITE_OG,

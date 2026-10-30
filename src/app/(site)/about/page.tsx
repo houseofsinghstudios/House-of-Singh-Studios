@@ -5,12 +5,13 @@ import { aboutPageQuery } from "@/lib/sanity/queries";
 import { getNetworkMembers } from "@/lib/sanity/network";
 import AboutClient from "@/components/about/AboutClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
+import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
 export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'A multidisciplinary design studio built by Maninder Singh. Design should be structured, intentional, and commercially effective.',
+  description: PAGE_DESCRIPTIONS.about,
   alternates: { canonical: 'https://studios.houseofsingh.com/about' },
   openGraph: {
     ...WEBSITE_OG,

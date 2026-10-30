@@ -35,23 +35,14 @@ export async function getServiceBySlug(slug: string) {
 export async function getAllPosts() {
   try {
     const posts = await client.fetch(
+      // Card fields only: the whole list is sent to the browser for the filters, so the article
+      // bodies stay on the server (the read time is worked out here from them).
       `*[_type == "post"] | order(featured desc, publishedAt desc) {
         _id,
         title,
         slug,
-        featuredImage {
-          ...,
-          asset-> {
-            _id,
-            url,
-            metadata { dimensions, lqip }
-          }
-        },
+        featuredImage { alt, crop, hotspot, asset-> { _id } },
         category,
-        tags,
-        keyTakeaways,
-        body,
-        featured,
         "readingTime": round(length(pt::text(body)) / 5 / 200),
         publishedAt
       }`

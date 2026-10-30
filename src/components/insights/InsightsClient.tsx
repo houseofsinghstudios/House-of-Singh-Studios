@@ -16,8 +16,6 @@ interface Post {
   category?: string;
   publishedAt?: string;
   readingTime?: number;
-  featured?: boolean;
-  tags?: string[];
 }
 
 interface InsightsClientProps {

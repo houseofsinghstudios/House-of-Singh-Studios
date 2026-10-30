@@ -26,6 +26,9 @@ const ARTICLES = [
   "what-a-brand-identity-system-actually-includes-and-why-a-logo-is-not-enough",
   "how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown",
   "what-ai-can-and-cannot-do-for-your-brand-from-a-studio-that-uses-it",
+  "brand-guidelines-what-to-include",
+  "branding-agency-pricing-toronto",
+  "how-much-does-a-website-cost-in-canada",
 ];
 const posts = ARTICLES.map((slug) => ({ slug }));
 
@@ -40,7 +43,10 @@ test("every prefix in the map matches exactly one real article", () => {
 });
 
 test("each service page gets two or three related articles, in the configured order", () => {
-  assert.deepEqual(relatedThinking("brand-identity", posts).map((p) => p.slug.slice(0, 20)), ["what-a-brand-identit", "rebrand-or-refresh-h", "how-much-does-brand-"]);
+  assert.deepEqual(relatedThinking("brand-identity", posts).map((p) => p.slug), ["what-a-brand-identity-system-actually-includes-and-why-a-logo-is-not-enough", "brand-guidelines-what-to-include", "branding-agency-pricing-toronto"]);
+  assert.equal(relatedThinking("digital-design", posts)[0].slug, "how-much-does-a-website-cost-in-canada", "the website cost guide leads on Website Design");
+  assert.deepEqual(relatedThinking("visual-media", posts).map((p) => p.slug.slice(0, 20)), ["why-your-brand-looks", "ai-made-design-faste"]);
+  assert.deepEqual(relatedThinking("creative-strategy", posts).map((p) => p.slug.slice(0, 20)), ["5-signs-your-brand-i", "what-ai-can-and-cann"]);
   for (const service of SERVICE_SLUGS) {
     const n = relatedThinking(service, posts).length;
     assert.ok(n >= 2 && n <= 3, `${service}: ${n}`);
