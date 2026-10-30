@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getAllProjects, getProjectBySlug, getProjectDetailBySlug } from "@/lib/sanity/projects";
 import CaseStudyClient from "@/components/work/CaseStudyClient";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/redirect-or-not-found";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { bareTitle, DEFAULT_SHARE_IMAGE, studioTitle, WEBSITE_OG } from "@/lib/seo";
 import { servicesForDisciplines } from "@/lib/linking";
@@ -50,9 +50,9 @@ export default async function CaseStudyPage({
 }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  // Only when Sanity answered and has no such case study: a failed read throws instead
-  // (src/lib/sanity/resilience.ts), so the last good page stays.
-  if (!project) notFound();
+  // Only when Sanity answered and has no such case study: a redirect set up in Studio, or the 404.
+  // A failed read throws instead (src/lib/sanity/resilience.ts), so the last good page stays.
+  if (!project) return redirectOrNotFound(`/work/${slug}`);
 
   const detail = await getProjectDetailBySlug(slug);
   // "Services delivered": the service pages this project demonstrates, from its discipline tags.

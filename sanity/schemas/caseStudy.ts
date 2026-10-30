@@ -32,6 +32,7 @@ export default defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
+      description: "Changing this after publishing breaks existing links. Add a redirect below if you change it.",
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),

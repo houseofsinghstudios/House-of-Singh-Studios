@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
@@ -11,6 +10,7 @@ import type { SanityImageSource } from "@sanity/image-url";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
 import { relatedPostsFor } from "@/lib/related-posts";
+import { redirectOrNotFound } from "@/lib/redirect-or-not-found";
 import RelatedWork from "@/components/insights/RelatedWork";
 import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
 import { jsonLd } from "@/lib/json-ld";
@@ -83,9 +83,8 @@ export default async function InsightArticlePage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
-  if (!post) {
-    notFound();
-  }
+  // Sanity answered and there is no such article: a redirect set up in Studio, or the 404.
+  if (!post) return redirectOrNotFound(`/insights/${slug}`);
 
   // "Related work": up to two case studies for the article's services (src/lib/linking.ts).
   const services = servicesForArticle(post.slug.current, slugsOf(post.relatedServices));

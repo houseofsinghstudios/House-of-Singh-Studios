@@ -19,7 +19,7 @@ export default defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      description: "The web address: /initiatives/<slug>.",
+      description: "The web address: /initiatives/<slug>. Changing this after publishing breaks existing links. Add a redirect below if you change it.",
       options: { source: "name", maxLength: 64 },
       validation: (rule) => rule.required(),
     }),
