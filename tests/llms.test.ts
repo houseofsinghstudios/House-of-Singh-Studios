@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { ARTICLE_FALLBACK, buildLlmsTxt } from "@/lib/llms";
+import { ARTICLE_FALLBACK, buildLlmsTxt, loadLlmsArticles } from "@/lib/llms";
 import { services } from "@/data/services";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
@@ -51,4 +51,41 @@ test("house style outside the addresses: no dashes, Canadian spelling", () => {
 
 test("llms.txt is not in the sitemap", () => {
   assert.doesNotMatch(readFileSync("src/app/sitemap.ts", "utf8"), /llms/);
+});
+
+// The article list when Sanity fails (src/lib/sanity/resilience.ts): no articles only while building;
+// at runtime the error is rethrown, so the last good /llms.txt keeps being served, never an empty list.
+const configured = { NEXT_PUBLIC_SANITY_PROJECT_ID: "abc123", NEXT_PUBLIC_SANITY_DATASET: "production" };
+const quietly = async (run: () => Promise<void>) => {
+  const original = { warn: console.warn, error: console.error };
+  console.warn = () => {};
+  console.error = () => {};
+  try { await run(); } finally { Object.assign(console, original); }
+};
+
+test("llms.txt articles: Sanity's answer becomes the list, untitled or slugless documents left out", async () => {
+  const docs = [{ slug: "a", title: "A", description: "Line." }, { slug: "b", title: "B", description: " " }, { title: "No slug" }, null];
+  assert.deepEqual(await loadLlmsArticles(async () => docs, { ...configured, NEXT_PHASE: "phase-production-server" }), [
+    { slug: "a", title: "A", description: "Line." },
+    { slug: "b", title: "B", description: null },
+  ]);
+});
+
+test("llms.txt articles: at runtime a failed read rethrows, so the last good llms.txt stays", async () => {
+  const error = new TypeError("fetch failed");
+  await quietly(async () => {
+    await assert.rejects(loadLlmsArticles(() => Promise.reject(error), { ...configured, NEXT_PHASE: "phase-production-server" }), (thrown) => thrown === error);
+  });
+});
+
+test("llms.txt articles: while building a failed read gives no articles, and the build completes", async () => {
+  await quietly(async () => {
+    assert.deepEqual(await loadLlmsArticles(() => Promise.reject(new TypeError("fetch failed")), { ...configured, NEXT_PHASE: "phase-production-build" }), []);
+  });
+});
+
+test("the sitemap keeps its own fallback: its Sanity read is still caught there, not by readSanity", () => {
+  const sitemap = readFileSync("src/app/sitemap.ts", "utf8");
+  assert.match(sitemap, /catch \(error\) \{\s*console\.warn\("\[sitemap\] Sanity fetch failed/);
+  assert.doesNotMatch(sitemap, /readSanity/);
 });

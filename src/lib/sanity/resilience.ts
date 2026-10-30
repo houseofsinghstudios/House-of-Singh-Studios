@@ -9,7 +9,7 @@
 // all, so a build still completes without Sanity. Each failure is logged here once, with a
 // "[sanity]" prefix; callers do not log it again.
 
-type SanityEnv = {
+export type SanityEnv = {
   NEXT_PHASE?: string;
   NEXT_PUBLIC_SANITY_PROJECT_ID?: string;
   NEXT_PUBLIC_SANITY_DATASET?: string;
