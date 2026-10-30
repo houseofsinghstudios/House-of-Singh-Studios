@@ -8,6 +8,8 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: [
           '/api/',
+          // "/studio/" alone does not cover the Studio's own address, /studio.
+          '/studio',
           '/studio/',
           '/admin/',
         ],
