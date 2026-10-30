@@ -49,6 +49,8 @@ export default async function CaseStudyPage({
 }) {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
+  // Only when Sanity answered and has no such case study: a failed read throws instead
+  // (src/lib/sanity/resilience.ts), so the last good page stays.
   if (!project) notFound();
 
   const detail = await getProjectDetailBySlug(slug);

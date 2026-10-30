@@ -52,11 +52,13 @@ const sanityFetch = async (q: string): Promise<unknown> => {
   return client.fetch(q, {}, { next: { revalidate: 60 } });
 };
 
+// Deliberately not readSanity: /start and the planner route answer on every request, so there is no
+// earlier page to keep, and the planner works with prices hidden.
 export async function loadPublishedPricing(fetcher: (q: string) => Promise<unknown> = sanityFetch): Promise<Pricing> {
   try {
     return pricingFromDocument(await fetcher(query));
   } catch (error) {
-    console.warn("[project-planner] Service Pricing fetch failed, prices hidden:", error instanceof Error ? error.name : "unknown error");
+    console.warn("[sanity] Service Pricing failed, prices hidden:", error instanceof Error ? error.name : "unknown error");
     return UNAVAILABLE;
   }
 }

@@ -1,5 +1,6 @@
 import { client } from "./client";
 import { shareImageUrl, urlFor } from "./image";
+import { readSanity } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
 import { coverAlt, projectAlt } from "@/lib/alt-text";
 import type { Project } from "@/data/projects";
@@ -372,48 +373,69 @@ function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
 }
 
 // ── Public API ──
+// A failed read follows readSanity (./resilience): the local data below only while building or
+// without Sanity; at runtime the error is rethrown so the last good page stays. When Sanity answers
+// with nothing, the local data is used as before.
 
-export async function getAllProjects(): Promise<Project[]> {
-  try {
-    const docs = await client.fetch(allProjectsQuery);
-    if (docs && docs.length > 0) {
-      return docs.map(mapSanityToProject);
-    }
-  } catch (error) {
-    console.error("[sanity/projects] Fetch failed, using fallback:", error);
-  }
+async function localProjects(): Promise<Project[]> {
   const { projects } = await import("@/data/projects");
   return projects;
 }
 
+async function localProjectBySlug(slug: string): Promise<Project | null> {
+  return (await localProjects()).find((p) => p.slug === slug) || null;
+}
+
+// The fallback for one case study: the local copy, or the original error when there is none, so a
+// failed read is never mistaken for a slug that does not exist.
+async function localProjectOrRethrow(slug: string, error: unknown): Promise<Project> {
+  const project = await localProjectBySlug(slug);
+  if (!project) throw error;
+  return project;
+}
+
+async function localProjectDetail(slug: string): Promise<ProjectDetail | null> {
+  const { getProjectDetail } = await import("@/data/projectDetails");
+  return getProjectDetail(slug) || null;
+}
+
+export async function getAllProjects(): Promise<Project[]> {
+  return readSanity(
+    "all case studies",
+    async () => {
+      const docs = await client.fetch(allProjectsQuery);
+      return docs && docs.length > 0 ? docs.map(mapSanityToProject) : localProjects();
+    },
+    localProjects
+  );
+}
+
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  try {
-    const doc = await client.fetch(projectBySlugQuery, { slug });
-    if (doc) {
-      return mapSanityToProject(doc, 0);
-    }
-  } catch (error) {
-    console.error("[sanity/projects] Slug fetch failed, using fallback:", error);
-  }
-  const { projects } = await import("@/data/projects");
-  return projects.find((p) => p.slug === slug) || null;
+  return readSanity(
+    `case study "${slug}"`,
+    async () => {
+      const doc = await client.fetch(projectBySlugQuery, { slug });
+      return doc ? mapSanityToProject(doc, 0) : localProjectBySlug(slug);
+    },
+    (error) => localProjectOrRethrow(slug, error)
+  );
 }
 
 export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetail | null> {
-  try {
-    const allDocs = await client.fetch(allProjectsQuery);
-    if (allDocs && allDocs.length > 0) {
+  return readSanity(
+    `case study detail "${slug}"`,
+    async () => {
+      const allDocs = await client.fetch(allProjectsQuery);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const doc = allDocs.find((d: any) => d.slug === slug);
-      if (doc) {
-        return mapSanityToProjectDetail(doc, allDocs);
-      }
+      const doc = allDocs && allDocs.length > 0 ? allDocs.find((d: any) => d.slug === slug) : null;
+      return doc ? mapSanityToProjectDetail(doc, allDocs) : localProjectDetail(slug);
+    },
+    async (error) => {
+      const detail = await localProjectDetail(slug);
+      if (!detail) throw error;
+      return detail;
     }
-  } catch (error) {
-    console.error("[sanity/projects] Detail fetch failed, using fallback:", error);
-  }
-  const { getProjectDetail } = await import("@/data/projectDetails");
-  return getProjectDetail(slug) || null;
+  );
 }
 
 // ── Map Sanity caseStudy → HomepageProject (for homepage featured work) ──
@@ -435,17 +457,20 @@ function mapSanityToHomepageProject(doc: any): HomepageProject {
   };
 }
 
-export async function getFeaturedProjects(): Promise<HomepageProject[]> {
-  try {
-    const docs = await client.fetch(featuredProjectsQuery);
-    if (docs && docs.length > 0) {
-      return docs.map(mapSanityToHomepageProject);
-    }
-  } catch (error) {
-    console.error("[sanity/projects] Featured fetch failed, using fallback:", error);
-  }
+async function localFeaturedProjects(): Promise<HomepageProject[]> {
   const { PROJECTS } = await import("@/lib/constants/homepage-data");
   return PROJECTS;
+}
+
+export async function getFeaturedProjects(): Promise<HomepageProject[]> {
+  return readSanity(
+    "featured case studies",
+    async () => {
+      const docs = await client.fetch(featuredProjectsQuery);
+      return docs && docs.length > 0 ? docs.map(mapSanityToHomepageProject) : localFeaturedProjects();
+    },
+    localFeaturedProjects
+  );
 }
 
 // Canonical discipline order for the filter bar
@@ -530,39 +555,41 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
     "creative-strategy": [],
   };
 
-  try {
-    const docs = await client.fetch(serviceCategoryQuery);
-    if (!docs || docs.length === 0) return empty;
+  return readSanity(
+    "case studies by service",
+    async () => {
+      const docs = await client.fetch(serviceCategoryQuery);
+      if (!docs || docs.length === 0) return empty;
 
-    const grouped = { ...empty };
-    // A project appears under every service it covers, once per service.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    docs.forEach((doc: any) => {
-      const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
-      const project = toServiceProject(doc);
-      for (const cat of new Set(categories)) {
-        if (grouped[cat]) grouped[cat].push(project);
-      }
-    });
-    return grouped;
-  } catch (error) {
-    console.error("[sanity/projects] Service category fetch failed:", error);
-    return empty;
-  }
+      const grouped = { ...empty };
+      // A project appears under every service it covers, once per service.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      docs.forEach((doc: any) => {
+        const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
+        const project = toServiceProject(doc);
+        for (const cat of new Set(categories)) {
+          if (grouped[cat]) grouped[cat].push(project);
+        }
+      });
+      return grouped;
+    },
+    () => empty
+  );
 }
 
 // Every case study as a card, newest first: the "Related work" row at the end of an article.
-// Empty if Sanity is unreachable, and the row is then hidden.
+// Empty when Sanity has none (or, while building, cannot be reached), and the row is then hidden.
 export async function getProjectCards(): Promise<ServiceProject[]> {
-  try {
-    const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current)] | order(publishedAt desc) {
+  return readSanity(
+    "case study cards",
+    async () => {
+      const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current)] | order(publishedAt desc) {
   title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage
 }`);
-    return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
-  } catch (error) {
-    console.error("[sanity/projects] Project cards fetch failed:", error);
-    return [];
-  }
+      return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
+    },
+    () => []
+  );
 }
 
 // ── Project Planner: published case studies that say what they delivered ──
@@ -580,6 +607,8 @@ const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current)
 }`;
 
 // Related work for the planner. Never falls back to unrelated projects: on any failure, none.
+// Deliberately not readSanity: /start renders on every request, so there is no earlier page to
+// keep, and the planner works without these.
 export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
   try {
     const docs: unknown = await client.fetch(plannerCaseStudiesQuery, {}, { next: { revalidate: 60 } });
@@ -588,7 +617,7 @@ export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
       .filter((d) => d && typeof d.title === "string" && typeof d.slug === "string" && Array.isArray(d.workDelivered))
       .map((d) => ({ title: d.title.trim(), slug: d.slug, workDelivered: d.workDelivered.filter((w: unknown) => typeof w === "string") }));
   } catch (error) {
-    console.warn("[sanity/projects] Planner case studies fetch failed:", error instanceof Error ? error.name : "unknown error");
+    console.warn("[sanity] planner case studies failed, showing none:", error instanceof Error ? error.name : "unknown error");
     return [];
   }
 }
@@ -606,19 +635,23 @@ const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && 
   ${serviceCategoriesProjection}
 }`;
 
-// Grouped by type. Empty lists when Sanity has none or cannot be reached: pages show their empty line.
+// Grouped by type. Empty lists when Sanity has none (or, while building, cannot be reached): pages
+// show their empty line.
 export async function getProjectsByType(types: ProjectType[]): Promise<Record<ProjectType, Project[]>> {
-  const grouped: Record<ProjectType, Project[]> = { client: [], exploration: [], parallel: [], commons: [] };
-  try {
-    const docs: unknown = await client.fetch(projectsByTypeQuery, { types });
-    if (Array.isArray(docs)) {
-      docs.forEach((doc, i) => {
-        const project = mapSanityToProject(doc, i);
-        if (project.projectType && types.includes(project.projectType)) grouped[project.projectType].push(project);
-      });
-    }
-  } catch (error) {
-    console.error("[sanity/projects] Projects by type fetch failed:", error instanceof Error ? error.name : "unknown error");
-  }
-  return grouped;
+  const empty = (): Record<ProjectType, Project[]> => ({ client: [], exploration: [], parallel: [], commons: [] });
+  return readSanity(
+    "case studies by type",
+    async () => {
+      const grouped = empty();
+      const docs: unknown = await client.fetch(projectsByTypeQuery, { types });
+      if (Array.isArray(docs)) {
+        docs.forEach((doc, i) => {
+          const project = mapSanityToProject(doc, i);
+          if (project.projectType && types.includes(project.projectType)) grouped[project.projectType].push(project);
+        });
+      }
+      return grouped;
+    },
+    empty
+  );
 }
