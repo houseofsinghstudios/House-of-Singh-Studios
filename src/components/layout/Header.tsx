@@ -82,7 +82,8 @@ export default function Header() {
         {/* Crest Logo — visible at page top only (desktop). Once hidden it is inert, so its home
             link cannot take keyboard focus; the wordmark link is the home link then. */}
         <div className="header-crest-wrap" aria-hidden={scrolled} inert={scrolled}>
-          <Link href="/" aria-label="House of Singh Studios home">
+          {/* The crest's alt is the link's text and its accessible name. */}
+          <Link href="/">
             <Image
               src="/hos-studios-logo.svg"
               alt="House of Singh Studios"
