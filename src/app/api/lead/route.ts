@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
-import { checkLeadLengths, cleanField } from "@/lib/lead";
-import { checkReferralFields, isIntroduction, isPartnership } from "@/lib/partners/forms";
+import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
+import { isEmail } from "@/lib/form-input";
+import { bodyTooLarge, readBodyText } from "@/lib/request-body";
+import { checkReferralFields, isIntroduction, isPartnership, REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanCampaign } from "@/lib/campaign";
@@ -56,7 +58,13 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    // Over 64 KB is refused before anything is parsed.
+    const text = await readBodyText(request);
+    if (text === null) {
+      console.log("[lead] request too large");
+      return bodyTooLarge();
+    }
+    const body = JSON.parse(text);
     const { name, email, service, budget, message, honeypot } = body;
 
     if (honeypot) {
@@ -64,8 +72,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    // Validate email format
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    // Validate email format: the length first, so the pattern never runs on a long value.
+    if (!email || !isEmail(String(email))) {
       console.log("[lead] validation failed: invalid email");
       return NextResponse.json(
         { success: false, error: "Invalid email" },
@@ -76,11 +84,11 @@ export async function POST(request: Request) {
     // Sanitize text inputs, then check lengths on the cleaned values. Service and budget are optional:
     // a missing or empty value cleans to "", which is valid; only the 80 character cap applies.
     const fields = {
-      name: cleanField(name),
-      email: cleanField(email),
-      service: cleanField(service),
-      budget: cleanField(budget),
-      message: cleanField(message),
+      name: cleanField(name, LEAD_LIMITS.name),
+      email: cleanField(email, LEAD_LIMITS.email),
+      service: cleanField(service, LEAD_LIMITS.service),
+      budget: cleanField(budget, LEAD_LIMITS.budget),
+      message: cleanField(message, LEAD_LIMITS.message),
     };
     const invalid = checkLeadLengths(fields);
     if (invalid) {
@@ -89,14 +97,14 @@ export async function POST(request: Request) {
     }
     // Introductions and partnerships carry their own fields; "How did you hear about us?" is optional on every lead.
     const referral = {
-      who: cleanField(body.who),
-      contact: cleanField(body.contact),
+      who: cleanField(body.who, REFERRAL_LIMITS.who),
+      contact: cleanField(body.contact, REFERRAL_LIMITS.contact),
       permission: body.permission === true,
-      businessName: cleanField(body.businessName),
-      partnerType: cleanField(body.partnerType),
-      website: cleanField(body.website),
-      hearAbout: cleanField(body.hearAbout),
-      recommendedBy: cleanField(body.recommendedBy),
+      businessName: cleanField(body.businessName, REFERRAL_LIMITS.businessName),
+      partnerType: cleanField(body.partnerType, REFERRAL_LIMITS.partnerType),
+      website: cleanField(body.website, REFERRAL_LIMITS.website),
+      hearAbout: cleanField(body.hearAbout, REFERRAL_LIMITS.hearAbout),
+      recommendedBy: cleanField(body.recommendedBy, REFERRAL_LIMITS.recommendedBy),
     };
     const referralInvalid = checkReferralFields(fields.service, referral);
     if (referralInvalid) {

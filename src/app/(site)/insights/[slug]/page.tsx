@@ -11,6 +11,7 @@ import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
 import RelatedWork from "@/components/insights/RelatedWork";
 import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
+import { jsonLd } from "@/lib/json-ld";
 
 type SlugRef = { slug?: { current?: string } } | null;
 const slugsOf = (refs: unknown): string[] =>
@@ -84,7 +85,7 @@ export default async function InsightArticlePage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLd({
             "@context": "https://schema.org",
             "@type": "Article",
             headline: post.title,

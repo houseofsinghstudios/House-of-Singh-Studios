@@ -80,3 +80,11 @@ test("subscribe: a valid email goes to n8n with the secret header", async () => 
   assert.equal(calls.length, 1);
   assert.equal((calls[0].init.headers as Record<string, string>)["x-hos-webhook-secret"], "test-secret");
 });
+
+test("careers: a portfolio that is not a web address is refused with a 400, and nothing is sent", async () => {
+  const calls = stubFetch(async () => new Response("{}", { status: 200 }));
+  const res = await careers(req("/api/careers", { ...application, portfolioUrl: "javascript:alert(1)" }) as never);
+  assert.equal(res.status, 400);
+  assert.deepEqual(await res.json(), { error: "Portfolio URL must start with http:// or https://" });
+  assert.equal(calls.length, 0);
+});

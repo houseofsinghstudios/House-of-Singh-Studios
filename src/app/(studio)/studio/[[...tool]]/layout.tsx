@@ -4,6 +4,10 @@
 export const metadata = {
   // absolute: already names the studio, so the root title template must not append it again.
   title: { absolute: "Studio — House of Singh Studios CMS" },
+  // The same as next-sanity's studio metadata: never indexed, and the Studio's address is not sent
+  // to other sites as a referrer.
+  robots: "noindex",
+  referrer: "same-origin",
 };
 
 const studioStyles = `

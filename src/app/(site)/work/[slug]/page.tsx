@@ -7,6 +7,7 @@ import { bareTitle, DEFAULT_SHARE_IMAGE, studioTitle, WEBSITE_OG } from "@/lib/s
 import { servicesForDisciplines } from "@/lib/linking";
 import { SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { disciplineLabel } from "@/lib/disciplines";
+import { jsonLd } from "@/lib/json-ld";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -68,7 +69,7 @@ export default async function CaseStudyPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLd({
             "@context": "https://schema.org",
             "@type": "CreativeWork",
             name: project.name,

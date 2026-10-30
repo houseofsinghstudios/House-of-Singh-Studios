@@ -22,8 +22,10 @@ test("careers: each field is capped, with a short reason that never quotes the v
   const cases: [keyof typeof CAREERS_LIMITS, string][] = [["name", "Name"], ["role", "Role"], ["portfolioUrl", "Portfolio URL"], ["message", "Message"]];
   for (const [key, label] of cases) {
     const max = CAREERS_LIMITS[key];
-    assert.equal(checkCareers(cleanCareers({ ...valid, [key]: "x".repeat(max) })), null, `${key} at the cap`);
-    const reason = checkCareers(cleanCareers({ ...valid, [key]: "x".repeat(max + 1) })) ?? "";
+    // The portfolio must also be a web address, so its value at the cap starts with https://.
+    const value = (n: number) => (key === "portfolioUrl" ? `https://${"x".repeat(n - 8)}` : "x".repeat(n));
+    assert.equal(checkCareers(cleanCareers({ ...valid, [key]: value(max) })), null, `${key} at the cap`);
+    const reason = checkCareers(cleanCareers({ ...valid, [key]: value(max + 1) })) ?? "";
     assert.match(reason, new RegExp(`^${label} must be at most`), key);
     assert.ok(!reason.includes("xxxx"), "reason does not quote the value");
   }
@@ -44,4 +46,13 @@ test("subscribe: valid email passes; bad or over 254 characters is rejected", ()
   assert.equal(atCap.length, 254);
   assert.equal(checkSubscribeEmail(atCap), null);
   assert.equal(checkSubscribeEmail(`a${atCap}`), "Email must be at most 254 characters");
+});
+
+test("careers: a portfolio, when given, must start with http:// or https://", () => {
+  for (const ok of ["https://ada.example/work", "http://ada.example", "HTTPS://ADA.EXAMPLE", ""]) {
+    assert.equal(checkCareers(cleanCareers({ ...valid, portfolioUrl: ok })), null, ok);
+  }
+  for (const bad of ["javascript:alert(1)", "ada.example", "//ada.example", "ftp://ada.example", "mailto:ada@example.com", "data:text/html,hi", " javascript:alert(1)"]) {
+    assert.equal(checkCareers(cleanCareers({ ...valid, portfolioUrl: bad })), "Portfolio URL must start with http:// or https://", bad);
+  }
 });

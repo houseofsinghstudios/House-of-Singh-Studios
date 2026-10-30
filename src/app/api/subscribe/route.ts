@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanField } from "@/lib/lead";
-import { checkSubscribeEmail } from "@/lib/subscribe";
+import { checkSubscribeEmail, SUBSCRIBE_EMAIL_MAX } from "@/lib/subscribe";
+import { bodyTooLarge, readBodyText } from "@/lib/request-body";
 
 // Signup points the n8n workflow stores in Airtable. Anything else is recorded as the footer.
 const SOURCES = ["footer-subscribe", "article", "brand-pulse"];
@@ -21,7 +22,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const body = await request.json();
+    // Over 64 KB is refused before anything is parsed.
+    const text = await readBodyText(request);
+    if (text === null) return bodyTooLarge();
+    const body = JSON.parse(text);
     if (!body || typeof body !== "object") {
       return NextResponse.json({ success: false, error: "Invalid request" }, { status: 400 });
     }
@@ -30,7 +34,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
     const { source } = body;
-    const email = cleanField(body.email);
+    const email = cleanField(body.email, SUBSCRIBE_EMAIL_MAX);
     const invalid = checkSubscribeEmail(email);
     if (invalid) {
       return NextResponse.json({ success: false, error: invalid }, { status: 400 });
