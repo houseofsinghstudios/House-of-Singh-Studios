@@ -7,7 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildBrief, validateAnswers, withNeeds, withPrimary, type Draft } from "@/lib/project-planner/engine";
 import { bookingUrl } from "@/lib/project-planner/links";
-import { FLOW } from "@/lib/project-planner/content";
+import { FLOW, INTRO } from "@/lib/project-planner/content";
 import type { ActionId, Optional, Pricing, ServiceId } from "@/lib/project-planner/types";
 import PlannerIntro from "./PlannerIntro";
 import PlannerStep, { type StepKey } from "./PlannerStep";
@@ -143,6 +143,9 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
 
   return (
     <div ref={rootRef} className="pp-root">
+      {/* The page's main heading lives in the intro. Whenever the intro is not on screen (?begin=1,
+          or a flow already under way), the same words stay as a visually hidden h1. */}
+      {screen !== "intro" && <h1 className="sr-only">{INTRO.heading}</h1>}
       <div key={screen === "step" ? `s${stepIndex}` : screen} className="pp-screen">
         {screen === "intro" && <PlannerIntro onStart={start} />}
         {screen === "step" && (
