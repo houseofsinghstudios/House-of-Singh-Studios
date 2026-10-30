@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "next-view-transitions";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
 import { serviceLinkLabel } from "@/lib/linking";
 import EditorialLabel from "@/components/ui/EditorialLabel";
@@ -10,17 +11,18 @@ const NUMBERS = ["01", "02", "03", "04"];
 
 export default function ServicesSection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  // Mobile and tablet: the same breakpoint as the accordion's CSS.
+  const isMobile = useMediaQuery("(max-width: 1023px)");
+  const [wasMobile, setWasMobile] = useState(isMobile);
   const [staggerDone, setStaggerDone] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  // Detect mobile/tablet
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 1024);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+  // Reset accordion state when switching to desktop: adjusted while rendering, when the width
+  // crosses the breakpoint, rather than in an effect.
+  if (wasMobile !== isMobile) {
+    setWasMobile(isMobile);
+    if (!isMobile) setActiveIndex(null);
+  }
 
   // After stagger animation completes, auto-expand first item on mobile
   useEffect(() => {
@@ -48,13 +50,6 @@ export default function ServicesSection() {
     observer.observe(section);
     return () => observer.disconnect();
   }, [isMobile, staggerDone]);
-
-  // Reset accordion state when switching to desktop
-  useEffect(() => {
-    if (!isMobile) {
-      setActiveIndex(null);
-    }
-  }, [isMobile]);
 
   const handleTap = useCallback(
     (index: number, e: React.MouseEvent) => {

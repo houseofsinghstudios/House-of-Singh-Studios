@@ -1,5 +1,6 @@
 # HOUSE OF SINGH STUDIOS — DEFINITIVE UI/UX DESIGN SYSTEM
-# Version 2.0 | Evolved from editorial minimalism toward confident interactive editorial
+# Version 2.1 | Evolved from editorial minimalism toward confident interactive editorial
+# Updated 2026-10-30 from the code: page map, header, homepage, Work, Packages, design exceptions, protected list.
 # This document governs all design and development decisions across the entire site.
 
 ---
@@ -55,6 +56,10 @@ Zero border-radius. Zero box-shadow. Zero gradients. Zero colored accent buttons
 Zero serif fonts. Zero animation libraries. Zero generic component defaults.
 Left-aligned by default. Maximum 2 font weights per page.
 
+Known exceptions, as built:
+- Box shadow: one, deliberate. Contact form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible). No other shadow is allowed.
+- Font weights: only 400 and 500 are loaded (src/app/layout.tsx), so only those render. One leftover font-weight: 300 sits in unused CSS (.clients-accordion-toggle) and is due for removal with the dead CSS.
+
 ---
 
 ## EVOLVED INTERACTION SYSTEM
@@ -65,21 +70,13 @@ Inspired by Dash Digital's interaction philosophy, adapted to our editorial lang
 
 Philosophy: Minimal. The nav should almost disappear. Content is king.
 
-CURRENT BEHAVIOR — Sticky header with wordmark left, text links right. Collapses from crest to wordmark on scroll.
+AS BUILT (src/components/layout/Header.tsx):
+- Sticky header. At the top of the page the crest logo sits top left; once scrolled, the header becomes a thin bar with the text wordmark on the left.
+- Above 1080px: six text links on the right (Services, Work, AI Lab, About, Insights, Contact), with the underline wipe.
+- At 1080px and below: a hamburger button (aria-label "Open menu" / "Close menu", aria-expanded) replaces the links. It opens a full screen panel on --bg with the same six links stacked large and left aligned, and the studio email and location at the bottom. The page behind does not scroll while it is open.
+- Partners, Initiatives, Commons, Careers, Privacy and Terms are reached from the footer, not the header.
 
-EVOLVED BEHAVIOR:
-- Header shrinks to a thin bar (48px height) on scroll with wordmark left and a single "Menu +" trigger right
-- The full navigation lives in a full-screen overlay triggered by "Menu +"
-- The overlay uses --bg background with large navigation links (Inter 500, clamp(32px, 4vw, 48px)) stacked vertically, left-aligned
-- Each nav link has a small count or descriptor next to it where relevant (e.g. "Work 04" showing project count, "Case Studies 08")
-- The overlay opens with a smooth opacity + translateY reveal (0.4s ease)
-- Close trigger labeled "Close" replaces "Menu +"
-- On desktop, the individual nav links can remain visible in the header alongside Menu +. The overlay is an enhancement, not a replacement.
-- On mobile, only the wordmark and Menu + are visible. All navigation moves to the overlay.
-
-WHY: This removes visual clutter from the content area. The user's attention stays on the work, not the chrome. Dash Digital does this and it makes the content feel larger.
-
-IMPLEMENTATION: Modify Header.tsx to add an overlay nav component. Use React state for open/close. CSS transitions for the overlay. No animation libraries.
+NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped. Do not rebuild it without the owner's approval. Open accessibility work on the mobile panel (health check F-10): Escape to close, focus kept inside the panel, aria-controls.
 
 ### Layer 2: Page Transitions
 
@@ -195,31 +192,32 @@ EVOLVED APPROACH:
 - Page loads: content enters via the staggered reveal system. The page appears to "build" itself.
 - Form submissions: button text changes to "Sending..." with reduced opacity
 - Empty content states: a quiet centered message in --text-muted, no decorative elements
-- Skeleton loading: if Sanity content takes time to load, show thin horizontal bars (8px height, --bg-shift fill, subtle pulse animation) in place of text blocks
+- Skeleton loading: not built (pages are static or ISR, so content arrives with the HTML). If ever needed: thin horizontal bars (8px height, --bg-shift fill, subtle pulse animation) in place of text blocks
+- Errors: src/app/(site)/error.tsx shows "This page could not load right now." inside the site layout, with Try Again, the homepage and /contact; src/app/global-error.tsx shows the same outside it. Both are noindex.
 
 ---
 
 ## PAGE-SPECIFIC INTERACTION MAPS
 
 ### Homepage
-Flow: Hero → (01) Featured Work → (02) The Argument → (03) Services → (04) About Preview → (05) Brands → (06) Testimonials → Stats → CTA
+Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
 
-- Hero: page load entrance with staggered data attributes. Headline, supporting text, buttons stagger in 0.1s apart.
-- Featured Work: 4-column card grid. Portrait images. Stagger reveal with 100ms offset per card.
-- Argument: Two-column. Dark section option. Steps stagger on right column.
-- Services: Accordion rows with hover reveal.
-- About Preview: Two-column on --bg-shift. Compact.
-- Brands: Accordion list with hover expand.
-- Testimonials: Asymmetric carousel with auto-rotate and pause.
-- Stats: Compact data bar with animated counters.
-- CTA: Dark inverted. Asymmetric. The close.
+- Hero: page load entrance with staggered data attributes. Label "Creative Direction Studio"; the H1 is visually hidden (sr-only) and the visible headline is presentational.
+- Featured Work: case study cards from Sanity. Stagger reveal.
+- The Argument: the headline's words reveal on scroll.
+- Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
+- Two ways to start (ToolBand): Brand Pulse Check and Project Planner. Desktop: two columns. Phones: a two tab switch.
+- Testimonials: carousel with auto rotate and pause.
+- Proof: animated counters (50+ projects, 12+ years, 8+ industries).
+- CTA: dark inverted. The close.
+- About Preview and Brands sections no longer exist.
 
 ### Work Page
-- Default view: LIST (text rows with dividers, hover background shift)
-- Toggle: LIST / GRID switch in top right
-- Grid view: 2-column staggered cards with images
-- Filter bar: horizontal pill buttons
-- Heading: large with superscript project count
+- Default view: GRID (2 columns of image cards), with a GRID / LIST switch in the filter bar (WorkPageClient.tsx).
+- List view: text rows with dividers, hover background shift.
+- Filter bar: disciplines, in a fixed order.
+- Heading: "Work" with the project count beside it, outside the H1.
+- Phones: single column grid, no list/grid switch.
 
 ### Services Overview
 - Compact hero (~60vh) with full-width image below
@@ -261,12 +259,24 @@ Flow: Hero → (01) Featured Work → (02) The Argument → (03) Services → (0
 - Brand Pulse Check: interactive multi-step flow, self-contained
 - Dark CTA
 
-### Packages
-- Compact hero
-- Three-column pricing grid with dividers between tiers
-- Recommended tier gets subtle --bg-shift background
-- Flexibility disclaimer below
-- Dark CTA
+### Packages (retired)
+- The Packages page no longer exists. /packages redirects (301) to /start, the Project Planner.
+- src/data/packages.ts stays: the planner takes its Brand Foundation price and timelines from it.
+
+### Project Planner (/start)
+- Multi step brief builder; the result can be sent to the studio. Rendered on every request (it reads ?service and ?begin).
+- Prices come from the Sanity Service Pricing document; if Sanity fails, prices are hidden and the planner still works.
+
+### Brand Pulse Check (/brand-pulse)
+- Self contained multi step tool with a shareable result (?r=, never indexed). Rendered on every request.
+
+### Initiatives (/initiatives, /initiatives/parallel, /initiatives/commons)
+- The initiatives overview and two programme pages. Other initiatives are listed but have no page; /initiatives/foundry returns 404 on purpose.
+
+### Partners, Careers, Privacy, Terms
+- /partners: the partner programme, introduction form with permission checkbox, FAQs.
+- /careers: open roles from Sanity, apply form.
+- /privacy and /terms: legal wording, approved by the owner. Change only with approval.
 
 ### Insights
 - Compact hero
@@ -291,7 +301,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 - All hover interactions disabled (CSS @media(hover: hover) wrapper)
 - Accordion sections: all content visible by default, no hover-reveal
 - Custom cursor: hidden on touch devices
-- Navigation: wordmark + Menu trigger only. Full-screen overlay for nav.
+- Navigation: crest or wordmark + hamburger at 1080px and below. Full screen panel for nav.
 - Image sizes reduced for performance
 - Stagger delays reduced or removed
 - Column layouts collapse to single column
@@ -337,9 +347,60 @@ Primary easing: cubic-bezier(0.23, 1, 0.32, 1). Fast start, gentle settle. Confi
 
 ## IMPLEMENTATION PRIORITY
 
-Phase 1 (immediate): Navigation overlay, page transitions, scroll reveal variety
+Phase 1 (immediate): page transitions, scroll reveal variety (done; the Menu + overlay was not built, see Layer 1)
 Phase 2 (next): Image clip-path reveals, hover interaction standardization
 Phase 3 (polish): Loading states, mobile optimization, performance audit
+
+---
+
+## SITE MAP AND ROUTES (as built)
+
+Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: Vercel.
+
+| Route | Rendering |
+|---|---|
+| / | Static, refreshed every 60 s (ISR) |
+| /services, /services/[slug] (brand-identity, visual-media, digital-design, creative-strategy) | ISR 60 s; service copy from src/data/services.ts |
+| /work, /work/[slug] | ISR 60 s; case studies from Sanity |
+| /insights, /insights/[slug] | ISR 60 s; every published article generated ahead |
+| /about, /careers, /initiatives, /initiatives/[slug] (parallel, commons) | ISR 60 s |
+| /ai, /partners, /privacy, /terms | Static |
+| /start, /brand-pulse, /contact | Rendered on every request (they read query parameters) |
+| /sitemap.xml, /llms.txt | Refreshed hourly |
+| /robots.txt, og and share images | Static |
+| /studio | Sanity Studio, own route group, no site chrome |
+| /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n |
+| /api/consent-region | GET, decides strict consent regions |
+
+Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work. Unknown URLs give the site 404 (noindex).
+
+When Sanity fails at runtime, pages keep their last good version (src/lib/sanity/resilience.ts); fallback content is used only while building.
+
+---
+
+## Protected: intentional work, do not remove
+
+These look unusual or redundant but are deliberate. Any change touching them needs the owner's approval. Report a genuine defect in one of them as a defect; never remove or weaken it as cleanup.
+
+- SEO structure: the semantic H1 swap on service pages (the label is the H1, the hero line an H2), and visually hidden H1s (homepage, Brand Pulse and Project Planner states, the hidden "Brand Pulse result" H1).
+- Hidden descriptive link text: the sr-only text in "Learn More" links on /services and in footer social links; the logo alt as link text.
+- Service FAQs and the questions accordion, with FAQPage JSON-LD.
+- The structured data graph: ProfessionalService and Organization with @id, founder Person, Service, CreativeWork, Article, BreadcrumbList.
+- RGD links (RgdLink and the auto linker in article bodies).
+- SITE_OG and WEBSITE_OG (og:type, og:locale en_CA, og:site_name) and the share image routes.
+- Related thinking, related work and related services modules, and src/lib/linking.ts.
+- Sitemap lastmod (the static page date map) and llms.txt with its tests.
+- Redirects in next.config.ts, and the intentional /initiatives/foundry 404.
+- Consent gated GA4 and Clarity (nothing loads before consent).
+- The analytics helper (src/lib/analytics.ts): page view parameters, trackOnce, the "set" call.
+- Lead events and the ?hos_internal and ?hos_debug flags.
+- Lead source capture (src/lib/lead-source.ts, src/lib/referrer.ts).
+- Partner referrals (?ref=) and their attribution.
+- Form protections: honeypots, the shared rate limiter, length limits, timeouts, the partner permission checkbox.
+- The Sanity services mirror (sanity/schemas/service.ts and scripts/import-services; the code is the source of truth).
+- The Sanity resilience helper (src/lib/sanity/resilience.ts).
+- Privacy and terms wording.
+- Known open design decision: Marble Ash editorial labels fail colour contrast; this is the owner's decision to make, not a defect to fix silently.
 
 ---
 

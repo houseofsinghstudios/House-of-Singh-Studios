@@ -1,0 +1,51 @@
+# Checks every change before it can be merged: type check, lint, unit tests and a production build.
+# Runs on every pull request and on pushes to main and feature/next-work. No secrets: the build reads
+# only the public Sanity project id and dataset, and published content is public. If Sanity cannot
+# be reached, the build still completes on the fallback content (src/lib/sanity/resilience.ts).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/next-work]
+
+permissions:
+  contents: read
+
+# A newer push to the same branch or pull request cancels the run it replaces.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Type check, lint, tests and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_PUBLIC_SANITY_PROJECT_ID: 00iree4d
+      NEXT_PUBLIC_SANITY_DATASET: production
+    steps:
+      - uses: actions/checkout@v5
+
+      # Sanity needs Node 22.12 or newer; 22.x takes the latest Node 22.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Production build
+        run: npm run build
