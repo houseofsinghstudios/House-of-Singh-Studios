@@ -11,6 +11,7 @@ import {
   relatedThinking,
   relatedWork,
   serviceLinkLabel,
+  serviceLinkTopic,
   servicesForArticle,
   servicesForDisciplines,
 } from "@/lib/linking";
@@ -95,13 +96,15 @@ test("every related article has a one line summary in house style; new articles 
   assert.equal(articleLine("a-new-article", "Its SEO description."), "Its SEO description.");
 });
 
-test("/services: each service link says where it goes, never Learn More", async () => {
+test("/services: each Learn More link carries its topic as hidden text, and no aria-label", async () => {
+  assert.equal(serviceLinkTopic("brand-identity"), " about brand identity design and rebranding in Toronto");
+  assert.equal(serviceLinkTopic("visual-media"), " about brand photography and video production in Toronto");
+  assert.equal(serviceLinkTopic("digital-design"), " about website design for brands in Toronto");
+  assert.equal(serviceLinkTopic("creative-strategy"), " about brand strategy and positioning in Toronto");
+  assert.equal(serviceLinkTopic("unknown"), "");
   const { readFileSync } = await import("node:fs");
   const src = readFileSync("src/components/services/ServicesClient.tsx", "utf8");
-  assert.doesNotMatch(src, /Learn More/);
-  for (const [slug, text] of [["brand-identity", "Explore Brand Identity"], ["visual-media", "Explore Visual Media"], ["digital-design", "Explore Digital Design"], ["creative-strategy", "Explore Creative Strategy"]]) {
-    assert.match(src, new RegExp(`slug: "${slug}",\\s*linkText: "${text}",`), slug);
-    // The accessible name starts with the visible words, then names the page.
-    assert.ok(serviceLinkLabel(slug, text).startsWith(`${text}: `), slug);
-  }
+  const link = src.slice(src.indexOf("<Link"), src.indexOf("</Link>"));
+  assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
+  assert.match(link, /Learn More<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
 });

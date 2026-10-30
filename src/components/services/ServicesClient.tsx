@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Link } from "next-view-transitions";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
-import { serviceLinkLabel } from "@/lib/linking";
+import { serviceLinkTopic } from "@/lib/linking";
 import type { ServiceProject } from "@/lib/sanity/projects";
 
 const BLOCKS = [
@@ -15,7 +15,6 @@ const BLOCKS = [
     description:
       "Your business has grown. Your brand has not kept up. Prospects compare you to competitors with sharper visuals and walk away. We build complete visual systems that make your business look as established as it actually is.",
     slug: "brand-identity",
-    linkText: "Explore Brand Identity",
     serviceCategory: "brand-identity",
     deliverables: [
       "Brand Strategy and Positioning",
@@ -42,7 +41,6 @@ const BLOCKS = [
     description:
       "Your content looks different on every platform. Nothing connects. We direct and produce brand photography, video, and content systems that hold together across every channel.",
     slug: "visual-media",
-    linkText: "Explore Visual Media",
     serviceCategory: "visual-media",
     deliverables: [
       "Brand Photography",
@@ -63,7 +61,6 @@ const BLOCKS = [
     description:
       "Your website exists. But it does not work for your business. People browse for 30 seconds and leave. We design digital experiences where every page has a job.",
     slug: "digital-design",
-    linkText: "Explore Digital Design",
     serviceCategory: "digital-design",
     deliverables: [
       "UX Research",
@@ -86,7 +83,6 @@ const BLOCKS = [
     description:
       "Your team makes brand decisions without a playbook. Marketing, agencies, freelancers: they all interpret your brand differently. We build the framework that lets your team operate without you.",
     slug: "creative-strategy",
-    linkText: "Explore Creative Strategy",
     serviceCategory: "creative-strategy",
     deliverables: [
       "Brand Audit",
@@ -171,14 +167,14 @@ export default function ServicesClient({ projectsByCategory }: Props) {
                   </li>
                 ))}
               </ul>
+              {/* "Learn More" on screen; the hidden rest makes the link text itself descriptive. */}
               <Link
                 href={`/services/${block.slug}`}
-                aria-label={serviceLinkLabel(block.slug, block.linkText)}
                 className="svc-block-btn"
                 style={{ marginTop: 32 }}
                 data-cursor="link"
               >
-                {block.linkText}
+                Learn More<span className="sr-only">{serviceLinkTopic(block.slug)}</span>
               </Link>
             </div>
 

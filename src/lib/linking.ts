@@ -104,6 +104,15 @@ export function relatedWork<T extends { slug: string; disciplines: string[] }>(s
 
 // The accessible name for a link to a service page whose visible text is short ("Learn More" or
 // the service name): the visible text first, so speech input still matches it, then the page topic.
+// The rest of a short link's text, for crawlers and screen readers alike: "about" and the page topic
+// in running text ("about brand identity design and rebranding in Toronto"). It goes inside the link
+// as visually hidden text after the visible words, so the link text and its accessible name are the
+// same and start with what is on screen. Empty for an unknown service.
+export function serviceLinkTopic(slug: string): string {
+  const topic = getServiceBySlug(slug)?.seoH1;
+  return topic ? ` about ${topic.charAt(0).toLowerCase()}${topic.slice(1)}` : "";
+}
+
 export function serviceLinkLabel(slug: string, visible: string): string {
   const topic = getServiceBySlug(slug)?.seoH1;
   return topic ? `${visible}: ${topic}` : visible;
