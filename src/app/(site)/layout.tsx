@@ -12,6 +12,7 @@ import ConsentManager from "@/components/consent/ConsentManager";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { AREA_SERVED, ORG_ID, PERSON_ID, orgRef, personRef } from "@/lib/schema";
 import { FOUNDER_PROFILES, STUDIO_PROFILES, profileUrls } from "@/lib/constants/profiles";
+import { jsonLd } from "@/lib/json-ld";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
 // /studio lives in the (studio) group, so none of this ever loads there.
@@ -84,7 +85,7 @@ export default function SiteLayout({
       {/* The studio and its founder, on every site page. Other nodes reference them by @id. */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(SITE_GRAPH) }}
+        dangerouslySetInnerHTML={{ __html: jsonLd(SITE_GRAPH) }}
       />
     </ViewTransitions>
   );

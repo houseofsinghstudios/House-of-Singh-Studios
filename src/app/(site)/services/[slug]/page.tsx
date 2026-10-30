@@ -8,6 +8,7 @@ import { AREA_SERVED, SERVICE_TERMS, orgRef } from "@/lib/schema";
 import { getAllProjectsGroupedByService } from "@/lib/sanity/projects";
 import { getArticleCards } from "@/lib/sanity/articles";
 import { articleLine, relatedThinking } from "@/lib/linking";
+import { jsonLd } from "@/lib/json-ld";
 
 // Same as /services: newly imported projects appear here within a minute, without a deploy.
 export const revalidate = 60;
@@ -92,7 +93,7 @@ export default async function ServiceDetailPage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
+            __html: jsonLd({
               "@context": "https://schema.org",
               "@type": "Service",
               "name": schema.name,

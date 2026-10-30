@@ -1,5 +1,7 @@
 // FAQPage structured data. Pass the same questions the page shows, so the markup matches the
 // visible text exactly. No ratings, results or other claims.
+import { jsonLd } from "@/lib/json-ld";
+
 export default function FaqSchema({ questions }: { questions: { q: string; a: string }[] }) {
   const data = {
     "@context": "https://schema.org",
@@ -10,5 +12,5 @@ export default function FaqSchema({ questions }: { questions: { q: string; a: st
       acceptedAnswer: { "@type": "Answer", text: a },
     })),
   };
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(data) }} />;
 }
