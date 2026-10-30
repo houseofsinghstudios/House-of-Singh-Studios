@@ -7,8 +7,8 @@ export type ServiceSlug = (typeof SERVICE_SLUGS)[number];
 
 // "Related thinking" on each service page, in this order. Each entry is the start of an article slug.
 export const RELATED_THINKING: Record<ServiceSlug, string[]> = {
-  "brand-identity": ["what-a-brand-identity-system-actually-includes", "rebrand-or-refresh", "how-much-does-brand-identity-design-cost"],
-  "digital-design": ["how-to-brief-a-design-studio", "why-your-brand-looks-different-everywhere"],
+  "brand-identity": ["what-a-brand-identity-system-actually-includes", "brand-guidelines-what-to-include", "branding-agency-pricing-toronto"],
+  "digital-design": ["how-much-does-a-website-cost-in-canada", "how-to-brief-a-design-studio", "why-your-brand-looks-different-everywhere"],
   "visual-media": ["why-your-brand-looks-different-everywhere", "ai-made-design-faster"],
   "creative-strategy": ["5-signs-your-brand-is-actively-costing-you", "what-ai-can-and-cannot-do-for-your-brand"],
 };
@@ -24,6 +24,9 @@ export const ARTICLE_LINES: Record<string, string> = {
   "ai-made-design-faster": "AI sped up production. Consistency still depends on creative direction.",
   "5-signs-your-brand-is-actively-costing-you": "Five signs your brand is working against the business instead of for it.",
   "what-ai-can-and-cannot-do-for-your-brand": "Where AI helps a design studio, and where the line sits for your brand.",
+  "brand-guidelines-what-to-include": "What brand guidelines should include, and why most teams stop using them.",
+  "branding-agency-pricing-toronto": "What Toronto studios and agencies charge, and how to compare their quotes.",
+  "how-much-does-a-website-cost-in-canada": "What a business website costs in Canada, by who builds it, with real numbers.",
 };
 
 // The line for an article card: the configured line, otherwise the fallback (its SEO description).
