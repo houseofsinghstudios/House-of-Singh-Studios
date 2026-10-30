@@ -33,6 +33,22 @@ export async function getArticleCards(): Promise<ArticleCard[]> {
   );
 }
 
+// The slugs of every published article, generated ahead by /insights/[slug]. Published means what
+// the sitemap counts: a slug, and not a draft or a release version. A failed read follows
+// readSanity: none while building (articles then render on their first visit), rethrown at runtime.
+const publishedArticleSlugsQuery = `*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))].slug.current`;
+
+export async function getPublishedArticleSlugs(): Promise<string[]> {
+  return readSanity(
+    "published article slugs",
+    async () => {
+      const slugs: unknown = await client.fetch(publishedArticleSlugsQuery);
+      return Array.isArray(slugs) ? slugs.filter((s): s is string => typeof s === "string" && s.length > 0) : [];
+    },
+    () => []
+  );
+}
+
 // Every published article for /llms.txt, newest first: its title and the description its page uses.
 // Published means what the sitemap counts: a slug, and not a draft or a release version. On any
 // failure, none: llms.txt keeps its deliberate fallback and does not use readSanity.
