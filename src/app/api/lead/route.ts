@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
-import { isEmail } from "@/lib/form-input";
+import { cleanSubmissionId, isEmail } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 import { checkReferralFields, isIntroduction, isPartnership, REFERRAL_LIMITS } from "@/lib/partners/forms";
@@ -114,6 +114,7 @@ export async function POST(request: Request) {
       return json({ success: false, error: referralInvalid }, 400);
     }
     const leadSource = cleanLeadSource(body.leadSource);
+    const submissionId = cleanSubmissionId(body.submissionId);
     const sanitized = {
       ...fields,
       ...(isIntroduction(fields.service) && {
@@ -129,6 +130,8 @@ export async function POST(request: Request) {
       // Where the session began (landing_page, referrer, utm_*), cleaned with the browser's rules.
       ...(leadSource && { leadSource }),
       source: "contact-form",
+      // The form's id for this submission, the same on a retry, for de-duplication in n8n.
+      ...(submissionId && { submissionId }),
       submittedAt: new Date().toISOString(),
     };
 

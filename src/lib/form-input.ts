@@ -35,3 +35,11 @@ export function stripTags(value: string): string {
 export function isEmail(value: unknown): value is string {
   return typeof value === "string" && value.length <= EMAIL_MAX && EMAIL.test(value);
 }
+
+// A submission id as the forms make it (submissionId() in src/lib/analytics.ts: 32 lowercase
+// hexadecimal characters), or undefined for anything else, which is then not sent to n8n.
+const SUBMISSION_ID = /^[0-9a-f]{32}$/;
+
+export function cleanSubmissionId(value: unknown): string | undefined {
+  return typeof value === "string" && SUBMISSION_ID.test(value) ? value : undefined;
+}

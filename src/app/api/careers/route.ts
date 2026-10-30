@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { checkCareers, cleanCareers } from "@/lib/careers";
+import { cleanSubmissionId } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 
@@ -39,6 +40,7 @@ export async function POST(request: NextRequest) {
       return json({ error: invalid }, 400);
     }
 
+    const submissionId = cleanSubmissionId(body.submissionId);
     const target = n8nTarget("N8N_CAREERS_WEBHOOK_URL");
     if ("missing" in target) {
       log.error(`${target.missing} is not configured`);
@@ -47,7 +49,13 @@ export async function POST(request: NextRequest) {
 
     const n8nResponse = await postToN8n(
       target,
-      { ...fields, source: "careers-page", submittedAt: new Date().toISOString() },
+      {
+        ...fields,
+        source: "careers-page",
+        // The form's id for this application, the same on a retry, for de-duplication in n8n.
+        ...(submissionId && { submissionId }),
+        submittedAt: new Date().toISOString(),
+      },
       10000,
     );
 

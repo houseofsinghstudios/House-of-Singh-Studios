@@ -3,6 +3,7 @@ import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanField } from "@/lib/lead";
 import { checkSubscribeEmail, SUBSCRIBE_EMAIL_MAX } from "@/lib/subscribe";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
+import { cleanSubmissionId } from "@/lib/form-input";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 
 const log = routeLog("subscribe");
@@ -40,6 +41,7 @@ export async function POST(request: Request) {
       return json({ success: false, error: invalid }, 400);
     }
 
+    const submissionId = cleanSubmissionId(body.submissionId);
     const target = n8nTarget("N8N_SUBSCRIBE_WEBHOOK_URL");
     if ("missing" in target) {
       log.error(`${target.missing} is not configured`);
@@ -48,7 +50,13 @@ export async function POST(request: Request) {
 
     const response = await postToN8n(
       target,
-      { email, source: typeof source === "string" && SOURCES.includes(source) ? source : DEFAULT_SOURCE, subscribedAt: new Date().toISOString() },
+      {
+        email,
+        source: typeof source === "string" && SOURCES.includes(source) ? source : DEFAULT_SOURCE,
+        // The form's id for this signup, the same on a retry, for de-duplication in n8n.
+        ...(submissionId && { submissionId }),
+        subscribedAt: new Date().toISOString(),
+      },
       10000,
     );
 
