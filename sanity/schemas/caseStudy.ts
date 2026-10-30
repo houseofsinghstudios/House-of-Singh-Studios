@@ -144,6 +144,8 @@ export default defineType({
       title: "Overview",
       type: "text",
       rows: 4,
+      // The card text on /work, the Business section and the search description fall back to it.
+      validation: (rule) => rule.required().error("Write an overview: it is the project's card text and its search description."),
     }),
     defineField({
       name: "challenge",
@@ -186,6 +188,9 @@ export default defineType({
             "Describe the image for people using screen readers. Leave empty to use the project title.",
         }),
       ],
+      // Without it the project's card on /work, the services pages and the case study hero is blank.
+      validation: (rule) =>
+        rule.custom((image: { asset?: unknown } | undefined) => (image?.asset ? true : "Add a featured image: it is the project's card and hero.")),
     }),
     defineField({
       name: "blocks",
@@ -263,6 +268,8 @@ export default defineType({
       name: "publishedAt",
       title: "Published At",
       type: "datetime",
+      // Every list of projects is ordered by it, newest first.
+      validation: (rule) => rule.required().error("Set the date: projects are listed newest first."),
     }),
   ],
   preview: {

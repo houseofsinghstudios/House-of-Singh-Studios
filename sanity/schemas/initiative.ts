@@ -34,6 +34,8 @@ export default defineType({
       title: "Tagline",
       type: "string",
       description: "One short line, for example One brand. Another possibility.",
+      // Shown on every initiative's row on /initiatives; empty, the row has a blank line.
+      validation: (rule) => rule.required().error("Write the tagline: it is shown on /initiatives."),
     }),
     defineField({
       name: "summary",
@@ -41,6 +43,7 @@ export default defineType({
       type: "text",
       rows: 3,
       description: "Two sentences, shown on the /initiatives page.",
+      validation: (rule) => rule.required().error("Write the summary: it is shown on /initiatives."),
     }),
     defineField({
       name: "status",

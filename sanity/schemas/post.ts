@@ -96,6 +96,8 @@ export default defineType({
       name: "body",
       title: "Body",
       type: "array",
+      // An article without a body is an empty page.
+      validation: (rule) => rule.required().min(1).error("Write the article: without a body the page is empty."),
       of: [
         defineArrayMember({
           type: "block",
