@@ -2,7 +2,7 @@
 // Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { DEBUG_KEY, INTERNAL_KEY, SENT_KEY, configParams, contactEvent, contentGroup, flagFromSearch, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, submissionId, syncDebugFlag, syncInternalFlag, track, trackOnce, trackPageView } from "@/lib/analytics";
+import { DEBUG_KEY, INTERNAL_KEY, SENT_KEY, configParams, contactEvent, contentGroup, flagFromSearch, isDiscoveryCallHref, leadParams, pageContext, safeService, setAllowed, startGtag, submissionId, syncDebugFlag, syncInternalFlag, track, trackOnce, trackPageView } from "@/lib/analytics";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
@@ -274,4 +274,71 @@ test("the list of sent submissions stays short", () => {
   assert.equal(list.length, 50);
   assert.equal(list.at(-1), "generate_lead:id-79");
   setAllowed(false);
+});
+
+// ── Debug mode and internal traffic: config only, never event parameters ──
+
+// Starts gtag on a stand in window, then sends a page view and an event through it, and returns
+// every queued command as plain arrays.
+function queued(internal: boolean, debug: boolean) {
+  const w: { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] } = {};
+  let tags = 0;
+  startGtag(w, internal, debug, () => { tags++; });
+  const g = (globalThis as unknown as { window: { gtag: unknown; location: Record<string, string> } }).window;
+  const saved = g.gtag;
+  g.gtag = w.gtag;
+  g.location.href = "https://studios.houseofsingh.com/careers";
+  setAllowed(true);
+  trackPageView("https://studios.houseofsingh.com/careers", "Careers");
+  track("generate_lead", { lead_type: "contact", debug_mode: true, traffic_type: "internal" });
+  setAllowed(false);
+  g.gtag = saved;
+  delete g.location.href;
+  return { tags, commands: (w.dataLayer as IArguments[]).map((a) => Array.from(a)) };
+}
+
+test("debug flag on: the config call carries debug_mode: true, before the first page view", () => {
+  const { tags, commands } = queued(false, true);
+  assert.equal(tags, 1);
+  assert.deepEqual(commands.map((c) => c[0] === "event" ? `event ${c[1]}` : c[0]), ["consent", "js", "config", "set", "event page_view", "event generate_lead"]);
+  const config = commands.find((c) => c[0] === "config")!;
+  assert.equal(config[1], "G-DKQYLQ90EK");
+  assert.equal((config[2] as Record<string, unknown>).debug_mode, true);
+  assert.ok(!("traffic_type" in (config[2] as object)));
+  assert.ok(commands.indexOf(config) < commands.findIndex((c) => c[1] === "page_view"), "config is queued before the first page view");
+});
+
+test("debug flag off: no debug_mode anywhere in the config", () => {
+  const config = queued(false, false).commands.find((c) => c[0] === "config")![2] as Record<string, unknown>;
+  assert.ok(!("debug_mode" in config));
+  assert.deepEqual(config, { send_page_view: false, allow_google_signals: false, allow_ad_personalization_signals: false });
+});
+
+test("internal flag: traffic_type in the config, as before", () => {
+  const config = queued(true, false).commands.find((c) => c[0] === "config")![2] as Record<string, unknown>;
+  assert.equal(config.traffic_type, "internal");
+  assert.ok(!("debug_mode" in config));
+});
+
+test("page views and every other event never carry debug_mode or traffic_type, whatever the flags", () => {
+  for (const [internal, debug] of [[false, false], [true, false], [false, true], [true, true]]) {
+    const { commands } = queued(internal, debug);
+    const sent = commands.filter((c) => c[0] === "event" || c[0] === "set");
+    assert.equal(sent.length, 3);
+    for (const c of sent) {
+      const params = (c[0] === "set" ? c[1] : c[2]) as Record<string, unknown>;
+      assert.ok(!("debug_mode" in params) && !("traffic_type" in params), JSON.stringify(c));
+    }
+    const lead = sent.find((c) => c[1] === "generate_lead")![2] as Record<string, unknown>;
+    assert.equal(lead.lead_type, "contact", "the event's own parameters still go");
+  }
+});
+
+test("startGtag runs once per page", () => {
+  const w: { gtag?: (...args: unknown[]) => void; dataLayer?: unknown[] } = {};
+  let tags = 0;
+  startGtag(w, false, true, () => { tags++; });
+  startGtag(w, true, false, () => { tags++; });
+  assert.equal(tags, 1);
+  assert.equal((w.dataLayer as IArguments[]).filter((a) => a[0] === "config").length, 1);
 });

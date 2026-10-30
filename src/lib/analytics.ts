@@ -8,6 +8,7 @@
 // not to the page they landed on. They are sent on each event rather than only with gtag's set
 // command, which does not add custom parameters such as content_group to the hits.
 
+import { GA_MEASUREMENT_ID } from "@/lib/constants/analytics";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { NOMINATION_SERVICES } from "@/lib/initiatives/nominations";
 import { PARTNER_SERVICES } from "@/lib/partners/forms";
@@ -142,6 +143,27 @@ export function configParams(internal: boolean, debug = false): EventParams {
   };
 }
 
+// ── Starting gtag ──
+
+type StartWindow = { gtag?: Gtag; dataLayer?: unknown[] };
+
+// The official snippet, run once consent is granted: the queue, consent, then the config call, which
+// carries debug_mode and traffic_type when their flags are set, before any page view or event. Then
+// the tag itself (loadTag). Once per page: a second call does nothing.
+export function startGtag(w: StartWindow, internal: boolean, debug: boolean, loadTag: () => void) {
+  if (w.gtag) return;
+  w.dataLayer = w.dataLayer || [];
+  w.gtag = function gtag() {
+    // gtag.js reads the arguments object itself, as in Google's snippet.
+    // eslint-disable-next-line prefer-rest-params
+    w.dataLayer!.push(arguments);
+  };
+  w.gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "granted" });
+  w.gtag("js", new Date());
+  w.gtag("config", GA_MEASUREMENT_ID, configParams(internal, debug));
+  loadTag();
+}
+
 // ── The gate ──
 
 let allowed = false;
@@ -171,8 +193,19 @@ function currentPage(): EventParams {
 
 // One event, with the current page's context. Never personal data: names, emails, phone numbers
 // and messages never go in params.
+// Settings that belong to the config call only. As event parameters gtag would send them as ordinary
+// ep. values (ep.debug_mode, ep.traffic_type) instead of switching on debug mode or internal traffic,
+// so no event or page view ever carries them.
+export const CONFIG_ONLY = ["debug_mode", "traffic_type"] as const;
+
+export function eventParams(params: EventParams): EventParams {
+  const out = { ...params };
+  for (const key of CONFIG_ONLY) delete out[key];
+  return out;
+}
+
 export function track(event: string, params: EventParams = {}) {
-  gtag()?.("event", event, { ...currentPage(), ...params });
+  gtag()?.("event", event, eventParams({ ...currentPage(), ...params }));
 }
 
 // ── Once per submission ──
@@ -231,7 +264,7 @@ export function trackOnce(event: string, id: string, params: EventParams = {}, s
 export function trackPageView(href: string, title: string) {
   const send = gtag();
   if (!send) return;
-  const page = pageContext(href, title);
+  const page = eventParams(pageContext(href, title));
   send("set", page);
   send("event", "page_view", page);
 }
