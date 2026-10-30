@@ -36,7 +36,8 @@ export default defineType({
       name: "internalName",
       title: "Internal name",
       type: "string",
-      description: "Not shown on the website.",
+      // The dataset is public: the site never shows this field, but anyone can read it from Sanity.
+      description: "Visible to anyone through Sanity's public data. Use a role or initials, never a full name.",
     }),
     defineField({
       name: "order",
