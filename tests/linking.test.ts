@@ -94,3 +94,14 @@ test("every related article has a one line summary in house style; new articles 
   assert.equal(articleLine(ARTICLES[1], "fallback"), ARTICLE_LINES["rebrand-or-refresh"]);
   assert.equal(articleLine("a-new-article", "Its SEO description."), "Its SEO description.");
 });
+
+test("/services: each service link says where it goes, never Learn More", async () => {
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync("src/components/services/ServicesClient.tsx", "utf8");
+  assert.doesNotMatch(src, /Learn More/);
+  for (const [slug, text] of [["brand-identity", "Explore Brand Identity"], ["visual-media", "Explore Visual Media"], ["digital-design", "Explore Digital Design"], ["creative-strategy", "Explore Creative Strategy"]]) {
+    assert.match(src, new RegExp(`slug: "${slug}",\\s*linkText: "${text}",`), slug);
+    // The accessible name starts with the visible words, then names the page.
+    assert.ok(serviceLinkLabel(slug, text).startsWith(`${text}: `), slug);
+  }
+});
