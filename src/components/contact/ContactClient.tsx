@@ -121,8 +121,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
       >
         <p
           data-hero-label
-          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-primary)]"
-          style={{ opacity: 0.4 }}
+          className="font-[var(--sans)] text-[11px] uppercase tracking-[0.15em] text-[color:var(--text-label)]"
         >
           (Contact)
         </p>
@@ -138,7 +137,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
         <p
           data-hero-sub
           className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[600px] mt-6"
-          style={{ opacity: 0.6 }}
+          style={{ opacity: 0.7 }}
         >
           Whether you are building a new brand or refining an existing one, the first step is the same. Tell us about your project.
         </p>

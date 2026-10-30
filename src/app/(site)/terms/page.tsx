@@ -25,13 +25,13 @@ export default function TermsPage() {
     ]} />
     <section className="legal-page" style={{ padding: "var(--hero-pt) var(--page-px) clamp(80px, 10vw, 120px)" }}>
       <div className="legal-content">
-        <p style={{ marginBottom: 24, fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-muted)" }}>
+        <p style={{ marginBottom: 24, fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-label)" }}>
           Legal
         </p>
         <h1 style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(32px, 4vw, 48px)", letterSpacing: "-0.025em", lineHeight: 1.1, color: "var(--text-primary)", margin: "0 0 16px" }}>
           Terms of Use
         </h1>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-muted)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
+        <p style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-label)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
           Last updated: October 29, 2026
         </p>
 

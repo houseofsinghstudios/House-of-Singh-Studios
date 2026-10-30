@@ -228,7 +228,7 @@ function InlineNewsletter() {
           type="submit"
           disabled={status === "submitting"}
           className="art-newsletter-submit"
-          style={{ opacity: status === "submitting" ? 0.4 : 0.6 }}
+          style={{ opacity: status === "submitting" ? 0.4 : 1 }}
         >
           Subscribe&nbsp;&rarr;
         </button>

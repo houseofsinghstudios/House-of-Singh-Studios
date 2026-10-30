@@ -254,7 +254,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontSize: 12,
             textTransform: "uppercase",
             letterSpacing: "0.15em",
-            opacity: 0.5,
+            color: "var(--text-label)",
             marginBottom: 20,
           }}
         >
@@ -283,7 +283,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontFamily: "var(--sans)",
             fontSize: 17,
             lineHeight: 1.6,
-            opacity: 0.6,
+            opacity: 0.7,
             maxWidth: 600,
             marginTop: 24,
           }}
@@ -303,7 +303,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            opacity: 0.4,
+            color: "var(--text-label)",
             marginBottom: 12,
           }}
         >
@@ -356,7 +356,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           fontSize: 12,
                           textTransform: "uppercase",
                           letterSpacing: "0.08em",
-                          opacity: 0.4,
+                          color: "var(--text-label)",
                           marginTop: 6,
                         }}
                       >
@@ -418,7 +418,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                                 fontSize: 11,
                                 textTransform: "uppercase",
                                 letterSpacing: "0.12em",
-                                opacity: 0.4,
+                                color: "var(--text-label)",
                                 marginBottom: 12,
                               }}
                             >
@@ -449,7 +449,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                               fontSize: 11,
                               textTransform: "uppercase",
                               letterSpacing: "0.12em",
-                              opacity: 0.4,
+                              color: "var(--text-label)",
                               marginBottom: 12,
                             }}
                           >
@@ -480,7 +480,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                               fontSize: 11,
                               textTransform: "uppercase",
                               letterSpacing: "0.12em",
-                              opacity: 0.4,
+                              color: "var(--text-label)",
                               marginBottom: 12,
                             }}
                           >
@@ -544,7 +544,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 fontSize: 12,
                 textTransform: "uppercase",
                 letterSpacing: "0.12em",
-                opacity: 0.4,
+                color: "var(--text-label)",
                 marginBottom: 16,
               }}
             >
@@ -580,6 +580,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
       {/* ── SECTION 3: APPLICATION FORM ── */}
       <section
         ref={formSectionRef}
+        className="surface-cloudy"
         data-clarity-mask="True"
         style={{
           padding: "120px var(--page-px)",
@@ -592,7 +593,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            opacity: 0.4,
+            color: "var(--text-label)",
             marginBottom: 24,
           }}
         >
@@ -800,7 +801,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            opacity: 0.4,
+            color: "var(--text-label)",
             marginBottom: 32,
           }}
         >

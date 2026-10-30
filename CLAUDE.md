@@ -31,10 +31,19 @@ These never change. They are the identity of House of Singh.
 | --bg-shift         | Cloudy White   | #E5E3E0   | Alternate sections, hover states, cards              |
 | --text-primary     | Obsidian Black | #22211F   | Headlines, primary text, dark section backgrounds   |
 | --text-secondary   | Gunmetal Gray  | #5C5B58   | Body text, descriptions                             |
-| --text-muted       | Marble Ash     | #A9A6A2   | Labels, metadata, dividers, muted elements          |
+| --text-muted       | Marble Ash     | #A9A6A2   | Hairlines, borders, dividers, decorative shapes; text on dark backgrounds |
+| --text-label       | Accessible Ash | #716F6C   | Small text on light backgrounds: labels, metadata, numbers, back links (4.64:1 on Silver Mist) |
 | --border           | Cloudy White   | #E5E3E0   | Dividers, borders, structural lines                 |
 
 No saturated colors. No gradients. No neon. The entire visual language operates in warm neutrals.
+
+Accessible Ash (decided 30 Oct 2026): every small text element on a light background uses --text-label,
+never Marble Ash: editorial labels, metadata lines, numbers, tags, back links, share labels, placeholders.
+Marble Ash stays for non text uses (hairlines, borders, dividers, decorative shapes) and for text on dark
+backgrounds, where it passes (6.6:1 on Obsidian). On Cloudy White panels (#E5E3E0) Accessible Ash
+is only 3.91:1, so small text there uses Gunmetal (5.3:1): the panel carries .surface-cloudy, which
+sets --text-label to Gunmetal for everything inside it. Dark section labels in Silver Mist at reduced opacity
+stay at 65 percent or more. Hovers that darken a label go from Accessible Ash to Obsidian.
 
 ### Typography
 
@@ -42,7 +51,7 @@ Font: Inter (--sans). Everywhere. No exceptions.
 Weights: 400 (regular) and 500 (medium) only.
 Headlines: Tight negative letter-spacing (-0.02em to -0.03em). This is the editorial signature.
 Body: 1.6 line height. Max width 680px.
-Labels: 11px, uppercase, letter-spacing 0.1em to 0.12em, --text-muted color.
+Labels: 11px, uppercase, letter-spacing 0.1em to 0.12em, --text-label color (--text-muted on dark backgrounds).
 
 ### Spacing
 
@@ -400,7 +409,7 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 - The Sanity services mirror (sanity/schemas/service.ts and scripts/import-services; the code is the source of truth).
 - The Sanity resilience helper (src/lib/sanity/resilience.ts).
 - Privacy and terms wording.
-- Known open design decision: Marble Ash editorial labels fail colour contrast; this is the owner's decision to make, not a defect to fix silently.
+- Accessible Ash for small text on light backgrounds, decided 30 Oct 2026 (--text-label, #716F6C), Gunmetal on Cloudy White panels (.surface-cloudy); Marble Ash for non text and for text on dark backgrounds.
 
 ---
 

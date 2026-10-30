@@ -97,7 +97,7 @@ export default function AILabClient() {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            color: "var(--text-muted)",
+            color: "var(--text-label)",
             margin: "0 0 16px",
           }}
         >
@@ -145,7 +145,7 @@ export default function AILabClient() {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            color: "var(--text-muted)",
+            color: "var(--text-label)",
             margin: "0 0 16px",
           }}
         >
@@ -255,7 +255,7 @@ export default function AILabClient() {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            color: "var(--text-muted)",
+            color: "var(--text-label)",
             margin: "0 0 16px",
           }}
         >
@@ -311,7 +311,7 @@ export default function AILabClient() {
             fontSize: 11,
             textTransform: "uppercase",
             letterSpacing: "0.12em",
-            color: "var(--text-muted)",
+            color: "var(--text-label)",
             margin: "0 0 12px",
           }}
         >
@@ -331,7 +331,7 @@ export default function AILabClient() {
         <p
           style={{
             fontSize: 14,
-            color: "var(--text-muted)",
+            color: "var(--text-label)",
             margin: 0,
             maxWidth: 480,
           }}

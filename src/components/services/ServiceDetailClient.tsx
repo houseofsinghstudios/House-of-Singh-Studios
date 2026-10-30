@@ -79,7 +79,7 @@ export default function ServiceDetailClient({
 
       {/* ═══ (01) WHAT YOU GET — Deliverables ═══ */}
       <section
-        className="svcd-deliverables"
+        className="svcd-deliverables surface-cloudy"
         style={{
           background: "var(--bg-shift)",
           padding: "clamp(48px, 8vw, 96px) var(--page-px)",
@@ -128,7 +128,7 @@ export default function ServiceDetailClient({
 
       {/* ═══ (03) WHO THIS IS FOR — Client Qualifier ═══ */}
       <section
-        className="svcd-qualifier"
+        className="svcd-qualifier surface-cloudy"
         style={{
           background: "var(--bg-shift)",
           padding: "clamp(48px, 8vw, 96px) var(--page-px)",
@@ -166,6 +166,7 @@ export default function ServiceDetailClient({
       {/* ═══ (06) RELATED WORK ═══ */}
       {hasRelatedWork && (
         <section
+          className="surface-cloudy"
           style={{
             background: "var(--bg-shift)",
             padding: "clamp(48px, 8vw, 96px) var(--page-px)",
