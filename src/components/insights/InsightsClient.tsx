@@ -3,23 +3,24 @@
 import { useState, useMemo } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import { urlFor } from "@/lib/sanity/image";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
-interface Post {
+// A post card. The image URLs are built on the server (src/app/(site)/insights/page.tsx): the
+// featured size and the card size, as any post can become the featured one.
+export interface InsightCard {
   _id: string;
   title: string;
   slug: { current: string };
-  featuredImage?: { asset?: { _ref?: string }; alt?: string };
+  featuredImage?: { alt?: string; featuredUrl: string; cardUrl: string };
   category?: string;
   publishedAt?: string;
   readingTime?: number;
 }
 
 interface InsightsClientProps {
-  posts: Post[];
+  posts: InsightCard[];
 }
 
 const POSTS_PER_PAGE = 6;
@@ -182,14 +183,11 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
               className="ins-featured css-reveal no-underline"
               data-cursor="view"
             >
-              {featuredPost.featuredImage?.asset && (
+              {featuredPost.featuredImage && (
                 <div className="ins-featured-img reveal-clip">
                   <div className="ins-featured-img-inner relative">
                     <Image
-                      src={urlFor(featuredPost.featuredImage)
-                        .width(1200)
-                        .height(675)
-                        .url()}
+                      src={featuredPost.featuredImage.featuredUrl}
                       alt={
                         featuredPost.featuredImage?.alt || featuredPost.title
                       }
@@ -224,14 +222,11 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                     data-cursor="view"
                     style={{ transitionDelay: `${i * 80}ms` }}
                   >
-                    {post.featuredImage?.asset && (
+                    {post.featuredImage && (
                       <div className="ins-card-img reveal-clip">
                         <div className="ins-card-img-inner relative">
                           <Image
-                            src={urlFor(post.featuredImage)
-                              .width(600)
-                              .height(338)
-                              .url()}
+                            src={post.featuredImage.cardUrl}
                             alt={post.featuredImage?.alt || post.title}
                             fill
                             style={{ objectFit: "cover" }}

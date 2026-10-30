@@ -8,7 +8,6 @@ import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import ShareButtons from "@/components/ShareButtons";
 import type { PortableTextReactComponents } from "@portabletext/react";
-import { urlFor } from "@/lib/sanity/image";
 import { calculateReadTime } from "@/lib/read-time";
 import { updatedLabel } from "@/lib/article-dates";
 import RgdLink, { RgdText } from "@/components/RgdLink";
@@ -17,7 +16,10 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { trackOnce } from "@/lib/analytics";
 import { createSubmissionKeeper } from "@/lib/submission-id";
 
+// src: the image URL at the size this page shows it, built on the server
+// (src/app/(site)/insights/[slug]/page.tsx).
 interface PostImage {
+  src?: string;
   asset?: {
     _id: string;
     url: string;
@@ -134,7 +136,7 @@ const portableTextComponents: Partial<PortableTextReactComponents> = {
         <figure className="art-figure reveal-clip">
           <div className="art-figure-inner">
             <Image
-              src={urlFor(value).width(1200).height(675).url()}
+              src={value.src}
               alt={value.alt || "Article image"}
               fill
               style={{ objectFit: "cover" }}
@@ -313,7 +315,7 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
             }}
           >
             <Image
-              src={urlFor(post.featuredImage).width(1600).height(900).url()}
+              src={post.featuredImage.src!}
               alt={post.featuredImage.alt || post.title}
               fill
               style={{ objectFit: "cover" }}
@@ -448,10 +450,7 @@ export default function InsightArticleClient({ post, endCta, relatedWork }: { po
                   <div className="ins-card-img">
                     <div className="ins-card-img-inner relative">
                       <Image
-                        src={urlFor(rp.featuredImage)
-                          .width(600)
-                          .height(338)
-                          .url()}
+                        src={rp.featuredImage.src!}
                         alt={rp.featuredImage.alt || rp.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
