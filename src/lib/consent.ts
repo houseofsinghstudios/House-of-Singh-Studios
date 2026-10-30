@@ -95,14 +95,27 @@ export function storeChoice(analytics: ConsentState, now = Date.now()): StoredCh
   return choice;
 }
 
-// Clarity's first party cookies. Removed when analytics are turned off.
-const CLARITY_COOKIES = ["_clck", "_clsk"];
+// The analytics cookies removed when analytics are turned off: Clarity's (_clck, _clsk) and Google
+// Analytics' (_ga, and one _ga_<id> per property, found by name). GA sets its cookies on the parent
+// domain (.houseofsingh.com) by default, so each is deleted host only, for this host and for every
+// parent domain above it, path "/".
+const ANALYTICS_COOKIES = ["_clck", "_clsk", "_ga"];
+const isGaPropertyCookie = (name: string) => name.startsWith("_ga_");
 
-function deleteClarityCookies() {
+function cookieNames(): string[] {
+  try {
+    return String(document.cookie || "").split(";").map((c) => c.split("=")[0].trim()).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+function deleteAnalyticsCookies() {
   const host = window.location.hostname;
   const parts = host.split(".");
   const domains = ["", host, ...parts.slice(1).map((_, i) => `.${parts.slice(i + 1).join(".")}`).filter((d) => d.split(".").length > 2)];
-  for (const name of CLARITY_COOKIES) {
+  const names = new Set([...ANALYTICS_COOKIES, ...cookieNames().filter(isGaPropertyCookie)]);
+  for (const name of names) {
     for (const domain of domains) {
       document.cookie = `${name}=; Max-Age=0; path=/${domain ? `; domain=${domain}` : ""}`;
     }
@@ -114,6 +127,6 @@ function deleteClarityCookies() {
 export function apply(state: ConsentState, w: ConsentWindow = window as ConsentWindow) {
   w.gtag?.("consent", "update", { analytics_storage: state });
   w.clarity?.("consentv2", { ad_Storage: "denied", analytics_Storage: state });
-  if (state === "denied") deleteClarityCookies();
+  if (state === "denied") deleteAnalyticsCookies();
   w.dispatchEvent?.(new CustomEvent(ANALYTICS_CONSENT_EVENT, { detail: state }));
 }
