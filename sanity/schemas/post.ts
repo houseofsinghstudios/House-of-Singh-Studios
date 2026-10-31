@@ -162,7 +162,7 @@ export default defineType({
       name: "relatedPosts",
       title: "Related Posts",
       description:
-        "Choose up to two articles to show at the end of this one, in this order. Leave empty to show the latest articles, the same category first.",
+        "Choose up to two articles to show at the end of this one, in this order. A slot left empty shows the latest article, the same category first.",
       type: "array",
       of: [
         defineArrayMember({

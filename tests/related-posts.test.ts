@@ -11,8 +11,18 @@ test("the editor's choice wins, in the order chosen", () => {
   assert.deepEqual(ids(relatedPostsFor([post("c2", "ai"), post("c1", "branding")], latest, current)), ["c2", "c1"]);
 });
 
-test("a single pick is shown alone, never topped up from the latest", () => {
-  assert.deepEqual(ids(relatedPostsFor([post("c1", "ai")], latest, current)), ["c1"]);
+test("a single pick comes first; the second slot is filled from the fallback, same category first", () => {
+  assert.deepEqual(ids(relatedPostsFor([post("c1", "ai")], latest, current)), ["c1", "l2"]);
+});
+
+test("the fill never repeats a pick, nor shows the article itself", () => {
+  const withPick = [post("l2", "branding"), post("now", "branding"), post("l1", "ai")];
+  assert.deepEqual(ids(relatedPostsFor([post("l2", "branding")], withPick, current)), ["l2", "l1"]);
+  assert.deepEqual(ids(relatedPostsFor([post("c1"), post("c1")], latest, current)), ["c1", "l2"]);
+});
+
+test("one pick and nothing else published: one card", () => {
+  assert.deepEqual(ids(relatedPostsFor([post("c1")], [], current)), ["c1"]);
 });
 
 test("only the first two picks are shown", () => {
@@ -20,7 +30,7 @@ test("only the first two picks are shown", () => {
 });
 
 test("a removed or unpublished pick, and the article itself, are skipped", () => {
-  assert.deepEqual(ids(relatedPostsFor([null, post("now", "branding"), post("c1")], latest, current)), ["c1"]);
+  assert.deepEqual(ids(relatedPostsFor([null, post("now", "branding"), post("c1")], latest, current)), ["c1", "l2"]);
 });
 
 test("an empty choice falls back to the latest, the same category first", () => {

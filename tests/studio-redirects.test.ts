@@ -75,10 +75,50 @@ test("the route: a failed lookup is the error itself, neither a 404 nor a redire
   await quiet(() => assert.rejects(resolveMissingSlug("/work/old", (path) => findStudioRedirect(path, failing, RUNTIME)), /fetch failed/));
 });
 
+test("/services only: an unreachable Sanity leaves the 404, logged with the [sanity] prefix", async () => {
+  const { findStudioRedirect, resolveMissingSlug } = await load();
+  const logged: string[] = [];
+  const { error, warn } = console;
+  console.error = console.warn = (line: string) => logged.push(line);
+  try {
+    const outcome = await resolveMissingSlug("/services/old", (path) => findStudioRedirect(path, failing, RUNTIME, { quiet: true }), { notFoundIfUnreachable: true });
+    assert.deepEqual(outcome, { notFound: true });
+  } finally {
+    Object.assign(console, { error, warn });
+  }
+  // One clear line per event, never readSanity's generic "rethrown" line as well.
+  assert.equal(logged.length, 1, logged.join(" | "));
+  assert.match(logged[0], /^\[sanity\] redirect lookup for "\/services\/old" failed, answered with the 404 .*fetch failed/);
+  // A redirect still wins when Sanity answers.
+  assert.deepEqual(await resolveMissingSlug("/services/old", found("/services/new", true), { notFoundIfUnreachable: true }), { redirect: { to: "/services/new", permanent: true } });
+});
+
+test("elsewhere the lookup keeps readSanity's single line, and the error stands", async () => {
+  const { findStudioRedirect } = await load();
+  const logged: string[] = [];
+  const { error, warn } = console;
+  console.error = console.warn = (line: string) => logged.push(line);
+  try {
+    await assert.rejects(findStudioRedirect("/work/old", failing, RUNTIME), /fetch failed/);
+    await assert.rejects(findStudioRedirect("/work/old", failing, RUNTIME, { quiet: true }), /fetch failed/);
+  } finally {
+    Object.assign(console, { error, warn });
+  }
+  assert.equal(logged.length, 1, logged.join(" | "));
+  assert.match(logged[0], /^\[sanity\] redirect for "\/work\/old" failed, rethrown/);
+});
+
+test("only /services takes the outage 404; insights, work and initiatives keep the error", () => {
+  assert.match(readFileSync("src/app/(site)/services/[slug]/page.tsx", "utf8"), /redirectOrNotFound\(`\/services\/\$\{slug\}`, \{ notFoundIfUnreachable: true \}\)/);
+  for (const route of ["insights", "work", "initiatives"]) {
+    assert.doesNotMatch(readFileSync(`src/app/(site)/${route}/[slug]/page.tsx`, "utf8"), /notFoundIfUnreachable/, route);
+  }
+});
+
 test("the four slug routes ask for a redirect before the 404", () => {
   for (const route of ["insights", "work", "services", "initiatives"]) {
     const src = readFileSync(`src/app/(site)/${route}/[slug]/page.tsx`, "utf8");
-    assert.match(src, new RegExp(`return redirectOrNotFound\\(\`/${route}/\\$\\{slug\\}\`\\)`), route);
+    assert.match(src, new RegExp(`return redirectOrNotFound\\(\`/${route}/\\$\\{slug\\}\`[,)]`), route);
     assert.doesNotMatch(src, /\bnotFound\(\)/, `${route}: no direct 404 left`);
   }
   const helper = readFileSync("src/lib/redirect-or-not-found.ts", "utf8");

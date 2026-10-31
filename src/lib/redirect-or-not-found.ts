@@ -5,8 +5,8 @@
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { resolveMissingSlug } from "@/lib/sanity/redirects";
 
-export async function redirectOrNotFound(path: string): Promise<never> {
-  const outcome = await resolveMissingSlug(path);
+export async function redirectOrNotFound(path: string, options?: { notFoundIfUnreachable?: boolean }): Promise<never> {
+  const outcome = await resolveMissingSlug(path, undefined, options);
   if ("redirect" in outcome) {
     const { to, permanent } = outcome.redirect;
     return permanent ? permanentRedirect(to) : redirect(to);
