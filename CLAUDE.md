@@ -378,7 +378,7 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /sitemap.xml, /llms.txt | Refreshed hourly |
 | /robots.txt, og and share images | Static |
 | /studio | Sanity Studio, own route group, no site chrome |
-| /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n |
+| /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n (contracts: docs/integrations/n8n.md) |
 | /api/consent-region | GET, decides strict consent regions |
 
 Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work. Unknown URLs give the site 404 (noindex).
