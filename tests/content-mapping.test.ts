@@ -28,6 +28,8 @@ function warnings<T>(run: () => T): { result: T; lines: string[] } {
 }
 
 const HASH = (n: number) => String(n).repeat(40).slice(0, 40);
+// Image URLs carry the configured project and dataset (CI sets the real ones).
+const IMAGES = `https://cdn\\.sanity\\.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/${process.env.NEXT_PUBLIC_SANITY_DATASET}/`;
 // A block image as blockImageProjection resolves it: the asset with its natural dimensions.
 const blockImage = (n: number, alt?: string, width = 1600, height = 1200) => ({
   ...(alt !== undefined && { alt }),
@@ -65,7 +67,7 @@ test("mapBlocks: every block type maps in order, with keys, sides, captions and 
   assert.equal(offset.image.alt, "Nivora");
   // Natural dimensions, never cropped or enlarged: width 2000 at most, fit max, modern format.
   assert.deepEqual([full.image.width, full.image.height], [2400, 1000]);
-  assert.match(full.image.src, /^https:\/\/cdn\.sanity\.io\/images\/test\/test\/3{40}-2400x1000\.jpg\?/);
+  assert.match(full.image.src, new RegExp(`^${IMAGES}3{40}-2400x1000\\.jpg\\?`));
   for (const param of ["w=2000", "fit=max", "auto=format"]) assert.ok(full.image.src.includes(param), param);
   assert.equal(full.caption, undefined, "an empty caption is left out");
   assert.equal(pair.images.length, 2);
@@ -140,7 +142,7 @@ test("mapSanityToProject: a complete case study becomes its /work entry", async 
   assert.equal(p.shortDescription, `${fullCaseStudy.overview.slice(0, 120)}…`, "over 120 characters is cut with an ellipsis");
   assert.equal(p.seoTitle, "Nivora", "an empty SEO title falls back to the title");
   assert.equal(p.seoDescription, fullCaseStudy.overview, "an empty SEO description falls back to the overview");
-  assert.match(p.image, /^https:\/\/cdn\.sanity\.io\/images\/test\/test\/8{40}-2400x1800\.jpg\?/);
+  assert.match(p.image, new RegExp(`^${IMAGES}8{40}-2400x1800\\.jpg\\?`));
   for (const param of ["w=1600", "q=80", "auto=format"]) assert.ok(p.image.includes(param), param);
   assert.ok(p.shareImage?.includes("w=1200") && p.shareImage.includes("h=630"), "share image is 1200x630");
   assert.deepEqual(p.sections.business.paragraphs, [fullCaseStudy.overview]);
