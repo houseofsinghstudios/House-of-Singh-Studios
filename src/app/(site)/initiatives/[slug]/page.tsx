@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/redirect-or-not-found";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import ParallelPage from "@/components/initiatives/ParallelPage";
 import CommonsPage from "@/components/initiatives/CommonsPage";
@@ -43,7 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProgrammePage({ params }: Props) {
   const { slug } = await params;
   const initiative = programmePage(slug, await getInitiativesForPage());
-  if (!initiative) notFound();
+  // No page for this slug (Foundry included): a redirect set up in Studio, or the 404.
+  if (!initiative) return redirectOrNotFound(`/initiatives/${slug}`);
   const projects = (await getProjectsByType([initiative.slug]))[initiative.slug];
 
   return (

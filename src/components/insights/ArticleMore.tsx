@@ -1,5 +1,5 @@
-// The end of an article: the previous and next articles, then up to two related posts (the same
-// category first, then the most recent others). Server rendered.
+// The end of an article: the previous and next articles, then the related posts the page chose
+// (src/lib/related-posts.ts). Server rendered.
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import type { AdjacentPost, RelatedPost } from "./InsightArticle";
@@ -9,13 +9,6 @@ function formatDateShort(dateString: string): string {
     month: "long",
     year: "numeric",
   }).format(new Date(dateString));
-}
-
-// Up to two related posts: the same category first, then filled from the others in their order.
-function pickRelated(related: RelatedPost[], category?: string): RelatedPost[] {
-  const same = related.filter((rp) => rp.category === category).slice(0, 2);
-  if (same.length >= 2) return same;
-  return [...same, ...related.filter((rp) => !same.find((r) => r._id === rp._id)).slice(0, 2 - same.length)];
 }
 
 export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: AdjacentPost; nextPost?: AdjacentPost }) {
@@ -64,8 +57,7 @@ export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: Adj
   );
 }
 
-export function ArticleRelated({ related, category }: { related: RelatedPost[]; category?: string }) {
-  const posts = pickRelated(related, category);
+export function ArticleRelated({ posts }: { posts: RelatedPost[] }) {
   if (posts.length === 0) return null;
   return (
     <section className="art-related-section">

@@ -5,6 +5,11 @@ import type { StructureResolver } from "sanity/structure";
 // their own titles, by their order. Everything else is listed as before.
 export const SINGLETONS = ["servicePricing"];
 
+// Types the site never reads: hidden from the desk and from every "create new" menu. Their schemas
+// and any existing documents stay (nothing is deleted). Testimonials and package prices live in the
+// code (src/lib/constants/homepage-data.ts, src/data/packages.ts).
+export const HIDDEN_TYPES = ["testimonial", "teamMember", "package"];
+
 const ORDERED_LISTS: Record<string, string> = {
   service: "Services (reference copy)",
   networkMember: "Network members",
@@ -20,7 +25,7 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType("servicePricing").documentId("servicePricing").title("Service Pricing")),
       S.divider(),
       ...S.documentTypeListItems()
-        .filter((item) => !SINGLETONS.includes(item.getId() ?? ""))
+        .filter((item) => ![...SINGLETONS, ...HIDDEN_TYPES].includes(item.getId() ?? ""))
         .map((item) => {
           const id = item.getId() ?? "";
           const title = ORDERED_LISTS[id];

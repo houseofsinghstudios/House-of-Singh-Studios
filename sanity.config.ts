@@ -4,7 +4,7 @@ import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./sanity/schemas";
-import { SINGLETONS, structure } from "./sanity/structure";
+import { HIDDEN_TYPES, SINGLETONS, structure } from "./sanity/structure";
 
 export default defineConfig({
   name: "hos-studios",
@@ -14,8 +14,8 @@ export default defineConfig({
   plugins: [structureTool({ structure }), visionTool()],
   schema: {
     types: schemaTypes,
-    // Singletons cannot be created again from the "new document" menu.
-    templates: (templates) => templates.filter((t) => !SINGLETONS.includes(t.schemaType)),
+    // Singletons cannot be created again from the "new document" menu, and hidden types not at all.
+    templates: (templates) => templates.filter((t) => ![...SINGLETONS, ...HIDDEN_TYPES].includes(t.schemaType)),
   },
   document: {
     // A singleton cannot be duplicated or deleted, only edited and published.

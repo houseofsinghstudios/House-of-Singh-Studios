@@ -19,7 +19,7 @@ export default defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
-      description: "The web address: /initiatives/<slug>.",
+      description: "The web address: /initiatives/<slug>. Changing this after publishing breaks existing links. Add a redirect below if you change it.",
       options: { source: "name", maxLength: 64 },
       validation: (rule) => rule.required(),
     }),
@@ -34,6 +34,8 @@ export default defineType({
       title: "Tagline",
       type: "string",
       description: "One short line, for example One brand. Another possibility.",
+      // Shown on every initiative's row on /initiatives; empty, the row has a blank line.
+      validation: (rule) => rule.required().error("Write the tagline: it is shown on /initiatives."),
     }),
     defineField({
       name: "summary",
@@ -41,6 +43,7 @@ export default defineType({
       type: "text",
       rows: 3,
       description: "Two sentences, shown on the /initiatives page.",
+      validation: (rule) => rule.required().error("Write the summary: it is shown on /initiatives."),
     }),
     defineField({
       name: "status",

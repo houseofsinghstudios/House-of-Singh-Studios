@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { redirectOrNotFound } from "@/lib/redirect-or-not-found";
 import { services, getServiceBySlug } from "@/data/services";
 import ServiceDetail from "@/components/services/ServiceDetail";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -75,7 +75,8 @@ export default async function ServiceDetailPage({
 }) {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
-  if (!service) notFound();
+  // Not a service: a redirect set up in Studio, or the 404.
+  if (!service) return redirectOrNotFound(`/services/${slug}`);
   const schema = serviceSchemaMap[slug];
   // Real case studies from Sanity that list this service. Empty if none, or if Sanity is unreachable.
   const [grouped, articleCards] = await Promise.all([getAllProjectsGroupedByService(), getArticleCards()]);

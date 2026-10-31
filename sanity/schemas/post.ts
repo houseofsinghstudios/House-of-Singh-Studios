@@ -16,6 +16,7 @@ export default defineType({
       name: "slug",
       title: "Slug",
       type: "slug",
+      description: "Changing this after publishing breaks existing links. Add a redirect below if you change it.",
       options: { source: "title", maxLength: 96 },
       validation: (rule) => rule.required(),
     }),
@@ -95,6 +96,8 @@ export default defineType({
       name: "body",
       title: "Body",
       type: "array",
+      // An article without a body is an empty page.
+      validation: (rule) => rule.required().min(1).error("Write the article: without a body the page is empty."),
       of: [
         defineArrayMember({
           type: "block",
@@ -159,7 +162,7 @@ export default defineType({
       name: "relatedPosts",
       title: "Related Posts",
       description:
-        "Select 2-3 related posts to show at the bottom of this article.",
+        "Choose up to two articles to show at the end of this one, in this order. Leave empty to show the latest articles, the same category first.",
       type: "array",
       of: [
         defineArrayMember({
@@ -167,7 +170,7 @@ export default defineType({
           to: [{ type: "post" }],
         }),
       ],
-      validation: (rule) => rule.max(3),
+      validation: (rule) => rule.max(2).unique(),
     }),
     defineField({
       name: "relatedServices",

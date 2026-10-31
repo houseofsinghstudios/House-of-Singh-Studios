@@ -9,6 +9,7 @@ import role from "./role";
 import servicePricing from "./servicePricing";
 import initiative from "./initiative";
 import networkMember from "./networkMember";
+import redirect from "./redirect";
 import { blockImage } from "./blocks/shared";
 import blockSplit from "./blocks/blockSplit";
 import blockOffset from "./blocks/blockOffset";
@@ -29,6 +30,7 @@ export const schemaTypes = [
   servicePricing,
   initiative,
   networkMember,
+  redirect,
   blockImage,
   blockSplit,
   blockOffset,

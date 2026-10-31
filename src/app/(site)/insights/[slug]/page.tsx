@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostBySlug } from "@/lib/sanity/queries";
 import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
@@ -10,6 +9,8 @@ import { insightImageUrl, shareImageUrl } from "@/lib/sanity/image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
+import { relatedPostsFor } from "@/lib/related-posts";
+import { redirectOrNotFound } from "@/lib/redirect-or-not-found";
 import RelatedWork from "@/components/insights/RelatedWork";
 import { SERVICE_TERMS, orgRef, personRef } from "@/lib/schema";
 import { jsonLd } from "@/lib/json-ld";
@@ -19,12 +20,13 @@ type WithImage = { asset?: unknown } & SanityImageSource;
 
 // The image URLs, built here so no Sanity code reaches the browser: the hero, every image in the
 // text and every related post's card, each as a plain src string beside the image it came from.
+// The related posts are the editor's choice, or the latest others (src/lib/related-posts.ts).
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const withImageUrls = (post: any) => ({
+const withImageUrls = ({ chosenPosts, latestPosts, ...post }: any) => ({
   ...post,
   featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage) } : post.featuredImage,
   body: post.body?.map((block: any) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
-  relatedPosts: post.relatedPosts?.map((rp: any) =>
+  relatedPosts: relatedPostsFor<any>(chosenPosts, latestPosts, post).map((rp: any) =>
     rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage) } } : rp),
 });
 /* eslint-enable @typescript-eslint/no-explicit-any */
@@ -81,9 +83,8 @@ export default async function InsightArticlePage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
 
-  if (!post) {
-    notFound();
-  }
+  // Sanity answered and there is no such article: a redirect set up in Studio, or the 404.
+  if (!post) return redirectOrNotFound(`/insights/${slug}`);
 
   // "Related work": up to two case studies for the article's services (src/lib/linking.ts).
   const services = servicesForArticle(post.slug.current, slugsOf(post.relatedServices));
