@@ -36,12 +36,22 @@ export async function findStudioRedirect(
 
 export type MissingSlug = { redirect: StudioRedirect } | { notFound: true };
 
-// What a slug route does once Sanity has answered that the slug does not exist: the Studio redirect
-// when there is one, otherwise the 404. A failed lookup throws (neither a 404 nor a redirect).
+// What a slug route does once it knows the slug does not exist: the Studio redirect when there is
+// one, otherwise the 404. A failed lookup throws (neither a 404 nor a redirect), except with
+// notFoundIfUnreachable: for /services/[slug], whose slugs come from the code, so "not a service" is
+// certain without Sanity and the page stays a 404 during an outage, as it always was.
 export async function resolveMissingSlug(
   path: string,
-  find: (path: string) => Promise<StudioRedirect | null> = findStudioRedirect
+  find: (path: string) => Promise<StudioRedirect | null> = findStudioRedirect,
+  { notFoundIfUnreachable = false }: { notFoundIfUnreachable?: boolean } = {}
 ): Promise<MissingSlug> {
-  const target = await find(path);
+  let target: StudioRedirect | null;
+  try {
+    target = await find(path);
+  } catch (error) {
+    if (!notFoundIfUnreachable) throw error;
+    console.error(`[sanity] redirect lookup for "${path}" failed, answered with the 404 (the slug is not in the code)`);
+    return { notFound: true };
+  }
   return target ? { redirect: target } : { notFound: true };
 }

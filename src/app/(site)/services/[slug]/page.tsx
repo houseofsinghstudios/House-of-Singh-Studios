@@ -75,8 +75,9 @@ export default async function ServiceDetailPage({
 }) {
   const { slug } = await params;
   const service = getServiceBySlug(slug);
-  // Not a service: a redirect set up in Studio, or the 404.
-  if (!service) return redirectOrNotFound(`/services/${slug}`);
+  // Not a service: a redirect set up in Studio, or the 404. Service slugs come from the code, so the
+  // 404 stands even when Sanity cannot be reached for the redirect lookup.
+  if (!service) return redirectOrNotFound(`/services/${slug}`, { notFoundIfUnreachable: true });
   const schema = serviceSchemaMap[slug];
   // Real case studies from Sanity that list this service. Empty if none, or if Sanity is unreachable.
   const [grouped, articleCards] = await Promise.all([getAllProjectsGroupedByService(), getArticleCards()]);

@@ -75,10 +75,34 @@ test("the route: a failed lookup is the error itself, neither a 404 nor a redire
   await quiet(() => assert.rejects(resolveMissingSlug("/work/old", (path) => findStudioRedirect(path, failing, RUNTIME)), /fetch failed/));
 });
 
+test("/services only: an unreachable Sanity leaves the 404, logged with the [sanity] prefix", async () => {
+  const { findStudioRedirect, resolveMissingSlug } = await load();
+  const logged: string[] = [];
+  const { error, warn } = console;
+  console.error = (line: string) => logged.push(line);
+  console.warn = () => {};
+  try {
+    const outcome = await resolveMissingSlug("/services/old", (path) => findStudioRedirect(path, failing, RUNTIME), { notFoundIfUnreachable: true });
+    assert.deepEqual(outcome, { notFound: true });
+  } finally {
+    Object.assign(console, { error, warn });
+  }
+  assert.ok(logged.some((line) => line.startsWith("[sanity] redirect lookup for \"/services/old\" failed")), logged.join(" | "));
+  // A redirect still wins when Sanity answers.
+  assert.deepEqual(await resolveMissingSlug("/services/old", found("/services/new", true), { notFoundIfUnreachable: true }), { redirect: { to: "/services/new", permanent: true } });
+});
+
+test("only /services takes the outage 404; insights, work and initiatives keep the error", () => {
+  assert.match(readFileSync("src/app/(site)/services/[slug]/page.tsx", "utf8"), /redirectOrNotFound\(`\/services\/\$\{slug\}`, \{ notFoundIfUnreachable: true \}\)/);
+  for (const route of ["insights", "work", "initiatives"]) {
+    assert.doesNotMatch(readFileSync(`src/app/(site)/${route}/[slug]/page.tsx`, "utf8"), /notFoundIfUnreachable/, route);
+  }
+});
+
 test("the four slug routes ask for a redirect before the 404", () => {
   for (const route of ["insights", "work", "services", "initiatives"]) {
     const src = readFileSync(`src/app/(site)/${route}/[slug]/page.tsx`, "utf8");
-    assert.match(src, new RegExp(`return redirectOrNotFound\\(\`/${route}/\\$\\{slug\\}\`\\)`), route);
+    assert.match(src, new RegExp(`return redirectOrNotFound\\(\`/${route}/\\$\\{slug\\}\`[,)]`), route);
     assert.doesNotMatch(src, /\bnotFound\(\)/, `${route}: no direct 404 left`);
   }
   const helper = readFileSync("src/lib/redirect-or-not-found.ts", "utf8");
