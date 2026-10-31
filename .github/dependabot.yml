@@ -12,6 +12,16 @@ updates:
     schedule:
       interval: "monthly"
     open-pull-requests-limit: 5
+    ignore:
+      # TypeScript 7 broke CI on 30 Oct 2026 (pull request #211). typescript-eslint, which
+      # eslint-config-next uses, supports TypeScript below 6.1 only. Revisit when it supports 7.
+      - dependency-name: "typescript"
+        versions: [">=7"]
+      # @types/node must match the Node major the site runs on (22: package.json engines, .nvmrc,
+      # CI). The @types/node 26 update broke CI on 30 Oct 2026 (pull request #210). Updates up to 22
+      # still arrive.
+      - dependency-name: "@types/node"
+        versions: [">=23"]
     groups:
       minor-and-patch:
         applies-to: version-updates
