@@ -79,17 +79,33 @@ test("/services only: an unreachable Sanity leaves the 404, logged with the [san
   const { findStudioRedirect, resolveMissingSlug } = await load();
   const logged: string[] = [];
   const { error, warn } = console;
-  console.error = (line: string) => logged.push(line);
-  console.warn = () => {};
+  console.error = console.warn = (line: string) => logged.push(line);
   try {
-    const outcome = await resolveMissingSlug("/services/old", (path) => findStudioRedirect(path, failing, RUNTIME), { notFoundIfUnreachable: true });
+    const outcome = await resolveMissingSlug("/services/old", (path) => findStudioRedirect(path, failing, RUNTIME, { quiet: true }), { notFoundIfUnreachable: true });
     assert.deepEqual(outcome, { notFound: true });
   } finally {
     Object.assign(console, { error, warn });
   }
-  assert.ok(logged.some((line) => line.startsWith("[sanity] redirect lookup for \"/services/old\" failed")), logged.join(" | "));
+  // One clear line per event, never readSanity's generic "rethrown" line as well.
+  assert.equal(logged.length, 1, logged.join(" | "));
+  assert.match(logged[0], /^\[sanity\] redirect lookup for "\/services\/old" failed, answered with the 404 .*fetch failed/);
   // A redirect still wins when Sanity answers.
   assert.deepEqual(await resolveMissingSlug("/services/old", found("/services/new", true), { notFoundIfUnreachable: true }), { redirect: { to: "/services/new", permanent: true } });
+});
+
+test("elsewhere the lookup keeps readSanity's single line, and the error stands", async () => {
+  const { findStudioRedirect } = await load();
+  const logged: string[] = [];
+  const { error, warn } = console;
+  console.error = console.warn = (line: string) => logged.push(line);
+  try {
+    await assert.rejects(findStudioRedirect("/work/old", failing, RUNTIME), /fetch failed/);
+    await assert.rejects(findStudioRedirect("/work/old", failing, RUNTIME, { quiet: true }), /fetch failed/);
+  } finally {
+    Object.assign(console, { error, warn });
+  }
+  assert.equal(logged.length, 1, logged.join(" | "));
+  assert.match(logged[0], /^\[sanity\] redirect for "\/work\/old" failed, rethrown/);
 });
 
 test("only /services takes the outage 404; insights, work and initiatives keep the error", () => {

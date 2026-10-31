@@ -14,19 +14,24 @@ type Fetch = (query: string, params: Record<string, string>) => Promise<unknown>
 
 const redirectQuery = `*[_type == "redirect" && from == $path] | order(_updatedAt desc) [0] { to, permanent }`;
 
+// quiet: the caller logs the failure itself (see resolveMissingSlug), so readSanity's generic line is
+// skipped. Either way a failure is thrown, never "no redirect".
 export async function findStudioRedirect(
   path: string,
   fetch: Fetch = (query, params) => client.fetch(query, params),
-  env?: SanityEnv
+  env?: SanityEnv,
+  { quiet = false }: { quiet?: boolean } = {}
 ): Promise<StudioRedirect | null> {
+  const read = async () => {
+    const found = (await fetch(redirectQuery, { path })) as { to?: unknown; permanent?: unknown } | null;
+    // Only a path on this site, and never back to the same path.
+    if (!found || !isSitePath(found.to) || found.to === path) return null;
+    return { to: found.to, permanent: found.permanent !== false };
+  };
+  if (quiet) return read();
   return readSanity(
     `redirect for "${path}"`,
-    async () => {
-      const found = (await fetch(redirectQuery, { path })) as { to?: unknown; permanent?: unknown } | null;
-      // Only a path on this site, and never back to the same path.
-      if (!found || !isSitePath(found.to) || found.to === path) return null;
-      return { to: found.to, permanent: found.permanent !== false };
-    },
+    read,
     (error) => {
       throw error;
     },
@@ -42,15 +47,18 @@ export type MissingSlug = { redirect: StudioRedirect } | { notFound: true };
 // certain without Sanity and the page stays a 404 during an outage, as it always was.
 export async function resolveMissingSlug(
   path: string,
-  find: (path: string) => Promise<StudioRedirect | null> = findStudioRedirect,
+  find?: (path: string) => Promise<StudioRedirect | null>,
   { notFoundIfUnreachable = false }: { notFoundIfUnreachable?: boolean } = {}
 ): Promise<MissingSlug> {
+  // With the outage 404, this function logs the failure, so the lookup stays quiet: one line.
+  const lookup = find ?? ((p: string) => findStudioRedirect(p, undefined, undefined, { quiet: notFoundIfUnreachable }));
   let target: StudioRedirect | null;
   try {
-    target = await find(path);
+    target = await lookup(path);
   } catch (error) {
     if (!notFoundIfUnreachable) throw error;
-    console.error(`[sanity] redirect lookup for "${path}" failed, answered with the 404 (the slug is not in the code)`);
+    const reason = error instanceof Error ? `${error.name}: ${error.message}`.slice(0, 200) : "unknown error";
+    console.error(`[sanity] redirect lookup for "${path}" failed, answered with the 404 as the slug is not in the code (${reason})`);
     return { notFound: true };
   }
   return target ? { redirect: target } : { notFound: true };
