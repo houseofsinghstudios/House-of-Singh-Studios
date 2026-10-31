@@ -22,15 +22,16 @@ const SITE_CSP = [
 
 // The embedded Sanity Studio at /studio: exactly what it ran with before the split, minus the
 // site's analytics hosts (the Studio has no analytics): Sanity's API, images, its bridge script
-// from core.sanity-cdn.com, and its version check against sanity-cdn.com (that one host, nothing
-// under it). 'unsafe-eval' stays here only (see the verification notes in the commit).
+// from core.sanity-cdn.com, its version check against sanity-cdn.com (that one host, nothing under
+// it), and its live updates over the project's own socket (wss://00iree4d.api.sanity.io).
+// 'unsafe-eval' stays here only (see the verification notes in the commit).
 const STUDIO_CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://core.sanity-cdn.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https://cdn.sanity.io",
   "font-src 'self' data:",
-  "connect-src 'self' https://*.sanity.io https://sanity-cdn.com",
+  "connect-src 'self' https://*.sanity.io https://sanity-cdn.com wss://00iree4d.api.sanity.io",
   "frame-src 'self'",
   "frame-ancestors 'none'",
   "object-src 'none'",
