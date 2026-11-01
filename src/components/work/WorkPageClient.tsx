@@ -228,7 +228,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
           /* ── GRID VIEW ── */
           <div className="wp-grid">
             {filteredProjects.map((project, i) => (
-              <WorkGridCard key={project.slug} project={project} index={i} onSelect={filterByTag} />
+              <WorkGridCard key={project.slug} project={project} index={i} onSelect={filterByTag} headingLevel={2} />
             ))}
           </div>
         )}
@@ -237,7 +237,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
       {/* ═══ MOBILE GRID (always visible on mobile) ═══ */}
       <div className="wp-mobile-grid" style={{ padding: "40px var(--page-px) 0" }}>
         {filteredProjects.map((project) => (
-          <WorkMobileCard key={project.slug} project={project} onSelect={filterByTag} />
+          <WorkMobileCard key={project.slug} project={project} onSelect={filterByTag} headingLevel={2} />
         ))}
       </div>
 

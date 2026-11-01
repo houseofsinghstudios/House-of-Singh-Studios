@@ -36,10 +36,14 @@ export function projectTags(project: WorkCard): DisciplineTag[] {
 interface CardProps {
   project: WorkCard;
   onSelect?: (value: string) => void;
+  // The card title's heading level: 2 where the cards sit straight under the page's h1 (/work),
+  // 3 inside a section that has its own h2 (the Initiatives pages). The look is the same.
+  headingLevel?: 2 | 3;
 }
 
 // Desktop grid card (1024px and wider), in .wp-grid.
-export function WorkGridCard({ project, index, onSelect }: CardProps & { index: number }) {
+export function WorkGridCard({ project, index, onSelect, headingLevel = 3 }: CardProps & { index: number }) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <Link
       href={`/work/${project.slug}`}
@@ -63,12 +67,12 @@ export function WorkGridCard({ project, index, onSelect }: CardProps & { index: 
       </div>
       <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={onSelect} />
       <div className="wp-grid-text-swap">
-        <h3
+        <Heading
           className="wp-grid-name"
           style={{ viewTransitionName: `project-${project.slug}` }}
         >
           {project.name}
-        </h3>
+        </Heading>
         <p className="wp-grid-desc">{project.shortDescription}</p>
       </div>
     </Link>
@@ -76,7 +80,8 @@ export function WorkGridCard({ project, index, onSelect }: CardProps & { index: 
 }
 
 // Phone and tablet card (below 1024px), in .wp-mobile-grid.
-export function WorkMobileCard({ project, onSelect }: CardProps) {
+export function WorkMobileCard({ project, onSelect, headingLevel = 3 }: CardProps) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
     <Link
       href={`/work/${project.slug}`}
@@ -94,7 +99,7 @@ export function WorkMobileCard({ project, onSelect }: CardProps) {
         </div>
       </div>
       <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={onSelect} />
-      <h3 className="wp-grid-name">{project.name}</h3>
+      <Heading className="wp-grid-name">{project.name}</Heading>
       <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
     </Link>
   );

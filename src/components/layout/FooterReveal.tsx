@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import Image from "next/image";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 
 export default function FooterReveal() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const taglineId = useId();
   const innerRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useMediaQuery(REDUCED_MOTION);
 
@@ -45,7 +46,9 @@ export default function FooterReveal() {
   }, [reduceMotion]);
 
   return (
-    <div className="ft-reveal" ref={sectionRef}>
+    // A named region, so the crest and its line sit in a landmark like the rest of the page (the
+    // footer is the page's one contentinfo landmark, and this block follows it outside the content).
+    <section className="ft-reveal" ref={sectionRef} aria-labelledby={taglineId}>
       <div className="ft-reveal-inner" ref={innerRef}>
         {/* next/image as in the header: the SVG unoptimized (next/image does not resize SVG). */}
         <Image
@@ -56,10 +59,10 @@ export default function FooterReveal() {
           height={99}
           unoptimized
         />
-        <p className="ft-reveal-tagline">
+        <p className="ft-reveal-tagline" id={taglineId}>
           Directed by humans. Accelerated by AI.
         </p>
       </div>
-    </div>
+    </section>
   );
 }
