@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/insights' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'Insights — House of Singh Studios',
+    title: 'Insights | House of Singh Studios',
     description: 'Articles from a Toronto design studio on brand identity, rebranding, websites and what they cost in Canada, with real numbers and practical frameworks.',
     url: 'https://studios.houseofsingh.com/insights',
     images: [DEFAULT_SHARE_IMAGE],

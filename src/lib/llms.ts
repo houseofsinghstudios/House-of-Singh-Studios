@@ -50,6 +50,7 @@ export function buildLlmsTxt(articles: LlmsArticle[]): string {
     ["Insights", articles.map((a) => link(a.title, `/insights/${a.slug}`, a.description || ARTICLE_FALLBACK))],
     ["Studio", [
       link("About", "/about", PAGE_DESCRIPTIONS.about),
+      link("AI Lab", "/ai", PAGE_DESCRIPTIONS.ai),
       link("Initiatives", "/initiatives", LANDING.description),
       link("Partners", "/partners", PARTNERS.description),
       link("Contact", "/contact", PAGE_DESCRIPTIONS.contact),

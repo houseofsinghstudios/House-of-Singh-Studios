@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/ai' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'AI Lab — House of Singh Studios',
+    title: 'AI Lab | House of Singh Studios',
     description: PAGE_DESCRIPTIONS.ai,
     url: 'https://studios.houseofsingh.com/ai',
     images: [DEFAULT_SHARE_IMAGE],

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
     default: 'House of Singh Studios | Brand Identity and Design, Toronto',
-    template: '%s — House of Singh Studios',
+    template: '%s | House of Singh Studios',
   },
   description: 'A design studio powered by AI systems and led by creative direction. Brand identity, visual media, digital design, and creative strategy for businesses that have outgrown their brand.',
   // No default og or twitter title and description: each page's own title and description
