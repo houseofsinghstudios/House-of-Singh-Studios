@@ -16,7 +16,6 @@ export interface Project {
   shortDescription: string;
   seoTitle: string;
   seoDescription: string;
-  gradient: string;
   image: string;
   // The 1200x630 share image (og:image) for Sanity case studies. Missing for the static fallback.
   shareImage?: string;
@@ -42,7 +41,6 @@ export const projects: Project[] = [
     workType: "Brand Identity",
     origin: "Client Project",
     year: "2024",
-    gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
     image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
     description:
       "Event branding and visual system for one of Canada\u2019s largest TEDx events.",

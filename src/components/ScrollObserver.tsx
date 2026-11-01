@@ -42,13 +42,10 @@ export default function ScrollObserver() {
       );
 
       const targets = document.querySelectorAll(
-        ".css-reveal:not(.in-view), .css-reveal-late:not(.in-view), .css-fade:not(.in-view), " +
+        ".css-reveal:not(.in-view), " +
         ".scroll-reveal-up:not(.in-view), .scroll-clip-reveal:not(.in-view), " +
         ".about-process-step:not(.in-view), " +
-        ".project-image-inner img:not(.in-view), " +
         ".founder-photo-reveal:not(.in-view), " +
-        ".argument-section .argument-step-row:not(.in-view), " +
-        ".argument-section .argument-left:not(.in-view), " +
         ".cta-section-mobile > div:first-child:not(.in-view), " +
         ".cta-section-mobile > h2:not(.in-view), " +
         ".cta-section-mobile > p:not(.in-view), " +
@@ -56,8 +53,6 @@ export default function ScrollObserver() {
         ".testimonials-section:not(.in-view), " +
         ".svc-accordion-row:not(.in-view), " +
         ".featured-work-item:not(.in-view), " +
-        ".clients-accordion-row:not(.in-view), " +
-        ".case-content-section:not(.in-view), " +
         ".reveal-clip:not(.in-view), .reveal-stagger-parent:not(.in-view), .reveal-text:not(.in-view), " +
         ".ins-card:not(.in-view), .ins-featured:not(.in-view), " +
         ".about-team-card:not(.in-view)"

@@ -67,7 +67,7 @@ Left-aligned by default. Maximum 2 font weights per page.
 
 Known exceptions, as built:
 - Box shadow: one, deliberate. Contact form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible). No other shadow is allowed.
-- Font weights: only 400 and 500 are loaded (src/app/layout.tsx), so only those render. One leftover font-weight: 300 sits in unused CSS (.clients-accordion-toggle) and is due for removal with the dead CSS.
+- Font weights: only 400 and 500 are loaded (src/app/layout.tsx), so only those render.
 
 ---
 
