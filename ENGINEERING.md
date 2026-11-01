@@ -85,6 +85,7 @@ Tests: tests/
 Import and indexing scripts: scripts/
 CI: .github/workflows/ci.yml
 Analytics notes: docs/analytics/
+Forms to n8n contracts (fields, limits, workflows, a checklist for changing a form): docs/integrations/n8n.md
 Health checks: docs/health/ (historical records, do not edit)
 Older audit reports: audits/AUDIT-YYYY-MM-DD-topic.md
 Operations layer: .claude/

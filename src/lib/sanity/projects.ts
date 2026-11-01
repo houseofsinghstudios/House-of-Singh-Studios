@@ -229,7 +229,8 @@ function mapBlock(raw: RawBlock, index: number, title: string): CaseStudyBlock |
   }
 }
 
-function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyBlock[] {
+// Exported for the content mapping tests (tests/content-mapping.test.ts), like the two mappers below.
+export function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyBlock[] {
   if (!Array.isArray(raw)) return [];
   const blocks: CaseStudyBlock[] = [];
   (raw as RawBlock[]).forEach((block, index) => {
@@ -246,7 +247,7 @@ function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyBlock[] 
 // ── Map Sanity caseStudy → Project (for /work list) ──
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapSanityToProject(doc: any, index: number): Project {
+export function mapSanityToProject(doc: any, index: number): Project {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -301,7 +302,7 @@ function mapSanityToProject(doc: any, index: number): Project {
 // ── Map Sanity caseStudy → ProjectDetail (for /work/[slug]) ──
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
+export function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
   // The cover's alt names the project and its primary discipline.

@@ -32,7 +32,7 @@ export default function PrivacyPage() {
           Privacy Policy
         </h1>
         <p className="legal-updated" style={{ fontFamily: "var(--sans)", fontSize: 13, color: "var(--text-label)", marginBottom: "clamp(40px, 5vw, 64px)" }}>
-          Last updated: October 29, 2026
+          Last updated: October 31, 2026
         </p>
 
         <div className="legal-body" style={{ fontFamily: "var(--sans)", fontSize: "clamp(15px, 1.1vw, 16px)", lineHeight: 1.75, color: "var(--text-secondary)", maxWidth: 680 }}>
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information you provide directly:</strong> name, email address, phone number, company name, project details, service interest, and budget range when you submit our contact form, book a discovery call, or subscribe to our communications. If you introduce a client to us as a partner, we also receive the name and contact details you give us for that client, which you confirm you have their permission to share.
           </p>
           <p style={{ margin: "0 0 12px" }}>
-            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>How your visit began, sent with an enquiry:</strong> when you send us a form (the contact form, the Project Planner, a partner introduction or application, or ask for your Brand Pulse result by email), we also receive how your visit to our website began. That means the first page you opened, the website that sent you (its domain only, such as google.com), and any campaign tags in that first link. Your browser keeps this for the current tab only, and it is never sent unless you submit a form.
+            <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>How your visit began, sent with an enquiry:</strong> when you send us a form (the contact form, the Project Planner, a partner introduction or application, or ask for your Brand Pulse result by email), we also receive how your visit to our website began. That means the first page you opened, the website that sent you (its domain only, such as google.com), and any campaign tags in that first link. Your browser keeps this for the current tab only. When you use Brand Pulse or the Project Planner, we also record anonymous steps, such as starting or completing the tool, together with how you arrived at it: the address of the page that sent you there (without any search terms), any campaign tags, the code in a partner&apos;s link if you followed one, and which part of our website you opened it from. These steps are not linked to your name or email address unless you choose to send us your details.
           </p>
           <p style={{ margin: "0 0 12px" }}>
             <strong style={{ color: "var(--text-primary)", fontWeight: 500 }}>Information collected automatically, when analytics are allowed:</strong> browser type, device information, pages visited, time spent on pages, the website that referred you, and general geographic location, through Google Analytics and Microsoft Clarity. We also record a few actions that matter to us: sending an enquiry or a brief, completing Brand Pulse, applying for a role, subscribing, clicking a link to book a call, and choices in the tools on our homepage. These record the kind of action (for example, which service you chose) and the page it happened on, never your name, email address, phone number or message. Our hosting provider&apos;s server logs also record IP addresses for security and to limit abuse of our forms.
