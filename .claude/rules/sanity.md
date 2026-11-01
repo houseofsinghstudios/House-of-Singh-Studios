@@ -35,4 +35,6 @@ Do not duplicate. Do not bypass.
 ## Environment variables
 
 NEXT_PUBLIC_SANITY_PROJECT_ID and NEXT_PUBLIC_SANITY_DATASET. Both must be in .env.example.
-Never hardcode project id or dataset.
+Never hardcode project id or dataset, with exactly one exception: the public project id and dataset
+fallback in src/lib/sanity/project.ts (public by design, used when the environment variables are
+missing). Read them from there; do not hardcode them anywhere else.
