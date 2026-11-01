@@ -8,6 +8,7 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { trackOnce } from "@/lib/analytics";
 import { createSubmissionKeeper } from "@/lib/submission-id";
+import { usePointerFocusFlag } from "@/lib/use-pointer-focus";
 import "./careers.css";
 
 /* ── Department label map ── */
@@ -184,6 +185,9 @@ export default function CareersClient({ roles }: CareersClientProps) {
   });
 
   const formSectionRef = useRef<HTMLDivElement>(null);
+  // Keyboard focus shows a 2px rule on each field; a mouse or touch press holds it back (careers.css).
+  const formRef = useRef<HTMLFormElement>(null);
+  usePointerFocusFlag(formRef, formState);
 
   function toggleRole(slug: string) {
     setExpandedRole((prev) => (prev === slug ? null : slug));
@@ -655,7 +659,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} data-clarity-mask="True">
+            <form ref={formRef} onSubmit={handleSubmit} data-clarity-mask="True">
               <div className="careers-form-field">
                 <label htmlFor="careers-name" className="careers-form-label">Name</label>
                 <input

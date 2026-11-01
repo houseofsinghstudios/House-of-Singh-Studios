@@ -68,14 +68,16 @@ export default function WorkSection({ projects }: WorkSectionProps) {
                 .join(" · ")}
             </p>
             <div className="featured-work-text-swap">
-              <h3
+              {/* h2: the section has no heading of its own (its label is not a heading), so the
+                  project names come straight after the page's h1. */}
+              <h2
                 className="featured-work-name"
                 style={{
                   viewTransitionName: `project-${project.href.split("/").pop()}`,
                 }}
               >
                 {project.name}
-              </h3>
+              </h2>
               <p className="featured-work-desc">{project.sentence}</p>
             </div>
           </Link>

@@ -48,7 +48,10 @@ export default function CustomCursor() {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const cursorEl = target.closest("[data-cursor]");
-      const state = cursorEl?.getAttribute("data-cursor") || "default";
+      const declared = cursorEl?.getAttribute("data-cursor") || "default";
+      // "link" and "expand" have no look of their own: they take the hover state, the same feedback
+      // every other link and button gets. "view" and "pause" keep their own states.
+      const state = declared === "link" || declared === "expand" ? "hover" : declared;
 
       // Check if hovering a link or button
       const isInteractive = target.closest(

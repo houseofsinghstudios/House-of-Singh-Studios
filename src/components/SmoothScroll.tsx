@@ -39,7 +39,35 @@ export default function SmoothScroll() {
 
     (window as unknown as Record<string, unknown>).__lenis = lenis;
 
+    // Keyboard focus stays in view. Lenis can leave the browser's own focus scroll behind, so a
+    // Tab that lands on an element hidden under the header or outside the window brings it to the
+    // middle of the view at once. Only Tab moves are handled: a mouse or touch press never scrolls
+    // here. With reduced motion Lenis is off and the browser scrolls focus into view itself.
+    let viaKeyboard = false;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Tab") viaKeyboard = true; };
+    const onPointer = () => { viaKeyboard = false; };
+    const onFocusIn = (e: FocusEvent) => {
+      const el = e.target;
+      if (!viaKeyboard || !(el instanceof HTMLElement)) return;
+      for (let node: HTMLElement | null = el; node; node = node.parentElement) {
+        const position = getComputedStyle(node).position;
+        if (position === "fixed" || position === "sticky") return;
+      }
+      const rect = el.getBoundingClientRect();
+      const top = document.querySelector(".site-header")?.getBoundingClientRect().bottom ?? 0;
+      const room = window.innerHeight - top;
+      if (rect.top >= top + 8 && rect.bottom <= window.innerHeight - 8) return;
+      const offset = rect.height < room ? -(top + (room - rect.height) / 2) : -(top + 24);
+      lenis.scrollTo(el, { offset, immediate: true });
+    };
+    document.addEventListener("keydown", onKey, true);
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("focusin", onFocusIn);
+
     return () => {
+      document.removeEventListener("keydown", onKey, true);
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("focusin", onFocusIn);
       cancelAnimationFrame(rafId);
       lenis.destroy();
       document.getElementById("lenis-styles")?.remove();

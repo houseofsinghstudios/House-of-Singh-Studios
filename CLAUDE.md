@@ -74,7 +74,7 @@ Zero serif fonts. Zero animation libraries. Zero generic component defaults.
 Left-aligned by default. Maximum 2 font weights per page.
 
 Known exceptions, as built:
-- Box shadow: one, deliberate. Contact form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible). No other shadow is allowed.
+- Box shadow: one, deliberate. Form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible, shared by the contact form, the Project Planner and Brand Pulse; careers.css for the careers form). No other shadow is allowed.
 - Font weights: only 400 and 500 are loaded (src/app/fonts.ts, shared by the root layout and the error page), so only those render.
 
 ---

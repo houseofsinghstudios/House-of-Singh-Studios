@@ -429,14 +429,18 @@ body {
   color: var(--text-label);
   background: none;
   border: none;
-  padding: 0;
+  /* Touch target: 4px above and below take the tap area to 24px or more; the matching negative
+     margin keeps the tag exactly where it was, and the underline sits 4px higher in the box so it
+     stays 2px under the text. */
+  padding: 4px 0;
+  margin: -4px 0;
   cursor: pointer;
   transition: color 0.2s ease;
 }
 .wp-grid-cat-tag::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 2px;
   left: 0;
   width: 100%;
   height: 1px;
@@ -1901,6 +1905,8 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   color: var(--text-primary);
   text-decoration: none;
   view-transition-name: site-logo;
+  /* Touch target: vertical padding on an inline link adds tap area without moving anything. */
+  padding: 6px 0;
 }
 
 /* ── Spacer ── */

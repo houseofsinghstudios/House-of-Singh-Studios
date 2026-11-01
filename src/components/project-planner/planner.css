@@ -400,11 +400,14 @@
   .site-header,
   .header-crest-wrap,
   footer,
-  .footer-reveal,
+  .ft-reveal,
   .next-page-link,
   .scroll-progress,
   .pp-no-print,
-  .pp-send {
+  .pp-send,
+  .custom-cursor-dot,
+  .custom-cursor-ring,
+  .cx-root {
     display: none !important;
   }
   .pp-root {
