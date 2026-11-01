@@ -91,7 +91,8 @@ AS BUILT (src/components/layout/Header.tsx):
 - Sticky header. At the top of the page the crest logo sits top left; once scrolled, the header becomes a thin bar with the text wordmark on the left.
 - Above 1080px: six text links on the right (Services, Work, AI Lab, About, Insights, Contact), with the underline wipe.
 - At 1080px and below: a hamburger button (aria-label "Open menu" / "Close menu", aria-expanded) replaces the links. It opens a full screen panel on --bg with the same six links stacked large and left aligned, and the studio email and location at the bottom. The page behind does not scroll while it is open.
-- Partners, Initiatives, Commons, Careers, Privacy and Terms are reached from the footer, not the header.
+- Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. Commons is linked from the About page and the Initiatives page instead.
+- Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
 NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped. Do not rebuild it without the owner's approval. Open accessibility work on the mobile panel (health check F-10): Escape to close, focus kept inside the panel, aria-controls.
 
