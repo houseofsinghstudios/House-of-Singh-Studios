@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPostBySlug } from "@/lib/sanity/queries";
+import { getPostBySlug, type ArticleCardDoc, type ArticleDoc } from "@/lib/sanity/queries";
 import { getPublishedArticleSlugs } from "@/lib/sanity/articles";
 import InsightArticle from "@/components/insights/InsightArticle";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
@@ -21,15 +21,13 @@ type WithImage = { asset?: unknown } & SanityImageSource;
 // The image URLs, built here so no Sanity code reaches the browser: the hero, every image in the
 // text and every related post's card, each as a plain src string beside the image it came from.
 // The related posts are the editor's choice, or the latest others (src/lib/related-posts.ts).
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const withImageUrls = ({ chosenPosts, latestPosts, ...post }: any) => ({
+const withImageUrls = ({ chosenPosts, latestPosts, ...post }: ArticleDoc) => ({
   ...post,
-  featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage) } : post.featuredImage,
-  body: post.body?.map((block: any) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
-  relatedPosts: relatedPostsFor<any>(chosenPosts, latestPosts, post).map((rp: any) =>
-    rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage) } } : rp),
+  featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage as WithImage) } : post.featuredImage,
+  body: post.body?.map((block) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
+  relatedPosts: relatedPostsFor<ArticleCardDoc>(chosenPosts, latestPosts, post).map((rp) =>
+    rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage as WithImage) } } : rp),
 });
-/* eslint-enable @typescript-eslint/no-explicit-any */
 const slugsOf = (refs: unknown): string[] =>
   Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];
 

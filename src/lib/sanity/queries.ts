@@ -62,8 +62,49 @@ const relatedCardFields = `_id,
           ${assetWithMetadata}
         }`;
 
-export async function getPostBySlug(slug: string) {
-  return readSanity(`article "${slug}"`, () => client.fetch(
+// An article as getPostBySlug reads it (before the page builds the image URLs).
+export interface ArticleImage {
+  _type?: string;
+  asset?: { _id: string; url: string; metadata?: { dimensions?: { width: number; height: number }; lqip?: string } };
+  alt?: string;
+  crop?: { top: number; bottom: number; left: number; right: number };
+  hotspot?: { x: number; y: number };
+}
+export interface ArticleLink {
+  title: string;
+  slug: { current: string };
+  category?: string;
+}
+export interface ArticleCardDoc extends ArticleLink {
+  _id: string;
+  publishedAt?: string;
+  featuredImage?: ArticleImage;
+}
+export type ArticleBodyBlock = { _type: string; _key?: string; children?: Array<{ text?: string }> } & ArticleImage;
+type Reference = { _id: string; title?: string; slug?: { current?: string } } | null;
+export interface ArticleDoc {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  featuredImage?: ArticleImage;
+  category?: string;
+  tags?: string[];
+  keyTakeaways?: string[];
+  body?: ArticleBodyBlock[];
+  relatedServices?: Reference[] | null;
+  relatedCaseStudies?: Reference[] | null;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+  _updatedAt?: string;
+  previousPost?: ArticleLink | null;
+  nextPost?: ArticleLink | null;
+  chosenPosts?: (ArticleCardDoc | null)[] | null;
+  latestPosts?: ArticleCardDoc[] | null;
+}
+
+export async function getPostBySlug(slug: string): Promise<ArticleDoc | null> {
+  return readSanity(`article "${slug}"`, () => client.fetch<ArticleDoc | null>(
     `*[_type == "post" && slug.current == $slug && ${PUBLISHED}][0] {
       _id,
       title,

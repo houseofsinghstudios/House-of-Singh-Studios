@@ -1,5 +1,6 @@
 import { client } from "./client";
 import { shareImageUrl, urlFor } from "./image";
+import type { SanityImageSource } from "@sanity/image-url";
 import { readSanity } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
 import { coverAlt, projectAlt } from "@/lib/alt-text";
@@ -90,6 +91,47 @@ const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true && ${P
   featuredImage
 }`;
 
+// ── What the case study queries return ──
+
+// A Sanity image as the queries project it: the asset reference (or the resolved asset), alt text,
+// and the editor's crop and hotspot.
+export interface CaseImage {
+  _key?: string;
+  asset?: { _ref?: string; _id?: string; url?: string } | null;
+  alt?: string;
+  caption?: string;
+  crop?: { top: number; bottom: number; left: number; right: number };
+  hotspot?: { x: number; y: number };
+}
+
+// A case study document. Every field may be missing on an incomplete document, so the mappers below
+// never assume one is there.
+export interface CaseStudyDoc {
+  _id?: string;
+  title?: string;
+  slug?: string;
+  client?: string;
+  industry?: string;
+  year?: string | number;
+  overview?: unknown;
+  challenge?: PortableTextBlock[];
+  approach?: PortableTextBlock[];
+  deliverables?: string[];
+  results?: PortableTextBlock[];
+  featuredImage?: CaseImage | null;
+  blocks?: unknown;
+  gallery?: CaseImage[] | null;
+  testimonial?: unknown;
+  featured?: boolean;
+  projectType?: unknown;
+  serviceCategories?: unknown;
+  disciplines?: unknown;
+  workDelivered?: unknown;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+}
+
 // ── Portable Text → plain text ──
 
 interface PortableTextBlock {
@@ -107,22 +149,20 @@ function portableTextToPlain(blocks: PortableTextBlock[] | undefined): string[] 
 
 // ── Sanity image → URL string ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanityImageUrl(img: any): string {
+function sanityImageUrl(img: CaseImage | null | undefined): string {
   if (!img?.asset) return "";
   try {
-    return urlFor(img).width(1600).auto("format").quality(80).url();
+    return urlFor(img as SanityImageSource).width(1600).auto("format").quality(80).url();
   } catch {
     return "";
   }
 }
 
 // The case study's share image: its cover cropped to 1200x630, or "" without one.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanityShareImageUrl(img: any): string {
+function sanityShareImageUrl(img: CaseImage | null | undefined): string {
   if (!img?.asset) return "";
   try {
-    return shareImageUrl(img);
+    return shareImageUrl(img as SanityImageSource);
   } catch {
     return "";
   }
@@ -232,8 +272,7 @@ export function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyB
 
 // ── Map Sanity caseStudy → Project (for /work list) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapSanityToProject(doc: any, index: number): Project {
+export function mapSanityToProject(doc: CaseStudyDoc, index: number): Project {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -286,8 +325,8 @@ export function mapSanityToProject(doc: any, index: number): Project {
 
 // ── Map Sanity caseStudy → ProjectDetail (for /work/[slug]) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
+// "order" is every case study's slug and title in the /work order, for the next project link.
+export function mapSanityToProjectDetail(doc: CaseStudyDoc, order: Array<Pick<CaseStudyDoc, "slug" | "title">>): ProjectDetail {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
   // The cover's alt names the project and its primary discipline.
@@ -295,16 +334,15 @@ export function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetai
 
   // Build gallery images
   const galleryImages: ProjectDetailImage[] = (doc.gallery || [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((img: any) => ({
+    .map((img) => ({
       src: sanityImageUrl(img),
       alt: projectAlt(doc.title || "", img.alt),
     }))
     .filter((img: ProjectDetailImage) => img.src);
 
   // Find next project (circular)
-  const currentIdx = allDocs.findIndex((d) => d.slug === doc.slug);
-  const nextDoc = allDocs[(currentIdx + 1) % allDocs.length] || allDocs[0];
+  const currentIdx = order.findIndex((d) => d.slug === doc.slug);
+  const nextDoc = order[(currentIdx + 1) % order.length] || order[0];
 
   // Build deliverables with descriptions
   const deliverables = (doc.deliverables || []).map((d: string) => ({
@@ -389,7 +427,7 @@ export async function getAllProjects(): Promise<Project[]> {
   return readSanity(
     "all case studies",
     async () => {
-      const docs = await client.fetch(allProjectsQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(allProjectsQuery);
       return docs && docs.length > 0 ? docs.map(mapSanityToProject) : localProjects();
     },
     localProjects
@@ -400,7 +438,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return readSanity(
     `case study "${slug}"`,
     async () => {
-      const doc = await client.fetch(projectBySlugQuery, { slug });
+      const doc = await client.fetch<CaseStudyDoc | null>(projectBySlugQuery, { slug });
       return doc ? mapSanityToProject(doc, 0) : localProjectBySlug(slug);
     },
     (error) => localProjectOrRethrow(slug, error)
@@ -411,7 +449,7 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
   return readSanity(
     `case study detail "${slug}"`,
     async () => {
-      const { doc, order } = await client.fetch(projectDetailQuery, { slug });
+      const { doc, order } = await client.fetch<{ doc: CaseStudyDoc | null; order: Array<Pick<CaseStudyDoc, "slug" | "title">> | null }>(projectDetailQuery, { slug });
       return doc && Array.isArray(order) && order.length > 0 ? mapSanityToProjectDetail(doc, order) : localProjectDetail(slug);
     },
     async (error) => {
@@ -424,8 +462,7 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
 
 // ── Map Sanity caseStudy → HomepageProject (for homepage featured work) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapSanityToHomepageProject(doc: any): HomepageProject {
+function mapSanityToHomepageProject(doc: CaseStudyDoc): HomepageProject {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -448,7 +485,7 @@ export async function getFeaturedProjects(): Promise<HomepageProject[]> {
   return readSanity(
     "featured case studies",
     async () => {
-      const docs = await client.fetch(featuredProjectsQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(featuredProjectsQuery);
       return docs && docs.length > 0 ? docs.map(mapSanityToHomepageProject) : localFeaturedProjects();
     },
     localFeaturedProjects
@@ -505,8 +542,7 @@ const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategori
 
 type ServiceCategoryMap = Record<string, ServiceProject[]>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toServiceProject(doc: any): ServiceProject {
+function toServiceProject(doc: CaseStudyDoc): ServiceProject {
   return {
     slug: doc.slug || "",
     name: doc.title || "",
@@ -533,13 +569,12 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
   return readSanity(
     "case studies by service",
     async () => {
-      const docs = await client.fetch(serviceCategoryQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(serviceCategoryQuery);
       if (!docs || docs.length === 0) return empty;
 
       const grouped = { ...empty };
       // A project appears under every service it covers, once per service.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      docs.forEach((doc: any) => {
+      docs.forEach((doc) => {
         const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
         const project = toServiceProject(doc);
         for (const cat of new Set(categories)) {
@@ -558,7 +593,7 @@ export async function getProjectCards(): Promise<ServiceProject[]> {
   return readSanity(
     "case study cards",
     async () => {
-      const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) { ${caseStudyCardFields} }`);
+      const docs = await client.fetch<CaseStudyDoc[]>(`*[_type == "caseStudy" && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) { ${caseStudyCardFields} }`);
       return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
     },
     () => []

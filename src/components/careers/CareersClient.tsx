@@ -5,7 +5,7 @@ import { PortableText } from "@portabletext/react";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
-import type { PortableTextReactComponents } from "@portabletext/react";
+import type { PortableTextComponents, PortableTextMarkComponentProps } from "@portabletext/react";
 import { trackOnce } from "@/lib/analytics";
 import { createSubmissionKeeper } from "@/lib/submission-id";
 import { usePointerFocusFlag } from "@/lib/use-pointer-focus";
@@ -28,10 +28,11 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 /* ── Portable Text for role description ── */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-const roleTextComponents: Partial<PortableTextReactComponents> = {
+type LinkMark = { _type: "link"; href?: string };
+
+const roleTextComponents: PortableTextComponents = {
   block: {
-    normal: ({ children }: any) => (
+    normal: ({ children }) => (
       <p
         style={{
           fontFamily: "var(--sans)",
@@ -44,7 +45,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
         {children}
       </p>
     ),
-    h2: ({ children }: any) => (
+    h2: ({ children }) => (
       <h3
         style={{
           fontFamily: "var(--sans)",
@@ -59,7 +60,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
         {children}
       </h3>
     ),
-    h3: ({ children }: any) => (
+    h3: ({ children }) => (
       <h4
         style={{
           fontFamily: "var(--sans)",
@@ -75,13 +76,13 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
     ),
   },
   marks: {
-    strong: ({ children }: any) => (
+    strong: ({ children }) => (
       <strong style={{ fontWeight: 500 }}>{children}</strong>
     ),
-    em: ({ children }: any) => (
+    em: ({ children }) => (
       <em style={{ fontStyle: "italic" }}>{children}</em>
     ),
-    link: ({ children, value }: any) => {
+    link: ({ children, value }: PortableTextMarkComponentProps<LinkMark>) => {
       const href = value?.href || "";
       const isExternal = href.startsWith("http");
       return (
@@ -102,14 +103,14 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
     },
   },
   list: {
-    bullet: ({ children }: any) => (
+    bullet: ({ children }) => (
       <ul
         style={{ listStyleType: "disc", paddingLeft: 24, marginBottom: 16 }}
       >
         {children}
       </ul>
     ),
-    number: ({ children }: any) => (
+    number: ({ children }) => (
       <ol
         style={{ listStyleType: "decimal", paddingLeft: 24, marginBottom: 16 }}
       >
@@ -118,7 +119,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
     ),
   },
   listItem: {
-    bullet: ({ children }: any) => (
+    bullet: ({ children }) => (
       <li
         style={{
           fontFamily: "var(--sans)",
@@ -131,7 +132,7 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
         {children}
       </li>
     ),
-    number: ({ children }: any) => (
+    number: ({ children }) => (
       <li
         style={{
           fontFamily: "var(--sans)",
@@ -146,7 +147,6 @@ const roleTextComponents: Partial<PortableTextReactComponents> = {
     ),
   },
 };
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /* ── Types ── */
 interface Role {

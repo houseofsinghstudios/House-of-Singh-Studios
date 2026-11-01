@@ -53,8 +53,8 @@ interface Post {
   featuredImage?: PostImage;
   keyTakeaways?: string[];
   body?: ArticleBlock[];
-  previousPost?: AdjacentPost;
-  nextPost?: AdjacentPost;
+  previousPost?: AdjacentPost | null;
+  nextPost?: AdjacentPost | null;
   relatedPosts?: RelatedPost[];
 }
 
