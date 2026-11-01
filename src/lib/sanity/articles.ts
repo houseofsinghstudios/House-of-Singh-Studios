@@ -1,9 +1,10 @@
 // Article cards for "Related thinking" on the service pages: title, one line and read time only.
-// Published articles; the read time is worked out the same way as on /insights. Empty when there
+// Published articles; the read time is worked out on the server exactly as on the article itself. Empty when there
 // are none (or, while building, Sanity cannot be reached), and the row is then hidden.
 import { client } from "./client";
 import { readSanity } from "./resilience";
 import { loadLlmsArticles, type LlmsArticle } from "@/lib/llms";
+import { calculateReadTime, READ_TIME_BLOCKS } from "@/lib/read-time";
 
 export interface ArticleCard {
   slug: string;
@@ -17,7 +18,7 @@ const articleCardsQuery = `*[_type == "post" && defined(slug.current) && !(_id i
   title,
   "slug": slug.current,
   "line": coalesce(seoDescription, keyTakeaways[0], ""),
-  "readingTime": round(length(pt::text(body)) / 5 / 200)
+  ${READ_TIME_BLOCKS}
 }`;
 
 export async function getArticleCards(): Promise<ArticleCard[]> {
@@ -28,7 +29,7 @@ export async function getArticleCards(): Promise<ArticleCard[]> {
       if (!Array.isArray(docs)) return [];
       return docs
         .filter((d) => d && typeof d.slug === "string" && typeof d.title === "string")
-        .map((d) => ({ slug: d.slug, title: d.title, line: typeof d.line === "string" ? d.line : "", readingTime: Math.max(1, Number(d.readingTime) || 1) }));
+        .map((d) => ({ slug: d.slug, title: d.title, line: typeof d.line === "string" ? d.line : "", readingTime: Math.max(1, calculateReadTime(d.readBody)) }));
     },
     () => []
   );

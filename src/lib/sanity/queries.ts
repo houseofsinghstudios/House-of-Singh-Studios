@@ -1,22 +1,38 @@
 import { client } from "./client";
 import { readSanity } from "./resilience";
+import { calculateReadTime, READ_TIME_BLOCKS } from "@/lib/read-time";
 
 // A failed read in getAllPosts, getPostBySlug and getAllRoles follows readSanity (./resilience): the fallback only
 // while building or without Sanity; at runtime the error is rethrown so the last good page stays.
-export async function getAllPosts() {
-  return readSanity("articles", () => client.fetch(
-      // Card fields only: the whole list is sent to the browser for the filters, so the article
-      // bodies stay on the server (the read time is worked out here from them).
+// One article card for /insights, as sent to the browser (no body).
+export interface PostCard {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  featuredImage?: { alt?: string; crop?: { top: number; bottom: number; left: number; right: number }; hotspot?: { x: number; y: number }; asset?: { _id: string } };
+  category?: string;
+  publishedAt?: string;
+  readingTime: number;
+}
+
+export async function getAllPosts(): Promise<PostCard[]> {
+  return readSanity("articles", async () => {
+    // Card fields only: the whole list is sent to the browser for the filters, so the article
+    // bodies stay on the server. Only the text of the body blocks is fetched, the read time is
+    // worked out from it here exactly as on the article, and the text is dropped.
+    const posts = await client.fetch<Array<Omit<PostCard, "readingTime"> & { readBody?: Parameters<typeof calculateReadTime>[0] }>>(
       `*[_type == "post"] | order(featured desc, publishedAt desc) {
         _id,
         title,
         slug,
         featuredImage { alt, crop, hotspot, asset-> { _id } },
         category,
-        "readingTime": round(length(pt::text(body)) / 5 / 200),
+        ${READ_TIME_BLOCKS},
         publishedAt
       }`
-  ), () => []);
+    );
+    return (posts || []).map(({ readBody, ...post }) => ({ ...post, readingTime: calculateReadTime(readBody) }));
+  }, () => []);
 }
 
 // A related post card: title, date, category and image.
