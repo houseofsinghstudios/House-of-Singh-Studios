@@ -13,4 +13,7 @@ export const client = createClient({
   dataset,
   apiVersion: "2024-01-01",
   useCdn: true,
+  // Published content only, whatever the API version's default; the queries filter drafts and
+  // release versions as well.
+  perspective: "published",
 });

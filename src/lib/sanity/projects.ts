@@ -29,7 +29,12 @@ const blocksProjection = `blocks[] {
   _type == "blockFeature" => { caption, image ${blockImageProjection}, detail ${blockImageProjection} }
 }`;
 
-const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
+// Published documents only, the same filter in every query (and the client reads the published
+// perspective as well): no drafts, no release versions.
+const PUBLISHED = `!(_id in path("drafts.**")) && !(_id in path("versions.**"))`;
+
+// Everything a case study page and the /work list read.
+const caseStudyFields = `
   _id,
   title,
   "slug": slug.current,
@@ -60,42 +65,23 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   seoTitle,
   seoDescription,
   publishedAt
+`;
+
+// A case study card: the service pages' rows and the "Related work" row under an article.
+const caseStudyCardFields = `title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage`;
+
+const allProjectsQuery = `*[_type == "caseStudy" && ${PUBLISHED}] | order(publishedAt desc) {${caseStudyFields}}`;
+
+const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug && ${PUBLISHED}][0] {${caseStudyFields}}`;
+
+// A case study page: that case study in full, and every case study's slug and title in the /work
+// order, only to find the next project (the list wraps round).
+const projectDetailQuery = `{
+  "doc": ${projectBySlugQuery},
+  "order": *[_type == "caseStudy" && ${PUBLISHED}] | order(publishedAt desc) { "slug": slug.current, title }
 }`;
 
-const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] {
-  _id,
-  title,
-  "slug": slug.current,
-  client,
-  industry,
-  year,
-  overview,
-  challenge,
-  approach,
-  deliverables,
-  results,
-  featuredImage,
-  ${blocksProjection},
-  gallery[] {
-    _key,
-    asset,
-    alt,
-    caption,
-    hotspot,
-    crop
-  },
-  testimonial,
-  featured,
-  projectType,
-  ${serviceCategoriesProjection},
-  disciplines,
-  workDelivered,
-  seoTitle,
-  seoDescription,
-  publishedAt
-}`;
-
-const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | order(publishedAt desc) {
+const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true && ${PUBLISHED}] | order(publishedAt desc) {
   _id,
   title,
   "slug": slug.current,
@@ -425,10 +411,8 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
   return readSanity(
     `case study detail "${slug}"`,
     async () => {
-      const allDocs = await client.fetch(allProjectsQuery);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const doc = allDocs && allDocs.length > 0 ? allDocs.find((d: any) => d.slug === slug) : null;
-      return doc ? mapSanityToProjectDetail(doc, allDocs) : localProjectDetail(slug);
+      const { doc, order } = await client.fetch(projectDetailQuery, { slug });
+      return doc && Array.isArray(order) && order.length > 0 ? mapSanityToProjectDetail(doc, order) : localProjectDetail(slug);
     },
     async (error) => {
       const detail = await localProjectDetail(slug);
@@ -514,16 +498,9 @@ function firstSentence(text: unknown): string {
   return (match ? match[0] : trimmed).trim();
 }
 
-const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory))] | order(publishedAt desc) {
-  title,
-  "slug": slug.current,
-  ${serviceCategoriesProjection},
-  client,
-  industry,
-  overview,
-  disciplines,
-  projectType,
-  featuredImage
+const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory)) && ${PUBLISHED}] | order(publishedAt desc) {
+  ${caseStudyCardFields},
+  ${serviceCategoriesProjection}
 }`;
 
 type ServiceCategoryMap = Record<string, ServiceProject[]>;
@@ -581,9 +558,7 @@ export async function getProjectCards(): Promise<ServiceProject[]> {
   return readSanity(
     "case study cards",
     async () => {
-      const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current)] | order(publishedAt desc) {
-  title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage
-}`);
+      const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) { ${caseStudyCardFields} }`);
       return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
     },
     () => []
@@ -598,7 +573,7 @@ export interface PlannerCaseStudy {
   workDelivered: string[];
 }
 
-const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current) && count(workDelivered) > 0 && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current) && count(workDelivered) > 0 && ${PUBLISHED}] | order(publishedAt desc) {
   "title": title,
   "slug": slug.current,
   workDelivered
@@ -622,7 +597,7 @@ export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
 
 // ── Initiatives: published case studies of one project type, newest first ──
 
-const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) {
   title,
   "slug": slug.current,
   year,

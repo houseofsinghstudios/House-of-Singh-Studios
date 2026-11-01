@@ -12,7 +12,7 @@ export interface StudioRedirect {
 
 type Fetch = (query: string, params: Record<string, string>) => Promise<unknown>;
 
-const redirectQuery = `*[_type == "redirect" && from == $path] | order(_updatedAt desc) [0] { to, permanent }`;
+const redirectQuery = `*[_type == "redirect" && from == $path && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(_updatedAt desc) [0] { to, permanent }`;
 
 // quiet: the caller logs the failure itself (see resolveMissingSlug), so readSanity's generic line is
 // skipped. Either way a failure is thrown, never "no redirect".

@@ -14,7 +14,7 @@ export interface ArticleCard {
   readingTime: number;
 }
 
-const articleCardsQuery = `*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**"))] | order(publishedAt desc) {
+const articleCardsQuery = `*[_type == "post" && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
   title,
   "slug": slug.current,
   "line": coalesce(seoDescription, keyTakeaways[0], ""),
