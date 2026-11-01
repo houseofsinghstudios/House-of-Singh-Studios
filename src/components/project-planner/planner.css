@@ -71,7 +71,6 @@
   color: var(--text-primary);
   margin: 24px 0 0;
 }
-.pp-error,
 .pp-message {
   font-size: 13px;
   line-height: 1.5;

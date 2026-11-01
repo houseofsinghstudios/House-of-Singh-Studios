@@ -45,7 +45,7 @@ export default function PulseEmailForm({ id, buttonLabel, status, onSubmit }: Pr
           aria-describedby={error ? `${id}-email-error` : undefined}
           disabled={sending}
         />
-        {error && <p id={`${id}-email-error`} className="bp-error" role="alert">{error}</p>}
+        {error && <p id={`${id}-email-error`} className="form-error" role="alert">{error}</p>}
       </div>
       <div className="bp-honeypot" aria-hidden="true">
         <label htmlFor={`${id}-website-url`}>Leave empty</label>

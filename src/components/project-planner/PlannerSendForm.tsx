@@ -71,7 +71,7 @@ export default function PlannerSendForm({ onSend }: Props) {
               aria-describedby={error ? `pp-send-${f.key}-error` : undefined}
               disabled={sending}
             />
-            {error && <p id={`pp-send-${f.key}-error`} className="pp-error" role="alert">{error}</p>}
+            {error && <p id={`pp-send-${f.key}-error`} className="form-error" role="alert">{error}</p>}
           </div>
         );
       })}
@@ -91,7 +91,7 @@ export default function PlannerSendForm({ onSend }: Props) {
       </label>
       <p className="pp-small">{SEND.smallPrint} <Link href="/privacy" className="pp-link">{SEND.privacyLink}</Link>.</p>
       <button type="submit" className="btn-primary pp-btn" disabled={sending} aria-busy={sending}>{sending ? SEND.sending : SEND.button}</button>
-      {status === "error" && <p className="pp-error" role="alert">{SEND.failure}</p>}
+      {status === "error" && <p className="form-error" role="alert">{SEND.failure}</p>}
     </form>
   );
 }

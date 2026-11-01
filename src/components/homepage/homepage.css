@@ -539,7 +539,7 @@
   align-items: center;
   justify-content: center;
   background: none;
-  border: 1px solid rgba(26, 26, 26, 0.15);
+  border: 1px solid var(--overlay-15);
   color: var(--text-primary);
   cursor: pointer;
   transition: border-color 0.3s ease, background-color 0.3s ease;
@@ -549,7 +549,7 @@
 @media (hover: hover) {
   .testimonials-nav-btn:hover {
     border-color: var(--text-primary);
-    background: rgba(26, 26, 26, 0.03);
+    background: var(--overlay-3);
   }
 }
 

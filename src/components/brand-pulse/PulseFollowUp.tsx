@@ -73,7 +73,7 @@ function KeepIt({ lead, leadEmail, shareHref, onLead, onProfile }: Pick<Props, "
           <p className="bp-text">{KEEP_IT.text}</p>
           {lead === "error" && (
             <div className="bp-fallback" role="alert">
-              <p className="bp-error">{KEEP_IT.failure}</p>
+              <p className="form-error">{KEEP_IT.failure}</p>
               <p className="bp-fallback-link">{shareHref}</p>
             </div>
           )}

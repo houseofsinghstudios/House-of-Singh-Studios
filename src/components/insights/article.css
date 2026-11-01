@@ -47,17 +47,9 @@
   transition: color 0.3s ease;
 }
 
-.art-back-arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
 @media (hover: hover) {
   .art-back:hover {
     color: var(--text-primary);
-  }
-  .art-back:hover .art-back-arrow {
-    transform: translateX(-4px);
   }
 }
 
@@ -342,13 +334,6 @@
   font-size: 14px;
   color: var(--text-secondary);
   margin: 0;
-}
-
-.art-newsletter-error {
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--text-label);
-  margin: 8px 0 0;
 }
 
 /* ── Prev / Next navigation ── */

@@ -248,7 +248,7 @@
 
 .about-careers-text {
   font-size: 14px;
-  color: var(--gunmetal, #5C5B58);
+  color: var(--text-secondary);
   line-height: 1.6;
 }
 
@@ -257,7 +257,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 500;
-  color: var(--obsidian, #22211F);
+  color: var(--text-primary);
   text-decoration: none;
   transition: opacity 0.3s;
   display: inline-flex;

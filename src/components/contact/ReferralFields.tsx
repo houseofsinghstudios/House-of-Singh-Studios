@@ -41,7 +41,7 @@ export function IntroductionFields({ permissionError, onPermission }: { permissi
           />
           <span>{FORM_COPY.permission}</span>
         </label>
-        <p id="contact-permission-error" className="contact-error" role="alert">
+        <p id="contact-permission-error" className="form-error contact-error" role="alert">
           {permissionError ? FORM_COPY.permissionError : ""}
         </p>
       </div>

@@ -77,8 +77,8 @@ export default function CaseStudyTemplate({
             "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 64px)",
         }}
       >
-        <Link href="/work" className="cs-back css-reveal">
-          <span className="cs-back-arrow">←</span> All Projects
+        <Link href="/work" className="cs-back back-link css-reveal">
+          <span className="back-arrow">←</span> All Projects
         </Link>
         <p
           className="cs-hero-meta css-reveal"

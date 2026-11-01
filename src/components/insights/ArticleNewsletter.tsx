@@ -90,7 +90,7 @@ export default function ArticleNewsletter() {
         </button>
       </form>
       {status === "error" && (
-        <p className="art-newsletter-error">Something went wrong. Try again.</p>
+        <p className="form-error">Something went wrong. Try again.</p>
       )}
     </div>
   );

@@ -89,7 +89,7 @@ export default function ServicesSection() {
               key={service.href}
               href={service.href}
               aria-label={serviceLinkLabel(service.href.split("/").pop() || "", service.title)}
-              className={`svc-accordion-row${isActive ? " svc-mob-active" : ""}`}
+              className={`svc-accordion-row row-bleed${isActive ? " svc-mob-active" : ""}`}
               data-cursor="view"
               onClick={(e) => handleTap(i, e)}
             >

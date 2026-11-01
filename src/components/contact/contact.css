@@ -11,7 +11,7 @@
 }
 
 .contact-col-right {
-  border-left: 1px solid rgba(26, 26, 26, 0.08);
+  border-left: 1px solid var(--overlay-8);
   padding-left: 80px;
 }
 
@@ -31,7 +31,7 @@
   color: var(--text-primary);
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--marble, #A9A6A2);
+  border-bottom: 1px solid var(--text-muted);
   padding: 12px 0;
   min-height: 80px;
   outline: none;
@@ -64,7 +64,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
   .contact-col-right {
     border-left: none;
     padding-left: 0;
-    border-top: 1px solid rgba(26, 26, 26, 0.08);
+    border-top: 1px solid var(--overlay-8);
     padding-top: 48px;
   }
 }
@@ -108,12 +108,7 @@ form:not([data-pointer-focus]) .contact-textarea:focus-visible + .focus-line {
 /* Inline field message under a contact field. Space for one line is always kept, so a message
  never moves the fields below it. */
 .contact-error {
-  font-family: var(--sans);
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-primary);
   min-height: 1.5em;
-  margin: 8px 0 0;
 }
 
 /* Narrow phones: the permission message runs to two lines, so two are kept. */

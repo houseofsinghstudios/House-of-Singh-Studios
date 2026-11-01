@@ -87,7 +87,7 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--marble, #A9A6A2);
+  border-bottom: 1px solid var(--text-muted);
   font-family: var(--sans);
   font-size: 16px;
   color: var(--text-primary);
@@ -102,7 +102,7 @@
 .careers-form-input:focus,
 .careers-form-select:focus,
 .careers-form-textarea:focus {
-  border-bottom-color: var(--obsidian, #22211F);
+  border-bottom-color: var(--text-primary);
 }
 
 .careers-form-input::placeholder,

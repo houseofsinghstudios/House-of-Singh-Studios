@@ -778,12 +778,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               {formState === "error" && (
                 <p
                   role="alert"
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 13,
-                    color: "#8B0000",
-                    marginTop: 12,
-                  }}
+                  className="form-error"
                 >
                   Something went wrong. Please try again or email us at{" "}
                   {STUDIO_EMAIL}

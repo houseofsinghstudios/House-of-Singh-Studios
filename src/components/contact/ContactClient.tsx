@@ -163,11 +163,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
           ) : (
             <>
               {error && (
-                <p
-                  role="alert"
-                  className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] mb-6"
-                  style={{ color: "rgba(139, 0, 0, 0.8)" }}
-                >
+                <p role="alert" className="form-error form-error--lead">
                   Something went wrong. Please try again or email us directly at{" "}
                   <a href={`mailto:${STUDIO_EMAIL}`} className="underline">
                     {STUDIO_EMAIL}

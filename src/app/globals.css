@@ -22,6 +22,15 @@
      hairlines, borders and decorative shapes, and for text on dark backgrounds (6.6:1 on Obsidian). */
   --text-label: #716F6C;
   --border: #E5E3E0;
+  /* Oxide: form and tool error text. A muted warm brick that sits with the neutrals: 7.4:1 on
+     Silver Mist, 6.2:1 on Cloudy White. Used only through .form-error. */
+  --error: #7A4136;
+  /* Overlays: #1A1A1A at set strengths, for soft hairlines, tints and scrims. */
+  --overlay-3: rgba(26, 26, 26, 0.03);
+  --overlay-8: rgba(26, 26, 26, 0.08);
+  --overlay-15: rgba(26, 26, 26, 0.15);
+  --overlay-50: rgba(26, 26, 26, 0.5);
+  --overlay-60: rgba(26, 26, 26, 0.6);
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
   --hero-pt: clamp(280px, 24vw, 340px);
@@ -92,10 +101,26 @@ body {
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  /* Light sweep on hover: the ::before slides in from the left. */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
 }
 @media (hover: hover) {
+  .btn-primary:hover::before {
+    transform: translateX(0);
+  }
   .btn-primary:hover {
-    opacity: 0.82;
+    opacity: 1;
   }
 }
 
@@ -115,10 +140,26 @@ body {
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
+  /* Dark fill sweep on hover; the text inverts. */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--text-primary);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
 }
 @media (hover: hover) {
+  .btn-secondary:hover::before {
+    transform: translateX(0);
+  }
   .btn-secondary:hover {
-    background: var(--text-primary);
+    background: transparent;
     color: var(--bg);
   }
 }
@@ -139,10 +180,26 @@ body {
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  /* Subtle dark sweep on hover. */
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-primary-inverted::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.05);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
 }
 @media (hover: hover) {
+  .btn-primary-inverted:hover::before {
+    transform: translateX(0);
+  }
   .btn-primary-inverted:hover {
-    opacity: 0.82;
+    opacity: 1;
   }
 }
 
@@ -215,8 +272,9 @@ body {
 .svc-accordion-row:last-child {
   border-bottom: 1px solid var(--border);
 }
-/* Full-bleed hover background */
-.svc-accordion-row::before {
+/* Full-bleed hover background, shared by the list rows (.row-bleed): Services rows, the Work list,
+   the next project row and the About process steps. Each row sets its own hover strength. */
+.row-bleed::before {
   content: '';
   position: absolute;
   top: 0;
@@ -277,6 +335,17 @@ body {
 @media (hover: hover) {
   .arrow-link:hover .arrow-icon {
     transform: translateX(6px);
+  }
+}
+
+/* Back links (case study, service and article heroes): the arrow nudges left on hover. */
+.back-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+@media (hover: hover) {
+  .back-link:hover .back-arrow {
+    transform: translateX(-4px);
   }
 }
 
@@ -1152,16 +1221,7 @@ body {
   position: relative;
 }
 .about-process-step::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  left: calc(-1 * var(--page-px));
-  right: calc(-1 * var(--page-px));
-  background: var(--bg-shift);
-  opacity: 0;
-  transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   pointer-events: none;
-  z-index: -1;
 }
 
 @media (hover: hover) {
@@ -1224,7 +1284,7 @@ body {
   color: var(--text-primary);
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--marble, #A9A6A2);
+  border-bottom: 1px solid var(--text-muted);
   padding: 12px 0;
   outline: none;
   transition: border-color 0.2s ease;
@@ -1289,6 +1349,24 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
 .pp-tick input:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
+}
+
+/* Form errors: one style for every form and tool message that says something went wrong or a
+   field needs attention. */
+.form-error {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--error);
+  margin: 8px 0 0;
+}
+.form-error a {
+  color: inherit;
+}
+/* A message that opens a form, above its first field. */
+.form-error--lead {
+  margin: 0 0 24px;
 }
 
 /* "Who recommended us?" opens under "How did you hear about us?" over 250ms, at once with reduced
@@ -1650,7 +1728,7 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   display: block;
   width: 2px;
   height: 14px;
-  background: rgba(26, 26, 26, 0.6);
+  background: var(--overlay-60);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1999,80 +2077,6 @@ body.nav-open .header-crest-wrap {
   }
 }
 
-/* ── Interaction 2: Button Hover Fill Sweep ── */
-
-/* Primary button — light sweep overlay */
-.btn-primary {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: -1;
-}
-@media (hover: hover) {
-  .btn-primary:hover::before {
-    transform: translateX(0);
-  }
-  .btn-primary:hover {
-    opacity: 1;
-  }
-}
-
-/* Secondary/outline button — dark fill sweep, text inverts */
-.btn-secondary {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.btn-secondary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--text-primary);
-  transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: -1;
-}
-@media (hover: hover) {
-  .btn-secondary:hover::before {
-    transform: translateX(0);
-  }
-  .btn-secondary:hover {
-    background: transparent;
-  }
-}
-
-/* Primary-inverted — subtle dark sweep */
-.btn-primary-inverted {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.btn-primary-inverted::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.05);
-  transform: translateX(-100%);
-  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  z-index: -1;
-}
-@media (hover: hover) {
-  .btn-primary-inverted:hover::before {
-    transform: translateX(0);
-  }
-  .btn-primary-inverted:hover {
-    opacity: 1;
-  }
-}
-
 /* ── Interaction 3: Staggered Scroll Reveals ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -2165,14 +2169,6 @@ td a {
   }
 }
 
-/* Exclude nav links and buttons from body link effect */
-.header-nav-link:hover,
-.btn-primary:hover,
-.btn-secondary:hover,
-.btn-primary-inverted:hover {
-  /* Already handled by their own hover effects */
-}
-
 /* ═══════════════════════════════════════════════════════
    UI/UX C: Inner Page Interactions
    ═══════════════════════════════════════════════════════ */
@@ -2239,7 +2235,7 @@ td a {
   display: block;
   width: 100%;
   height: 2px;
-  background: rgba(26, 26, 26, 0.5);
+  background: var(--overlay-50);
   transform: scaleX(0);
   transform-origin: center;
   transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -2565,7 +2561,7 @@ td a {
 }
 .svc-del-item::before {
   content: '·';
-  color: var(--marble, #A9A6A2);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
