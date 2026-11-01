@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     ...WEBSITE_OG,
     title: 'Contact — House of Singh Studios',
-    description: 'Start a conversation. Book a discovery call or send us a message about your project.',
+    description: PAGE_DESCRIPTIONS.contact,
     url: 'https://studios.houseofsingh.com/contact',
     images: [DEFAULT_SHARE_IMAGE],
   },
