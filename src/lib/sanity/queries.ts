@@ -1,38 +1,6 @@
 import { client } from "./client";
 import { readSanity } from "./resilience";
 
-export async function getAllServices() {
-  return client.fetch(
-    `*[_type == "service"] | order(order asc) {
-      _id,
-      title,
-      slug,
-      description,
-      deliverables,
-      featuredImage,
-      order
-    }`
-  );
-}
-
-export async function getServiceBySlug(slug: string) {
-  return client.fetch(
-    `*[_type == "service" && slug.current == $slug][0] {
-      _id,
-      title,
-      slug,
-      description,
-      deliverables,
-      processOverview,
-      featuredImage,
-      seoTitle,
-      seoDescription,
-      order
-    }`,
-    { slug }
-  );
-}
-
 // A failed read in getAllPosts, getPostBySlug and getAllRoles follows readSanity (./resilience): the fallback only
 // while building or without Sanity; at runtime the error is rethrown so the last good page stays.
 export async function getAllPosts() {
@@ -124,51 +92,6 @@ export async function getPostBySlug(slug: string) {
   ), (error) => { throw error; });
 }
 
-export async function getAllPackages() {
-  return client.fetch(
-    `*[_type == "package"] | order(order asc) {
-      _id,
-      name,
-      description,
-      includes,
-      idealFor,
-      featured,
-      order
-    }`
-  );
-}
-
-export async function getFeaturedCaseStudies() {
-  return client.fetch(
-    `*[_type == "caseStudy" && featured == true] | order(publishedAt desc) {
-      _id,
-      title,
-      slug,
-      client,
-      industry,
-      featuredImage,
-      overview
-    }`
-  );
-}
-
-export async function getSiteSettings() {
-  return client.fetch(
-    `*[_type == "siteSettings"][0] {
-      _id,
-      studioName,
-      tagline,
-      description,
-      email,
-      phone,
-      location,
-      instagramUrl,
-      linkedinUrl,
-      ogImage
-    }`
-  );
-}
-
 export const aboutPageQuery = `*[_type == "siteSettings"][0]{
   aboutStudioImage{
     asset->{_id, url, metadata{dimensions, lqip}},
@@ -203,24 +126,4 @@ export async function getAllRoles() {
       publishedAt
     }`
   ), () => []);
-}
-
-export async function getRoleBySlug(slug: string) {
-  return client.fetch(
-    `*[_type == "role" && slug.current == $slug && isActive == true][0] {
-      _id,
-      title,
-      slug,
-      department,
-      type,
-      location,
-      summary,
-      description,
-      responsibilities,
-      requirements,
-      niceToHave,
-      publishedAt
-    }`,
-    { slug }
-  );
 }

@@ -1,5 +1,4 @@
 import type { ProjectType } from "@/lib/initiatives/types";
-import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
 export const HERO = {
   label: "Creative Direction Studio",
@@ -12,26 +11,7 @@ export const HERO = {
   },
 };
 
-export const ARGUMENT = {
-  label: "The Problem",
-  heading: "Your business has evolved. Your brand has not.",
-  snap: "We fix that.",
-  steps: [
-    "Discover what your brand should be.",
-    "Design the system that makes it real.",
-    "Deliver assets that hold up everywhere.",
-  ],
-};
-
-export const STATS = {
-  items: [
-    { target: 50, suffix: "+", label: "Projects Delivered" },
-    { target: 12, suffix: "+", label: "Years of Practice" },
-    { target: 8, suffix: "+", label: "Industries Served" },
-  ],
-};
-
-export interface ServiceBlock {
+interface ServiceBlock {
   title: string;
   sentence: string;
   description: string;
@@ -76,8 +56,6 @@ export interface Project {
   href: string;
   // Missing means client work: no label.
   projectType?: ProjectType;
-  color: string;
-  accent: string;
   image: string;
 }
 
@@ -88,13 +66,11 @@ export const PROJECTS: Project[] = [
     sentence:
       "Event branding and visual system for one of Canada's largest TEDx events.",
     href: "/work/tedxtoronto",
-    color: "#2B2B2B",
-    accent: "#E62B1E",
     image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
   },
 ];
 
-export interface Testimonial {
+interface Testimonial {
   quote: string;
   author: string;
 }
@@ -121,13 +97,3 @@ export const TESTIMONIALS: Testimonial[] = [
     author: "Lovejot, Director, Planning and Logistics",
   },
 ];
-
-export const CTA = {
-  label: "Next Step",
-  heading: "Start a project.",
-  supporting: "",
-  buttons: {
-    primary: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL },
-    secondary: { text: "Start a Project", href: "/start" },
-  },
-};

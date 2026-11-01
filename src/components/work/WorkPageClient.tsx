@@ -9,6 +9,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import { WorkGridCard, WorkMobileCard, projectImage, projectTags, type WorkCard } from "@/components/work/WorkCards";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import "./work-page.css";
 
 type ViewMode = "list" | "grid";
 
@@ -186,7 +187,7 @@ export default function WorkPageClient({ projects, filters }: WorkPageClientProp
               <Link
                 key={project.slug}
                 href={`/work/${project.slug}`}
-                className="wp-list-row no-underline"
+                className="wp-list-row row-bleed no-underline"
                 style={{ transitionDelay: `${i * 60}ms` }}
                 onMouseEnter={() => setHoveredSlug(project.slug)}
                 onMouseLeave={() => setHoveredSlug(null)}

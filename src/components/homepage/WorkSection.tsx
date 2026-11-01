@@ -6,6 +6,7 @@ import type { Project } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { projectTypeLabel } from "@/lib/initiatives/types";
+import "./homepage.css";
 
 interface WorkSectionProps {
   projects: Project[];

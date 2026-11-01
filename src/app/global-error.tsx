@@ -5,9 +5,7 @@
 // itself). It replaces the whole document, so it has its own html and body, no site CSS, and
 // inline styles with the site's colour values. Same wording as (site)/error.tsx. Never indexed.
 import Link from "next/link";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"], weight: ["400", "500"], display: "swap" });
+import { inter } from "./fonts";
 
 const OBSIDIAN = "#22211F";
 const GUNMETAL = "#5C5B58";

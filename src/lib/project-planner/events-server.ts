@@ -9,6 +9,7 @@ import { referralCode } from "@/lib/campaign";
 import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
 import { capRaw, isEmail, stripTags } from "@/lib/form-input";
+import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "./config";
 import type { Answers, Optional, Pricing } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
@@ -38,12 +39,12 @@ function attribution(v: unknown) {
 }
 
 function website(v: unknown): string | null {
-  const raw = clean(v, 200);
+  const raw = clean(v, WEBSITE_LIMIT);
   if (!raw) return "";
   try {
     const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
     if (!u.hostname.includes(".")) return null;
-    return `${u.protocol}//${u.host.toLowerCase()}${u.pathname === "/" ? "" : u.pathname}`.slice(0, 200);
+    return `${u.protocol}//${u.host.toLowerCase()}${u.pathname === "/" ? "" : u.pathname}`.slice(0, WEBSITE_LIMIT);
   } catch {
     return null;
   }
@@ -54,7 +55,7 @@ function optional(v: unknown): Optional | string {
   if (o.investment !== undefined && o.investment !== null && o.investment !== "" && !validBand(o.investment)) return "Invalid investment";
   const site = website(o.website);
   if (site === null) return "Invalid website";
-  return { investment: validBand(o.investment) ? o.investment : undefined, website: site, importantDate: clean(o.importantDate, 60) };
+  return { investment: validBand(o.investment) ? o.investment : undefined, website: site, importantDate: clean(o.importantDate, IMPORTANT_DATE_LIMIT) };
 }
 
 function contact(v: unknown) {

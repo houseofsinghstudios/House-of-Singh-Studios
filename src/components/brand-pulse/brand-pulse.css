@@ -60,12 +60,6 @@
   color: var(--text-primary);
   margin: 16px 0 0;
 }
-.bp-error {
-  font-size: 13px;
-  line-height: 1.5;
-  color: var(--text-primary);
-  margin: 8px 0 0;
-}
 .bp-btn {
   margin-top: 24px;
 }

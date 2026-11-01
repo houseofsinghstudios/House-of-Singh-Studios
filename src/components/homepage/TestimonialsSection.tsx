@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { TESTIMONIALS } from "@/lib/constants/homepage-data";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
+import "./homepage.css";
 
 export default function TestimonialsSection() {
   const [active, setActive] = useState(0);

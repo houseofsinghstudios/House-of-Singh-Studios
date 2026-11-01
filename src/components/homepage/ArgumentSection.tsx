@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
+import "./homepage.css";
 
 const HEADLINE_WORDS = [
   "Your", "business", "has", "evolved.", "Your", "brand", "has", "not."

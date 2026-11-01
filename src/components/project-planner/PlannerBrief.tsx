@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ACTIONS, BRIEF, OPTIONAL } from "@/lib/project-planner/content";
 import { BAND_IDS, type ActionId, type BandId, type Brief, type Optional } from "@/lib/project-planner/types";
+import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "@/lib/project-planner/config";
 import OptionList from "./OptionList";
 
 export interface CaseStudyLink {
@@ -52,11 +53,11 @@ function OptionalDetails({ optional, onOptional }: Pick<Props, "optional" | "onO
       </fieldset>
       <div className="pp-field">
         <label className="contact-label" htmlFor="pp-website">{OPTIONAL.website} <span className="pp-muted">{OPTIONAL.optional}</span></label>
-        <input id="pp-website" className="contact-input" autoComplete="url" maxLength={200} value={optional.website ?? ""} onChange={(e) => onOptional({ website: e.target.value })} />
+        <input id="pp-website" className="contact-input" autoComplete="url" maxLength={WEBSITE_LIMIT} value={optional.website ?? ""} onChange={(e) => onOptional({ website: e.target.value })} />
       </div>
       <div className="pp-field">
         <label className="contact-label" htmlFor="pp-date">{OPTIONAL.importantDate} <span className="pp-muted">{OPTIONAL.optional}</span></label>
-        <input id="pp-date" className="contact-input" maxLength={60} placeholder={OPTIONAL.importantDatePlaceholder} value={optional.importantDate ?? ""} onChange={(e) => onOptional({ importantDate: e.target.value })} />
+        <input id="pp-date" className="contact-input" maxLength={IMPORTANT_DATE_LIMIT} placeholder={OPTIONAL.importantDatePlaceholder} value={optional.importantDate ?? ""} onChange={(e) => onOptional({ importantDate: e.target.value })} />
       </div>
     </details>
   );

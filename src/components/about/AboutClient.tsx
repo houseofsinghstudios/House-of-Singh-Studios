@@ -10,6 +10,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import type { NetworkCard } from "@/lib/about/network";
 import { RgdText } from "@/components/RgdLink";
 import NetworkGrid from "./NetworkGrid";
+import "./about.css";
 
 // A Sanity image as aboutPageQuery returns it. Crop values are fractions of the original trimmed
 // from each edge.
@@ -166,7 +167,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
           {STEPS.map((step, i) => (
             <div
               key={step.name}
-              className="about-process-step scroll-reveal-up"
+              className="about-process-step row-bleed scroll-reveal-up"
             >
               <div className="about-process-step-left">
                 <span className="about-process-ghost" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>

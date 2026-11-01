@@ -12,6 +12,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import ArticleBody, { type ArticleBlock } from "./ArticleBody";
 import ArticleNewsletter from "./ArticleNewsletter";
 import { ArticleAdjacent, ArticleRelated } from "./ArticleMore";
+import "./article.css";
 
 // src: the image URL at the size this page shows it, built by the article page.
 interface PostImage {
@@ -75,8 +76,8 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
     <>
       {/* ═══ HERO ═══ */}
       <section className="art-hero">
-        <Link href="/insights" className="art-back" data-cursor="link">
-          <span className="art-back-arrow">&#8592;</span>
+        <Link href="/insights" className="art-back back-link" data-cursor="link">
+          <span className="back-arrow">&#8592;</span>
           All Insights
         </Link>
 
@@ -181,8 +182,8 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
       <section style={{ padding: "0 var(--page-px)" }}>
         <div className="art-body">
           <div className="art-footer-divider" />
-          <Link href="/insights" className="art-back art-back--inline">
-            <span className="art-back-arrow">&#8592;</span>
+          <Link href="/insights" className="art-back art-back--inline back-link">
+            <span className="back-arrow">&#8592;</span>
             Back to Insights
           </Link>
           <ShareButtons

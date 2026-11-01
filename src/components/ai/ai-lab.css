@@ -1,0 +1,151 @@
+/* The AI Lab page (/ai). Moved from globals.css so only the pages that use these styles load them.
+   Imported by the components that render these classes; the shared base stays in globals.css. */
+
+/* ═══════════════════════════════════════════════════════
+ AI page
+ ═══════════════════════════════════════════════════════ */
+
+/* ── Comparison table ── */
+.ai-compare-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 1fr;
+  transition: background 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    margin 0.3s cubic-bezier(0.23, 1, 0.32, 1),
+    padding 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.ai-compare-data {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+}
+
+.ai-compare-data:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-compare-data:hover {
+  background: var(--bg-shift);
+  margin: 0 -20px;
+  padding: 16px 20px;
+}
+
+.ai-compare-header {
+  padding: 0 0 12px;
+}
+
+.ai-compare-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ai-compare-header .ai-compare-trad,
+.ai-compare-header .ai-compare-us {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-label);
+}
+
+.ai-compare-trad {
+  font-size: 13px;
+  color: var(--text-label);
+  line-height: 1.5;
+  padding-right: 24px;
+}
+
+.ai-compare-us {
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.5;
+  padding-left: 24px;
+  border-left: 2px solid var(--text-primary);
+}
+
+.ai-compare-header .ai-compare-us {
+  border-left: 2px solid transparent;
+}
+
+/* ── Argument grid (dark section) ── */
+.ai-argument-grid {
+  display: grid;
+  grid-template-columns: 5fr 4fr;
+  gap: clamp(32px, 4vw, 64px);
+  align-items: start;
+}
+
+/* ── Outcome grid ── */
+.ai-outcome-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+
+.ai-outcome-col {
+  padding: 24px 20px;
+  border-left: 1px solid var(--border);
+}
+
+.ai-outcome-col:first-child {
+  border-left: none;
+  padding-left: 0;
+}
+
+.ai-outcome-col:last-child {
+  padding-right: 0;
+}
+
+.ai-outcome-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0 0 8px;
+}
+
+.ai-outcome-body {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .ai-compare-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ai-compare-data {
+    padding: 16px 0;
+  }
+  .ai-compare-data:hover {
+    margin: 0;
+    padding: 16px 0;
+  }
+  .ai-compare-us {
+    border-left: 2px solid var(--text-primary);
+    padding-left: 12px;
+  }
+  .ai-compare-trad {
+    padding-right: 0;
+    padding-left: 12px;
+  }
+  .ai-compare-header {
+    display: none;
+  }
+  .ai-argument-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .ai-outcome-grid {
+    grid-template-columns: 1fr;
+  }
+  .ai-outcome-col {
+    border-left: none;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ai-outcome-col:last-child {
+    border-bottom: none;
+  }
+}

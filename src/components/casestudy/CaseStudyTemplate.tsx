@@ -13,6 +13,7 @@ import { projectTypeLabel } from "@/lib/initiatives/types";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import { serviceForCaseStudy, startHref } from "@/lib/project-planner/start-links";
+import "./case-study.css";
 
 // A service page this project demonstrates, with descriptive link text.
 export interface ServiceLink {
@@ -76,8 +77,8 @@ export default function CaseStudyTemplate({
             "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 64px)",
         }}
       >
-        <Link href="/work" className="cs-back css-reveal">
-          <span className="cs-back-arrow">←</span> All Projects
+        <Link href="/work" className="cs-back back-link css-reveal">
+          <span className="back-arrow">←</span> All Projects
         </Link>
         <p
           className="cs-hero-meta css-reveal"

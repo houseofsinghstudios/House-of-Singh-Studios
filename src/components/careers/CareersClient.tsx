@@ -8,6 +8,7 @@ import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import type { PortableTextReactComponents } from "@portabletext/react";
 import { trackOnce } from "@/lib/analytics";
 import { createSubmissionKeeper } from "@/lib/submission-id";
+import "./careers.css";
 
 /* ── Department label map ── */
 const DEPARTMENT_LABELS: Record<string, string> = {
@@ -777,12 +778,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               {formState === "error" && (
                 <p
                   role="alert"
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 13,
-                    color: "#8B0000",
-                    marginTop: 12,
-                  }}
+                  className="form-error"
                 >
                   Something went wrong. Please try again or email us at{" "}
                   {STUDIO_EMAIL}

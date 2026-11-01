@@ -263,7 +263,6 @@ export function mapSanityToProject(doc: any, index: number): Project {
     // Bare title: the root layout's title template adds the studio name.
     seoTitle: doc.seoTitle || doc.title || "",
     seoDescription: doc.seoDescription || overviewText,
-    gradient: "linear-gradient(155deg, #D8D2CA, #C8BFB4)",
     image: imageUrl,
     shareImage: sanityShareImageUrl(doc.featuredImage) || undefined,
     sections: {
@@ -452,8 +451,6 @@ function mapSanityToHomepageProject(doc: any): HomepageProject {
     sentence: overviewText.length > 160 ? overviewText.slice(0, 160) + "…" : overviewText,
     href: `/work/${doc.slug || ""}`,
     projectType: projectType(doc.projectType),
-    color: "#2B2B2B",
-    accent: "#C9A96E",
     image: imageUrl,
   };
 }

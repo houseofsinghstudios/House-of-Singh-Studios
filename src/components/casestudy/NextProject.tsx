@@ -11,7 +11,7 @@ export default function NextProject({ slug, name }: NextProjectProps) {
   return (
     <Link
       href={`/work/${slug}`}
-      className="cs-next-row"
+      className="cs-next-row row-bleed"
       data-cursor="expand"
     >
       <span className="cs-next-label editorial-label">(Next Project)</span>

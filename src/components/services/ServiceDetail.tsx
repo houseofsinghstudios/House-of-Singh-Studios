@@ -14,6 +14,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
+import "./service-detail.css";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":
@@ -53,8 +54,8 @@ export default function ServiceDetail({
         className="svcd-hero"
         style={{ padding: "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 80px)" }}
       >
-        <Link href="/services" className="svcd-back css-reveal">
-          <span className="svcd-back-arrow">←</span> Services
+        <Link href="/services" className="svcd-back back-link css-reveal">
+          <span className="back-arrow">←</span> Services
         </Link>
         <p className="editorial-label css-reveal" style={{ transitionDelay: "0ms", margin: "24px 0 12px" }}>
           (Services)

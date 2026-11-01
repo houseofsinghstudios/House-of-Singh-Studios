@@ -5,6 +5,7 @@ import { Link } from "next-view-transitions";
 import ProjectCardRow from "@/components/work/ProjectCardRow";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import type { ServiceLink } from "@/components/casestudy/CaseStudyTemplate";
+import "./article.css";
 
 export default function RelatedWork({ projects, services }: { projects: ServiceProject[]; services: ServiceLink[] }) {
   if (projects.length === 0 && services.length === 0) return null;

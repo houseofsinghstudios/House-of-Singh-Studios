@@ -34,8 +34,16 @@ These never change. They are the identity of House of Singh.
 | --text-muted       | Marble Ash     | #A9A6A2   | Hairlines, borders, dividers, decorative shapes; text on dark backgrounds |
 | --text-label       | Accessible Ash | #716F6C   | Small text on light backgrounds: labels, metadata, numbers, back links (4.64:1 on Silver Mist) |
 | --border           | Cloudy White   | #E5E3E0   | Dividers, borders, structural lines                 |
+| --error            | Oxide          | #7A4136   | Form and tool error text only, through .form-error (7.4:1 on Silver Mist, 6.2:1 on Cloudy White) |
 
 No saturated colors. No gradients. No neon. The entire visual language operates in warm neutrals.
+
+Oxide (decided 1 Nov 2026): the one error colour, a muted warm brick that sits with the neutrals. Every form
+and tool error (contact, careers, newsletter, Project Planner, Brand Pulse) uses the shared .form-error style:
+13px Inter, line height 1.5, Oxide, 8px above (.form-error--lead for a message that opens a form). The written
+message always shows next to its field or button; colour is never the only signal. Oxide is for nothing else.
+
+Overlays: --overlay-3, -8, -15, -50 and -60 are #1A1A1A at those strengths, for soft hairlines, tints and scrims.
 
 Accessible Ash (decided 30 Oct 2026): every small text element on a light background uses --text-label,
 never Marble Ash: editorial labels, metadata lines, numbers, tags, back links, share labels, placeholders.
@@ -67,7 +75,7 @@ Left-aligned by default. Maximum 2 font weights per page.
 
 Known exceptions, as built:
 - Box shadow: one, deliberate. Contact form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible). No other shadow is allowed.
-- Font weights: only 400 and 500 are loaded (src/app/layout.tsx), so only those render. One leftover font-weight: 300 sits in unused CSS (.clients-accordion-toggle) and is due for removal with the dead CSS.
+- Font weights: only 400 and 500 are loaded (src/app/fonts.ts, shared by the root layout and the error page), so only those render.
 
 ---
 

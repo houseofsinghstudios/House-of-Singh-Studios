@@ -58,7 +58,7 @@ export default function PulseStudioView({ email, onSubmit }: Props) {
               aria-describedby={f.key === "website" && error ? "bp-studio-website-error" : undefined}
               disabled={sending}
             />
-            {f.key === "website" && error && <p id="bp-studio-website-error" className="bp-error" role="alert">{error}</p>}
+            {f.key === "website" && error && <p id="bp-studio-website-error" className="form-error" role="alert">{error}</p>}
           </div>
         ))}
         <div className="bp-field">
@@ -76,7 +76,7 @@ export default function PulseStudioView({ email, onSubmit }: Props) {
       <button type="submit" className="btn-secondary bp-btn" disabled={sending} aria-busy={sending}>
         {sending ? STUDIO_VIEW.sending : STUDIO_VIEW.button}
       </button>
-      {status === "error" && <p className="bp-error" role="alert">{STUDIO_VIEW.failure}</p>}
+      {status === "error" && <p className="form-error" role="alert">{STUDIO_VIEW.failure}</p>}
     </form>
   );
 }
