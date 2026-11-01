@@ -786,21 +786,22 @@ body {
   .ft-tagline {
     display: none;
   }
+  /* Studio and Company side by side, each with its heading; then Start below across both, its heading
+     first and its four links in the same two columns, row by row. */
   .ft-columns {
     grid-template-columns: 1fr 1fr;
-    gap: 0;
+    gap: 24px 0;
   }
   .ft-col {
     gap: 0;
   }
-  .ft-col-head {
-    display: none;
-  }
-  /* Studio and Company side by side, then Start below across both, its links in the same two columns. */
   .ft-col:last-child {
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+  .ft-col:last-child .ft-col-head {
+    grid-column: 1 / -1;
   }
   .ft-col-link {
     font-size: 15px;

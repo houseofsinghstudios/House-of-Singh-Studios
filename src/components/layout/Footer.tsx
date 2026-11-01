@@ -7,7 +7,8 @@ import { CLARITY_HOST } from "@/lib/constants/clarity";
 import { PRIVACY_CHOICES_EVENT } from "@/components/consent/ConsentManager";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
-// Three columns, grouped by what the visitor wants: the work, the studio, a way to start.
+// Three columns of four links, grouped by what the visitor wants: the work, the studio, a way to start.
+// Commons is linked from the About page and the Initiatives page, not here.
 const STUDIO_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
@@ -18,7 +19,6 @@ const STUDIO_LINKS = [
 const COMPANY_LINKS = [
   { label: "About", href: "/about" },
   { label: "Initiatives", href: "/initiatives" },
-  { label: "Commons", href: "/initiatives/commons" },
   { label: "Partners", href: "/partners" },
   { label: "Careers", href: "/careers" },
 ];
