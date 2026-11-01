@@ -36,7 +36,9 @@ No client components when a server component would work. Every client component 
 No raw img tags. Always next/image (SVGs with unoptimized, as the header and footer crests do).
 No inline styles unless dynamic.
 
-Known gaps against these rules, to fix when the files are next touched, not as a reason to relax them: several client components could be server components (health check F-12), some client components have no top comment, about 400 static inline style objects remain (Careers, Privacy, Terms, AI Lab), and eight files exceed 300 lines (globals.css is about 6,000).
+Known gaps against these rules, to fix when the files are next touched, not as a reason to relax them: several client components could be server components (health check F-12), some client components have no top comment, about 400 static inline style objects remain (Careers, Privacy, Terms, AI Lab), and several files exceed 300 lines (globals.css is about 2,500; homepage.css about 800).
+
+Stylesheets: globals.css holds the tokens, base, header, footer and the styles shared across routes. Styles used by one route or feature live beside its components (for example components/casestudy/case-study.css, components/insights/article.css) and are imported by the components that render them, so a page loads only what it uses. A rule moved out of globals.css loads after it, so check that no later global rule of the same specificity used to override it.
 No box-shadow. No border-radius unless explicitly approved. No gradients. No serif fonts. See CLAUDE.md.
 
 ## Run commands

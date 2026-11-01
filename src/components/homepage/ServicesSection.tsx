@@ -6,6 +6,7 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
 import { serviceLinkLabel } from "@/lib/linking";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import "./homepage.css";
 
 const NUMBERS = ["01", "02", "03", "04"];
 

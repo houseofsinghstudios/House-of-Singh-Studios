@@ -1,0 +1,301 @@
+/* The About page. Moved from globals.css so only the pages that use these styles load them.
+   Imported by the components that render these classes; the shared base stays in globals.css. */
+
+.about-process-step-left {
+  position: relative;
+}
+
+.about-process-ghost {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(28px, 3vw, 40px);
+  letter-spacing: -0.03em;
+  color: var(--text-muted);
+  opacity: 0.3;
+  line-height: 1;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.about-process-name {
+  letter-spacing: -0.02em;
+  transition: color 0.3s ease;
+}
+
+@media (hover: hover) {
+  .about-process-step:hover .about-process-name {
+    letter-spacing: 0.01em;
+  }
+}
+
+/* ── Founder ── */
+.about-founder-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+@media (max-width: 899px) {
+  .about-process-ghost {
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .about-founder-grid {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+/* ── Hero clock ── */
+.about-clock-location,
+.about-clock-time {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-label);
+}
+
+/* Equal width digits, so the time never changes width as it ticks or when it first appears. */
+.about-clock-time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Before the browser knows the time: invisible placeholder digits keep the space. */
+.about-clock-pending {
+  visibility: hidden;
+}
+
+.about-clock-colon {
+  animation: colonBlink 2s ease-in-out infinite;
+}
+
+@keyframes colonBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── Typographic Duel: "A studio, not an agency" ── */
+.about-duel-heading {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: clamp(32px, 4vw, 48px);
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--text-primary);
+  margin: 0 0 clamp(48px, 6vw, 80px);
+}
+
+.about-duel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+.about-duel-col {
+  min-width: 0;
+}
+
+.about-duel-header {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 32px;
+}
+
+.about-duel-header--we {
+  color: var(--text-primary);
+}
+
+.about-duel-header--not {
+  color: var(--text-label);
+}
+
+.about-duel-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-duel-item--we {
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: default;
+}
+
+.about-duel-item--not {
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--text-muted);
+}
+
+@media (hover: hover) {
+  .about-duel-item--not.is-paired {
+    color: var(--text-secondary);
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--text-secondary);
+  }
+}
+
+@media (max-width: 599px) {
+  .about-duel-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(32px, 6vw, 48px);
+  }
+}
+
+/* ── Full-width image break ── */
+.about-image-break {
+  margin-top: clamp(40px, 5vw, 64px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+.about-image-break-inner {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--bg-shift);
+}
+
+@media (max-width: 599px) {
+  .about-image-break-inner {
+    aspect-ratio: 4/3;
+  }
+}
+
+/* ── Team/Network placeholder ── */
+.about-team-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.about-team-card-square {
+  aspect-ratio: 1/1;
+  background: var(--bg-shift);
+  overflow: hidden;
+  transition: filter 0.3s ease;
+}
+
+/* A network member's photo fills the square, cropped around its hotspot, always in black and white.
+ The filter sits on the image, so the square's hover brightness never brings colour back. */
+.about-team-card-photo {
+  position: relative;
+}
+
+.about-team-photo {
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+@media (hover: hover) {
+  .about-team-card:hover .about-team-card-square {
+    filter: brightness(0.96);
+  }
+  .about-team-card:hover .about-team-card-role {
+    letter-spacing: 0.01em;
+  }
+}
+
+.about-team-card-role {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-top: 16px;
+  letter-spacing: -0.02em;
+  transition: opacity 0.3s ease;
+}
+
+.about-team-card-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-label);
+  margin-top: 4px;
+}
+
+@media (max-width: 899px) {
+  .about-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 599px) {
+  .about-team-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Careers CTA below collaborators */
+.about-careers-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+}
+
+.about-careers-text {
+  font-size: 14px;
+  color: var(--gunmetal, #5C5B58);
+  line-height: 1.6;
+}
+
+.about-careers-link {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  color: var(--obsidian, #22211F);
+  text-decoration: none;
+  transition: opacity 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.about-careers-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@media (hover: hover) {
+  .about-careers-link:hover {
+    opacity: 0.6;
+  }
+  .about-careers-link:hover .about-careers-arrow {
+    transform: translateX(4px);
+  }
+}
+
+/* Initiatives link: a 44px tall target without moving the row. */
+.about-initiatives-link {
+  padding: 14px 0;
+  margin: -14px 0;
+}
+
+@media (max-width: 768px) {
+  .about-careers-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-clock-colon {
+    animation: none;
+  }
+}

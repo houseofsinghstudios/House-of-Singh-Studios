@@ -9,6 +9,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import { WorkGridCard, WorkMobileCard, projectImage, projectTags, type WorkCard } from "@/components/work/WorkCards";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import "./work-page.css";
 
 type ViewMode = "list" | "grid";
 

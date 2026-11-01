@@ -12,6 +12,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import ArticleBody, { type ArticleBlock } from "./ArticleBody";
 import ArticleNewsletter from "./ArticleNewsletter";
 import { ArticleAdjacent, ArticleRelated } from "./ArticleMore";
+import "./article.css";
 
 // src: the image URL at the size this page shows it, built by the article page.
 interface PostImage {

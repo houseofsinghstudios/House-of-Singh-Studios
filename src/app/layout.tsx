@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
+import { inter } from "./fonts";
 
 // Root layout shared by the website and the Studio: the document, the font and the default
 // metadata only. Site chrome and site CSS live in (site)/layout.tsx so they never reach /studio.
-
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-  variable: "--font-inter",
-});
 
 const siteUrl = 'https://studios.houseofsingh.com'
 

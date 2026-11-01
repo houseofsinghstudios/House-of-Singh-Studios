@@ -14,6 +14,7 @@ import NextPageLink from "@/components/layout/NextPageLink";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { serviceForSiteSlug, startHref } from "@/lib/project-planner/start-links";
+import "./service-detail.css";
 
 const CLIENT_QUALIFIER: Record<string, string> = {
   "brand-identity":

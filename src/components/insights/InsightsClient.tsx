@@ -6,6 +6,7 @@ import Image from "next/image";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import "./insights.css";
 
 // A post card. The image URLs are built on the server (src/app/(site)/insights/page.tsx): the
 // featured size and the card size, as any post can become the featured one.

@@ -3,6 +3,7 @@
 // grid below it, as on /work.
 import type { Project } from "@/data/projects";
 import { WorkGridCard, WorkMobileCard } from "@/components/work/WorkCards";
+import "@/components/work/work-cards.css";
 
 export default function InitiativeWork({ projects, empty }: { projects: Project[]; empty?: string }) {
   if (projects.length === 0) return empty ? <p className="init-empty css-reveal">{empty}</p> : null;

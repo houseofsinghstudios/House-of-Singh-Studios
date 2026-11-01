@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { Project } from "@/data/projects";
 import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
 import { disciplineLabel } from "@/lib/disciplines";
+import "./work-cards.css";
 
 // What a card shows. The /work page sends only these fields to the browser, never a case study's
 // text (see workCard).

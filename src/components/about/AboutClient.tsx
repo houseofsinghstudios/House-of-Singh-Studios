@@ -10,6 +10,7 @@ import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import type { NetworkCard } from "@/lib/about/network";
 import { RgdText } from "@/components/RgdLink";
 import NetworkGrid from "./NetworkGrid";
+import "./about.css";
 
 // A Sanity image as aboutPageQuery returns it. Crop values are fractions of the original trimmed
 // from each edge.

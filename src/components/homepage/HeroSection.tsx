@@ -5,6 +5,7 @@ import { HERO } from "@/lib/constants/homepage-data";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
+import "./homepage.css";
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);

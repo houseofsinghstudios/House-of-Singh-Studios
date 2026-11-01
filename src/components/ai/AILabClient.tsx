@@ -7,6 +7,7 @@ import BrandPulse from "@/components/brand-pulse/BrandPulse";
 import ProofStats, { type ProofStat } from "@/components/ai/ProofStats";
 import { INTRO } from "@/lib/brand-pulse/content";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import "./ai-lab.css";
 
 /* ── Comparison table rows ── */
 const COMPARISON_ROWS = [

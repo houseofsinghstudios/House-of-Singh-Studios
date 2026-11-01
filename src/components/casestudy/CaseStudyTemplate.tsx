@@ -13,6 +13,7 @@ import { projectTypeLabel } from "@/lib/initiatives/types";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import { serviceForCaseStudy, startHref } from "@/lib/project-planner/start-links";
+import "./case-study.css";
 
 // A service page this project demonstrates, with descriptive link text.
 export interface ServiceLink {

@@ -17,6 +17,7 @@ import { NOMINATION_SERVICES, isNomination } from "@/lib/initiatives/nominations
 import { FORM_COPY, PARTNER_SERVICES, contactThanks, isIntroduction, isPartnership, messageOptional, messagePlaceholder } from "@/lib/partners/forms";
 import HearAboutFields from "./HearAboutFields";
 import { IntroductionFields, PartnershipFields } from "./ReferralFields";
+import "./contact.css";
 
 export default function ContactClient({ initialService = "" }: { initialService?: string }) {
   // The service that was sent, which picks the thank you; null until then.
