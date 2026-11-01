@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/contact' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'Contact — House of Singh Studios',
-    description: 'Start a conversation. Book a discovery call or send us a message about your project.',
+    title: 'Contact | House of Singh Studios',
+    description: PAGE_DESCRIPTIONS.contact,
     url: 'https://studios.houseofsingh.com/contact',
     images: [DEFAULT_SHARE_IMAGE],
   },

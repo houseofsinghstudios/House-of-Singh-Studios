@@ -11,7 +11,7 @@ function formatDateShort(dateString: string): string {
   }).format(new Date(dateString));
 }
 
-export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: AdjacentPost; nextPost?: AdjacentPost }) {
+export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: AdjacentPost | null; nextPost?: AdjacentPost | null }) {
   if (!previousPost && !nextPost) return null;
   return (
     <section className="art-nav-section">

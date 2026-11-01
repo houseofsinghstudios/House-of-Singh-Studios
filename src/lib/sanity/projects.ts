@@ -1,5 +1,6 @@
 import { client } from "./client";
 import { shareImageUrl, urlFor } from "./image";
+import type { SanityImageSource } from "@sanity/image-url";
 import { readSanity } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
 import { coverAlt, projectAlt } from "@/lib/alt-text";
@@ -29,7 +30,12 @@ const blocksProjection = `blocks[] {
   _type == "blockFeature" => { caption, image ${blockImageProjection}, detail ${blockImageProjection} }
 }`;
 
-const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
+// Published documents only, the same filter in every query (and the client reads the published
+// perspective as well): no drafts, no release versions.
+const PUBLISHED = `!(_id in path("drafts.**")) && !(_id in path("versions.**"))`;
+
+// Everything a case study page and the /work list read.
+const caseStudyFields = `
   _id,
   title,
   "slug": slug.current,
@@ -60,42 +66,23 @@ const allProjectsQuery = `*[_type == "caseStudy"] | order(publishedAt desc) {
   seoTitle,
   seoDescription,
   publishedAt
+`;
+
+// A case study card: the service pages' rows and the "Related work" row under an article.
+const caseStudyCardFields = `title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage`;
+
+const allProjectsQuery = `*[_type == "caseStudy" && ${PUBLISHED}] | order(publishedAt desc) {${caseStudyFields}}`;
+
+const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug && ${PUBLISHED}][0] {${caseStudyFields}}`;
+
+// A case study page: that case study in full, and every case study's slug and title in the /work
+// order, only to find the next project (the list wraps round).
+const projectDetailQuery = `{
+  "doc": ${projectBySlugQuery},
+  "order": *[_type == "caseStudy" && ${PUBLISHED}] | order(publishedAt desc) { "slug": slug.current, title }
 }`;
 
-const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug][0] {
-  _id,
-  title,
-  "slug": slug.current,
-  client,
-  industry,
-  year,
-  overview,
-  challenge,
-  approach,
-  deliverables,
-  results,
-  featuredImage,
-  ${blocksProjection},
-  gallery[] {
-    _key,
-    asset,
-    alt,
-    caption,
-    hotspot,
-    crop
-  },
-  testimonial,
-  featured,
-  projectType,
-  ${serviceCategoriesProjection},
-  disciplines,
-  workDelivered,
-  seoTitle,
-  seoDescription,
-  publishedAt
-}`;
-
-const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | order(publishedAt desc) {
+const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true && ${PUBLISHED}] | order(publishedAt desc) {
   _id,
   title,
   "slug": slug.current,
@@ -103,6 +90,47 @@ const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true] | ord
   projectType,
   featuredImage
 }`;
+
+// ── What the case study queries return ──
+
+// A Sanity image as the queries project it: the asset reference (or the resolved asset), alt text,
+// and the editor's crop and hotspot.
+export interface CaseImage {
+  _key?: string;
+  asset?: { _ref?: string; _id?: string; url?: string } | null;
+  alt?: string;
+  caption?: string;
+  crop?: { top: number; bottom: number; left: number; right: number };
+  hotspot?: { x: number; y: number };
+}
+
+// A case study document. Every field may be missing on an incomplete document, so the mappers below
+// never assume one is there.
+export interface CaseStudyDoc {
+  _id?: string;
+  title?: string;
+  slug?: string;
+  client?: string;
+  industry?: string;
+  year?: string | number;
+  overview?: unknown;
+  challenge?: PortableTextBlock[];
+  approach?: PortableTextBlock[];
+  deliverables?: string[];
+  results?: PortableTextBlock[];
+  featuredImage?: CaseImage | null;
+  blocks?: unknown;
+  gallery?: CaseImage[] | null;
+  testimonial?: unknown;
+  featured?: boolean;
+  projectType?: unknown;
+  serviceCategories?: unknown;
+  disciplines?: unknown;
+  workDelivered?: unknown;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+}
 
 // ── Portable Text → plain text ──
 
@@ -121,22 +149,20 @@ function portableTextToPlain(blocks: PortableTextBlock[] | undefined): string[] 
 
 // ── Sanity image → URL string ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanityImageUrl(img: any): string {
+function sanityImageUrl(img: CaseImage | null | undefined): string {
   if (!img?.asset) return "";
   try {
-    return urlFor(img).width(1600).auto("format").quality(80).url();
+    return urlFor(img as SanityImageSource).width(1600).auto("format").quality(80).url();
   } catch {
     return "";
   }
 }
 
 // The case study's share image: its cover cropped to 1200x630, or "" without one.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function sanityShareImageUrl(img: any): string {
+function sanityShareImageUrl(img: CaseImage | null | undefined): string {
   if (!img?.asset) return "";
   try {
-    return shareImageUrl(img);
+    return shareImageUrl(img as SanityImageSource);
   } catch {
     return "";
   }
@@ -246,8 +272,7 @@ export function mapBlocks(raw: unknown, slug: string, title: string): CaseStudyB
 
 // ── Map Sanity caseStudy → Project (for /work list) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapSanityToProject(doc: any, index: number): Project {
+export function mapSanityToProject(doc: CaseStudyDoc, index: number): Project {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -300,8 +325,8 @@ export function mapSanityToProject(doc: any, index: number): Project {
 
 // ── Map Sanity caseStudy → ProjectDetail (for /work/[slug]) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetail {
+// "order" is every case study's slug and title in the /work order, for the next project link.
+export function mapSanityToProjectDetail(doc: CaseStudyDoc, order: Array<Pick<CaseStudyDoc, "slug" | "title">>): ProjectDetail {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
   // The cover's alt names the project and its primary discipline.
@@ -309,16 +334,15 @@ export function mapSanityToProjectDetail(doc: any, allDocs: any[]): ProjectDetai
 
   // Build gallery images
   const galleryImages: ProjectDetailImage[] = (doc.gallery || [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((img: any) => ({
+    .map((img) => ({
       src: sanityImageUrl(img),
       alt: projectAlt(doc.title || "", img.alt),
     }))
     .filter((img: ProjectDetailImage) => img.src);
 
   // Find next project (circular)
-  const currentIdx = allDocs.findIndex((d) => d.slug === doc.slug);
-  const nextDoc = allDocs[(currentIdx + 1) % allDocs.length] || allDocs[0];
+  const currentIdx = order.findIndex((d) => d.slug === doc.slug);
+  const nextDoc = order[(currentIdx + 1) % order.length] || order[0];
 
   // Build deliverables with descriptions
   const deliverables = (doc.deliverables || []).map((d: string) => ({
@@ -403,7 +427,7 @@ export async function getAllProjects(): Promise<Project[]> {
   return readSanity(
     "all case studies",
     async () => {
-      const docs = await client.fetch(allProjectsQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(allProjectsQuery);
       return docs && docs.length > 0 ? docs.map(mapSanityToProject) : localProjects();
     },
     localProjects
@@ -414,7 +438,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   return readSanity(
     `case study "${slug}"`,
     async () => {
-      const doc = await client.fetch(projectBySlugQuery, { slug });
+      const doc = await client.fetch<CaseStudyDoc | null>(projectBySlugQuery, { slug });
       return doc ? mapSanityToProject(doc, 0) : localProjectBySlug(slug);
     },
     (error) => localProjectOrRethrow(slug, error)
@@ -425,10 +449,8 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
   return readSanity(
     `case study detail "${slug}"`,
     async () => {
-      const allDocs = await client.fetch(allProjectsQuery);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const doc = allDocs && allDocs.length > 0 ? allDocs.find((d: any) => d.slug === slug) : null;
-      return doc ? mapSanityToProjectDetail(doc, allDocs) : localProjectDetail(slug);
+      const { doc, order } = await client.fetch<{ doc: CaseStudyDoc | null; order: Array<Pick<CaseStudyDoc, "slug" | "title">> | null }>(projectDetailQuery, { slug });
+      return doc && Array.isArray(order) && order.length > 0 ? mapSanityToProjectDetail(doc, order) : localProjectDetail(slug);
     },
     async (error) => {
       const detail = await localProjectDetail(slug);
@@ -440,8 +462,7 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
 
 // ── Map Sanity caseStudy → HomepageProject (for homepage featured work) ──
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function mapSanityToHomepageProject(doc: any): HomepageProject {
+function mapSanityToHomepageProject(doc: CaseStudyDoc): HomepageProject {
   const overviewText = typeof doc.overview === "string" ? doc.overview : "";
   const imageUrl = sanityImageUrl(doc.featuredImage);
 
@@ -464,7 +485,7 @@ export async function getFeaturedProjects(): Promise<HomepageProject[]> {
   return readSanity(
     "featured case studies",
     async () => {
-      const docs = await client.fetch(featuredProjectsQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(featuredProjectsQuery);
       return docs && docs.length > 0 ? docs.map(mapSanityToHomepageProject) : localFeaturedProjects();
     },
     localFeaturedProjects
@@ -514,22 +535,14 @@ function firstSentence(text: unknown): string {
   return (match ? match[0] : trimmed).trim();
 }
 
-const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory))] | order(publishedAt desc) {
-  title,
-  "slug": slug.current,
-  ${serviceCategoriesProjection},
-  client,
-  industry,
-  overview,
-  disciplines,
-  projectType,
-  featuredImage
+const serviceCategoryQuery = `*[_type == "caseStudy" && (defined(serviceCategories) || defined(serviceCategory)) && ${PUBLISHED}] | order(publishedAt desc) {
+  ${caseStudyCardFields},
+  ${serviceCategoriesProjection}
 }`;
 
 type ServiceCategoryMap = Record<string, ServiceProject[]>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function toServiceProject(doc: any): ServiceProject {
+function toServiceProject(doc: CaseStudyDoc): ServiceProject {
   return {
     slug: doc.slug || "",
     name: doc.title || "",
@@ -556,13 +569,12 @@ export async function getAllProjectsGroupedByService(): Promise<ServiceCategoryM
   return readSanity(
     "case studies by service",
     async () => {
-      const docs = await client.fetch(serviceCategoryQuery);
+      const docs = await client.fetch<CaseStudyDoc[]>(serviceCategoryQuery);
       if (!docs || docs.length === 0) return empty;
 
       const grouped = { ...empty };
       // A project appears under every service it covers, once per service.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      docs.forEach((doc: any) => {
+      docs.forEach((doc) => {
         const categories: string[] = Array.isArray(doc.serviceCategories) ? doc.serviceCategories : [];
         const project = toServiceProject(doc);
         for (const cat of new Set(categories)) {
@@ -581,9 +593,7 @@ export async function getProjectCards(): Promise<ServiceProject[]> {
   return readSanity(
     "case study cards",
     async () => {
-      const docs = await client.fetch(`*[_type == "caseStudy" && defined(slug.current)] | order(publishedAt desc) {
-  title, "slug": slug.current, client, industry, overview, disciplines, projectType, featuredImage
-}`);
+      const docs = await client.fetch<CaseStudyDoc[]>(`*[_type == "caseStudy" && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) { ${caseStudyCardFields} }`);
       return Array.isArray(docs) ? docs.map(toServiceProject).filter((p: ServiceProject) => p.slug) : [];
     },
     () => []
@@ -598,7 +608,7 @@ export interface PlannerCaseStudy {
   workDelivered: string[];
 }
 
-const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current) && count(workDelivered) > 0 && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+const plannerCaseStudiesQuery = `*[_type == "caseStudy" && defined(slug.current) && count(workDelivered) > 0 && ${PUBLISHED}] | order(publishedAt desc) {
   "title": title,
   "slug": slug.current,
   workDelivered
@@ -622,7 +632,7 @@ export async function getPlannerCaseStudies(): Promise<PlannerCaseStudy[]> {
 
 // ── Initiatives: published case studies of one project type, newest first ──
 
-const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && defined(slug.current) && !(_id in path("drafts.**")) && !(_id in path("versions.**"))] | order(publishedAt desc) {
+const projectsByTypeQuery = `*[_type == "caseStudy" && projectType in $types && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) {
   title,
   "slug": slug.current,
   year,

@@ -14,10 +14,10 @@ Production URL: https://studios.houseofsingh.com (canonical). The .vercel.app ad
 
 ## Stack, locked
 
-Next.js 16.4.2, App Router only. Never Pages Router. Turbopack builds.
-React 19.2.3.
+Next.js 16.4.3, App Router only. Never Pages Router. Turbopack builds.
+React 19.3.1.
 Node 22.12 or newer (Sanity requires it; CI runs Node 22.x).
-Sanity 5 (embedded Studio at /studio) with next-sanity 12 for reads. Published content only, no token on the site.
+Sanity 5 (embedded Studio at /studio) with next-sanity 13 for reads. Published content only, no token on the site.
 TypeScript strict mode.
 Tailwind v4 via @tailwindcss/postcss. No tailwind.config.js needed.
 Lenis for smooth scroll. The only approved animation dependency.
@@ -49,7 +49,7 @@ Start: npm run start
 Lint: npm run lint (must pass with 0 problems)
 Typecheck: npx tsc --noEmit
 Test: npm run test (Node's built in test runner, with tsx to load TypeScript)
-Content imports: npm run import:services, import:portfolio, import:roles (need SANITY_WRITE_TOKEN in a local .env.import, never committed and never on Vercel)
+Content imports: npm run import:services, import:portfolio, import:roles (need SANITY_WRITE_TOKEN in a local .env.import, which git ignores and which never goes on Vercel)
 
 CI: .github/workflows/ci.yml runs npm ci, the type check, lint, the tests and a production build on every pull request and on pushes to main and feature/next-work. No secrets; the build reads only the public Sanity project id and dataset.
 

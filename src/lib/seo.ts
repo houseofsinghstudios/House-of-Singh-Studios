@@ -1,5 +1,5 @@
 // Page titles carry the studio name exactly once. The root layout's title template appends
-// " — House of Singh Studios" to every page title, so stored titles must be bare.
+// " | House of Singh Studios" to every page title, so stored titles must be bare.
 
 export const STUDIO_NAME = "House of Singh Studios";
 
@@ -30,7 +30,7 @@ export function bareTitle(...candidates: (string | null | undefined)[]): string 
 
 // For Open Graph and Twitter, which do not use the title template: the bare title plus the studio name, once.
 export function studioTitle(title: string): string {
-  return `${bareTitle(title)} — ${STUDIO_NAME}`;
+  return `${bareTitle(title)} | ${STUDIO_NAME}`;
 }
 
 // The site wide default share image (og:image and the twitter card): the homepage picture, served

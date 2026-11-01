@@ -1,3 +1,8 @@
+// Read time: words in the article body's text blocks, 200 a minute, rounded up, at least 1 (0 with no
+// body). The article page and every card (/insights, Related thinking) use this one calculation, on
+// the server. Cards fetch only the block text with READ_TIME_BLOCKS, so no body reaches the browser.
+export const READ_TIME_BLOCKS = `"readBody": body[_type == "block"]{ _type, children[]{ text } }`;
+
 export function calculateReadTime(
   body: Array<{ _type: string; children?: Array<{ text?: string }> }> | undefined
 ): number {

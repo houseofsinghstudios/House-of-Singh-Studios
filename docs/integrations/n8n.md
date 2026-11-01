@@ -2,8 +2,9 @@
 
 How every form and tool on the site reaches n8n, what each request carries, and what each n8n workflow
 does with it. The website side is read from the code (src/app/api/*/route.ts and src/lib); the n8n side
-from the workflow definitions, read only, on 31 Oct 2026. If either side changes, update this file in
-the same change.
+from the workflow definitions, read only, on 31 Oct 2026, and the fixes the studio made in n8n the
+same day (email failures, repeated emails, subscriber case, 48hr Follow Up). If either side changes,
+update this file in the same change.
 
 Never put a secret value, a webhook URL or a webhook path in this file, in code comments or in logs.
 
@@ -86,6 +87,9 @@ Shared field formats:
   It emails the studio inbox ("New Lead: …" or "Introduction: …") and, for an introduction, thanks
   the person who made it.
 - **Airtable:** base Design Studio CRM. Emails go through the studio's SMTP account.
+- **Email failures:** the email steps continue on error after the record is saved, so a failed email
+  never turns a saved lead into an error on the website. The same holds for Careers, Brand Pulse and
+  the Project Planner.
 
 ## /api/careers: job applications
 
@@ -160,9 +164,12 @@ The result is always recomputed on the server; whatever result the browser sends
   - **`completed`:** Status "Completed". No email.
   - **`feedback`:** saves the Feedback field. No email.
   - **`lead`:** Status "Lead", the email, a retake reminder date six months out, and consent.
-    - With marketing consent, it also upserts into Subscribers (Source "brand-pulse").
+    - With marketing consent, it also upserts into Subscribers (Source "brand-pulse"), with the
+      email lowercased, as Newsletter Subscribe does.
     - Emails the visitor their result and alerts the studio inbox.
   - **`profile`:** saves name, company, website and team size, and alerts the studio inbox.
+  - **Repeated emails:** a repeated `lead` or `profile` event (the same event and Result ID) updates
+    the row but sends no email again.
 
 ## /api/project-planner: Project Planner events
 
@@ -201,11 +208,13 @@ browser sends is ignored. A hidden price is sent as null.
   - On the website, an instance does not resend an event it has already delivered (same
     `briefId:event`).
   - In n8n, every event upserts one row in **Project Briefs**, matched on **Brief ID**, filling that
-    event's timestamp. The workflow does not read `eventIdempotencyKey`.
+    event's timestamp.
+  - A repeated `sent` event sends no email again: the workflow skips it by `eventIdempotencyKey`
+    (or by the Brief ID when the key is missing).
 - **On `sent` it also:**
   - upserts the lead into **Leads**, matched on Brief ID (Pipeline Stage "Inquiry", Lead Source
     "Project Planner");
-  - upserts into Subscribers when consent is given;
+  - upserts into Subscribers when consent is given, with the email lowercased;
   - emails the visitor their brief and alerts the studio inbox.
 
 ## Scheduled workflows (they read Airtable, not the website)
@@ -214,25 +223,22 @@ browser sends is ignored. A hidden price is sent as null.
   - Reads Leads with Pipeline Stage "Inquiry", an email, and at least 48 hours since creation.
     Nominations (stage "Nomination") and introductions ("Qualification") are skipped. Project Planner
     leads are included.
-  - Emails each lead an invitation to a discovery call, then sets the stage to "Contacted".
+  - Handles one lead at a time: emails the invitation to a discovery call, then sets that lead's stage
+    to "Contacted". A lead whose email fails is skipped (it stays "Inquiry" and is tried again the next
+    day); the others are emailed and marked as usual.
 - **Partner Welcome** (`pTUDD5ULXtSGQvmJ`): every 15 minutes.
   - Reads Partners with Status "Approved", a referral code, an email, and Welcome Sent not ticked.
   - Emails the welcome with the partner's referral link and terms, then ticks Welcome Sent and sets
     Approved On.
 
-## Known gaps (from the workflow definitions, 31 Oct 2026)
+## Known limits
 
-- **Errors after a save:** a failed studio alert email makes the website show an error although the
-  row was already saved (Lead Capture, Careers, Brand Pulse, Project Planner). A retry of a lead or an
-  application is skipped by its `submissionId`.
-- **Repeated emails:** Brand Pulse and Project Planner have no repeat guard for their emails. A
-  repeated `lead`, `profile` or `sent` event emails again; the Airtable row is only updated.
-- **Subscriber case:** Brand Pulse and Project Planner store subscriber emails without lowercasing
-  them; Newsletter Subscribe lowercases. The same address in different capitals can become two rows.
 - **Leads choice lists:** "Nomination", "Partnership" and "Project Planner" rely on Airtable's typecast
   setting to exist as Leads options.
-- **48hr Follow Up failures:** if one send fails mid run, the leads already emailed in that run are
-  not marked "Contacted" and are emailed again the next day.
+
+The four gaps listed here before (an email error after a save, repeated Brand Pulse and Planner
+emails, subscriber emails in mixed case, and repeat emails after a 48hr Follow Up failure) were fixed
+in n8n on 31 Oct 2026; the sections above describe the behaviour since.
 
 ## Changing a form safely
 

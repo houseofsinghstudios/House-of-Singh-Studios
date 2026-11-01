@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/terms' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'Terms of Use — House of Singh Studios',
+    title: 'Terms of Use | House of Singh Studios',
     description: 'Terms of Use for House of Singh Studios Inc., covering use of this website, intellectual property, enquiries and the Ontario law that applies.',
     url: 'https://studios.houseofsingh.com/terms',
     images: [DEFAULT_SHARE_IMAGE],

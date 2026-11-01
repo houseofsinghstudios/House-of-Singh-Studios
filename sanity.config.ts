@@ -5,12 +5,13 @@ import { structureTool } from "sanity/structure";
 import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./sanity/schemas";
 import { HIDDEN_TYPES, SINGLETONS, structure } from "./sanity/structure";
+import { PUBLIC_SANITY_DATASET, PUBLIC_SANITY_PROJECT_ID } from "./src/lib/sanity/project";
 
 export default defineConfig({
   name: "hos-studios",
   title: "House of Singh Studios",
-  projectId: "00iree4d",
-  dataset: "production",
+  projectId: PUBLIC_SANITY_PROJECT_ID,
+  dataset: PUBLIC_SANITY_DATASET,
   plugins: [structureTool({ structure }), visionTool()],
   schema: {
     types: schemaTypes,

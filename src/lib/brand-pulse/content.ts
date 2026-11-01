@@ -295,5 +295,5 @@ export const ARTICLE_CTA = {
 
 export const PAGE = {
   title: "Brand Pulse Check",
-  description: "Seven quick questions, about a minute. A plain read on five vital signs of your brand, with one clear next step.",
+  description: "Seven quick questions, about a minute. A free, plain read on five vital signs of your brand, with one clear next step from a Toronto studio.",
 };

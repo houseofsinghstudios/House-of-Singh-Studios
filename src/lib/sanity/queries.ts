@@ -1,22 +1,54 @@
 import { client } from "./client";
 import { readSanity } from "./resilience";
+import { calculateReadTime, READ_TIME_BLOCKS } from "@/lib/read-time";
+
+// Published documents only, the same filter in every query (and the client reads the published
+// perspective as well): no drafts, no release versions.
+const PUBLISHED = `!(_id in path("drafts.**")) && !(_id in path("versions.**"))`;
+
+// An image asset with its size and placeholder, as article images and the About page read them.
+const assetWithMetadata = `asset-> {
+            _id,
+            url,
+            metadata { dimensions, lqip }
+          }`;
+
+// The previous and next article links under an article.
+const adjacentPostFields = `title,
+        slug,
+        category`;
 
 // A failed read in getAllPosts, getPostBySlug and getAllRoles follows readSanity (./resilience): the fallback only
 // while building or without Sanity; at runtime the error is rethrown so the last good page stays.
-export async function getAllPosts() {
-  return readSanity("articles", () => client.fetch(
-      // Card fields only: the whole list is sent to the browser for the filters, so the article
-      // bodies stay on the server (the read time is worked out here from them).
-      `*[_type == "post"] | order(featured desc, publishedAt desc) {
+// One article card for /insights, as sent to the browser (no body).
+export interface PostCard {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  featuredImage?: { alt?: string; crop?: { top: number; bottom: number; left: number; right: number }; hotspot?: { x: number; y: number }; asset?: { _id: string } };
+  category?: string;
+  publishedAt?: string;
+  readingTime: number;
+}
+
+export async function getAllPosts(): Promise<PostCard[]> {
+  return readSanity("articles", async () => {
+    // Card fields only: the whole list is sent to the browser for the filters, so the article
+    // bodies stay on the server. Only the text of the body blocks is fetched, the read time is
+    // worked out from it here exactly as on the article, and the text is dropped.
+    const posts = await client.fetch<Array<Omit<PostCard, "readingTime"> & { readBody?: Parameters<typeof calculateReadTime>[0] }>>(
+      `*[_type == "post" && ${PUBLISHED}] | order(featured desc, publishedAt desc) {
         _id,
         title,
         slug,
         featuredImage { alt, crop, hotspot, asset-> { _id } },
         category,
-        "readingTime": round(length(pt::text(body)) / 5 / 200),
+        ${READ_TIME_BLOCKS},
         publishedAt
       }`
-  ), () => []);
+    );
+    return (posts || []).map(({ readBody, ...post }) => ({ ...post, readingTime: calculateReadTime(readBody) }));
+  }, () => []);
 }
 
 // A related post card: title, date, category and image.
@@ -27,26 +59,59 @@ const relatedCardFields = `_id,
         category,
         featuredImage {
           ...,
-          asset-> {
-            _id,
-            url,
-            metadata { dimensions, lqip }
-          }
+          ${assetWithMetadata}
         }`;
 
-export async function getPostBySlug(slug: string) {
-  return readSanity(`article "${slug}"`, () => client.fetch(
-    `*[_type == "post" && slug.current == $slug][0] {
+// An article as getPostBySlug reads it (before the page builds the image URLs).
+export interface ArticleImage {
+  _type?: string;
+  asset?: { _id: string; url: string; metadata?: { dimensions?: { width: number; height: number }; lqip?: string } };
+  alt?: string;
+  crop?: { top: number; bottom: number; left: number; right: number };
+  hotspot?: { x: number; y: number };
+}
+export interface ArticleLink {
+  title: string;
+  slug: { current: string };
+  category?: string;
+}
+export interface ArticleCardDoc extends ArticleLink {
+  _id: string;
+  publishedAt?: string;
+  featuredImage?: ArticleImage;
+}
+export type ArticleBodyBlock = { _type: string; _key?: string; children?: Array<{ text?: string }> } & ArticleImage;
+type Reference = { _id: string; title?: string; slug?: { current?: string } } | null;
+export interface ArticleDoc {
+  _id: string;
+  title: string;
+  slug: { current: string };
+  featuredImage?: ArticleImage;
+  category?: string;
+  tags?: string[];
+  keyTakeaways?: string[];
+  body?: ArticleBodyBlock[];
+  relatedServices?: Reference[] | null;
+  relatedCaseStudies?: Reference[] | null;
+  seoTitle?: string;
+  seoDescription?: string;
+  publishedAt?: string;
+  _updatedAt?: string;
+  previousPost?: ArticleLink | null;
+  nextPost?: ArticleLink | null;
+  chosenPosts?: (ArticleCardDoc | null)[] | null;
+  latestPosts?: ArticleCardDoc[] | null;
+}
+
+export async function getPostBySlug(slug: string): Promise<ArticleDoc | null> {
+  return readSanity(`article "${slug}"`, () => client.fetch<ArticleDoc | null>(
+    `*[_type == "post" && slug.current == $slug && ${PUBLISHED}][0] {
       _id,
       title,
       slug,
       featuredImage {
         ...,
-        asset-> {
-          _id,
-          url,
-          metadata { dimensions, lqip }
-        }
+        ${assetWithMetadata}
       },
       category,
       tags,
@@ -55,11 +120,7 @@ export async function getPostBySlug(slug: string) {
         ...,
         _type == "image" => {
           ...,
-          asset-> {
-            _id,
-            url,
-            metadata { dimensions, lqip }
-          }
+          ${assetWithMetadata}
         }
       },
       relatedServices[]-> { _id, title, slug },
@@ -68,22 +129,18 @@ export async function getPostBySlug(slug: string) {
       seoDescription,
       publishedAt,
       _updatedAt,
-      "previousPost": *[_type == "post" && publishedAt < ^.publishedAt] | order(publishedAt desc) [0] {
-        title,
-        slug,
-        category
+      "previousPost": *[_type == "post" && publishedAt < ^.publishedAt && ${PUBLISHED}] | order(publishedAt desc) [0] {
+        ${adjacentPostFields}
       },
-      "nextPost": *[_type == "post" && publishedAt > ^.publishedAt] | order(publishedAt asc) [0] {
-        title,
-        slug,
-        category
+      "nextPost": *[_type == "post" && publishedAt > ^.publishedAt && ${PUBLISHED}] | order(publishedAt asc) [0] {
+        ${adjacentPostFields}
       },
       // The editor's hand picked related posts, in their order, and the latest three others as the
       // fallback; src/lib/related-posts.ts decides which are shown.
       "chosenPosts": relatedPosts[]-> {
         ${relatedCardFields}
       },
-      "latestPosts": *[_type == "post" && _id != ^._id] | order(publishedAt desc) [0...3] {
+      "latestPosts": *[_type == "post" && _id != ^._id && ${PUBLISHED}] | order(publishedAt desc) [0...3] {
         ${relatedCardFields}
       }
     }`,
@@ -92,7 +149,7 @@ export async function getPostBySlug(slug: string) {
   ), (error) => { throw error; });
 }
 
-export const aboutPageQuery = `*[_type == "siteSettings"][0]{
+export const aboutPageQuery = `*[_type == "siteSettings" && ${PUBLISHED}][0]{
   aboutStudioImage{
     asset->{_id, url, metadata{dimensions, lqip}},
     hotspot,
@@ -111,7 +168,7 @@ export const aboutPageQuery = `*[_type == "siteSettings"][0]{
 
 export async function getAllRoles() {
   return readSanity("open roles", () => client.fetch(
-    `*[_type == "role" && isActive == true] | order(order asc, publishedAt desc) {
+    `*[_type == "role" && isActive == true && ${PUBLISHED}] | order(order asc, publishedAt desc) {
       _id,
       title,
       slug,

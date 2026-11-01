@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/careers' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'Careers — House of Singh Studios',
+    title: 'Careers | House of Singh Studios',
     description: 'Freelance and contract roles in brand design, photography, video and editing with House of Singh Studios, in Toronto, the GTA or remotely.',
     url: 'https://studios.houseofsingh.com/careers',
     images: [DEFAULT_SHARE_IMAGE],

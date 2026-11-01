@@ -223,10 +223,11 @@ function sanityAnswers(result: unknown, status = 200) {
 test("getArticleCards: each published article becomes a card; incomplete ones are dropped", async () => {
   const { getArticleCards } = await articles();
   const queries = sanityAnswers([
-    { title: "Brand guidelines", slug: "brand-guidelines-what-to-include", line: "What to include.", readingTime: 7 },
-    { title: "No line yet", slug: "no-line", line: null, readingTime: 0 },
-    { title: "No slug", slug: null, line: "x", readingTime: 3 },
-    { slug: "no-title", line: "x", readingTime: 3 },
+    // The read time comes from the body's text blocks, worked out as on the article: 1,301 words is 7 min.
+    { title: "Brand guidelines", slug: "brand-guidelines-what-to-include", line: "What to include.", readBody: [{ _type: "block", children: [{ text: "word ".repeat(1300) }, { text: "end" }] }] },
+    { title: "No line yet", slug: "no-line", line: null, readBody: null },
+    { title: "No slug", slug: null, line: "x", readBody: [] },
+    { slug: "no-title", line: "x", readBody: [] },
     null,
   ]);
   const cards = await getArticleCards();
@@ -234,6 +235,19 @@ test("getArticleCards: each published article becomes a card; incomplete ones ar
   assert.deepEqual(cards, [
     { slug: "brand-guidelines-what-to-include", title: "Brand guidelines", line: "What to include.", readingTime: 7 },
     { slug: "no-line", title: "No line yet", line: "", readingTime: 1 },
+  ]);
+});
+
+test("getAllPosts (/insights cards): read time from the body text, as on the article; the text is not kept", async () => {
+  const { getAllPosts } = await import("@/lib/sanity/queries");
+  sanityAnswers([
+    { _id: "a", title: "Long", slug: { current: "long" }, readBody: [{ _type: "block", children: [{ text: "word ".repeat(401) }] }] },
+    { _id: "b", title: "Empty", slug: { current: "empty" }, readBody: null },
+  ]);
+  const posts = await getAllPosts();
+  assert.deepEqual(posts, [
+    { _id: "a", title: "Long", slug: { current: "long" }, readingTime: 3 },
+    { _id: "b", title: "Empty", slug: { current: "empty" }, readingTime: 0 },
   ]);
 });
 

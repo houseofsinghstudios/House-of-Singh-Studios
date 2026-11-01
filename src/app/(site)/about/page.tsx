@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://studios.houseofsingh.com/about' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'About — House of Singh Studios',
+    title: 'About | House of Singh Studios',
     description: 'A multidisciplinary design studio built by Maninder Singh. Design should be structured, intentional, and commercially effective.',
     url: 'https://studios.houseofsingh.com/about',
     images: [DEFAULT_SHARE_IMAGE],

@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { bareTitle, studioTitle } from "@/lib/seo";
 
-const final = (seoTitle: string, fallback = "Article Title") => `${bareTitle(seoTitle, fallback)} — House of Singh Studios`;
+const final = (seoTitle: string, fallback = "Article Title") => `${bareTitle(seoTitle, fallback)} | House of Singh Studios`;
 const once = (t: string) => (t.match(/House of Singh Studios/gi) ?? []).length === 1;
 
 test("an SEO title never doubles the studio name", () => {
@@ -48,7 +48,7 @@ test("articles: an SEO title is the whole title, exactly as written; without one
   for (const none of [undefined, null, "", "   "]) {
     assert.deepEqual(articleTitles(none, "How to Brief a Design Studio"), {
       title: "How to Brief a Design Studio",
-      social: "How to Brief a Design Studio — House of Singh Studios",
+      social: "How to Brief a Design Studio | House of Singh Studios",
     }, String(none));
   }
 });
