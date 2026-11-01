@@ -19,7 +19,7 @@ You need Node.js 22 or newer and `npm install` run once.
 
 The services import uses the same `.env.import` file and Sanity write token as the portfolio import. If you have set that up already, there is nothing more to do. If not, follow "Before you start" in `scripts/import-portfolio/README.md`.
 
-**Never put the token in `.env.local`.** `.env.local` holds the website's settings on your computer only: git ignores it and it is never committed. The write token belongs only in `.env.import`, which git also ignores.
+**Never put the token in `.env.local`.** `.env.local` holds the website's settings on your computer only: git ignores it, so it is not committed (it was tracked from March to October 2026, holding only the public project id and dataset). The write token belongs only in `.env.import`, which git also ignores.
 
 ---
 
