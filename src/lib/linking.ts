@@ -1,6 +1,6 @@
 // Internal links between services, articles and case studies. Pure, so it is tested without Sanity.
 // Edit the maps here: articles are matched on the start of their slug, so long slugs stay readable.
-import { getServiceBySlug } from "@/data/services";
+import { serviceTopic } from "@/lib/service-names";
 
 export const SERVICE_SLUGS = ["brand-identity", "visual-media", "digital-design", "creative-strategy"] as const;
 export type ServiceSlug = (typeof SERVICE_SLUGS)[number];
@@ -112,11 +112,11 @@ export function relatedWork<T extends { slug: string; disciplines: string[] }>(s
 // as visually hidden text after the visible words, so the link text and its accessible name are the
 // same and start with what is on screen. Empty for an unknown service.
 export function serviceLinkTopic(slug: string): string {
-  const topic = getServiceBySlug(slug)?.seoH1;
+  const topic = serviceTopic(slug);
   return topic ? ` about ${topic.charAt(0).toLowerCase()}${topic.slice(1)}` : "";
 }
 
 export function serviceLinkLabel(slug: string, visible: string): string {
-  const topic = getServiceBySlug(slug)?.seoH1;
+  const topic = serviceTopic(slug);
   return topic ? `${visible}: ${topic}` : visible;
 }

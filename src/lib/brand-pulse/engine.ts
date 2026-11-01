@@ -2,7 +2,7 @@
 // No randomness, no dates, no network. Runs in the browser for display and on the server for n8n.
 // The three actions are not here: they are server only, added by the API route from actions.ts.
 
-import { services } from "@/data/services";
+import { SERVICE_NAMES, type ServiceNameSlug } from "@/lib/service-names";
 import {
   AHEAD_SENTENCES,
   CLARITY_SENTENCES,
@@ -23,7 +23,7 @@ import type { Answers, Level, ProfileId, Pulse, Result, ServiceKey, ServiceLink,
 // 2.0.0: severity scoring and the weakest-area tie break.
 export const ENGINE_VERSION = "2.0.0";
 
-const SERVICE_SLUGS: Record<ServiceKey, string> = {
+const SERVICE_SLUGS: Record<ServiceKey, ServiceNameSlug> = {
   BRAND: "brand-identity",
   MEDIA: "visual-media",
   DIGITAL: "digital-design",
@@ -137,9 +137,7 @@ export function primaryService(profile: ProfileId, weakest: Weakest): ServiceKey
 
 export function serviceLink(key: ServiceKey): ServiceLink {
   const slug = SERVICE_SLUGS[key];
-  const service = services.find((s) => s.slug === slug);
-  if (!service) throw new Error(`Brand Pulse: service ${slug} is missing from src/data/services.ts`);
-  return { slug, name: service.name, url: `${SITE_URL}/services/${slug}` };
+  return { slug, name: SERVICE_NAMES[slug], url: `${SITE_URL}/services/${slug}` };
 }
 
 // Everything except the three actions, which live on the server only (actions.ts).
