@@ -178,23 +178,22 @@
 .init-row .svc-block-desc {
   margin-bottom: 24px;
 }
-.init-row-explore {
-  display: inline-block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-primary);
+/* Explore: the /services Learn More button (.svc-block-btn, globals.css) inside the row's link.
+   32px above it, as above Learn More: here its margin collapses with the summary's 24px. Its hover
+   follows the whole row, the same opacity as the Services button. */
+.init-row .init-row-explore {
+  display: block;
+  width: fit-content;
+  margin-top: 32px;
 }
 @media (hover: hover) {
-  .init-row:hover .arrow-icon {
-    transform: translateX(4px);
+  .init-row:hover .init-row-explore {
+    opacity: 0.8;
   }
 }
 .init-row:focus-visible {
   outline: 2px solid var(--text-primary);
   outline-offset: 8px;
-}
-.init-row:focus-visible .arrow-icon {
-  transform: translateX(4px);
 }
 
 /* The visual: landscape, about 16:10, the cover or the panel. */
@@ -248,6 +247,11 @@
   .init-row-explore {
     order: 2;
     justify-self: start;
+  }
+  /* A grid item here, so no margin collapsing: 8px plus the 24px below the list (or the cover)
+     keeps the 32px above the button. */
+  .init-row .init-row-explore {
+    margin-top: 8px;
   }
   .init-row-visual--panel {
     display: none;

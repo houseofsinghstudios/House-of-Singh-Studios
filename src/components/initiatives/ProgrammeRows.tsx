@@ -1,6 +1,6 @@
 // /initiatives, (01) Programs: one Services page block row per visible initiative, a 1px rule
-// between rows. Left: the status line in Obsidian, the category, name, tagline, summary, then Explore
-// with the site arrow. Right: the newest project's cover once the program has published work,
+// between rows. Left: the status line in Obsidian, the category, name, tagline, summary, then an
+// Explore button in the /services Learn More style. Right: the newest project's cover once the program has published work,
 // otherwise a landscape panel (Cloudy ground, the row number small at the top left, the at a glance
 // values in one row along the bottom). On phones the panel gives way to a short list of the same
 // values between the summary and Explore. A row with its own page is one link, named
@@ -75,11 +75,8 @@ function RowBody({ row, number }: { row: ProgrammeRow; number: string }) {
             ))}
           </ul>
         )}
-        {linked && (
-          <span className="init-row-explore">
-            {LANDING.explore(initiative.name)} <span className="arrow-icon" aria-hidden="true">&rarr;</span>
-          </span>
-        )}
+        {/* The /services button look, as a visual element inside the row's one link. */}
+        {linked && <span className="svc-block-btn init-row-explore">{LANDING.explore(initiative.name)}</span>}
       </div>
       <div className={row.newest ? "init-row-visual" : "init-row-visual init-row-visual--panel"}>
         <Visual row={row} number={number} />
