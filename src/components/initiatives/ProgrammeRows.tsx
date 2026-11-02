@@ -12,6 +12,7 @@ import type { Project } from "@/data/projects";
 import { projectImage } from "@/components/work/WorkCards";
 import { LANDING } from "@/lib/initiatives/content";
 import { initiativeLogo, statusText, type Initiative } from "@/lib/initiatives/types";
+import { logoSizes } from "@/lib/initiatives/logo-scale";
 import InitiativeLogo from "./InitiativeLogo";
 
 export interface ProgrammeRow {
@@ -50,7 +51,7 @@ function Name({ initiative }: { initiative: Initiative }) {
   if (!logo) return <h3 className="svc-block-name">{initiative.name}</h3>;
   return (
     <div className="svc-block-name init-row-logo">
-      <InitiativeLogo logo={logo} alt="" sizes="(max-width: 768px) 60vw, 320px" />
+      <InitiativeLogo logo={logo} alt="" sizes={logoSizes(logo, "row")} />
       <h3 className="sr-only">{initiative.name}</h3>
     </div>
   );

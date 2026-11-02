@@ -36,22 +36,47 @@
 }
 
 /* ── Initiative logos (only when one is set in Sanity) ──
-   The image keeps its proportions: the height is set, the width follows. */
+   Sized by height, the width follows; never stretched: where a width cap applies, the logo is
+   scaled down inside its box (object-fit: contain) rather than squeezed. Heights match
+   src/lib/initiatives/logo-scale.ts: below 768px, from 768px, from 1024px. */
 .init-logo-img {
   display: block;
   width: auto;
   max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
 }
-/* Hero: between the label and the H1, small, like the label above it. */
+/* Hero: 20px below the breadcrumb label (its own 16px margin collapses into this one), 36px above
+   the H1, 28px on phones; at most 80% of the column wide. */
 .init-hero-logo {
-  margin: 0 0 24px;
+  margin: 20px 0 28px;
 }
 .init-hero-logo .init-logo-img {
-  height: clamp(20px, 2vw, 28px);
+  height: 40px;
+  max-width: 80%;
 }
-/* Programme rows: in place of the visible name, as tall as the name's line (1.15em of its size). */
+/* Programme rows: in place of the visible name; the name's spacing is unchanged. */
 .init-row-logo .init-logo-img {
-  height: 1.15em;
+  height: 32px;
+}
+@media (min-width: 768px) {
+  .init-hero-logo {
+    margin-bottom: 36px;
+  }
+  .init-hero-logo .init-logo-img {
+    height: 52px;
+  }
+  .init-row-logo .init-logo-img {
+    height: 38px;
+  }
+}
+@media (min-width: 1024px) {
+  .init-hero-logo .init-logo-img {
+    height: 64px;
+  }
+  .init-row-logo .init-logo-img {
+    height: 44px;
+  }
 }
 
 /* ── Hero: intro left, "At a glance" right on program pages; stacked on phones ── */

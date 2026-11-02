@@ -10,6 +10,9 @@ import { initiativeLogo, toInitiative, toInitiativeLogo, type Initiative } from 
 import { initiativeShareImage } from "@/lib/initiatives/share";
 import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { fitLogo } from "@/lib/og/share-image";
+import { LOGO_HEIGHTS, logoSizes } from "@/lib/initiatives/logo-scale";
+import fs from "node:fs";
+import path from "node:path";
 
 // The components import their stylesheets; outside Next those imports load as nothing. The tests
 // run as CommonJS, so the components are required after the stylesheet loader is in place.
@@ -141,4 +144,40 @@ test("the share image fits the logo in its box and keeps its proportions", () =>
   assert.deepEqual(fitLogo(800, 200), { width: 560, height: 140 });
   assert.deepEqual(fitLogo(200, 200), { width: 180, height: 180 });
   assert.deepEqual(fitLogo(3000, 300), { width: 560, height: 56 });
+});
+
+// The live logos' proportions: Parallel 1600 by 401, Commons 1600 by 334 (PNG).
+const PARALLEL_PNG = { width: 1600, height: 401 };
+const COMMONS_PNG = { width: 1600, height: 334 };
+
+test("logo sizes: the drawn width at each breakpoint, from the height and the logo's proportions", () => {
+  assert.equal(logoSizes(PARALLEL_PNG, "hero"), "(min-width: 1024px) 256px, (min-width: 768px) 208px, 160px");
+  assert.equal(logoSizes(COMMONS_PNG, "hero"), "(min-width: 1024px) 307px, (min-width: 768px) 250px, 192px");
+  assert.equal(logoSizes(PARALLEL_PNG, "row"), "(min-width: 1024px) 176px, (min-width: 768px) 152px, 128px");
+  assert.equal(logoSizes(COMMONS_PNG, "row"), "(min-width: 1024px) 211px, (min-width: 768px) 183px, 154px");
+});
+
+test("logo sizes: at 2x a PNG is requested at least twice as wide as drawn", () => {
+  // next/image candidates (the default image and device sizes); the browser takes the first at or
+  // above sizes x pixel ratio.
+  const candidates = [16, 32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840];
+  for (const logo of [PARALLEL_PNG, COMMONS_PNG]) {
+    for (const place of ["hero", "row"] as const) {
+      // The drawn widths: each "NNNpx" that ends an entry (the breakpoints end in "px)").
+      const widths = [...logoSizes(logo, place).matchAll(/(\d+)px(?=,|$)/g)].map((m) => Number(m[1]));
+      assert.equal(widths.length, 3);
+      for (const width of widths) {
+        const picked = candidates.find((c) => c >= width * 2);
+        assert.ok(picked !== undefined && picked >= width * 2, `${place} ${width}px drawn picks ${picked}`);
+      }
+    }
+  }
+});
+
+test("the logo heights in the CSS match the scale", () => {
+  const css = fs.readFileSync(path.join(process.cwd(), "src/components/initiatives/initiatives.css"), "utf8");
+  const block = css.slice(css.indexOf("/* ── Initiative logos"), css.indexOf("/* ── Hero: intro left"));
+  const heights = (selector: string) => [...block.matchAll(new RegExp(`\\${selector} \\.init-logo-img \\{[^}]*?height: (\\d+)px`, "g"))].map((m) => Number(m[1]));
+  assert.deepEqual(heights(".init-hero-logo"), [LOGO_HEIGHTS.hero.base, LOGO_HEIGHTS.hero.md, LOGO_HEIGHTS.hero.lg]);
+  assert.deepEqual(heights(".init-row-logo"), [LOGO_HEIGHTS.row.base, LOGO_HEIGHTS.row.md, LOGO_HEIGHTS.row.lg]);
 });
