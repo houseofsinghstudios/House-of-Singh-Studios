@@ -1,6 +1,6 @@
 # Dependabot: keeps npm dependencies current, once a month.
 # Minor and patch updates arrive together in one pull request; each major update gets its own,
-# so breaking changes are reviewed one at a time. Security updates are separate from this
+# so breaking changes are reviewed one at a time, except the majors held under ignore below. Security updates are separate from this
 # schedule: they open as soon as an advisory is published, as long as Dependabot alerts and
 # security updates are switched on in the repository settings (Settings, Code security).
 # The CI workflow (.github/workflows/ci.yml) pins its actions to major versions; only npm is listed.
@@ -13,10 +13,23 @@ updates:
       interval: "monthly"
     open-pull-requests-limit: 5
     ignore:
-      # TypeScript 7 broke CI on 30 Oct 2026 (pull request #211). typescript-eslint, which
-      # eslint-config-next uses, supports TypeScript below 6.1 only. Revisit when it supports 7.
+      # TypeScript majors are held, every one of them: TypeScript 7 broke CI on 30 Oct 2026
+      # (pull request #211), and typescript-eslint, which eslint-config-next uses, supports
+      # TypeScript below 6.1 only. A new major is upgraded by hand once the lint tooling supports
+      # it. Minor and patch updates still arrive in the group below.
       - dependency-name: "typescript"
-        versions: [">=7"]
+        update-types: ["version-update:semver-major"]
+      # Sanity majors are held: Sanity 6 and its client will be upgraded together in a planned
+      # batch (sanity, @sanity/vision, @sanity/client and next-sanity move as one, with the Studio
+      # checked before it ships). Minor and patch updates still arrive in the group below.
+      - dependency-name: "sanity"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@sanity/vision"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@sanity/client"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "next-sanity"
+        update-types: ["version-update:semver-major"]
       # @types/node must match the Node major the site runs on (22: package.json engines, .nvmrc,
       # CI). The @types/node 26 update broke CI on 30 Oct 2026 (pull request #210). Updates up to 22
       # still arrive.

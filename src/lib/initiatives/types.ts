@@ -49,6 +49,16 @@ export interface Recognition {
   logo: { url: string; alt: string; width: number; height: number };
 }
 
+// An initiative's wordmark from Sanity: the file as uploaded, its alt text and size. SVG files are
+// shown as uploaded (no image optimizer); PNG files go through next/image.
+export interface InitiativeLogo {
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+  svg: boolean;
+}
+
 export interface Initiative {
   name: string;
   slug: string;
@@ -63,6 +73,9 @@ export interface Initiative {
   seoDescription?: string;
   atAGlance: GlanceItem[];
   recognitions: Recognition[];
+  // Both optional: without a logo every page renders as it did before logos existed.
+  logo?: InitiativeLogo;
+  logoOnDark?: InitiativeLogo;
 }
 
 // An unknown status is treated as hidden: nothing appears by accident.
@@ -131,6 +144,23 @@ export function toRecognitions(v: unknown): Recognition[] {
   });
 }
 
+// A logo with a URL, alt text and its dimensions, or undefined: anything incomplete shows no logo.
+export function toInitiativeLogo(v: unknown): InitiativeLogo | undefined {
+  const logo = v && typeof v === "object" ? (v as Record<string, unknown>) : {};
+  const url = text(logo.url);
+  const alt = text(logo.alt);
+  const width = typeof logo.width === "number" ? logo.width : 0;
+  const height = typeof logo.height === "number" ? logo.height : 0;
+  if (!url || !alt || !width || !height) return undefined;
+  const svg = text(logo.extension).toLowerCase() === "svg" || /\.svg(\?|$)/i.test(url);
+  return { url, alt, width, height, svg };
+}
+
+// The logo for a light or a dark background. On dark, logoOnDark when set, otherwise the logo.
+export function initiativeLogo(i: Pick<Initiative, "logo" | "logoOnDark">, ground: "light" | "dark" = "light"): InitiativeLogo | undefined {
+  return ground === "dark" ? i.logoOnDark ?? i.logo : i.logo;
+}
+
 // Recognitions grouped by year, in the order entered. Items without a year form their own group.
 export function recognitionsByYear(list: Recognition[]): { year?: number; items: Recognition[] }[] {
   const groups: { year?: number; items: Recognition[] }[] = [];
@@ -140,6 +170,13 @@ export function recognitionsByYear(list: Recognition[]): { year?: number; items:
     else groups.push({ year: r.year, items: [r] });
   }
   return groups;
+}
+
+// The logo keys only when a logo is set, so an initiative without one is exactly as before.
+function logos(doc: Record<string, unknown>): Pick<Initiative, "logo" | "logoOnDark"> {
+  const logo = toInitiativeLogo(doc.logo);
+  const logoOnDark = toInitiativeLogo(doc.logoOnDark);
+  return { ...(logo && { logo }), ...(logoOnDark && { logoOnDark }) };
 }
 
 // One Sanity initiative document as an Initiative, or null without a name and slug.
@@ -162,5 +199,6 @@ export function toInitiative(doc: Record<string, unknown>): Initiative | null {
     seoDescription: text(doc.seoDescription) || undefined,
     atAGlance: toGlance(doc.atAGlance),
     recognitions: toRecognitions(doc.recognitions),
+    ...logos(doc),
   };
 }

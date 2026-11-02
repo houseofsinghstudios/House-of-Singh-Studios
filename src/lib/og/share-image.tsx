@@ -1,6 +1,7 @@
 // Share images (Open Graph and Twitter) for the homepage and the two lead tools, drawn with next/og
 // at build time, so all three look like one family.
 // Editorial, like the site: Obsidian ground, Mist type, zero radius, generous margins.
+// Initiatives with a logo have their own, lighter image (logoShareImage, at the end).
 // Inter (400 and 500, Latin) is bundled here for these images only; see fonts/OFL.txt.
 // CSS variables do not reach next/og, so the palette is repeated from the tokens in CLAUDE.md.
 
@@ -88,4 +89,28 @@ export function studioShareImage() {
     line: "Brand identity and design. Toronto.",
     footer: "studios.houseofsingh.com",
   });
+}
+
+// An initiative's share image: its logo centred on Silver Mist, the studio name small beneath.
+// The logo arrives as a data URI and is fitted inside LOGO_BOX, keeping its proportions.
+const LOGO_BOX = { width: 560, height: 180 };
+const GUNMETAL = "#5C5B58";
+
+export function fitLogo(width: number, height: number, box = LOGO_BOX): { width: number; height: number } {
+  const scale = Math.min(box.width / width, box.height / height);
+  return { width: Math.round(width * scale), height: Math.round(height * scale) };
+}
+
+export async function logoShareImage({ src, width, height }: { src: string; width: number; height: number }) {
+  const size = fitLogo(width, height);
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: MIST, fontFamily: "Inter" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- next/og draws plain img elements */}
+        <img src={src} alt="" width={size.width} height={size.height} />
+        <div style={{ display: "flex", marginTop: 48, fontSize: 22, fontWeight: 500, letterSpacing: "-0.01em", color: GUNMETAL }}>House of Singh Studios</div>
+      </div>
+    ),
+    { ...SHARE_SIZE, fonts: await fonts() },
+  );
 }

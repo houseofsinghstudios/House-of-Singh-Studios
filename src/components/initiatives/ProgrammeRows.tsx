@@ -4,13 +4,15 @@
 // otherwise a landscape panel (Cloudy ground, the row number small at the top left, the at a glance
 // values in one row along the bottom). On phones the panel gives way to a short list of the same
 // values between the summary and Explore. A row with its own page is one link, named
-// "Explore <name>"; its hover is the existing service block hover.
+// "Explore <name>"; its hover is the existing service block hover. An initiative with a logo in
+// Sanity shows the logo in place of the visible name.
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import type { Project } from "@/data/projects";
 import { projectImage } from "@/components/work/WorkCards";
 import { LANDING } from "@/lib/initiatives/content";
-import { statusText, type Initiative } from "@/lib/initiatives/types";
+import { initiativeLogo, statusText, type Initiative } from "@/lib/initiatives/types";
+import InitiativeLogo from "./InitiativeLogo";
 
 export interface ProgrammeRow {
   initiative: Initiative;
@@ -41,6 +43,19 @@ function Visual({ row, number }: { row: ProgrammeRow; number: string }) {
   );
 }
 
+// The name as the row's h3. With a logo set, the logo shows in its place (decorative, empty alt)
+// and the same h3 stays beside it as visually hidden text, so the heading reads exactly as before.
+function Name({ initiative }: { initiative: Initiative }) {
+  const logo = initiativeLogo(initiative, "light");
+  if (!logo) return <h3 className="svc-block-name">{initiative.name}</h3>;
+  return (
+    <div className="svc-block-name init-row-logo">
+      <InitiativeLogo logo={logo} alt="" sizes="(max-width: 768px) 60vw, 320px" />
+      <h3 className="sr-only">{initiative.name}</h3>
+    </div>
+  );
+}
+
 function RowBody({ row, number }: { row: ProgrammeRow; number: string }) {
   const { initiative, linked } = row;
   const status = statusText(initiative);
@@ -49,7 +64,7 @@ function RowBody({ row, number }: { row: ProgrammeRow; number: string }) {
       <div className="init-row-text">
         {status && <p className="editorial-label init-row-status">({status})</p>}
         <p className="svc-block-label">{initiative.category}</p>
-        <h3 className="svc-block-name">{initiative.name}</h3>
+        <Name initiative={initiative} />
         <p className="init-row-tagline">{initiative.tagline}</p>
         <p className="svc-block-desc">{initiative.summary}</p>
         {initiative.atAGlance.length > 0 && (

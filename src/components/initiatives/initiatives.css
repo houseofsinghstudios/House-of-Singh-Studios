@@ -35,6 +35,25 @@
   }
 }
 
+/* ── Initiative logos (only when one is set in Sanity) ──
+   The image keeps its proportions: the height is set, the width follows. */
+.init-logo-img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+}
+/* Hero: between the label and the H1, small, like the label above it. */
+.init-hero-logo {
+  margin: 0 0 24px;
+}
+.init-hero-logo .init-logo-img {
+  height: clamp(20px, 2vw, 28px);
+}
+/* Programme rows: in place of the visible name, as tall as the name's line (1.15em of its size). */
+.init-row-logo .init-logo-img {
+  height: 1.15em;
+}
+
 /* ── Hero: intro left, "At a glance" right on program pages; stacked on phones ── */
 .init-hero-grid {
   display: grid;
