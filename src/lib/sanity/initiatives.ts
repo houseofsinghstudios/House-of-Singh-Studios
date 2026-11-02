@@ -21,6 +21,8 @@ const initiativesQuery = `*[_type == "initiative" && defined(slug.current) && !(
   seoTitle,
   seoDescription,
   atAGlance[] { label, value },
+  "logo": logo { alt, asset, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "extension": asset->extension },
+  "logoOnDark": logoOnDark { alt, asset, "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height, "extension": asset->extension },
   recognitions[] {
     name,
     year,
@@ -28,16 +30,19 @@ const initiativesQuery = `*[_type == "initiative" && defined(slug.current) && !(
   }
 }`;
 
-type Doc = Record<string, unknown> & { recognitions?: { logo?: Record<string, unknown> | null }[] | null };
+type ImageDoc = Record<string, unknown> | null | undefined;
+type Doc = Record<string, unknown> & { logo?: ImageDoc; logoOnDark?: ImageDoc; recognitions?: { logo?: ImageDoc }[] | null };
 
 // Logo URLs come from the shared image builder: the image as uploaded, no transforms.
+const withUrl = (image: ImageDoc): ImageDoc =>
+  image?.asset ? { ...image, url: urlFor(image as Parameters<typeof urlFor>[0]).url() } : image;
+
 function withLogoUrls(doc: Doc): Doc {
-  if (!Array.isArray(doc.recognitions)) return doc;
   return {
     ...doc,
-    recognitions: doc.recognitions.map((r) =>
-      r?.logo?.asset ? { ...r, logo: { ...r.logo, url: urlFor(r.logo as Parameters<typeof urlFor>[0]).url() } } : r
-    ),
+    logo: withUrl(doc.logo),
+    logoOnDark: withUrl(doc.logoOnDark),
+    recognitions: Array.isArray(doc.recognitions) ? doc.recognitions.map((r) => (r?.logo ? { ...r, logo: withUrl(r.logo) } : r)) : doc.recognitions,
   };
 }
 

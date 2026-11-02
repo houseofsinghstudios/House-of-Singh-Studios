@@ -1,6 +1,7 @@
 // /initiatives/parallel: hero with at a glance, (01) the edition's parts as an editorial split,
 // (02) the work, (03) Questions, (04) the lighter suggest band.
 import type { Project } from "@/data/projects";
+import type { InitiativeLogo } from "@/lib/initiatives/types";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InlineLinks from "@/components/InlineLinks";
 import { PARALLEL, QUESTIONS_NOTE } from "@/lib/initiatives/content";
@@ -11,10 +12,10 @@ import InitiativeQuestions from "./InitiativeQuestions";
 import NumberedRows from "./NumberedRows";
 import { NominateBand } from "./NominateBand";
 
-export default function ParallelPage({ projects }: { projects: Project[] }) {
+export default function ParallelPage({ projects, logo }: { projects: Project[]; logo?: InitiativeLogo }) {
   return (
     <div className="init-page">
-      <InitiativeHero programme="Parallel" heading={PARALLEL.heading} intro={PARALLEL.intro} glance={PARALLEL.glance} />
+      <InitiativeHero programme="Parallel" heading={PARALLEL.heading} intro={PARALLEL.intro} glance={PARALLEL.glance} logo={logo} />
       <InitiativeSection id="steps" number="01" heading={PARALLEL.stepsHeading} intro={PARALLEL.stepsIntro} split>
         <NumberedRows rows={PARALLEL.steps} />
       </InitiativeSection>

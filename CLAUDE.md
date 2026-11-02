@@ -290,6 +290,7 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work →
 
 ### Initiatives (/initiatives, /initiatives/parallel, /initiatives/commons)
 - The initiatives overview and two programme pages. Other initiatives are listed but have no page; /initiatives/foundry returns 404 on purpose.
+- Logos (optional, Sanity "logo" and "logoOnDark", SVG or PNG): only when set, the logo replaces the visible name in the programme rows (the h3 stays as visually hidden text), sits above the unchanged H1 in the program hero, and the page shares /initiatives/[slug]/share-image (logo on Silver Mist). Without a logo every page and its share image are as before.
 
 ### Partners, Careers, Privacy, Terms
 - /partners: the partner programme, introduction form with permission checkbox, FAQs.
@@ -386,6 +387,7 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /start, /brand-pulse, /contact | Rendered on every request (they read query parameters) |
 | /sitemap.xml, /llms.txt | Refreshed hourly |
 | /robots.txt, og and share images | Static |
+| /initiatives/[slug]/share-image | Rendered on request; redirects to /share-image.png when there is no logo |
 | /studio | Sanity Studio, own route group, no site chrome |
 | /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n (contracts: docs/integrations/n8n.md) |
 | /api/consent-region | GET, decides strict consent regions |

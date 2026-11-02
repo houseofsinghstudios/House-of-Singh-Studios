@@ -6,7 +6,7 @@ import type { Project } from "@/data/projects";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InlineLinks from "@/components/InlineLinks";
 import { COMMONS, QUESTIONS_NOTE } from "@/lib/initiatives/content";
-import type { Recognition } from "@/lib/initiatives/types";
+import type { InitiativeLogo, Recognition } from "@/lib/initiatives/types";
 import InitiativeHero from "./InitiativeHero";
 import InitiativeSection from "./InitiativeSection";
 import InitiativeWork from "./InitiativeWork";
@@ -30,12 +30,18 @@ function List({ items, note }: { items: string[]; note?: string }) {
   );
 }
 
-export default function CommonsPage({ projects, recognitions }: { projects: Project[]; recognitions: Recognition[] }) {
+interface Props {
+  projects: Project[];
+  recognitions: Recognition[];
+  logo?: InitiativeLogo;
+}
+
+export default function CommonsPage({ projects, recognitions, logo }: Props) {
   const hasWork = recognitions.length > 0 || projects.length > 0;
   const num = (n: number) => String(hasWork ? n : n - 1).padStart(2, "0");
   return (
     <div className="init-page">
-      <InitiativeHero programme="Commons" heading={COMMONS.heading} intro={COMMONS.intro} glance={COMMONS.glance} />
+      <InitiativeHero programme="Commons" heading={COMMONS.heading} intro={COMMONS.intro} glance={COMMONS.glance} logo={logo} />
       <InitiativeSection id="what-we-offer" number="01" heading={COMMONS.offerHeading} split>
         <List items={COMMONS.offer} />
       </InitiativeSection>

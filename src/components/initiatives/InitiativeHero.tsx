@@ -2,10 +2,12 @@
 // On a program page the label is a breadcrumb: "(Initiatives / Parallel)", with Initiatives
 // linking back to /initiatives in the label style, underlined on hover only. A program page also
 // has an "At a glance" column on the right: one row per fact between 1px rules, stacked under the
-// intro on phones.
+// intro on phones. A program with a logo in Sanity shows it between the label and the H1, at a
+// restrained height; the H1 is unchanged.
 import { Link } from "next-view-transitions";
 import { GLANCE_LABEL } from "@/lib/initiatives/content";
-import type { GlanceItem } from "@/lib/initiatives/types";
+import type { GlanceItem, InitiativeLogo as Logo } from "@/lib/initiatives/types";
+import InitiativeLogo from "./InitiativeLogo";
 import "./initiatives.css";
 
 interface Props {
@@ -14,6 +16,8 @@ interface Props {
   // The program name for the breadcrumb; omitted on /initiatives itself.
   programme?: string;
   glance?: GlanceItem[];
+  // The program's logo for a light background; omitted when none is set.
+  logo?: Logo;
 }
 
 function Glance({ items }: { items: GlanceItem[] }) {
@@ -32,7 +36,7 @@ function Glance({ items }: { items: GlanceItem[] }) {
   );
 }
 
-export default function InitiativeHero({ heading, intro, programme, glance }: Props) {
+export default function InitiativeHero({ heading, intro, programme, glance, logo }: Props) {
   return (
     <section className="init-hero" style={{ padding: "var(--hero-pt) var(--page-px) clamp(64px, 8vw, 100px)" }}>
       <div className="init-hero-grid">
@@ -46,6 +50,11 @@ export default function InitiativeHero({ heading, intro, programme, glance }: Pr
               "(Initiatives)"
             )}
           </p>
+          {logo && (
+            <div className="init-hero-logo svc-hero-stagger">
+              <InitiativeLogo logo={logo} alt={logo.alt} sizes="240px" priority />
+            </div>
+          )}
           <h1
             className="svc-hero-stagger"
             style={{

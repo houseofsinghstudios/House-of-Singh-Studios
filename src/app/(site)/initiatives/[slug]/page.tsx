@@ -5,9 +5,11 @@ import ParallelPage from "@/components/initiatives/ParallelPage";
 import CommonsPage from "@/components/initiatives/CommonsPage";
 import { COMMONS, PARALLEL } from "@/lib/initiatives/content";
 import { BUILT_PAGES, programmePage, type BuiltPage } from "@/lib/initiatives/pages";
+import { initiativeShareImage } from "@/lib/initiatives/share";
+import { initiativeLogo } from "@/lib/initiatives/types";
 import { getInitiativesForPage } from "@/lib/sanity/initiatives";
 import { getProjectsByType } from "@/lib/sanity/projects";
-import { DEFAULT_SHARE_IMAGE, STUDIO_NAME, studioTitle, WEBSITE_OG } from "@/lib/seo";
+import { STUDIO_NAME, studioTitle, WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
 
@@ -36,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: named ? { absolute: title } : title,
     description,
     alternates: { canonical: url },
-    openGraph: { ...WEBSITE_OG, title: named ? title : studioTitle(title), description, url, images: [DEFAULT_SHARE_IMAGE] },
+    openGraph: { ...WEBSITE_OG, title: named ? title : studioTitle(title), description, url, images: [initiativeShareImage(initiative)] },
   };
 }
 
@@ -46,6 +48,7 @@ export default async function ProgrammePage({ params }: Props) {
   // No page for this slug (Foundry included): a redirect set up in Studio, or the 404.
   if (!initiative) return redirectOrNotFound(`/initiatives/${slug}`);
   const projects = (await getProjectsByType([initiative.slug]))[initiative.slug];
+  const logo = initiativeLogo(initiative, "light");
 
   return (
     <>
@@ -55,9 +58,9 @@ export default async function ProgrammePage({ params }: Props) {
         { name: initiative.name, url: `${SITE}/initiatives/${slug}` },
       ]} />
       {initiative.slug === "parallel" ? (
-        <ParallelPage projects={projects} />
+        <ParallelPage projects={projects} logo={logo} />
       ) : (
-        <CommonsPage projects={projects} recognitions={initiative.recognitions} />
+        <CommonsPage projects={projects} recognitions={initiative.recognitions} logo={logo} />
       )}
     </>
   );

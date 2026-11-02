@@ -3,6 +3,34 @@ import { defineArrayMember, defineType, defineField } from "sanity";
 // A studio led program shown under /initiatives (Parallel, Commons, Foundry).
 // The status list must match src/lib/initiatives/types.ts. "hidden" never renders anywhere:
 // not on /initiatives, not in the sitemap, and its page returns 404.
+
+const LOGO_DESCRIPTION = "Wordmark shown on the Initiatives page, the initiative's own page and its share image.";
+
+// An optional wordmark, SVG or PNG. Alt text is required once a file is uploaded. logoOnDark is the
+// version for dark backgrounds; where it is missing, the site uses logo there too.
+function logoField(name: string, title: string) {
+  return defineField({
+    name,
+    title,
+    type: "image",
+    description: LOGO_DESCRIPTION,
+    options: { accept: "image/svg+xml,image/png" },
+    fields: [
+      defineField({
+        name: "alt",
+        title: "Alt text",
+        type: "string",
+        description: "For example: Parallel wordmark.",
+        validation: (rule) =>
+          rule.custom((alt, context) => {
+            const parent = context.parent as { asset?: unknown } | undefined;
+            return parent?.asset && !(typeof alt === "string" && alt.trim()) ? "Write the alt text for this logo." : true;
+          }),
+      }),
+    ],
+  });
+}
+
 export default defineType({
   name: "initiative",
   title: "Initiative",
@@ -23,6 +51,8 @@ export default defineType({
       options: { source: "name", maxLength: 64 },
       validation: (rule) => rule.required(),
     }),
+    logoField("logo", "Logo"),
+    logoField("logoOnDark", "Logo for dark backgrounds"),
     defineField({
       name: "category",
       title: "Category",
