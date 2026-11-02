@@ -114,11 +114,13 @@ test("a PNG logo goes through the image optimizer", () => {
   assert.match(rows(png), /<Image src="[^"]+\.png" alt="" [^>]*unoptimized=false/);
 });
 
-test("program hero: the logo sits above the unchanged H1 only when set", () => {
+test("program hero: the decorative logo sits above the unchanged H1 only when set", () => {
   const plain = hero();
   assert.doesNotMatch(plain, /init-hero-logo/);
   const shown = hero(withLogo.logo);
-  assert.match(shown, /<div className="init-hero-logo svc-hero-stagger"><Image src="[^"]+\.svg" alt="Parallel wordmark"/);
+  // Empty alt: the breadcrumb label names the programme, so the logo adds nothing to read.
+  assert.match(shown, /<div className="init-hero-logo svc-hero-stagger"><Image src="[^"]+\.svg" alt=""/);
+  assert.doesNotMatch(shown, /Parallel wordmark/);
   const h1 = (s: string) => s.match(/<h1[^>]*>(.*?)<\/h1>/)?.[1];
   assert.equal(h1(shown), "One brand. Another possibility.");
   assert.equal(h1(shown), h1(plain));

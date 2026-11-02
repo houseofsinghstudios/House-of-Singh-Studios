@@ -6,7 +6,7 @@ import type { InitiativeLogo as Logo } from "@/lib/initiatives/types";
 
 interface Props {
   logo: Logo;
-  // Empty where the logo is decorative and the name is given as text beside it.
+  // Empty in the rows and the hero, where the name is already given as text.
   alt: string;
   sizes: string;
   priority?: boolean;
