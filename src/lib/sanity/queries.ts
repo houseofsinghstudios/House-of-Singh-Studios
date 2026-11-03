@@ -149,6 +149,20 @@ export async function getPostBySlug(slug: string): Promise<ArticleDoc | null> {
   ), (error) => { throw error; });
 }
 
+// The founder portrait from Site Settings (the About page image) as its absolute Sanity CDN URL, for
+// the founder's structured data on every page. Refreshed daily. Deliberately forgiving: a failed
+// read means no image in the structured data, never a failed or stale page.
+const founderImageQuery = `*[_type == "siteSettings" && ${PUBLISHED}][0].aboutFounderImage.asset->url`;
+
+export async function getFounderImageUrl(): Promise<string | undefined> {
+  try {
+    const url: unknown = await client.fetch(founderImageQuery, {}, { next: { revalidate: 86400 } });
+    return typeof url === "string" && url.startsWith("https://cdn.sanity.io/") ? url : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export const aboutPageQuery = `*[_type == "siteSettings" && ${PUBLISHED}][0]{
   aboutStudioImage{
     asset->{_id, url, metadata{dimensions, lqip}},

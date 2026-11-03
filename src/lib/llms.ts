@@ -39,6 +39,16 @@ export async function loadLlmsArticles(read: () => Promise<unknown>, env?: Sanit
   );
 }
 
+// Who is who: the studio, its parent brand and its founder, in plain sentences, so assistants keep
+// the three apart and do not confuse them with businesses that use similar names. Word the
+// studio's relation to House of Singh as a venture, never a division or subsidiary.
+export const WHO_IS_WHO = [
+  "House of Singh Studios (studios.houseofsingh.com) is a Toronto design studio for brand identity, websites, photography and creative direction, founded in Canada on 8 September 2023. It is a venture of House of Singh.",
+  "House of Singh (houseofsingh.com) is the creative practice and parent brand of Maninder Singh, a Toronto based designer, photographer and creative director, active under that name since 2014. HOUSE OF SINGH is a registered Canadian trademark (TMA1179828).",
+  "Maninder Singh, RGD, is the founder and creative director of House of Singh Studios. He led the TEDxToronto creative team.",
+  "House of Singh and House of Singh Studios are not affiliated with other businesses that use similar names.",
+];
+
 const link = (title: string, path: string, description: string) => `- [${title}](${SITE}${path}): ${description}`;
 
 // Articles in the order given (newest first from the query).
@@ -61,6 +71,9 @@ export function buildLlmsTxt(articles: LlmsArticle[]): string {
     "",
     "> House of Singh Studios is a Toronto design studio for brand identity, websites, photography and video, and brand strategy. It serves businesses across the GTA and Canada.",
     "",
+    "## Who is who",
+    "",
+    ...WHO_IS_WHO.flatMap((paragraph) => [paragraph, ""]),
     ...sections.flatMap(([heading, lines]) => [`## ${heading}`, "", ...lines, ""]),
   ].join("\n");
 }

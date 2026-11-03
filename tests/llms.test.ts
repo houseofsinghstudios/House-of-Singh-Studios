@@ -3,7 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { ARTICLE_FALLBACK, buildLlmsTxt, loadLlmsArticles } from "@/lib/llms";
+import { ARTICLE_FALLBACK, WHO_IS_WHO, buildLlmsTxt, loadLlmsArticles } from "@/lib/llms";
 import { services } from "@/data/services";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
@@ -18,8 +18,28 @@ test("llms.txt format: title, one paragraph summary, then the sections in order"
   const lines = txt.split("\n");
   assert.equal(lines[0], "# House of Singh Studios");
   assert.match(lines[2], /^> House of Singh Studios is a Toronto design studio for brand identity, websites, photography and video, and brand strategy\. It serves businesses across the GTA and Canada\.$/);
-  assert.deepEqual(lines.filter((l) => l.startsWith("## ")), ["## Services", "## Tools", "## Work", "## Insights", "## Studio"]);
+  assert.deepEqual(lines.filter((l) => l.startsWith("## ")), ["## Who is who", "## Services", "## Tools", "## Work", "## Insights", "## Studio"]);
   for (const l of lines.filter((l) => l.startsWith("- "))) assert.match(l, /^- \[[^\]]+\]\(https:\/\/studios\.houseofsingh\.com\/[a-z0-9/-]*\): \S/, l);
+});
+
+test("who is who: right after the summary, the studio, the parent brand and the founder, in plain sentences", () => {
+  const lines = txt.split("\n");
+  assert.deepEqual(lines.slice(4, 14), [
+    "## Who is who",
+    "",
+    "House of Singh Studios (studios.houseofsingh.com) is a Toronto design studio for brand identity, websites, photography and creative direction, founded in Canada on 8 September 2023. It is a venture of House of Singh.",
+    "",
+    "House of Singh (houseofsingh.com) is the creative practice and parent brand of Maninder Singh, a Toronto based designer, photographer and creative director, active under that name since 2014. HOUSE OF SINGH is a registered Canadian trademark (TMA1179828).",
+    "",
+    "Maninder Singh, RGD, is the founder and creative director of House of Singh Studios. He led the TEDxToronto creative team.",
+    "",
+    "House of Singh and House of Singh Studios are not affiliated with other businesses that use similar names.",
+    "",
+  ]);
+  assert.equal(lines[14], "## Services");
+  // The studio is a venture of House of Singh: never a division or a subsidiary.
+  assert.doesNotMatch(WHO_IS_WHO.join(" "), /division|subsidiar/i);
+  assert.match(WHO_IS_WHO[0], /a venture of House of Singh\./);
 });
 
 test("every published article is listed once, in the order given (newest first), with its page's description", () => {

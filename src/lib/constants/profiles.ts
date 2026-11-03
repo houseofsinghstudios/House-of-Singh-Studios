@@ -14,6 +14,7 @@ export const FOUNDER_PROFILES = {
   // Maninder Singh's RGD member profile: every visible "RGD" on the site links here (RgdLink).
   rgd: "https://rgd.ca/members/profile/manindersingh",
   linkedin: "https://www.linkedin.com/in/manindersingh333",
+  instagram: "https://www.instagram.com/houseofsingh/",
 };
 
 export const profileUrls = (profiles: Record<string, string>): string[] => Object.values(profiles).filter(Boolean);

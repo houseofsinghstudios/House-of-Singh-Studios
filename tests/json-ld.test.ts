@@ -10,7 +10,7 @@ const PS = String.fromCharCode(0x2029);
 
 test("the parsed JSON is identical to JSON.stringify's, for ordinary and hostile values", () => {
   const values: unknown[] = [
-    { "@context": "https://schema.org", "@type": "Article", headline: "Rebrand or Refresh?", author: { "@id": "https://studios.houseofsingh.com/#maninder-singh" } },
+    { "@context": "https://schema.org", "@type": "Article", headline: "Rebrand or Refresh?", author: { "@id": "https://houseofsingh.com/#maninder-singh" } },
     { name: "A < B & C > D", list: [1, "two", null, true], nested: { quote: 'He said "hi"', slash: "a/b\\c" } },
     { name: `</script><script>alert(1)</script>`, line: `one${LS}two${PS}three`, emoji: "caf\u00e9" },
     [],
@@ -40,6 +40,7 @@ test("every JSON-LD script tag in the site uses jsonLd", () => {
     "src/app/(site)/work/[slug]/page.tsx",
     "src/app/(site)/insights/[slug]/page.tsx",
     "src/app/(site)/layout.tsx",
+    "src/app/(site)/about/page.tsx",
   ];
   for (const f of files) {
     const src = readFileSync(f, "utf8");

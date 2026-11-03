@@ -7,8 +7,18 @@ import { readSanity } from "@/lib/sanity/resilience";
 import AboutClient from "@/components/about/AboutClient";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
+import { jsonLd } from "@/lib/json-ld";
+import { orgRef } from "@/lib/schema";
 
 export const revalidate = 60;
+
+const ABOUT_PAGE = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  url: "https://studios.houseofsingh.com/about",
+  name: "About House of Singh Studios",
+  mainEntity: orgRef,
+};
 
 export const metadata: Metadata = {
   title: 'About',
@@ -37,6 +47,8 @@ export default async function AboutPage() {
         { name: 'Home', url: 'https://studios.houseofsingh.com' },
         { name: 'About', url: 'https://studios.houseofsingh.com/about' },
       ]} />
+      {/* The page is about the studio: its main entity is the studio node on every page. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(ABOUT_PAGE) }} />
       <AboutClient aboutData={aboutData} networkMembers={networkMembers} />
     </>
   );
