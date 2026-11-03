@@ -45,6 +45,10 @@ export const DEFAULT_SHARE_IMAGE = {
   alt: "House of Singh Studios. Clear thinking, made visible. Brand identity and design studio in Toronto.",
 };
 
+// Pinterest domain verification, in every page's head through the root layout's metadata.other
+// (<meta name="p:domain_verify" content="..."/>). Google verifies with a file in public/ instead.
+export const PINTEREST_VERIFICATION = { "p:domain_verify": "d0fc4fadf7b3d29fdac5a02c4996d7ab" } as const;
+
 // The openGraph fields every page carries. A page's openGraph replaces the layout's whole openGraph,
 // so every page that sets one spreads these first: WEBSITE_OG on every page except articles, which
 // spread SITE_OG and set type "article" themselves.
