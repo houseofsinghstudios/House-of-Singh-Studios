@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
+import { DEFAULT_SHARE_IMAGE, PINTEREST_VERIFICATION, WEBSITE_OG } from "@/lib/seo";
 import { inter } from "./fonts";
 
 // Root layout shared by the website and the Studio: the document, the font and the default
@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     creator: '@hosdesignstudio',
   },
+  // Site verification tags: Next renders each as <meta name="..." content="..."/>. A page's own
+  // metadata.other would replace this object, so no page sets one.
+  other: { ...PINTEREST_VERIFICATION },
   // No default canonical: every page sets its own. A root canonical would be inherited by
   // 404s and the Studio, pointing them at the homepage.
 };

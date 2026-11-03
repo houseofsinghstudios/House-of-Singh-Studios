@@ -1,7 +1,7 @@
 // Page title tests. Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { bareTitle, studioTitle } from "@/lib/seo";
+import { PINTEREST_VERIFICATION, bareTitle, studioTitle } from "@/lib/seo";
 
 const final = (seoTitle: string, fallback = "Article Title") => `${bareTitle(seoTitle, fallback)} | House of Singh Studios`;
 const once = (t: string) => (t.match(/House of Singh Studios/gi) ?? []).length === 1;
@@ -91,4 +91,19 @@ test("the root layout's openGraph spreads WEBSITE_OG too, for pages without thei
   const src = readFileSync("src/app/layout.tsx", "utf8");
   assert.match(src, /openGraph: \{\s*\.\.\.WEBSITE_OG,/);
   assert.doesNotMatch(src, /\b(type|locale|siteName): '/);
+});
+
+test("Pinterest domain verification: in the root layout's metadata, so on the home page and every page", async () => {
+  const { readFileSync, readdirSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  assert.deepEqual(PINTEREST_VERIFICATION, { "p:domain_verify": "d0fc4fadf7b3d29fdac5a02c4996d7ab" });
+  const root = readFileSync("src/app/layout.tsx", "utf8");
+  assert.match(root, /other: \{ \.\.\.PINTEREST_VERIFICATION \}/);
+  // The home page (and every other page or layout) sets no metadata.other of its own, which would
+  // replace the root layout's and drop the tag.
+  const walk = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : /^(page|layout)\.tsx$/.test(e.name) ? [join(dir, e.name)] : []));
+  const files = walk("src/app").filter((f) => f !== join("src/app", "layout.tsx"));
+  assert.ok(files.includes(join("src/app/(site)/(home)/page.tsx")));
+  for (const f of files) assert.doesNotMatch(readFileSync(f, "utf8"), /\bother:\s*\{/, f);
 });
