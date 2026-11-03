@@ -7,6 +7,7 @@ import assert from "node:assert/strict";
 import Module from "node:module";
 import { isValidElement, type ReactNode } from "react";
 import { initiativeLogo, toInitiative, toInitiativeLogo, type Initiative } from "@/lib/initiatives/types";
+import type { Project } from "@/data/projects";
 import { initiativeShareImage } from "@/lib/initiatives/share";
 import { DEFAULT_SHARE_IMAGE } from "@/lib/seo";
 import { fitLogo } from "@/lib/og/share-image";
@@ -68,7 +69,9 @@ function tree(node: ReactNode): string {
   return `<${name}${attrs ? " " + attrs : ""}>${tree(children as ReactNode)}</${name}>`;
 }
 
-const rows = (initiative: Initiative) => tree(ProgrammeRows({ rows: [{ initiative, linked: true, newest: null }] }));
+const rows = (initiative: Initiative, newest: Project | null = null) => tree(ProgrammeRows({ rows: [{ initiative, linked: true, newest }] }));
+// A published Parallel case study: only its name and cover matter to the row.
+const PROJECT = { slug: "edition-one", name: "Edition One", image: "https://cdn.sanity.io/images/00iree4d/production/cover-1600x1000.jpg" } as unknown as Project;
 const hero = (logo?: Initiative["logo"]) =>
   tree(InitiativeHero({ heading: "One brand. Another possibility.", intro: "Intro.", programme: "Parallel", logo }));
 
@@ -101,15 +104,15 @@ test("programme row without a logo: the visible h3 name, no image", () => {
   assert.equal(rows(toInitiative(doc({ logo: null, logoOnDark: null })) as Initiative), html);
 });
 
-test("programme row with a logo: decorative logo in place of the name, the same h3 text visually hidden", () => {
-  const html = rows(withLogo);
+test("programme row with a logo and a published project: the small logo in place of the name, exactly as before", () => {
+  const html = rows(withLogo, PROJECT);
   assert.match(html, /<div className="svc-block-name init-row-logo"><Image src="[^"]+abc123def456-800x200\.svg" alt="" width=800 height=200 [^>]*unoptimized=true/);
   assert.match(html, /<h3 className="sr-only">Parallel<\/h3>/);
   assert.equal((html.match(/<h3/g) || []).length, 1);
   // Everything else in the row is unchanged.
   const strip = (s: string) =>
     s.replace(/<div className="svc-block-name init-row-logo">.*?<h3 className="sr-only">(.*?)<\/h3><\/div>/, '<h3 className="svc-block-name">$1</h3>');
-  assert.equal(strip(html), rows(withoutLogo));
+  assert.equal(strip(html), rows(withoutLogo, PROJECT));
 });
 
 test("a PNG logo goes through the image optimizer", () => {
@@ -180,4 +183,71 @@ test("the logo heights in the CSS match the scale", () => {
   const heights = (selector: string) => [...block.matchAll(new RegExp(`\\${selector} \\.init-logo-img \\{[^}]*?height: (\\d+)px`, "g"))].map((m) => Number(m[1]));
   assert.deepEqual(heights(".init-hero-logo"), [LOGO_HEIGHTS.hero.base, LOGO_HEIGHTS.hero.md, LOGO_HEIGHTS.hero.lg]);
   assert.deepEqual(heights(".init-row-logo"), [LOGO_HEIGHTS.row.base, LOGO_HEIGHTS.row.md, LOGO_HEIGHTS.row.lg]);
+});
+
+// The programme panel: with a logo and no published project, the panel shows the logo large and
+// the small logo is hidden beside it (CSS, tablet and desktop only); a published project brings
+// back the cover and the small logo; without a logo the row is as it always was.
+const css = () => fs.readFileSync(path.join(process.cwd(), "src/components/initiatives/initiatives.css"), "utf8");
+const panelOf = (html: string) => html.slice(html.indexOf('className="init-row-visual'));
+const textOf = (html: string) => html.slice(0, html.indexOf('className="init-row-visual'));
+
+test("panel, logo and no project: the logo large in the panel, decorative, between the number and the facts", () => {
+  const facts = { atAGlance: [{ value: "Real brands" }, { value: "New directions" }, { value: "The thinking, shown" }] };
+  const plain = toInitiative(doc(facts)) as Initiative;
+  const panel = panelOf(rows(toInitiative(doc({ ...facts, logo: logoDoc(SVG_URL, "svg") })) as Initiative));
+  assert.match(panel, /<span className="editorial-label init-panel-num" aria-hidden="true">01<\/span><div className="init-panel-logo"><Image src="[^"]+abc123def456-800x200\.svg" alt="" [^>]*sizes="22vw"/);
+  assert.ok(panel.indexOf("init-panel-logo") < panel.indexOf("init-panel-glance"));
+  assert.doesNotMatch(panel, /Edition One/);
+  // Everything else in the panel is as before.
+  assert.match(panel, /<ul className="init-panel-glance"><li>Real brands<\/li><li>New directions<\/li><li>The thinking, shown<\/li><\/ul>/);
+  assert.equal(panel.replace(/<div className="init-panel-logo">.*?<\/div>/, ""), panelOf(rows(plain)));
+});
+
+test("panel, logo and no project: the small logo is marked for hiding beside the panel; the h3 and link name stay", () => {
+  const html = rows(withLogo);
+  assert.match(textOf(html), /<div className="svc-block-name init-row-logo init-row-logo--panel"><Image [^>]*alt=""[^>]*><\/Image><h3 className="sr-only">Parallel<\/h3><\/div>/);
+  assert.match(html, /aria-label="Explore Parallel"/);
+  assert.match(html, /<span className="svc-block-btn init-row-explore">Explore Parallel<\/span>/);
+  // Hidden only where the panel shows (from 769px); on phones (768px and below) the panel is hidden
+  // and the small logo shows.
+  const sheet = css();
+  assert.match(sheet, /@media \(min-width: 769px\) \{\s*\.init-row-logo--panel \.init-logo-img \{\s*display: none;/);
+  assert.match(sheet, /@media \(max-width: 768px\) \{[\s\S]*?\.init-row-visual--panel \{\s*display: none;/);
+  assert.equal((sheet.match(/init-row-logo--panel/g) || []).length, 1);
+});
+
+test("panel, logo and no project: about 55% of the panel wide, never more than 70%, height following", () => {
+  const rule = css().match(/\.init-panel-logo \.init-logo-img \{([^}]*)\}/)?.[1] || "";
+  assert.match(rule, /width: 55%;/);
+  assert.match(rule, /max-width: 70%;/);
+  assert.match(rule, /height: auto;/);
+});
+
+test("panel, published project: the newest cover, no logo in the panel, the small logo shown at every width", () => {
+  const html = rows(withLogo, PROJECT);
+  assert.match(panelOf(html), /<Image src="[^"]+cover-1600x1000\.jpg" alt="Edition One"/);
+  assert.doesNotMatch(panelOf(html), /init-panel-logo|init-logo-img/);
+  assert.match(textOf(html), /<div className="svc-block-name init-row-logo">/);
+  assert.doesNotMatch(html, /init-row-logo--panel/);
+});
+
+test("panel, no logo: the row is exactly as before, with or without a project", () => {
+  for (const newest of [null, PROJECT]) {
+    const html = rows(withoutLogo, newest);
+    assert.doesNotMatch(html, /init-panel-logo|init-row-logo|init-logo-img/);
+    assert.match(html, /<h3 className="svc-block-name">Parallel<\/h3>/);
+  }
+  assert.match(panelOf(rows(withoutLogo)), /^className="init-row-visual init-row-visual--panel"><div className="svc-block-img init-visual init-panel"><span className="editorial-label init-panel-num" aria-hidden="true">01<\/span><\/div><\/div>/);
+});
+
+test("panel logo sizes: requested at least twice the drawn width on a 2x screen, at every width the panel shows", () => {
+  for (const vw of [769, 1024, 1440, 1920]) {
+    const pagePx = Math.max(40, vw * 0.08);
+    const gap = Math.min(96, Math.max(48, vw * 0.06));
+    const panel = ((vw - 2 * pagePx - gap) * 45) / 100;
+    const inner = panel - 2 * Math.min(32, Math.max(20, vw * 0.024));
+    const drawn = inner * 0.55;
+    assert.ok((vw * 22) / 100 >= drawn, `${vw}px: sizes ${(vw * 22) / 100} covers drawn ${drawn.toFixed(0)}`);
+  }
 });

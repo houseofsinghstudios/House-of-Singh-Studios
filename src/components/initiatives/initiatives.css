@@ -226,6 +226,24 @@
   line-height: 1.5;
   color: var(--text-primary);
 }
+/* With a logo and no published project, the panel shows the logo large: centred, between the
+   number and the at a glance row, so a little above the middle; about 55% of the panel wide,
+   never more than 70%, height following. The small logo in the text column is hidden beside it
+   (the h3 stays as hidden text); on phones the panel is hidden and the small logo shows. */
+.init-panel-logo {
+  display: flex;
+  justify-content: center;
+}
+.init-panel-logo .init-logo-img {
+  width: 55%;
+  max-width: 70%;
+  height: auto;
+}
+@media (min-width: 769px) {
+  .init-row-logo--panel .init-logo-img {
+    display: none;
+  }
+}
 /* The phone list: hidden beside the panel. */
 .init-row-glance {
   display: none;

@@ -290,7 +290,7 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work →
 
 ### Initiatives (/initiatives, /initiatives/parallel, /initiatives/commons)
 - The initiatives overview and two programme pages. Other initiatives are listed but have no page; /initiatives/foundry returns 404 on purpose.
-- Logos (optional, Sanity "logo" and "logoOnDark", SVG or PNG): only when set, the logo replaces the visible name in the programme rows (the h3 stays as visually hidden text), sits above the unchanged H1 in the program hero (decorative in both, empty alt; the alt field stays required in Studio), and the page shares /initiatives/[slug]/share-image (logo on Silver Mist). Without a logo every page and its share image are as before.
+- Logos (optional, Sanity "logo" and "logoOnDark", SVG or PNG): only when set, the logo replaces the visible name in the programme rows (the h3 stays as visually hidden text; while a programme has no published project, the logo shows large in the row's panel instead and the small one is hidden beside it, on phones the small one always shows), sits above the unchanged H1 in the program hero (decorative in both, empty alt; the alt field stays required in Studio), and the page shares /initiatives/[slug]/share-image (logo on Silver Mist). Without a logo every page and its share image are as before.
 
 ### Partners, Careers, Privacy, Terms
 - /partners: the partner programme, introduction form with permission checkbox, FAQs.
