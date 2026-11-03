@@ -383,7 +383,7 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /work, /work/[slug] | ISR 60 s; case studies from Sanity |
 | /insights, /insights/[slug] | ISR 60 s; every published article generated ahead |
 | /about, /careers, /initiatives, /initiatives/[slug] (parallel, commons) | ISR 60 s |
-| /ai, /partners, /privacy, /terms | Static |
+| /ai, /partners, /privacy, /terms | Static, refreshed daily (the founder portrait in every page's structured data is read daily) |
 | /start, /brand-pulse, /contact | Rendered on every request (they read query parameters) |
 | /sitemap.xml, /llms.txt | Refreshed hourly |
 | /robots.txt, og and share images | Static |
@@ -397,6 +397,26 @@ Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse 
 When Sanity fails at runtime, pages keep their last good version (src/lib/sanity/resilience.ts); fallback content is used only while building.
 
 ---
+
+## ENTITIES AND NAMING (search engines and AI assistants)
+
+Three entities, kept apart and linked by shared @ids in the structured data (src/lib/schema.ts,
+src/lib/site-graph.ts) and described in plain sentences in llms.txt ("Who is who", src/lib/llms.ts):
+
+| Entity | What it is | @id | Owned by |
+|---|---|---|---|
+| Maninder Singh | Person: founder and creative director, RGD | https://houseofsingh.com/#maninder-singh | houseofsingh.com |
+| House of Singh | Parent brand and creative practice of Maninder Singh, since 2014; registered Canadian trademark TMA1179828 | https://houseofsingh.com/#organization | houseofsingh.com |
+| House of Singh Studios | The design studio, a venture of House of Singh, founded in Canada on 8 September 2023 | https://studios.houseofsingh.com/#organization | this site |
+
+- houseofsingh.com (a separate repository) owns the person and the parent brand entities. This site
+  only references them by those @ids (the Person node here describes the same person, with the same
+  @id); it never mints its own ids for them.
+- Wording: the studio is a "venture" of House of Singh. Never "division" or "subsidiary".
+- Founding: the studio's foundingDate is 2023-09-08 in all machine readable data. The founder's
+  "14+ years" is personal experience, not the studio's age; do not change it.
+- houseofsinghstudios.com redirects to https://studios.houseofsingh.com at the Vercel domain level
+  (not in next.config.ts); studios.houseofsingh.com stays the only canonical address.
 
 ## Protected: intentional work, do not remove
 
