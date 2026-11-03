@@ -1,9 +1,20 @@
 // The studio and its founder as structured data, on every site page (src/app/(site)/layout.tsx).
-// Other nodes reference them by @id. The founder's @id is shared with houseofsingh.com, the
-// founder's own site, which owns that entity; this site describes the same person.
+// Other nodes reference them by @id. The founder's and the parent brand's @ids are shared with
+// houseofsingh.com, the founder's own site, which owns those entities; this site describes the
+// same person and brand.
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
 import { FOUNDER_PROFILES, STUDIO_PROFILES, profileUrls } from "@/lib/constants/profiles";
-import { AREA_SERVED, ORG_ID, PERSON_ID, orgRef, personRef } from "@/lib/schema";
+import { AREA_SERVED, ORG_ID, PARENT_ORG_ID, PERSON_ID, orgRef, personRef } from "@/lib/schema";
+
+// The parent brand, described briefly; houseofsingh.com carries its full node under the same @id.
+const PARENT_ORG = {
+  "@type": "Organization",
+  "@id": PARENT_ORG_ID,
+  name: "House of Singh",
+  url: "https://houseofsingh.com",
+  foundingDate: "2014",
+  founder: personRef,
+};
 
 // The founder's professional body and fields, as stated on houseofsingh.com.
 const RGD = { "@type": "Organization", name: "RGD (Registered Graphic Designers)", url: "https://rgd.ca" };
@@ -36,8 +47,10 @@ export function siteGraph({ founderImage }: { founderImage?: string } = {}) {
         knowsAbout: ["brand identity design", "rebranding", "brand strategy", "website design", "brand photography", "video production", "packaging design"],
         sameAs: profileUrls(STUDIO_PROFILES),
         founder: personRef,
+        parentOrganization: PARENT_ORG,
         numberOfEmployees: { "@type": "QuantitativeValue", value: "1-10" },
-        foundingDate: "2024",
+        // Founded in Canada on 8 September 2023.
+        foundingDate: "2023-09-08",
         priceRange: "$$$$",
       },
       {

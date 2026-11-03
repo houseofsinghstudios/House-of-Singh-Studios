@@ -8,6 +8,10 @@ export const ORG_ID = `${SITE_URL}/#organization`;
 // engines and AI assistants see one person on both sites.
 export const PERSON_ID = "https://houseofsingh.com/#maninder-singh";
 
+// House of Singh, the founder's creative practice and the studio's parent brand. Like the founder,
+// it belongs to houseofsingh.com; the studio is a venture of it.
+export const PARENT_ORG_ID = "https://houseofsingh.com/#organization";
+
 export const orgRef = { "@id": ORG_ID };
 export const personRef = { "@id": PERSON_ID };
 

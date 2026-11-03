@@ -51,3 +51,27 @@ test("no source file still uses the old studio founder id", () => {
   const hits = [...walk(path.join(process.cwd(), "src")), ...walk(path.join(process.cwd(), "scripts"))].filter((f) => fs.readFileSync(f, "utf8").includes(old));
   assert.deepEqual(hits, []);
 });
+
+test("the studio: founded 8 September 2023, a venture of House of Singh", () => {
+  const s = studio();
+  assert.equal(s.foundingDate, "2023-09-08");
+  assert.deepEqual(s.parentOrganization, {
+    "@type": "Organization",
+    "@id": "https://houseofsingh.com/#organization",
+    name: "House of Singh",
+    url: "https://houseofsingh.com",
+    foundingDate: "2014",
+    founder: { "@id": PERSON },
+  });
+  // Every other studio field is as before.
+  for (const key of ["name", "url", "logo", "image", "description", "email", "address", "areaServed", "knowsAbout", "sameAs", "numberOfEmployees", "priceRange"]) assert.ok(key in s, key);
+  assert.equal(s.name, "House of Singh Studios");
+  assert.deepEqual(s["@type"], ["ProfessionalService", "Organization"]);
+});
+
+test("/about: an AboutPage whose main entity is the studio", () => {
+  const src = fs.readFileSync(path.join(process.cwd(), "src/app/(site)/about/page.tsx"), "utf8");
+  assert.match(src, /"@type": "AboutPage"/);
+  assert.match(src, /mainEntity: orgRef/);
+  assert.match(src, /__html: jsonLd\(ABOUT_PAGE\)/);
+});

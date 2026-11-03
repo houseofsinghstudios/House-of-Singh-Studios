@@ -40,6 +40,7 @@ test("every JSON-LD script tag in the site uses jsonLd", () => {
     "src/app/(site)/work/[slug]/page.tsx",
     "src/app/(site)/insights/[slug]/page.tsx",
     "src/app/(site)/layout.tsx",
+    "src/app/(site)/about/page.tsx",
   ];
   for (const f of files) {
     const src = readFileSync(f, "utf8");
