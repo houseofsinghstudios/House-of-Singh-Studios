@@ -405,16 +405,28 @@ src/lib/site-graph.ts) and described in plain sentences in llms.txt ("Who is who
 
 | Entity | What it is | @id | Owned by |
 |---|---|---|---|
-| Maninder Singh | Person: founder and creative director, RGD | https://houseofsingh.com/#maninder-singh | houseofsingh.com |
-| House of Singh | Parent brand and creative practice of Maninder Singh, since 2014; registered Canadian trademark TMA1179828 | https://houseofsingh.com/#organization | houseofsingh.com |
-| House of Singh Studios | The design studio, a venture of House of Singh, founded in Canada on 8 September 2023 | https://studios.houseofsingh.com/#organization | this site |
+| Maninder Singh | Person: creative director, photographer and multidisciplinary designer, RGD; founder and creative director of the studio | https://houseofsingh.com/#maninder-singh | houseofsingh.com |
+| House of Singh | Parent brand and creative practice of Maninder Singh, since 2014; a registered Canadian trademark | https://houseofsingh.com/#organization | houseofsingh.com |
+| House of Singh Studios | The design studio, a venture of House of Singh, founded in Canada in 2023 | https://studios.houseofsingh.com/#organization | this site |
 
 - houseofsingh.com (a separate repository) owns the person and the parent brand entities. This site
   only references them by those @ids (the Person node here describes the same person, with the same
   @id); it never mints its own ids for them.
 - Wording: the studio is a "venture" of House of Singh. Never "division" or "subsidiary".
-- Founding: the studio's foundingDate is 2023-09-08 in all machine readable data. The founder's
-  "14+ years" is personal experience, not the studio's age; do not change it.
+- Never publish the studio's exact founding day or month, anywhere (copy, metadata, JSON-LD,
+  llms.txt): founded in 2023, nothing more. foundingDate is "2023". The founder's "14+ years" is
+  personal experience, not the studio's age; do not change it.
+- Never publish the trademark registration number: "HOUSE OF SINGH is a registered Canadian
+  trademark", no number. Tests guard llms.txt and the JSON-LD against both.
+- The founder's titles, always in this order: "creative director, photographer and
+  multidisciplinary designer" (the Person description: "Creative director, photographer and
+  multidisciplinary designer based in Toronto, Canada."). His job title on this site stays
+  "Founder and Creative Director". RGD is "RGD (Registered Graphic Designers of Canada)".
+- The founder's profiles (Person sameAs, src/lib/constants/profiles.ts), in this order: RGD
+  (https://rgd.ca/members/profile/manindersingh), LinkedIn
+  (https://www.linkedin.com/in/manindersingh333), Instagram (https://www.instagram.com/houseofsingh/),
+  X (https://x.com/houseofsingh), Pinterest (https://ca.pinterest.com/houseofsingh). Match
+  houseofsingh.com.
 - houseofsinghstudios.com redirects to https://studios.houseofsingh.com at the Vercel domain level
   (not in next.config.ts); studios.houseofsingh.com stays the only canonical address.
 

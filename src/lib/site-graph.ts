@@ -17,7 +17,7 @@ const PARENT_ORG = {
 };
 
 // The founder's professional body and fields, as stated on houseofsingh.com.
-const RGD = { "@type": "Organization", name: "RGD (Registered Graphic Designers)", url: "https://rgd.ca" };
+const RGD = { "@type": "Organization", name: "RGD (Registered Graphic Designers of Canada)", url: "https://rgd.ca" };
 const FOUNDER_KNOWS_ABOUT = ["Brand identity", "Creative direction", "Art direction", "Photography", "Packaging design", "Web design"];
 
 // No telephone: the studio publishes no phone number.
@@ -49,8 +49,7 @@ export function siteGraph({ founderImage }: { founderImage?: string } = {}) {
         founder: personRef,
         parentOrganization: PARENT_ORG,
         numberOfEmployees: { "@type": "QuantitativeValue", value: "1-10" },
-        // Founded in Canada on 8 September 2023.
-        foundingDate: "2023-09-08",
+        foundingDate: "2023",
         priceRange: "$$$$",
       },
       {
@@ -58,6 +57,7 @@ export function siteGraph({ founderImage }: { founderImage?: string } = {}) {
         "@id": PERSON_ID,
         name: "Maninder Singh",
         url: "https://houseofsingh.com",
+        description: "Creative director, photographer and multidisciplinary designer based in Toronto, Canada.",
         jobTitle: "Founder and Creative Director",
         honorificSuffix: "RGD",
         ...(founderImage ? { image: founderImage } : {}),

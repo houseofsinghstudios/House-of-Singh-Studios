@@ -15,6 +15,8 @@ export const FOUNDER_PROFILES = {
   rgd: "https://rgd.ca/members/profile/manindersingh",
   linkedin: "https://www.linkedin.com/in/manindersingh333",
   instagram: "https://www.instagram.com/houseofsingh/",
+  x: "https://x.com/houseofsingh",
+  pinterest: "https://ca.pinterest.com/houseofsingh",
 };
 
 export const profileUrls = (profiles: Record<string, string>): string[] => Object.values(profiles).filter(Boolean);

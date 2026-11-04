@@ -28,12 +28,15 @@ test("the Person node: name, url, title, portrait, studio, RGD, fields and profi
   assert.equal(p.jobTitle, "Founder and Creative Director");
   assert.equal(p.image, PORTRAIT);
   assert.deepEqual(p.worksFor, { "@id": "https://studios.houseofsingh.com/#organization" });
-  assert.deepEqual(p.memberOf, { "@type": "Organization", name: "RGD (Registered Graphic Designers)", url: "https://rgd.ca" });
+  assert.deepEqual(p.memberOf, { "@type": "Organization", name: "RGD (Registered Graphic Designers of Canada)", url: "https://rgd.ca" });
+  assert.equal(p.description, "Creative director, photographer and multidisciplinary designer based in Toronto, Canada.");
   assert.deepEqual(p.knowsAbout, ["Brand identity", "Creative direction", "Art direction", "Photography", "Packaging design", "Web design"]);
   assert.deepEqual(p.sameAs, [
     "https://rgd.ca/members/profile/manindersingh",
     "https://www.linkedin.com/in/manindersingh333",
     "https://www.instagram.com/houseofsingh/",
+    "https://x.com/houseofsingh",
+    "https://ca.pinterest.com/houseofsingh",
   ]);
 });
 
@@ -52,9 +55,9 @@ test("no source file still uses the old studio founder id", () => {
   assert.deepEqual(hits, []);
 });
 
-test("the studio: founded 8 September 2023, a venture of House of Singh", () => {
+test("the studio: founded in 2023, a venture of House of Singh", () => {
   const s = studio();
-  assert.equal(s.foundingDate, "2023-09-08");
+  assert.equal(s.foundingDate, "2023");
   assert.deepEqual(s.parentOrganization, {
     "@type": "Organization",
     "@id": "https://houseofsingh.com/#organization",
@@ -74,4 +77,26 @@ test("/about: an AboutPage whose main entity is the studio", () => {
   assert.match(src, /"@type": "AboutPage"/);
   assert.match(src, /mainEntity: orgRef/);
   assert.match(src, /__html: jsonLd\(ABOUT_PAGE\)/);
+});
+
+// Never the trademark number, nor the studio's founding day or month: in the site graph, and in the
+// source of every file that writes JSON-LD (Sanity content is checked on the built pages).
+// The date pattern also catches 2023/09/08 and similar, without spelling the date out here.
+const FORBIDDEN = [/TMA\s*\d/, /2023\D0?9\D0?8/, /September/];
+
+test("guard: the site graph never gives the trademark number or the studio's founding day or month", () => {
+  const out = JSON.stringify(siteGraph({ founderImage: PORTRAIT }));
+  for (const re of FORBIDDEN) assert.doesNotMatch(out, re);
+});
+
+test("guard: no file that writes JSON-LD gives them either", () => {
+  const walk = (dir: string): string[] =>
+    fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+      const p = path.join(dir, e.name);
+      return e.isDirectory() ? walk(p) : /\.(ts|tsx)$/.test(e.name) ? [p] : [];
+    });
+  const writers = walk(path.join(process.cwd(), "src")).filter((f) => /jsonLd\(|application\/ld\+json/.test(fs.readFileSync(f, "utf8")));
+  const files = [...writers, path.join(process.cwd(), "src/lib/schema.ts"), path.join(process.cwd(), "src/lib/site-graph.ts")];
+  assert.ok(writers.length >= 7, `found ${writers.length} JSON-LD writers`);
+  for (const f of files) for (const re of FORBIDDEN) assert.doesNotMatch(fs.readFileSync(f, "utf8"), re, `${f} ${re}`);
 });
