@@ -247,3 +247,20 @@
     }
   }
 }
+
+/* The archive pages /insights/page/N: the same grid as /insights, with Newer and Older links. */
+.ins-hero-label {
+  margin: 0 0 16px;
+}
+
+.ins-list {
+  padding: clamp(40px, 5vw, 64px) var(--page-px) clamp(64px, 8vw, 120px);
+}
+
+.ins-pager {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: clamp(48px, 6vw, 72px);
+}

@@ -32,3 +32,19 @@ export const STATIC_LASTMOD: Record<string, string> = {
 export function staticLastmod(path: string): string | undefined {
   return STATIC_LASTMOD[path] ?? (path.startsWith("/initiatives/") ? STATIC_LASTMOD["/initiatives"] : undefined);
 }
+
+// The /insights listing changes whenever a post does, so its lastmod is the newest _updatedAt among
+// the published posts, not a date in the map above (that date stays as the fallback when Sanity
+// cannot be read). Undefined when there is no valid date.
+export function latestUpdatedAt(docs: ReadonlyArray<{ _updatedAt?: string }>): string | undefined {
+  let latest: string | undefined;
+  let latestTime = -Infinity;
+  for (const doc of docs) {
+    const t = doc._updatedAt ? Date.parse(doc._updatedAt) : NaN;
+    if (!Number.isNaN(t) && t > latestTime) {
+      latestTime = t;
+      latest = doc._updatedAt;
+    }
+  }
+  return latest;
+}

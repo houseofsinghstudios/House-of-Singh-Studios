@@ -28,6 +28,7 @@ export interface PostCard {
   featuredImage?: { alt?: string; crop?: { top: number; bottom: number; left: number; right: number }; hotspot?: { x: number; y: number }; asset?: { _id: string } };
   category?: string;
   publishedAt?: string;
+  featured?: boolean;
   readingTime: number;
 }
 
@@ -35,12 +36,14 @@ export async function getAllPosts(): Promise<PostCard[]> {
   return readSanity("articles", async () => {
     // Card fields only: the whole list is sent to the browser for the filters, so the article
     // bodies stay on the server. Only the text of the body blocks is fetched, the read time is
-    // worked out from it here exactly as on the article, and the text is dropped.
+    // worked out from it here exactly as on the article, and the text is dropped. Newest first;
+    // src/lib/insights-listing.ts then moves the hero (the newest Featured post) to the front.
     const posts = await client.fetch<Array<Omit<PostCard, "readingTime"> & { readBody?: Parameters<typeof calculateReadTime>[0] }>>(
-      `*[_type == "post" && ${PUBLISHED}] | order(featured desc, publishedAt desc) {
+      `*[_type == "post" && ${PUBLISHED}] | order(publishedAt desc) {
         _id,
         title,
         slug,
+        featured,
         featuredImage { alt, crop, hotspot, asset-> { _id } },
         category,
         ${READ_TIME_BLOCKS},

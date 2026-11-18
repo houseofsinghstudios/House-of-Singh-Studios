@@ -1,60 +1,21 @@
 "use client";
 
+// A client component: the category filter and "Load more" keep their state in the browser. The
+// cards, their order and the page links come from the server (src/lib/insights-cards.ts and
+// src/lib/insights-listing.ts), shared with the paginated pages /insights/page/N.
+
 import { useState, useMemo } from "react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
-import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
-import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import InsightsCta from "@/components/insights/InsightsCta";
+import { InsightGridCard, PostMeta, type InsightCard } from "@/components/insights/InsightCards";
+import { POSTS_PER_PAGE, orderForListing, pageHref } from "@/lib/insights-listing";
 import "./insights.css";
 
-// A post card. The image URLs are built on the server (src/app/(site)/insights/page.tsx): the
-// featured size and the card size, as any post can become the featured one.
-export interface InsightCard {
-  _id: string;
-  title: string;
-  slug: { current: string };
-  featuredImage?: { alt?: string; featuredUrl: string; cardUrl: string };
-  category?: string;
-  publishedAt?: string;
-  readingTime?: number;
-}
-
 interface InsightsClientProps {
+  // Already in listing order: the hero first, then newest first.
   posts: InsightCard[];
-}
-
-const POSTS_PER_PAGE = 6;
-
-function formatDate(dateString?: string): string {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
-}
-
-function PostMeta({
-  category,
-  date,
-  readingTime,
-}: {
-  category?: string;
-  date?: string;
-  readingTime?: number;
-}) {
-  const parts: string[] = [];
-  if (category) parts.push(category);
-  if (date) parts.push(formatDate(date));
-  if (readingTime) parts.push(`${readingTime} min read`);
-  return (
-    <p className="ins-meta">
-      {parts.map((part, i) => (
-        <span key={i}>
-          {i > 0 && <span className="ins-meta-dot">&middot;</span>}
-          {part}
-        </span>
-      ))}
-    </p>
-  );
 }
 
 export default function InsightsClient({ posts }: InsightsClientProps) {
@@ -73,13 +34,16 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
   // Filter posts
   const filteredPosts = useMemo(() => {
     if (activeFilter === "All") return posts;
-    return posts.filter((p) => p.category === activeFilter);
+    return orderForListing(posts.filter((p) => p.category === activeFilter));
   }, [posts, activeFilter]);
 
-  // Featured = first filtered post
+  // The hero: the newest Featured post, otherwise the newest (src/lib/insights-listing.ts).
   const featuredPost = filteredPosts[0];
   const gridPosts = filteredPosts.slice(1, visibleCount + 1);
   const hasMore = visibleCount + 1 < filteredPosts.length;
+  // "Load more" is a real link to the next page, so crawlers reach every post; in the browser it
+  // reveals the next cards in place instead.
+  const nextPage = Math.floor(visibleCount / POSTS_PER_PAGE) + 1;
 
   // Reset pagination on filter change
   const handleFilter = (f: string) => {
@@ -216,46 +180,22 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
             <>
               <div className="ins-grid">
                 {gridPosts.map((post, i) => (
-                  <Link
-                    key={post._id}
-                    href={`/insights/${post.slug?.current}`}
-                    className="ins-card css-reveal no-underline"
-                    data-cursor="view"
-                    style={{ transitionDelay: `${i * 80}ms` }}
-                  >
-                    {post.featuredImage && (
-                      <div className="ins-card-img reveal-clip">
-                        <div className="ins-card-img-inner relative">
-                          <Image
-                            src={post.featuredImage.cardUrl}
-                            alt={post.featuredImage?.alt || post.title}
-                            fill
-                            style={{ objectFit: "cover" }}
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                          />
-                        </div>
-                      </div>
-                    )}
-                    <PostMeta
-                      category={post.category}
-                      date={post.publishedAt}
-                      readingTime={post.readingTime}
-                    />
-                    <h3 className="ins-card-title">{post.title}</h3>
-                  </Link>
+                  <InsightGridCard key={post._id} post={post} index={i} />
                 ))}
               </div>
 
               {hasMore && (
                 <div className="ins-load-more">
-                  <button
-                    onClick={() =>
-                      setVisibleCount((prev) => prev + POSTS_PER_PAGE)
-                    }
-                    className="ins-load-more-btn"
+                  <a
+                    href={pageHref(nextPage)}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      setVisibleCount((prev) => prev + POSTS_PER_PAGE);
+                    }}
+                    className="ins-load-more-btn no-underline"
                   >
                     Load more
-                  </button>
+                  </a>
                 </div>
               )}
             </>
@@ -265,28 +205,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
 
       <NextPageLink current="/insights" />
 
-      {/* ═══ DARK CTA ═══ */}
-      <section
-        className="css-reveal"
-        style={{
-          background: "var(--text-primary)",
-          color: "var(--bg)",
-          padding: "120px var(--page-px)",
-        }}
-      >
-        <div className="cta-centered">
-          <p className="cta-label">(Next Step)</p>
-          <h2 className="cta-heading">Have a project in mind?</h2>
-          <div className="cta-buttons">
-            <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
-            </Button>
-            <Button href="/start" variant="secondary-inverted" data-cursor="link">
-              Start a Project
-            </Button>
-          </div>
-        </div>
-      </section>
+      <InsightsCta />
     </div>
   );
 }
