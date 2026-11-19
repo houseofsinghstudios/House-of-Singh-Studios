@@ -186,9 +186,9 @@
 }
 
 @media (max-width: 767px) {
-  /* Starts below the header crest, which reaches 128px on phones. */
+  /* The same 152px top space as before the header change: the 56px header bar plus 96px. */
   .svcd-hero {
-    padding-top: var(--header-clearance) !important;
+    padding-top: calc(var(--header-bar) + 96px) !important;
   }
   .svcd-del-grid {
     grid-template-columns: 1fr;

@@ -1,0 +1,96 @@
+// The site header and the phone drawer: the hide and show rules (src/lib/header-scroll.ts), the
+// Toronto time (src/lib/toronto-time.ts), and what the header and drawer contain. Run with:
+// npm run test
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { HIDE_AFTER, INITIAL_SCROLL, isScrolled, nextHeaderScroll, type HeaderScroll } from "@/lib/header-scroll";
+import { formatTorontoTime, torontoTime } from "@/lib/toronto-time";
+
+// Scrolls through a list of positions and gives the state after each.
+function run(positions: number[], locked = false, from: HeaderScroll = INITIAL_SCROLL): HeaderScroll[] {
+  const out: HeaderScroll[] = [];
+  let state = from;
+  for (const y of positions) out.push((state = nextHeaderScroll(state, y, locked)));
+  return out;
+}
+const last = (states: HeaderScroll[]) => states[states.length - 1];
+
+test("visible near the top; hides only below 400px, on the way down", () => {
+  assert.equal(last(run([0, 100, 300, 400])).hidden, false, "never hides above 400px");
+  assert.equal(last(run([0, 300, 500])).hidden, true, "hides once past 400px going down");
+});
+
+test("down: hides only after more than 8px since the last change of direction", () => {
+  // Hidden at 600, shown again by a 20px move up to 580, then down again from 580.
+  const states = run([0, 600, 580, 584, 588, 590]);
+  assert.equal(states[1].hidden, true, "600: hidden");
+  assert.equal(states[2].hidden, false, "580: 20px up, shown");
+  assert.equal(states[3].hidden, false, "584: 4px down, still shown");
+  assert.equal(states[4].hidden, false, "588: 8px down, still shown (not more than 8)");
+  assert.equal(states[5].hidden, true, "590: 10px down, hidden");
+});
+
+test("up: shows on any upward move of more than 8px", () => {
+  const states = run([0, 600, 595, 592, 590]);
+  assert.equal(states[1].hidden, true, "600: hidden");
+  assert.equal(states[2].hidden, true, "595: 5px up, still hidden");
+  assert.equal(states[3].hidden, true, "592: 8px up, still hidden (not more than 8)");
+  assert.equal(states[4].hidden, false, "590: 10px up, shown");
+});
+
+test("always visible at the top of the page, and while locked", () => {
+  assert.equal(last(run([0, 900, 10])).hidden, false, "back at the top");
+  assert.equal(last(run([0, 900, 1200], true)).hidden, false, "drawer open or reduced motion");
+  assert.ok(HIDE_AFTER === 400);
+});
+
+test("the line under the bar shows once scrolled past 20px", () => {
+  assert.equal(isScrolled(0), false);
+  assert.equal(isScrolled(20), false);
+  assert.equal(isScrolled(21), true);
+});
+
+test("the drawer's time is Toronto time whatever the visitor's zone, as in 1:05 AM EST", () => {
+  // 06:05 UTC on 15 January is 1:05 AM in Toronto (EST, UTC minus 5).
+  assert.equal(formatTorontoTime(torontoTime(new Date(Date.UTC(2026, 0, 15, 6, 5)))), "1:05 AM EST");
+  // 16:30 UTC on 15 July is 12:30 PM in Toronto (EDT, UTC minus 4).
+  assert.equal(formatTorontoTime(torontoTime(new Date(Date.UTC(2026, 6, 15, 16, 30)))), "12:30 PM EDT");
+  assert.deepEqual(torontoTime(new Date(Date.UTC(2026, 0, 15, 6, 5))), { hour: "1", minute: "05", dayPeriod: "AM", zone: "EST" });
+});
+
+test("desktop header: the wordmark artwork home link, five links and Plan your project; no Contact", () => {
+  const header = readFileSync("src/components/layout/Header.tsx", "utf8");
+  assert.match(header, /src="\/hos-studios-wordmark\.svg" alt="House of Singh Studios"/);
+  assert.doesNotMatch(header, /hos-studios-logo\.svg|header-crest/);
+  const links = [...header.slice(header.indexOf("NAV_LINKS = ["), header.indexOf("];")).matchAll(/label: "([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(links, ["Services", "Work", "AI Lab", "About", "Insights"]);
+  assert.match(header, /href="\/start" className="btn-primary header-cta" data-cursor="link" onClick=\{\(\) => track\("header_cta_click", \{ location: "header" \}\)\}>\s*Plan your project/);
+  assert.match(header, /track\("menu_open"\)/);
+  assert.match(header, /aria-expanded=\{open\}/);
+  assert.match(header, /aria-controls=\{DRAWER_ID\}/);
+  // The crest file stays for the footer.
+  assert.ok(readFileSync("public/hos-studios-logo.svg", "utf8").length > 0);
+  // The wordmark is artwork: outlined paths, no text and no font.
+  const svg = readFileSync("public/hos-studios-wordmark.svg", "utf8");
+  assert.doesNotMatch(svg, /<text|font-family|@font-face/);
+});
+
+test("drawer: a modal dialog with six links including Contact, a close button, and no Plan your project", () => {
+  const drawer = readFileSync("src/components/layout/MenuDrawer.tsx", "utf8");
+  assert.match(drawer, /role="dialog"\s+aria-modal="true"\s+aria-label="Menu"/);
+  assert.match(drawer, /aria-label="Close menu"/);
+  const links = [...drawer.slice(drawer.indexOf("DRAWER_LINKS = ["), drawer.indexOf("];")).matchAll(/label: "([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(links, ["Services", "Work", "AI Lab", "About", "Insights", "Contact"]);
+  assert.doesNotMatch(drawer, /Plan your project|\/start/);
+  for (const closes of [/e\.key === "Escape"/, /className="menu-scrim"[^>]*onClick=\{onClose\}/, /onClick=\{onClose\}\s*style/, /SWIPE_CLOSE_PX = 60/]) assert.match(drawer, closes);
+  assert.match(drawer, /EditorialLabel text="Studio"/);
+  assert.match(drawer, /EditorialLabel text="Local time"/);
+});
+
+test("one header token: --header-bar, 72px on desktop and 56px at 1080px and below", () => {
+  const css = readFileSync("src/app/globals.css", "utf8");
+  assert.match(css, /--header-bar: 72px;/);
+  assert.match(css, /@media \(max-width: 1080px\) \{\s*:root \{\s*--header-bar: 56px;/);
+  for (const old of ["--header-clearance", "--header-logo-top", "--header-logo-height"]) assert.ok(!css.includes(old), old);
+});

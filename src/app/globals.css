@@ -34,12 +34,9 @@
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
   --hero-pt: clamp(280px, 24vw, 340px);
-  /* The header crest's position and size. The crest reads these, so anything measured from them
-     follows the real logo. */
-  --header-logo-top: 48px;
-  --header-logo-height: 115px;
-  /* Space a page needs at its top so the first content clears the crest by 24px. */
-  --header-clearance: calc(var(--header-logo-top) + var(--header-logo-height) + 24px);
+  /* The fixed header bar's height: 72px on desktop, 56px at 1080px and below (one height at every
+     scroll position). Anything that must clear the header measures from it. */
+  --header-bar: 72px;
 }
 
 @theme inline {
@@ -1823,91 +1820,54 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
    UI/UX A: Global Micro-Interactions
    ═══════════════════════════════════════════════════════ */
 
-/* ── V2 Header System ── */
-
+/* ── V2 Header System ──
+   One fixed bar at every scroll position: the wordmark artwork on the left (the home link), the
+   links and "Plan your project" on the right above 1080px, the menu button at 1080px and below.
+   Solid Silver Mist; a 1px line fades in once the page has scrolled past 20px. It slides up out of
+   view on the way down the page and back on the way up (src/lib/header-scroll.ts). */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 100;
-  height: 80px;
+  height: var(--header-bar);
   display: flex;
   align-items: center;
   padding: 0 var(--page-px);
-  background-color: transparent;
+  background-color: var(--bg);
   border-bottom: 1px solid transparent;
-  transition: transform 0.35s ease,
-              background-color 0.3s ease,
-              border-color 0.3s ease,
-              height 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+              border-color 0.3s ease;
 }
-
 .site-header--scrolled {
-  height: 56px;
-  background-color: rgba(247, 246, 245, 0.9);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
   border-bottom-color: var(--border);
 }
-
-/* Firefox fallback: no backdrop-filter support */
-@supports not (backdrop-filter: blur(1px)) {
-  .site-header--scrolled {
-    background-color: rgba(247, 246, 245, 0.95);
-  }
+.site-header--hidden {
+  transform: translateY(-100%);
 }
 
-/* ── Crest logo (page top, desktop) ── */
-.header-crest-wrap {
-  position: fixed;
-  left: var(--page-px);
-  top: var(--header-logo-top);
-  z-index: 100;
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  pointer-events: auto;
-}
-.site-header--scrolled ~ .header-crest-wrap,
-.site-header--scrolled .header-crest-wrap {
-  opacity: 0;
-  transform: translateY(-20px);
-  pointer-events: none;
-}
-/* Crest is inside header, so use the class directly */
-.site-header--scrolled .header-crest-wrap {
-  opacity: 0;
-  transform: translateY(-20px);
-  pointer-events: none;
-}
-.header-crest {
-  height: var(--header-logo-height);
-  width: auto;
-  display: block;
-}
-
-/* ── Wordmark ── */
-.header-wordmark-wrap {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-}
-.site-header--scrolled .header-wordmark-wrap {
-  opacity: 1;
-  pointer-events: auto;
-}
+/* ── Wordmark: artwork, sized by height (the width follows the artwork) ── */
 .header-wordmark {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--text-primary);
-  text-decoration: none;
+  display: flex;
+  align-items: center;
+  /* Never touches the links or the menu button: where the bar is too narrow for the artwork at full
+     size, the artwork shrinks instead. */
+  min-width: 0;
+  margin-right: 32px;
+  /* Touch target: padding adds tap area around the artwork without moving it. */
+  padding: 12px 0;
+  margin-top: -12px;
+  margin-bottom: -12px;
   view-transition-name: site-logo;
-  /* Touch target: vertical padding on an inline link adds tap area without moving anything. */
-  padding: 6px 0;
+}
+.header-wordmark-img {
+  display: block;
+  height: 14px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
 }
 
 /* ── Spacer ── */
@@ -1920,9 +1880,13 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   display: flex;
   align-items: center;
   gap: 32px;
-  opacity: 1;
-  transition: opacity 0.2s ease;
-  pointer-events: auto;
+}
+/* Just above the drawer breakpoint the links and "Plan your project" stay on one line, so the
+   wordmark gives way: a closer gap keeps it at 11px or more down to 1081px. */
+@media (min-width: 1081px) and (max-width: 1279px) {
+  .header-desktop-nav {
+    gap: 24px;
+  }
 }
 
 /* ── Interaction 1: Nav Link Hover Underline ── */
@@ -1933,6 +1897,7 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  white-space: nowrap;
   color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.2s ease;
@@ -1959,105 +1924,202 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   }
 }
 
-/* ── Mobile hamburger ── */
+/* "Plan your project": the primary button's colours and light sweep (.btn-primary), at the nav's
+   size: 11px uppercase with the links' letter spacing. */
+.header-cta {
+  padding: 10px 16px;
+  font-size: 11px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+.header-cta:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* ── Menu button (1080px and below) ── */
 .header-mobile-hamburger {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: flex-end;
   gap: 6px;
-  width: 32px;
-  height: 32px;
+  /* 44px tap area; the lines sit flush with the right page edge. */
+  width: 44px;
+  height: 44px;
+  margin-right: -12px;
+  padding: 0 12px;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px 0;
-  z-index: 110;
 }
 .hamburger-line {
   display: block;
   width: 20px;
   height: 1.5px;
   background: var(--text-primary);
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.2s ease;
-  transform-origin: center;
-}
-.hamburger-line--top.open {
-  transform: translateY(3.75px) rotate(45deg);
-}
-.hamburger-line--bottom.open {
-  transform: translateY(-3.75px) rotate(-45deg);
 }
 
-/* ── Mobile nav panel ── */
-.mobile-nav-panel {
+/* ── Phone and tablet menu: a drawer from the right over a scrim (MenuDrawer.tsx) ── */
+body.nav-open {
+  overflow: hidden;
+}
+.menu-scrim {
   position: fixed;
-  top: 64px;
-  left: 0;
+  inset: 0;
+  z-index: 120;
+  background: var(--overlay-50);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0s linear 0.45s;
+}
+.menu-scrim[data-open="true"] {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.45s ease;
+}
+.menu-drawer {
+  position: fixed;
+  top: 0;
   right: 0;
   bottom: 0;
-  z-index: 99;
+  z-index: 121;
+  width: 85vw;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 32px 32px;
   background: var(--bg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s linear 0.55s;
+}
+.menu-drawer[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.menu-drawer-top {
+  flex: none;
+  height: var(--header-bar);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* The close button: an 18px X of two 1.5px Obsidian strokes in a 44px tap area. */
+.menu-drawer-close {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin-right: -13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.menu-drawer-close::before,
+.menu-drawer-close::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* The diagonal of an 18px square. */
+  width: 25.5px;
+  height: 1.5px;
+  background: var(--text-primary);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.menu-drawer-close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.menu-drawer-close:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -4px;
+}
+.menu-drawer-links {
   display: flex;
   flex-direction: column;
-  padding: 32px var(--page-px) 48px;
-  animation: mobileNavIn 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  margin-top: 16px;
 }
-@keyframes mobileNavIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.mobile-nav-links {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
+/* The links: no dividers between them (deliberate, see CLAUDE.md). They slide in from 24px to the
+   right and fade, starting 0.16s after the drawer opens, 50ms apart (--i is the link's index). */
 .mobile-nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 55px;
   font-family: var(--sans);
   font-size: clamp(24px, 5vw, 32px);
   font-weight: 500;
   letter-spacing: -0.01em;
   color: var(--text-primary);
   text-decoration: none;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  transition: opacity 0.2s ease;
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.menu-drawer[data-open="true"] .mobile-nav-link {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: calc(0.16s + var(--i, 0) * 50ms);
 }
 @media (hover: hover) {
-  .mobile-nav-link:hover {
+  .menu-drawer[data-open="true"] .mobile-nav-link:hover {
     opacity: 0.6;
+    transition-delay: 0s;
   }
 }
-.mobile-nav-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.mobile-nav-link:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+.menu-drawer-foot {
   margin-top: auto;
   padding-top: 32px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.menu-drawer-label {
+  margin: 0 0 8px;
+}
+.menu-drawer-value {
+  display: block;
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--text-label);
+  color: var(--text-secondary);
 }
-
-/* ── Responsive: Desktop 1081+ ── */
-@media (min-width: 1081px) {
-  .header-desktop-nav {
-    display: flex;
-  }
+.menu-drawer-time {
+  font-variant-numeric: tabular-nums;
 }
-
-/* ── Hide crest when mobile nav is open ── */
-body.nav-open .header-crest-wrap {
-  opacity: 0 !important;
-  pointer-events: none;
+/* The colon drops to 25 percent once every 2 seconds: a step, not a smooth blink. */
+.menu-drawer-colon {
+  animation: menu-clock-colon 2s step-end infinite;
+}
+@keyframes menu-clock-colon {
+  0% { opacity: 1; }
+  50% { opacity: 0.25; }
 }
 
 /* ── Responsive: Nav hamburger at 1080px and below ── */
 @media (max-width: 1080px) {
+  :root {
+    --header-bar: 56px;
+  }
   .header-desktop-nav {
     display: none !important;
   }
   .header-mobile-hamburger {
     display: flex;
+  }
+  /* About 12px tall; on a narrow phone it shrinks to leave room for the menu button. */
+  .header-wordmark {
+    margin-right: 16px;
+  }
+  .header-wordmark-img {
+    height: 12px;
   }
 }
 
@@ -2065,22 +2127,6 @@ body.nav-open .header-crest-wrap {
 @media (max-width: 767px) {
   :root {
     --hero-pt: clamp(200px, 28vw, 260px);
-    --header-logo-top: 32px;
-    --header-logo-height: 96px;
-  }
-  .site-header {
-    height: 64px;
-  }
-  .site-header--scrolled {
-    height: 64px;
-  }
-  .header-wordmark-wrap {
-    opacity: 0;
-    pointer-events: none;
-  }
-  .site-header--scrolled .header-wordmark-wrap {
-    opacity: 1;
-    pointer-events: auto;
   }
 }
 
@@ -2705,16 +2751,38 @@ td a {
     opacity: 1;
     transform: none;
   }
-  /* Loops and the mobile menu's entrance */
-  .mobile-nav-panel {
-    animation: none;
-  }
-
-  /* The header changes state on scroll (crest to wordmark, shrinking) at once, without sliding */
-  .site-header,
-  .header-crest-wrap,
-  .header-wordmark-wrap {
+  /* The header never hides with reduced motion (src/components/layout/Header.tsx); its line under
+     the bar appears at once. */
+  .site-header {
     transition: none;
+  }
+  /* The drawer and its scrim fade over 0.3s: no slide, no stagger; the clock's colon stays still. */
+  .menu-drawer,
+  .menu-drawer[data-open="true"] {
+    transform: none;
+  }
+  .menu-drawer {
+    opacity: 0;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+  .menu-drawer[data-open="true"] {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+  .menu-scrim {
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+  }
+  .menu-scrim[data-open="true"] {
+    transition: opacity 0.3s ease;
+  }
+  .mobile-nav-link,
+  .menu-drawer[data-open="true"] .mobile-nav-link {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .menu-drawer-colon {
+    animation: none;
   }
   /* The footer crest shows fully revealed and at full size, as it ends after the scroll */
   .ft-reveal-inner {
