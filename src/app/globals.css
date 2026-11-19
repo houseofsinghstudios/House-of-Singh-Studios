@@ -855,7 +855,7 @@ body {
   width: 100%;
 }
 .ft-reveal-crest {
-  height: clamp(120px, 16vw, 180px);
+  height: clamp(150px, 20vw, 240px);
   width: auto;
   filter: brightness(0) saturate(100%) invert(73%) sepia(6%) saturate(339%) hue-rotate(15deg) brightness(90%) contrast(87%);
 }
@@ -865,14 +865,28 @@ body {
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.14em;
+  line-height: 1.6;
   color: var(--text-secondary);
   text-align: center;
   margin: 0;
+  /* Across the full width, centred: one line where it fits, two centred lines on a narrow phone
+     (never smaller type). */
   position: absolute;
   bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  padding: 0 var(--page-px);
+}
+/* The maple leaf and "Proudly" never part; the leaf sits 9px before the word, centred on the capitals. */
+.ft-reveal-lead {
   white-space: nowrap;
+}
+.ft-reveal-leaf {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 9px;
+  vertical-align: -2px;
 }
 
 /* ═══════════════════════════════════════════════════════
