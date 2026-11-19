@@ -87,50 +87,32 @@ export function heroImagesMessage(images: unknown, shown: boolean): string | und
 // ── What the hero shows (src/components/homepage/Hero*.tsx) ──
 // HeroSection (a server component) turns each HeroProject into a HeroEntry: plain data with a finished
 // image URL, safe to hand to the client components. One image per project: its first hero image.
-// heroField and heroWord stay in Studio for a later version that pairs the word with the image; the
-// homepage does not read them now.
+// heroField stays in Studio for later use; the homepage does not read it now.
 
 export interface HeroEntry {
   slug: string;
   heroName: string;
   heroLine: string;
+  // The word in the value line while this project's image shows ("" when Studio has none).
+  heroWord: string;
   heroFit: HeroFit;
   // The Studio crop already in the URL; the focal point as a CSS object-position.
   image: { src: string; alt: string; lqip?: string; position: string };
 }
 
-// The word that cycles in "Brand identity, design and digital for growing businesses.", in this order,
-// on its own clock. "businesses" first, the sentence screen readers hear. Lower case, 14 characters
-// at most, so the reserved three lines always hold the sentence.
-export const HERO_WORDS = [
-  "businesses",
-  "cafés",
-  "restaurants",
-  "clinics",
-  "law firms",
-  "contractors",
-  "retailers",
-  "food brands",
-  "beauty labels",
-  "startups",
-] as const;
-export const HERO_WORD_MAX = 14;
+// The word in "Brand identity, design and digital for growing businesses." before the rotation has
+// moved, and for any project without a field word. Also the sentence screen readers hear.
+export const DEFAULT_WORD = "businesses";
 
-// The two clocks, in milliseconds. The words: the first change 4.5s after the entrance has finished,
-// then every 3s. The images: 6s each, including the first. They never change within 500ms of each
-// other: an image that would, waits until 500ms after the word.
-export const HERO_ENTRANCE_MS = 1700;
-export const WORD_FIRST_MS = HERO_ENTRANCE_MS + 4500;
-export const WORD_EVERY_MS = 3000;
-export const IMAGE_HOLD_MS = 6000;
-export const CLOCK_GAP_MS = 500;
+// One clock: each image holds 5s, the first included, at every width; the word changes with it.
+export const IMAGE_HOLD_MS = 5000;
 
-// How much longer an image that is due now waits, given the last and the next word change (the next is
-// Infinity while the words are stopped).
-export function imageWait(now: number, lastWord: number, nextWord: number): number {
-  if (now - lastWord < CLOCK_GAP_MS) return lastWord + CLOCK_GAP_MS - now;
-  if (nextWord - now < CLOCK_GAP_MS) return nextWord + CLOCK_GAP_MS - now;
-  return 0;
+// The word for the image on screen. The first image on the first pass shows "businesses"; every later
+// image shows its project's field word; once the rotation has looped, the first project shows its own
+// too. A project without a field word shows "businesses" for its turn.
+export function heroWordFor(entries: readonly Pick<HeroEntry, "heroWord">[], index: number, looped: boolean): string {
+  if (index === 0 && !looped) return DEFAULT_WORD;
+  return entries[index]?.heroWord.trim() || DEFAULT_WORD;
 }
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));

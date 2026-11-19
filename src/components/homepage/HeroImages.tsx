@@ -3,9 +3,9 @@
 // image only when it is about to show (so a phone does not fetch every project image at once), and
 // runs the progress line along the image's foot.
 //
-// The whole image is one link to the project on screen. The progress line's CSS animation times the
-// hold: when it ends the image is due, and HeroInteractive decides when it moves (never within 500ms
-// of a word change). Pausing the animation pauses the hold, so the line and the timer agree.
+// The whole image is one link to the project on screen. The progress line's CSS animation is the
+// clock: when it ends the next image shows (and the value line's word with it). Pausing the animation
+// pauses the hold, so the line and the timer always agree.
 
 import Image from "next/image";
 import { Link } from "next-view-transitions";

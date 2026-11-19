@@ -1,6 +1,7 @@
 // The homepage hero. A server component: it builds each image's URL with the Studio crop (the
 // Sanity image builder stays on the server) and hands plain data to HeroInteractive, which owns
-// everything that moves: the rotating images, the caption and the cycling word in the value line.
+// everything that moves: the rotating images, the caption and the value line's word, which follows
+// the image.
 //
 // With no hero projects the hero shows the text column only, beside an empty Cloudy White column.
 
@@ -17,6 +18,7 @@ function heroEntry(project: HeroProject): HeroEntry {
     slug: project.slug,
     heroName: project.heroName,
     heroLine: project.heroLine,
+    heroWord: project.heroWord,
     heroFit: project.heroFit,
     image: {
       src: heroImageUrl(image),

@@ -1,14 +1,14 @@
 "use client";
 // A client component: the value line enters line by line (its lines are measured in the browser), and
-// its last word cycles, rolling letter by letter on a marker band.
+// its last word changes with the image on show, rolling letter by letter on a marker band.
 //
 // "Brand identity, design and digital for growing businesses." Nothing in it is interactive. The
 // visible line is hidden from screen readers, which read the sentence once, from the hidden copy;
-// the word changes are not announced. Reduced motion: no entrance and no roll (and no cycling, which
+// the word changes are not announced. Reduced motion: no entrance and no roll (and no changes, which
 // HeroInteractive stops), the band shown still.
 
 import { useEffect, useRef, useState } from "react";
-import { HERO_WORDS } from "@/lib/homepage-hero";
+import { DEFAULT_WORD } from "@/lib/homepage-hero";
 
 const LEAD = "Brand identity, design and digital for growing".split(" ");
 // The line's entrance in CSS: from 0.5s, 70ms between lines, 0.9s each. The masks come off after it.
@@ -95,7 +95,7 @@ export default function HeroLine({ word, reduceMotion }: { word: string; reduceM
           </span>
         </span>
       </p>
-      <p className="sr-only">{`${LEAD.join(" ")} ${HERO_WORDS[0]}.`}</p>
+      <p className="sr-only">{`${LEAD.join(" ")} ${DEFAULT_WORD}.`}</p>
     </>
   );
 }

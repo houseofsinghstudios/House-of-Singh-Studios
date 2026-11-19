@@ -1,67 +1,37 @@
-// The homepage hero as it renders (src/components/homepage/Hero*.tsx): the word list and the two clocks
-// (src/lib/homepage-hero.ts), and the parts of the markup that must not drift: the hidden H1, the
+// The homepage hero as it renders (src/components/homepage/Hero*.tsx): the word that follows the image
+// and the one clock (src/lib/homepage-hero.ts), and the parts of the markup that must not drift: the hidden H1, the
 // label, the client component comments, the images and the analytics events. Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import {
-  CLOCK_GAP_MS,
-  HERO_ENTRANCE_MS,
-  HERO_WORDS,
-  HERO_WORD_MAX,
-  IMAGE_HOLD_MS,
-  WORD_EVERY_MS,
-  WORD_FIRST_MS,
-  heroObjectPosition,
-  imageWait,
-} from "@/lib/homepage-hero";
+import { DEFAULT_WORD, IMAGE_HOLD_MS, heroObjectPosition, heroWordFor } from "@/lib/homepage-hero";
 
 const read = (file: string) => readFileSync(file, "utf8");
 
-test("the cycling words: the agreed list in order, businesses first", () => {
-  assert.deepEqual([...HERO_WORDS], ["businesses", "cafés", "restaurants", "clinics", "law firms", "contractors", "retailers", "food brands", "beauty labels", "startups"]);
-  assert.equal(HERO_WORDS[0], "businesses");
+const PROJECTS = [{ heroWord: "cafés" }, { heroWord: "home brands" }, { heroWord: "  " }, { heroWord: "jewellers" }];
+
+test("the word follows the image: businesses for the first image on the first pass, then each project's word", () => {
+  assert.equal(DEFAULT_WORD, "businesses");
+  assert.equal(heroWordFor(PROJECTS, 0, false), "businesses", "first image, first pass");
+  assert.equal(heroWordFor(PROJECTS, 1, false), "home brands");
+  assert.equal(heroWordFor(PROJECTS, 3, false), "jewellers");
+  assert.equal(heroWordFor(PROJECTS, 0, true), "cafés", "once looped, the first project shows its own word");
+  assert.equal(heroWordFor(PROJECTS, 1, true), "home brands");
 });
 
-test("every word is lower case and 14 characters at most", () => {
-  assert.equal(HERO_WORD_MAX, 14);
-  for (const word of HERO_WORDS) {
-    assert.equal(word, word.toLowerCase(), `${word} is lower case`);
-    assert.ok([...word].length <= HERO_WORD_MAX, `${word} is ${[...word].length} characters`);
-  }
+test("a project without a field word shows businesses for its turn", () => {
+  assert.equal(heroWordFor(PROJECTS, 2, false), "businesses");
+  assert.equal(heroWordFor(PROJECTS, 2, true), "businesses");
+  assert.equal(heroWordFor([{ heroWord: "" }], 0, true), "businesses");
+  assert.equal(heroWordFor([], 4, true), "businesses", "nothing there");
 });
 
-test("the clocks: words 4.5s after the entrance then every 3s; images 6s each; 500ms apart", () => {
-  assert.equal(WORD_FIRST_MS, HERO_ENTRANCE_MS + 4500);
-  assert.equal(WORD_EVERY_MS, 3000);
-  assert.equal(IMAGE_HOLD_MS, 6000);
-  assert.equal(CLOCK_GAP_MS, 500);
-});
-
-test("an image due within 500ms of a word change waits until 500ms after it", () => {
-  // Nothing near: moves at once.
-  assert.equal(imageWait(10_000, 8_000, 11_000), 0);
-  // A word changed 200ms ago: wait 300ms more.
-  assert.equal(imageWait(10_000, 9_800, 12_800), 300);
-  // A word changes in 200ms: wait for it, then 500ms.
-  assert.equal(imageWait(10_000, 7_000, 10_200), 700);
-  // Exactly 500ms either side is far enough.
-  assert.equal(imageWait(10_000, 9_500, 13_000), 0);
-  assert.equal(imageWait(10_000, 7_000, 10_500), 0);
-  // Words stopped (paused): only the last change counts.
-  assert.equal(imageWait(10_000, -Infinity, Infinity), 0);
-  // Simulated: words at 6.2s, 9.2s, 12.2s...; images every 6s after they may move. None within 500ms.
-  const words = Array.from({ length: 20 }, (_, k) => WORD_FIRST_MS + k * WORD_EVERY_MS);
-  let image = 0;
-  for (let n = 0; n < 8; n++) {
-    let due = image + IMAGE_HOLD_MS;
-    const last = Math.max(-Infinity, ...words.filter((w) => w <= due));
-    const next = Math.min(Infinity, ...words.filter((w) => w > due));
-    due += imageWait(due, last, next);
-    for (const w of words) assert.ok(Math.abs(due - w) >= CLOCK_GAP_MS, `image at ${due}, word at ${w}`);
-    image = due;
-  }
+test("one clock: each image holds 5s, the first included; the word has no clock of its own", () => {
+  assert.equal(IMAGE_HOLD_MS, 5000);
+  const interactive = read("src/components/homepage/HeroInteractive.tsx");
+  assert.doesNotMatch(interactive, /useWordClock|setTimeout|setInterval|imageWait/);
+  assert.match(interactive, /heroWordFor\(entries, index, rotation\.looped\)/);
 });
 
 test("the focal point: the hotspot measured inside the crop, centred without one", () => {
@@ -79,7 +49,8 @@ test("HeroSection: a server component with the hidden H1 unchanged, the label, o
   assert.match(src, /<EditorialLabel text="Brand identity studio, Toronto" \/>/);
   assert.match(src, /const image = project\.heroImages\[0\];/);
   assert.match(src, /heroImageUrl\(image\)/, "image URLs from the Sanity image builder, so the Studio crop applies");
-  assert.doesNotMatch(src, /heroField|heroWord/, "the homepage does not read the field or the field word yet");
+  assert.match(src, /heroWord: project\.heroWord,/, "the word for each project's turn");
+  assert.doesNotMatch(src, /heroField/, "the homepage does not read the field");
   const page = read("src/app/(site)/(home)/page.tsx");
   assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getFeaturedProjects\(\)\]\)/);
   assert.match(page, /export const revalidate = 60;/);
@@ -96,7 +67,7 @@ test("every hero client component says why it is a client component", () => {
 test("the value line: nothing interactive, hidden from screen readers, read once from a hidden sentence", () => {
   const src = read("src/components/homepage/HeroLine.tsx");
   assert.match(src, /<p ref=\{ref\} className="hero-value" aria-hidden="true">/);
-  assert.match(src, /<p className="sr-only">\{`\$\{LEAD\.join\(" "\)\} \$\{HERO_WORDS\[0\]\}\.`\}<\/p>/);
+  assert.match(src, /<p className="sr-only">\{`\$\{LEAD\.join\(" "\)\} \$\{DEFAULT_WORD\}\.`\}<\/p>/);
   assert.doesNotMatch(src, /<button|<a |href=|aria-live|onClick/);
   assert.match(src, /<span className="hero-band" aria-hidden="true" \/>/);
 });
@@ -129,12 +100,12 @@ test("the caption carries no Client or Exploration tag", () => {
   assert.doesNotMatch(src, /projectType|PROJECT_TYPE_LABELS|Exploration"|Client"/);
 });
 
-test("Pause: pressed state and both labels, and it stops the word as well as the images", () => {
+test("Pause: pressed state and both labels; it holds the image, and the word with it", () => {
   assert.match(read("src/components/homepage/HeroPause.tsx"), /aria-pressed=\{paused\}/);
-  assert.match(read("src/components/homepage/HeroPause.tsx"), /"Play the project images" : "Pause the project images"/);
+  assert.match(read("src/components/homepage/HeroPause.tsx"), /"Play the animation" : "Pause the animation"/);
   const interactive = read("src/components/homepage/HeroInteractive.tsx");
-  assert.match(interactive, /useWordClock\(moving && !paused\)/);
-  assert.match(interactive, /useImageClock\(entries\.length, paused \|\| hold\.held, times\)/);
+  assert.match(interactive, /halted=\{paused \|\| hold\.held\}/);
+  assert.match(interactive, /const word = moving \? heroWordFor/);
 });
 
 test("analytics: hero_project_click from the image or the caption, and hero_pause_toggle", () => {
@@ -162,4 +133,9 @@ test("hero.css: every grid-area a part asks for exists in each layout (desktop a
   const templates = [...css.matchAll(/grid-template-areas:([\s\S]*?);/g)].map((m) => new Set(m[1].replace(/"/g, " ").trim().split(/\s+/)));
   assert.equal(templates.length, 2, "one template for each layout");
   for (const template of templates) for (const area of used) assert.ok(template.has(area), `${area} is in ${[...template].join(" ")}`);
+});
+
+test("Featured Work images load lazily: below the fold, they never compete with the hero image", () => {
+  const src = read("src/components/homepage/WorkSection.tsx");
+  assert.doesNotMatch(src, /\bpriority\b|\bpreload\b|fetchPriority|loading="eager"/);
 });
