@@ -71,6 +71,10 @@ const nextConfig: NextConfig = {
       { source: "/work/meridian", destination: "/work", statusCode: 301 },
       { source: "/work/soulbound", destination: "/work", statusCode: 301 },
       { source: "/work/test", destination: "/work", statusCode: 301 },
+      // The Insights archive starts at /insights (page 1); the archive pages are /insights/page/2
+      // onwards. These two addresses would otherwise show nothing or an article 404.
+      { source: "/insights/page", destination: "/insights", statusCode: 301 },
+      { source: "/insights/page/1", destination: "/insights", statusCode: 301 },
     ];
   },
   async headers() {

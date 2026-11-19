@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Link } from "next-view-transitions";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { getInsightCards } from "@/lib/insights-cards";
-import { pageCount, pageHref, parsePageNumber, postsForPage } from "@/lib/insights-listing";
+import { archivePageNumber, pageCount, pageHref, parsePageNumber, postsForPage } from "@/lib/insights-listing";
 import { InsightGridCard } from "@/components/insights/InsightCards";
 import InsightsCta from "@/components/insights/InsightsCta";
 import NextPageLink from "@/components/layout/NextPageLink";
@@ -42,13 +42,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function InsightsArchivePage({ params }: Props) {
-  const page = parsePageNumber((await params).page);
-  if (page === 1) permanentRedirect("/insights");
-  if (!page) notFound();
-
+  // /insights/page/1 never reaches this page: next.config.ts redirects it to /insights.
   const posts = await getInsightCards();
+  const page = archivePageNumber((await params).page, posts.length);
+  if (!page) notFound();
   const total = pageCount(posts.length);
-  if (page > total) notFound();
   const pagePosts = postsForPage(posts, page);
 
   return (
@@ -66,6 +64,8 @@ export default async function InsightsArchivePage({ params }: Props) {
         </section>
 
         <div className="ins-list">
+          {/* Hidden: keeps the headings in order, h1 then h2 then the cards' h3. */}
+          <h2 className="sr-only">Articles</h2>
           <div className="ins-grid">
             {pagePosts.map((post, i) => (
               <InsightGridCard key={post._id} post={post} index={i} />

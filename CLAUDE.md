@@ -382,7 +382,7 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /services, /services/[slug] (brand-identity, visual-media, digital-design, creative-strategy) | ISR 60 s; service copy from src/data/services.ts |
 | /work, /work/[slug] | ISR 60 s; case studies from Sanity |
 | /insights, /insights/[slug] | ISR 60 s; every published article generated ahead |
-| /insights/page/[page] (2 onwards) | ISR 60 s; the archive pages behind "Load more" (a real link), indexed with their own title and canonical, not in the sitemap. /insights/page and /insights/page/1 redirect to /insights |
+| /insights/page/[page] (2 onwards) | ISR 60 s; the archive pages behind "Load more" (a real link), indexed with their own title and canonical, not in the sitemap; 404 past the last page. /insights/page and /insights/page/1 redirect (301) to /insights |
 | /about, /careers, /initiatives, /initiatives/[slug] (parallel, commons) | ISR 60 s |
 | /ai, /partners, /privacy, /terms | Static, refreshed daily (the founder portrait in every page's structured data is read daily) |
 | /start, /brand-pulse, /contact | Rendered on every request (they read query parameters) |
@@ -394,7 +394,7 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /api/consent-region | GET, decides strict consent regions |
 | /api/revalidate | POST from the Sanity webhook, signed with SANITY_REVALIDATE_SECRET; refreshes the whole site, the sitemap and llms.txt at once |
 
-Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work. Unknown URLs give the site 404 (noindex).
+Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work; /insights/page and /insights/page/1 → /insights. Unknown URLs give the site 404 (noindex).
 
 When Sanity fails at runtime, pages keep their last good version (src/lib/sanity/resilience.ts); fallback content is used only while building.
 
