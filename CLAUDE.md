@@ -382,15 +382,17 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /services, /services/[slug] (brand-identity, visual-media, digital-design, creative-strategy) | ISR 60 s; service copy from src/data/services.ts |
 | /work, /work/[slug] | ISR 60 s; case studies from Sanity |
 | /insights, /insights/[slug] | ISR 60 s; every published article generated ahead |
+| /insights/page/[page] (2 onwards) | ISR 60 s; the archive pages behind "Load more" (a real link), indexed with their own title and canonical, not in the sitemap. /insights/page and /insights/page/1 redirect to /insights |
 | /about, /careers, /initiatives, /initiatives/[slug] (parallel, commons) | ISR 60 s |
 | /ai, /partners, /privacy, /terms | Static, refreshed daily (the founder portrait in every page's structured data is read daily) |
 | /start, /brand-pulse, /contact | Rendered on every request (they read query parameters) |
-| /sitemap.xml, /llms.txt | Refreshed hourly |
+| /sitemap.xml, /llms.txt | Refreshed hourly, and at once when Sanity publishes (/api/revalidate) |
 | /robots.txt, og and share images | Static |
 | /initiatives/[slug]/share-image | Rendered on request; redirects to /share-image.png when there is no logo |
 | /studio | Sanity Studio, own route group, no site chrome |
 | /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n (contracts: docs/integrations/n8n.md) |
 | /api/consent-region | GET, decides strict consent regions |
+| /api/revalidate | POST from the Sanity webhook, signed with SANITY_REVALIDATE_SECRET; refreshes the whole site, the sitemap and llms.txt at once |
 
 Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work. Unknown URLs give the site 404 (noindex).
 
@@ -459,3 +461,10 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 ## SANITY
 
 Sanity Studio is embedded at /studio inside its own route group and deploys with Vercel. Never run `sanity deploy`; it creates a separate hosted Studio that falls out of sync with the code.
+
+Publishing refreshes the site at once: a webhook in sanity.io/manage posts to /api/revalidate, signed with
+SANITY_REVALIDATE_SECRET (set on Vercel and on the webhook). Without it, changes wait for each page's own refresh.
+
+Insights order (src/lib/insights-listing.ts): one hero, the newest post marked Featured, then every other
+post newest first. Featured never pushes a newer post below an older one. A future publishedAt is fixed in
+Studio, not in code.

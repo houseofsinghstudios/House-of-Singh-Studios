@@ -3,15 +3,18 @@ import { client } from "@/lib/sanity/client";
 import { services } from "@/data/services";
 import { programmePage } from "@/lib/initiatives/pages";
 import { getInitiatives } from "@/lib/sanity/initiatives";
-import { STATIC_PAGES, staticLastmod } from "@/lib/sitemap-dates";
+import { STATIC_PAGES, latestUpdatedAt, staticLastmod } from "@/lib/sitemap-dates";
 
-// Rebuilt hourly, so a newly published project or article appears without a redeploy.
+// Rebuilt hourly, and at once when Sanity publishes (src/app/api/revalidate), so a newly published
+// project or article appears without a redeploy.
 export const revalidate = 3600;
 
 const baseUrl = "https://studios.houseofsingh.com";
 
 // Every URL has a lastModified: code pages from the date map in src/lib/sitemap-dates.ts (never the
-// build date, which would claim changes that never happened), Sanity pages from _updatedAt.
+// build date, which would claim changes that never happened), Sanity pages from _updatedAt, and
+// /insights from its newest post's _updatedAt. The archive pages /insights/page/N are deliberately
+// not listed: they are reached through links.
 
 // Published documents only. Drafts and release versions are unpublished and never listed.
 // The legacy fallback projects in src/data/projects.ts are deliberately not listed either.
@@ -48,7 +51,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   };
 
-  STATIC_PAGES.filter((path) => path !== "/initiatives").forEach((path) => add(path, staticLastmod(path)));
+  STATIC_PAGES.filter((path) => path !== "/initiatives" && path !== "/insights").forEach((path) => add(path, staticLastmod(path)));
   services.forEach((service) => add(`/services/${service.slug}`, staticLastmod(`/services/${service.slug}`)));
 
   // Initiatives: the landing page and every programme page that renders. Hidden ones never appear.
@@ -66,10 +69,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { next: { revalidate } }
     );
     (caseStudies || []).forEach((doc) => add(`/work/${doc.slug}`, doc._updatedAt));
+    add("/insights", latestUpdatedAt(posts || []) ?? staticLastmod("/insights"));
     (posts || []).forEach((doc) => add(`/insights/${doc.slug}`, doc._updatedAt));
   } catch (error) {
     console.warn("[sitemap] Sanity fetch failed, serving static and services pages only:", error);
   }
+  // Without Sanity, /insights keeps its date from the map.
+  add("/insights", staticLastmod("/insights"));
 
   return [...entries.values()];
 }

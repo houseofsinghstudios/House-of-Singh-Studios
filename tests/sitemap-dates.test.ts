@@ -35,3 +35,12 @@ test("dates are real and not in the future; programme pages fall back to Initiat
   assert.equal(staticLastmod("/initiatives/foundry"), STATIC_LASTMOD["/initiatives"]);
   assert.equal(staticLastmod("/nowhere"), undefined);
 });
+
+test("/insights takes the newest post's _updatedAt", async () => {
+  const { latestUpdatedAt } = await import("@/lib/sitemap-dates");
+  assert.equal(
+    latestUpdatedAt([{ _updatedAt: "2026-10-28T10:00:00Z" }, { _updatedAt: "2026-11-18T09:30:00Z" }, {}, { _updatedAt: "not a date" }]),
+    "2026-11-18T09:30:00Z"
+  );
+  assert.equal(latestUpdatedAt([]), undefined);
+});
