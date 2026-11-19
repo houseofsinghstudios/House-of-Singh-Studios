@@ -37,7 +37,8 @@ function DesktopNav() {
   );
 }
 
-// At 1080px and below: opens the drawer. Two lines; the drawer has its own close button.
+// At 1080px and below: opens and closes the drawer. Its two lines turn into a cross while the drawer
+// is open (globals.css); it stays above the drawer, the one control for it.
 function MenuButton({ buttonRef, open, onClick }: { buttonRef: React.RefObject<HTMLButtonElement | null>; open: boolean; onClick: () => void }) {
   return (
     <button
@@ -115,7 +116,7 @@ export default function Header() {
         <DesktopNav />
         <MenuButton buttonRef={menuButtonRef} open={drawerOpen} onClick={drawerOpen ? closeDrawer : openDrawer} />
       </header>
-      <MenuDrawer id={DRAWER_ID} open={drawerOpen} onClose={closeDrawer} />
+      <MenuDrawer id={DRAWER_ID} open={drawerOpen} onClose={closeDrawer} toggleRef={menuButtonRef} />
     </>
   );
 }

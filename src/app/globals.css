@@ -1834,7 +1834,9 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  /* Above the menu's scrim (120) and drawer (121): the menu button stays visible and usable while the
+     drawer is open, and while it slides away. */
+  z-index: 130;
   height: var(--header-bar);
   display: flex;
   align-items: center;
@@ -1951,11 +1953,35 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   border: none;
   cursor: pointer;
 }
+.header-mobile-hamburger:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -4px;
+}
+/* The two lines morph into the drawer's close cross. Open: they slide to the middle (180ms), then turn
+   to 45 and minus 45 degrees (280ms, from 180ms). Close: the exact reverse, turning back first. Each
+   state names its own transitions, so the order follows the direction. */
 .hamburger-line {
   display: block;
-  width: 20px;
+  width: 22px;
   height: 1.5px;
   background: var(--text-primary);
+  transition:
+    rotate 280ms cubic-bezier(0.23, 1, 0.32, 1),
+    translate 180ms cubic-bezier(0.23, 1, 0.32, 1) 280ms;
+}
+.header-mobile-hamburger[aria-expanded="true"] .hamburger-line {
+  transition:
+    translate 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    rotate 280ms cubic-bezier(0.23, 1, 0.32, 1) 180ms;
+}
+/* The lines are 7.5px apart, centre to centre (1.5px lines, 6px gap): 3.75px each meets in the middle. */
+.header-mobile-hamburger[aria-expanded="true"] .hamburger-line:first-child {
+  translate: 0 3.75px;
+  rotate: 45deg;
+}
+.header-mobile-hamburger[aria-expanded="true"] .hamburger-line:last-child {
+  translate: 0 -3.75px;
+  rotate: -45deg;
 }
 
 /* ── Phone and tablet menu: a drawer from the right over a scrim (MenuDrawer.tsx) ── */
@@ -1986,7 +2012,8 @@ body.nav-open {
   max-width: 420px;
   display: flex;
   flex-direction: column;
-  padding: 0 32px 32px;
+  /* The header (with the menu button, now the close cross) sits over the drawer's top. */
+  padding: var(--header-bar) 32px 32px;
   background: var(--bg);
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -1998,42 +2025,6 @@ body.nav-open {
   transform: translateX(0);
   visibility: visible;
   transition: transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.menu-drawer-top {
-  flex: none;
-  height: var(--header-bar);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-/* The close button: an 18px X of two 1.5px Obsidian strokes in a 44px tap area. */
-.menu-drawer-close {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  margin-right: -13px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.menu-drawer-close::before,
-.menu-drawer-close::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  /* The diagonal of an 18px square. */
-  width: 25.5px;
-  height: 1.5px;
-  background: var(--text-primary);
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-.menu-drawer-close::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-.menu-drawer-close:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: -4px;
 }
 .menu-drawer-links {
   display: flex;
@@ -2750,6 +2741,11 @@ td a {
   /* The header never hides with reduced motion (src/components/layout/Header.tsx); its line under
      the bar appears at once. */
   .site-header {
+    transition: none;
+  }
+  /* The menu button swaps between lines and cross at once. */
+  .hamburger-line,
+  .header-mobile-hamburger[aria-expanded="true"] .hamburger-line {
     transition: none;
   }
   /* The drawer and its scrim fade over 0.3s: no slide, no stagger; the clock's colon stays still. */

@@ -88,10 +88,20 @@ test("desktop header: the studio's name as the home link, five links and Plan yo
   assert.doesNotMatch(css, /header-wordmark-img|min-width: 1081px\) and \(max-width: 1279px/);
 });
 
-test("drawer: a modal dialog with six links including Contact, a close button, and no Plan your project", () => {
+test("drawer: a disclosure the menu button controls, six links including Contact, no close X of its own", () => {
   const drawer = readFileSync("src/components/layout/MenuDrawer.tsx", "utf8");
-  assert.match(drawer, /role="dialog"\s+aria-modal="true"\s+aria-label="Menu"/);
-  assert.match(drawer, /aria-label="Close menu"/);
+  const header = readFileSync("src/components/layout/Header.tsx", "utf8");
+  // Not a dialog: aria-modal would hide the menu button (outside the drawer) from screen readers.
+  const code = drawer.replace(/^\s*\/\/.*$/gm, "");
+  assert.doesNotMatch(code, /role="dialog"|aria-modal|<button/);
+  assert.match(drawer, /role="region"\s+aria-label="Menu"/);
+  assert.match(drawer, /<nav className="menu-drawer-links" aria-label="Site pages">/);
+  // The menu button is the one control: never made inert, focused on open, part of the Tab loop.
+  assert.match(drawer, /header\.site-header > :not\(\.header-mobile-hamburger\)/);
+  assert.match(drawer, /toggle\.current\?\.focus\(/);
+  assert.match(drawer, /\[toggle\.current, \.\.\.panel\.current\.querySelectorAll/);
+  assert.match(header, /toggleRef=\{menuButtonRef\}/);
+  assert.match(header, /aria-label=\{open \? "Close menu" : "Open menu"\}/);
   // The same pages as the header, then Contact.
   assert.match(drawer, /const DRAWER_LINKS = \[\.\.\.SITE_LINKS, \{ label: "Contact", href: "\/contact" \}\];/);
   assert.doesNotMatch(drawer, /label: "(Services|Work|AI Lab|About|Insights)"/, "no second copy of the pages");
@@ -99,6 +109,19 @@ test("drawer: a modal dialog with six links including Contact, a close button, a
   for (const closes of [/e\.key === "Escape"/, /className="menu-scrim"[^>]*onClick=\{onClose\}/, /onClick=\{onClose\}\s*style/, /SWIPE_CLOSE_PX = 60/]) assert.match(drawer, closes);
   assert.match(drawer, /EditorialLabel text="Studio"/);
   assert.match(drawer, /EditorialLabel text="Local time"/);
+});
+
+test("the menu button morphs into the close cross, above the drawer; instantly with reduced motion", () => {
+  const css = readFileSync("src/app/globals.css", "utf8");
+  const z = (selector: string) => Number(css.slice(css.indexOf(selector + " {")).match(/z-index: (\d+);/)?.[1]);
+  assert.ok(z(".site-header") > z(".menu-drawer") && z(".site-header") > z(".menu-scrim"), "header above the drawer and scrim");
+  assert.match(css, /\.hamburger-line \{\s*display: block;\s*width: 22px;\s*height: 1\.5px;\s*background: var\(--text-primary\);/);
+  // Open: slide (180ms) then turn (280ms from 180ms). Close: turn back, then slide (from 280ms).
+  assert.match(css, /\[aria-expanded="true"\] \.hamburger-line \{\s*transition:\s*translate 180ms cubic-bezier\(0\.23, 1, 0\.32, 1\),\s*rotate 280ms cubic-bezier\(0\.23, 1, 0\.32, 1\) 180ms;/);
+  assert.match(css, /\.hamburger-line \{[^}]*transition:\s*rotate 280ms cubic-bezier\(0\.23, 1, 0\.32, 1\),\s*translate 180ms cubic-bezier\(0\.23, 1, 0\.32, 1\) 280ms;/);
+  assert.match(css, /:first-child \{\s*translate: 0 3\.75px;\s*rotate: 45deg;/);
+  assert.match(css, /:last-child \{\s*translate: 0 -3\.75px;\s*rotate: -45deg;/);
+  assert.doesNotMatch(css, /menu-drawer-close|menu-drawer-top/);
 });
 
 test("one header token: --header-bar, 72px on desktop and 56px at 1080px and below", () => {
