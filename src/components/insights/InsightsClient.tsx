@@ -10,7 +10,7 @@ import Image from "next/image";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InsightsCta from "@/components/insights/InsightsCta";
 import { InsightGridCard, PostMeta, type InsightCard } from "@/components/insights/InsightCards";
-import { POSTS_PER_PAGE, orderForListing, pageHref } from "@/lib/insights-listing";
+import { POSTS_PER_PAGE, isPlainLeftClick, orderForListing, pageHref } from "@/lib/insights-listing";
 import "./insights.css";
 
 interface InsightsClientProps {
@@ -41,8 +41,9 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
   const featuredPost = filteredPosts[0];
   const gridPosts = filteredPosts.slice(1, visibleCount + 1);
   const hasMore = visibleCount + 1 < filteredPosts.length;
-  // "Load more" is a real link to the next page, so crawlers reach every post; in the browser it
-  // reveals the next cards in place instead.
+  // "Load more" is a real link to the next archive page, so crawlers reach every post; a plain left
+  // click reveals the next cards in place instead, and any other click follows the link. The archive
+  // pages have no category filter, so the link always points at the next page of all articles.
   const nextPage = Math.floor(visibleCount / POSTS_PER_PAGE) + 1;
 
   // Reset pagination on filter change
@@ -189,6 +190,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                   <a
                     href={pageHref(nextPage)}
                     onClick={(event) => {
+                      if (!isPlainLeftClick(event)) return;
                       event.preventDefault();
                       setVisibleCount((prev) => prev + POSTS_PER_PAGE);
                     }}

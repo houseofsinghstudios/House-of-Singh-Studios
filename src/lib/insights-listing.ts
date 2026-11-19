@@ -44,3 +44,28 @@ export function pageHref(page: number): string {
 export function parsePageNumber(value: string): number | null {
   return /^[1-9]\d{0,3}$/.test(value) ? Number(value) : null;
 }
+
+// The archive page an address shows, or null for a 404: page 2 up to the last page only. Page 1 is
+// /insights itself (next.config.ts redirects /insights/page and /insights/page/1 there).
+export function archivePageNumber(value: string, totalPosts: number): number | null {
+  const page = parsePageNumber(value);
+  return page && page >= 2 && page <= pageCount(totalPosts) ? page : null;
+}
+
+// "Load more" reveals the next cards in place only for a plain left click. Ctrl, Cmd, Shift or Alt,
+// a middle click or anything already handled is left to the browser, which follows the real link
+// (a new tab or window, or a download).
+type ClickLike = { button: number; ctrlKey: boolean; metaKey: boolean; shiftKey: boolean; altKey: boolean; defaultPrevented: boolean };
+export function isPlainLeftClick(event: ClickLike): boolean {
+  return event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && !event.defaultPrevented;
+}
+
+// Post slugs the site's own routes already use: /insights/page is the archive, so a post with the
+// slug "page" could never be reached. Checked in Studio (sanity/schemas/post.ts).
+export const RESERVED_POST_SLUGS = ["page"] as const;
+
+export function reservedPostSlugMessage(slug: string | undefined): string | undefined {
+  return slug && (RESERVED_POST_SLUGS as readonly string[]).includes(slug.trim().toLowerCase())
+    ? `The slug "${slug.trim()}" is reserved for the Insights archive pages. Choose another slug.`
+    : undefined;
+}

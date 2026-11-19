@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import { reservedPostSlugMessage } from "../../src/lib/insights-listing";
 
 export default defineType({
   name: "post",
@@ -18,7 +19,8 @@ export default defineType({
       type: "slug",
       description: "Changing this after publishing breaks existing links. Add a redirect below if you change it.",
       options: { source: "title", maxLength: 96 },
-      validation: (rule) => rule.required(),
+      // "page" is reserved: /insights/page is the archive, so a post with that slug could never be reached.
+      validation: (rule) => rule.required().custom((value) => reservedPostSlugMessage(value?.current) ?? true),
     }),
     defineField({
       name: "featured",
