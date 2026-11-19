@@ -107,6 +107,7 @@ const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined
   "heroImages": heroImages[defined(asset)] {
     alt,
     hotspot,
+    crop,
     "url": asset->url,
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height,
@@ -527,7 +528,15 @@ interface HeroProjectDoc {
   heroFit?: string;
   heroOrder?: number;
   projectType?: unknown;
-  heroImages?: Array<{ alt?: string; hotspot?: { x: number; y: number }; url?: string; width?: number; height?: number; lqip?: string }> | null;
+  heroImages?: Array<{
+    alt?: string;
+    hotspot?: { x: number; y: number };
+    crop?: { top: number; bottom: number; left: number; right: number };
+    url?: string;
+    width?: number;
+    height?: number;
+    lqip?: string;
+  }> | null;
 }
 
 const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
@@ -548,6 +557,7 @@ export function mapHeroProject(doc: HeroProjectDoc): HeroProject | null {
       ...(typeof image.height === "number" ? { height: image.height } : {}),
       ...(str(image.lqip) ? { lqip: str(image.lqip) } : {}),
       ...(image.hotspot ? { hotspot: { x: image.hotspot.x, y: image.hotspot.y } } : {}),
+      ...(image.crop ? { crop: { top: image.crop.top, bottom: image.crop.bottom, left: image.crop.left, right: image.crop.right } } : {}),
     }];
   });
   if (!title || !slug || heroImages.length === 0) return null;

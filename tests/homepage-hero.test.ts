@@ -54,7 +54,7 @@ test("the query's answer becomes hero projects: images without a file are droppe
     heroOrder: 2,
     projectType: "exploration",
     heroImages: [
-      { url: "https://cdn.sanity.io/images/x/y/a-2400x1600.jpg", width: 2400, height: 1600, lqip: "data:image/jpeg;base64,AAA", alt: "Vases on a shelf", hotspot: { x: 0.4, y: 0.6 } },
+      { url: "https://cdn.sanity.io/images/x/y/a-2400x1600.jpg", width: 2400, height: 1600, lqip: "data:image/jpeg;base64,AAA", alt: "Vases on a shelf", hotspot: { x: 0.4, y: 0.6 }, crop: { top: 0.1, bottom: 0, left: 0.05, right: 0.05 } },
       { alt: "No file yet" },
       { url: "https://cdn.sanity.io/images/x/y/b-2400x1600.jpg" },
     ],
@@ -63,8 +63,17 @@ test("the query's answer becomes hero projects: images without a file are droppe
   assert.equal(project.heroFit, "contain");
   assert.equal(project.projectType, "exploration");
   assert.equal(project.heroImages.length, 2);
-  assert.deepEqual(project.heroImages[0], { url: "https://cdn.sanity.io/images/x/y/a-2400x1600.jpg", alt: "Vases on a shelf", width: 2400, height: 1600, lqip: "data:image/jpeg;base64,AAA", hotspot: { x: 0.4, y: 0.6 } });
+  assert.deepEqual(project.heroImages[0], {
+    url: "https://cdn.sanity.io/images/x/y/a-2400x1600.jpg",
+    alt: "Vases on a shelf",
+    width: 2400,
+    height: 1600,
+    lqip: "data:image/jpeg;base64,AAA",
+    hotspot: { x: 0.4, y: 0.6 },
+    crop: { top: 0.1, bottom: 0, left: 0.05, right: 0.05 },
+  });
   assert.equal(project.heroImages[1].alt, "Marell", "missing alt falls back to the hero name");
+  assert.equal("crop" in project.heroImages[1], false, "no crop set, no crop key");
 
   const plain = mapHeroProject({ title: "Bruno Bakehouse", slug: "bruno-bakehouse", heroImages: [{ url: "https://cdn.sanity.io/i.jpg", alt: "Bread" }] });
   assert.equal(plain?.heroName, "Bruno Bakehouse", "hero name falls back to the title");

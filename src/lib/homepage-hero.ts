@@ -8,7 +8,8 @@ import { projectType, type ProjectType } from "@/lib/initiatives/types";
 export const HERO_MAX = 6;
 
 // One hero image, as the query returns it: the original file's URL and size, its blurred
-// placeholder, its alt text and the editor's hotspot.
+// placeholder, its alt text, and the editor's hotspot and crop (fractions of the original, as Sanity
+// stores them), so the image builder can respect both.
 export interface HeroImage {
   url: string;
   width?: number;
@@ -16,6 +17,7 @@ export interface HeroImage {
   lqip?: string;
   alt: string;
   hotspot?: { x: number; y: number };
+  crop?: { top: number; bottom: number; left: number; right: number };
 }
 
 // "cover" fills the frame; "contain" fits the whole image inside it (website screens).

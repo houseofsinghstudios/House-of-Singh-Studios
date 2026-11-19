@@ -6,12 +6,12 @@ import {
   heroWordCaseMessage,
 } from "../../src/lib/homepage-hero";
 
-// The four studio services. Shared by serviceCategories and the legacy serviceCategory field.
 // Whether the document being edited shows in the homepage hero: the Homepage hero fields are
 // required only then. The checks themselves live in src/lib/homepage-hero.ts.
 const heroShown = (context: { document?: unknown }) => (context.document as { heroShow?: unknown } | undefined)?.heroShow === true;
 const pass = (message: string | undefined) => message ?? true;
 
+// The four studio services. Shared by serviceCategories and the legacy serviceCategory field.
 const SERVICE_CATEGORY_OPTIONS = [
   { title: "Brand Identity and Visual Design", value: "brand-identity" },
   { title: "Visual Media and Content Production", value: "visual-media" },
