@@ -15,25 +15,18 @@ import { track } from "@/lib/analytics";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
 import { useHeaderScroll } from "@/lib/use-header-scroll";
 import MenuDrawer from "./MenuDrawer";
+import { SITE_LINKS } from "./site-links";
 
 const DRAWER_ID = "site-menu-drawer";
 // The drawer only exists at these widths: past them an open drawer closes.
 const DRAWER_WIDTHS = "(max-width: 1080px)";
-
-const NAV_LINKS = [
-  { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
-  { label: "AI Lab", href: "/ai" },
-  { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-];
 
 // Above 1080px: the five links, then "Plan your project" (hidden at 1080px and below, where the
 // drawer's Contact covers it).
 function DesktopNav() {
   return (
     <nav className="header-desktop-nav" aria-label="Primary navigation">
-      {NAV_LINKS.map((link) => (
+      {SITE_LINKS.map((link) => (
         <Link key={link.href} href={link.href} className="header-nav-link">
           {link.label}
         </Link>
