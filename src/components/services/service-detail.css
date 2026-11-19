@@ -186,9 +186,9 @@
 }
 
 @media (max-width: 767px) {
-  /* The same 152px top space as before the header change: the 56px header bar plus 96px. */
+  /* 24px below the header bar, as the hero started 24px below the old crest (which ended at 128px). */
   .svcd-hero {
-    padding-top: calc(var(--header-bar) + 96px) !important;
+    padding-top: calc(var(--header-bar) + 24px) !important;
   }
   .svcd-del-grid {
     grid-template-columns: 1fr;

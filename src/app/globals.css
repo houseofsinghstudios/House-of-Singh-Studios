@@ -33,7 +33,9 @@
   --overlay-60: rgba(26, 26, 26, 0.6);
   --sans: var(--font-inter), system-ui, sans-serif;
   --page-px: max(40px, 8vw);
-  --hero-pt: clamp(280px, 24vw, 340px);
+  /* Space above each page hero: the same distance below the header bar as the old crest left below
+     itself. Desktop: the crest ended at 163px, the bar at 72px, so 91px less than before. */
+  --hero-pt: clamp(189px, calc(24vw - 91px), 249px);
   /* The fixed header bar's height: 72px on desktop, 56px at 1080px and below (one height at every
      scroll position). Anything that must clear the header measures from it. */
   --header-bar: 72px;
@@ -2107,6 +2109,8 @@ body.nav-open {
 @media (max-width: 1080px) {
   :root {
     --header-bar: 56px;
+    /* 768px to 1080px: the crest still ended at 163px here, the bar at 56px, so 107px less. */
+    --hero-pt: clamp(173px, calc(24vw - 107px), 233px);
   }
   .header-desktop-nav {
     display: none !important;
@@ -2126,7 +2130,8 @@ body.nav-open {
 /* ── Responsive: Mobile below 768px ── */
 @media (max-width: 767px) {
   :root {
-    --hero-pt: clamp(200px, 28vw, 260px);
+    /* Below 768px: the crest ended at 128px, the bar at 56px, so 72px less. */
+    --hero-pt: clamp(128px, calc(28vw - 72px), 188px);
   }
 }
 
