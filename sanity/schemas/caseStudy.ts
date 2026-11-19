@@ -119,7 +119,7 @@ export default defineType({
       title: "Field",
       type: "string",
       fieldset: "homepageHero",
-      description: "The name in the homepage list, for example Home and lifestyle.",
+      description: "Not shown on the site at the moment. Keep it filled for later use.",
       validation: (rule) => [
         rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field: it is the name in the homepage list."))),
         rule.custom((value) => pass(heroLengthMessage(value, 22, "Keep it under 22 characters so it fits the homepage list."))).warning(),
@@ -130,7 +130,7 @@ export default defineType({
       title: "Field word",
       type: "string",
       fieldset: "homepageHero",
-      description: "Replaces \"businesses\" in \"digital for growing businesses.\", lower case and plural, for example home brands.",
+      description: "The word in the homepage line while this project's image shows. Lower case and plural, for example home brands.",
       validation: (rule) => [
         rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field word: it replaces businesses in the homepage line."))),
         rule.custom((value) => pass(heroWordCaseMessage(value))),

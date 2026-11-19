@@ -11,16 +11,11 @@
 import { Link } from "next-view-transitions";
 import { useEffect, useRef } from "react";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import { SITE_LINKS } from "./site-links";
 import TorontoTime from "./TorontoTime";
 
-export const DRAWER_LINKS = [
-  { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
-  { label: "AI Lab", href: "/ai" },
-  { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-];
+// The header's pages, then Contact (on desktop it has no link in the header).
+const DRAWER_LINKS = [...SITE_LINKS, { label: "Contact", href: "/contact" }];
 
 // Everything outside the drawer that can take focus. Inert while the drawer is open.
 const OUTSIDE = "header.site-header, main, footer, .ft-reveal, .skip-link";

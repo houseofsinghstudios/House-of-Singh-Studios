@@ -4,7 +4,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { HIDE_AFTER, INITIAL_SCROLL, isScrolled, nextHeaderScroll, type HeaderScroll } from "@/lib/header-scroll";
+import { HIDE_AFTER, INITIAL_SCROLL, SCROLLED_AT, THRESHOLD, isScrolled, nextHeaderScroll, type HeaderScroll } from "@/lib/header-scroll";
+import { SITE_LINKS } from "@/components/layout/site-links";
 import { formatTorontoTime, torontoTime } from "@/lib/toronto-time";
 
 // Scrolls through a list of positions and gives the state after each.
@@ -40,15 +41,21 @@ test("up: shows on any upward move of more than 8px", () => {
 });
 
 test("always visible at the top of the page, and while locked", () => {
-  assert.equal(last(run([0, 900, 10])).hidden, false, "back at the top");
+  assert.equal(last(run([0, 900, SCROLLED_AT])).hidden, false, "back at the top");
   assert.equal(last(run([0, 900, 1200], true)).hidden, false, "drawer open or reduced motion");
-  assert.ok(HIDE_AFTER === 400);
+});
+
+test("the rules' numbers: the line after 20px, hiding past 400px, 8px of movement", () => {
+  assert.deepEqual({ SCROLLED_AT, HIDE_AFTER, THRESHOLD }, { SCROLLED_AT: 20, HIDE_AFTER: 400, THRESHOLD: 8 });
+  // THRESHOLD exactly is not enough to hide; one pixel more is.
+  assert.equal(last(run([0, 600, 580, 580 + THRESHOLD])).hidden, false);
+  assert.equal(last(run([0, 600, 580, 580 + THRESHOLD + 1])).hidden, true);
 });
 
 test("the line under the bar shows once scrolled past 20px", () => {
   assert.equal(isScrolled(0), false);
-  assert.equal(isScrolled(20), false);
-  assert.equal(isScrolled(21), true);
+  assert.equal(isScrolled(SCROLLED_AT), false);
+  assert.equal(isScrolled(SCROLLED_AT + 1), true);
 });
 
 test("the drawer's time is Toronto time whatever the visitor's zone, as in 1:05 AM EST", () => {
@@ -63,8 +70,9 @@ test("desktop header: the wordmark artwork home link, five links and Plan your p
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
   assert.match(header, /src="\/hos-studios-wordmark\.svg" alt="House of Singh Studios"/);
   assert.doesNotMatch(header, /hos-studios-logo\.svg|header-crest/);
-  const links = [...header.slice(header.indexOf("NAV_LINKS = ["), header.indexOf("];")).matchAll(/label: "([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(links, ["Services", "Work", "AI Lab", "About", "Insights"]);
+  // One list of the main pages for the header and the drawer (site-links.ts).
+  assert.deepEqual(SITE_LINKS.map((l) => l.label), ["Services", "Work", "AI Lab", "About", "Insights"]);
+  assert.match(header, /\{SITE_LINKS\.map\(\(link\) => \(/);
   assert.match(header, /href="\/start" className="btn-primary header-cta" data-cursor="link" onClick=\{\(\) => track\("header_cta_click", \{ location: "header" \}\)\}>\s*Plan your project/);
   assert.match(header, /track\("menu_open"\)/);
   assert.match(header, /aria-expanded=\{open\}/);
@@ -80,8 +88,9 @@ test("drawer: a modal dialog with six links including Contact, a close button, a
   const drawer = readFileSync("src/components/layout/MenuDrawer.tsx", "utf8");
   assert.match(drawer, /role="dialog"\s+aria-modal="true"\s+aria-label="Menu"/);
   assert.match(drawer, /aria-label="Close menu"/);
-  const links = [...drawer.slice(drawer.indexOf("DRAWER_LINKS = ["), drawer.indexOf("];")).matchAll(/label: "([^"]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(links, ["Services", "Work", "AI Lab", "About", "Insights", "Contact"]);
+  // The same pages as the header, then Contact.
+  assert.match(drawer, /const DRAWER_LINKS = \[\.\.\.SITE_LINKS, \{ label: "Contact", href: "\/contact" \}\];/);
+  assert.doesNotMatch(drawer, /label: "(Services|Work|AI Lab|About|Insights)"/, "no second copy of the pages");
   assert.doesNotMatch(drawer, /Plan your project|\/start/);
   for (const closes of [/e\.key === "Escape"/, /className="menu-scrim"[^>]*onClick=\{onClose\}/, /onClick=\{onClose\}\s*style/, /SWIPE_CLOSE_PX = 60/]) assert.match(drawer, closes);
   assert.match(drawer, /EditorialLabel text="Studio"/);

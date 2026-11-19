@@ -42,7 +42,11 @@ const nextConfig: NextConfig = {
   // No "X-Powered-By: Next.js" header: it only tells visitors and scanners which framework runs here.
   poweredByHeader: false,
   images: {
-    formats: ["image/webp"],
+    // AVIF first where the browser takes it, WebP otherwise. Formats only: no image changes size.
+    formats: ["image/avif", "image/webp"],
+    // 75 is next/image's default and the quality of every image on the site; 60 is for the homepage
+    // hero images only (HeroImages.tsx), which start from a clean quality 90 source.
+    qualities: [60, 75],
     remotePatterns: [
       {
         protocol: "https",

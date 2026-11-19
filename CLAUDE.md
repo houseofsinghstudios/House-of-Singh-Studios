@@ -43,7 +43,7 @@ and tool error (contact, careers, newsletter, Project Planner, Brand Pulse) uses
 13px Inter, line height 1.5, Oxide, 8px above (.form-error--lead for a message that opens a form). The written
 message always shows next to its field or button; colour is never the only signal. Oxide is for nothing else.
 
-Overlays: --overlay-3, -8, -15, -50 and -60 are #1A1A1A at those strengths, for soft hairlines, tints and scrims.
+Overlays: --overlay-3, -8, -15, -28, -42, -50 and -60 are #1A1A1A at those strengths, for soft hairlines, tints and scrims (28 and 42: the homepage hero's Pause button at rest and on hover).
 
 Accessible Ash (decided 30 Oct 2026): every small text element on a light background uses --text-label,
 never Marble Ash: editorial labels, metadata lines, numbers, tags, back links, share labels, placeholders.
@@ -92,7 +92,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - Home link: the wordmark artwork, public/hos-studios-wordmark.svg (outlined letters, never set in a font), alt "House of Singh Studios", view-transition-name site-logo. About 14px tall on desktop and 12px at 1080px and below; it gives way first when space is short (about 11px just above 1080px, about 10px on a 390px phone, 9px at 360px). The crest no longer appears in the header; the file stays for the footer.
 - A 1px --border line fades in under the bar after 20px of scroll (0.3s).
 - Hides on the way down and shows on the way up: hides only past 400px and after more than 8px down since the last change of direction, shows after more than 8px up, translateY(-100%) over 0.35s cubic-bezier(0.23, 1, 0.32, 1). Always shown at the top, while the drawer is open, and when keyboard focus moves into it. With reduced motion it never hides.
-- Above 1080px: five links (Services, Work, AI Lab, About, Insights) with the underline wipe, 32px apart (24px between 1081px and 1279px), then "Plan your project" to /start: .btn-primary at the nav's size (Obsidian, Silver Mist text), data-cursor="link", tracked as header_cta_click { location: "header" }. Contact is not in the desktop header.
+- Above 1080px: five links (Services, Work, AI Lab, About, Insights; one list in src/components/layout/site-links.ts, which the drawer shares and adds Contact to) with the underline wipe, 32px apart (24px between 1081px and 1279px), then "Plan your project" to /start: .btn-primary at the nav's size (Obsidian, Silver Mist text), data-cursor="link", tracked as header_cta_click { location: "header" }. Contact is not in the desktop header.
 - At 1080px and below: the menu button (aria-label "Open menu" / "Close menu", aria-expanded, aria-controls) opens the drawer, tracked as menu_open. No "Plan your project" on phones.
 - The drawer: from the right, 85vw up to 420px, translateX(100%) to 0 over 0.55s, over a var(--overlay-50) scrim fading over 0.45s. An 18px close X (1.5px strokes, 44px tap area, "Close menu"). Six links (Services, Work, AI Lab, About, Insights, Contact), about 55px each, entering from 24px with a stagger from 0.16s, 50ms apart. At the foot: "(Studio)" over "Toronto, Canada" and "(Local time)" over the live Toronto time (America/Toronto whatever the visitor's zone, shown after mount only, refreshed every 15s while open, the colon dimming every 2s).
 - The drawer is a modal dialog (role dialog, aria-modal, aria-label "Menu"): the page behind is inert and does not scroll (Lenis paused), focus starts on Close and stays inside, and returns to the menu button on close. It closes on the X, the scrim, Escape, a link, a swipe right of more than 60px, and when the window widens past 1080px. Reduced motion: a 0.3s fade, no slide or stagger. This closes health check F-10.
@@ -226,8 +226,20 @@ EVOLVED APPROACH:
 ### Homepage
 Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
 
-- Hero: page load entrance with staggered data attributes. Label "Creative Direction Studio"; the H1 is visually hidden (sr-only) and the visible headline is presentational.
-- Featured Work: case study cards from Sanity. Stagger reveal.
+- Hero (src/components/homepage/HeroSection.tsx, a server component, with the client parts HeroInteractive, HeroImages, HeroCaption, HeroLine and HeroPause; styles in hero.css; words, timings and helpers in src/lib/homepage-hero.ts). Projects from getHeroProjects, the Studio "Homepage hero" fieldset. The H1 stays visually hidden (protected), then the label "(Brand identity studio, Toronto)".
+  - Layout: above 1080px the hero fills the first screen under the header; the image runs from 46% of the width to the right edge, full height, and the text column holds the label (64px under the header), the value line and, at its foot, the caption (44px above the hero's bottom). At 1080px and below: the image first (full width, clamp(380px, 110vw, 620px) tall), the caption 12px under it, then the label and the value line.
+  - Value line: "Brand identity, design and digital for growing businesses.", weight 500, -0.03em, three lines always reserved so no word length moves anything. Nothing in it is interactive, at any width (no list, no button, no plus). The visible line is aria-hidden; screen readers read the sentence once, with "businesses", from a visually hidden copy, and word changes are not announced.
+  - The word follows the image, at every width: while a project's image shows, the word is that project's Studio "Field word" (heroWordFor in src/lib/homepage-hero.ts). The first image on the first pass shows "businesses"; once the rotation has looped, the first project shows its own word; a project without a field word shows "businesses" for its turn. A new word needs no code change: add a project with "Show in the homepage hero" on and a Field word set in Studio. The word sits on a marker band: Cloudy White behind the word, 3px wider each side, from 0.12em below the line's top to 0.02em above its bottom, with the full stop just outside it. A change: as the old image starts to fade, the band wipes away to the right while the letters rise out (240ms, 12ms apart); then, as the new image fades in, the letters rise in (600ms, 25ms apart) while the band wipes in from the left (700ms).
+  - One clock: the images, one per project (its first hero image, in hero order), hold 5s each, the first included, at every width, and crossfade over 1.2s (1.4s at 1080px and below); the word changes with them. A 2px progress line along the image's foot is the clock. Pause, a pointer, keyboard focus or a finger on the image hold the image and its word together.
+  - Links: the whole image and "View project" go to the project on screen (/work/slug); the image takes the site cursor's View state.
+  - Pause: a small button over the image, bottom right, because anything that moves on its own for more than five seconds needs one (WCAG 2.2.2). It stops the images and the word, so it is named "Pause the animation" / "Play the animation" (aria-pressed). Shown only when something moves (two projects or more, motion allowed).
+  - Reduced motion: nothing moves: the first image only, "businesses" on its band, no entrance, no Pause.
+  - Caption: the project's hero name, its hero line (desktop only) and "View project". Intended: no Client or Exploration tag in the hero; the case study page carries it.
+  - Images: next/image at quality 60, served as AVIF or WebP, from a quality 90 source built by the Sanity image builder with the Studio crop (at most 2400px wide); the hotspot as object-position; sizes "(max-width: 1080px) 100vw, 54vw"; the first image preloaded with high fetch priority (it is the LCP element), the rest lazy. "Contain" images sit inside the frame on Cloudy White.
+  - With no hero projects: the text column only, beside an empty Cloudy White column (no image column on phones); nothing moves and there is no Pause.
+  - Not read: the Studio "Field". It stays filled in Studio for later use.
+  - Analytics: hero_project_click { project, source: image or caption }, hero_pause_toggle { state }.
+- Featured Work: case study cards from Sanity. Stagger reveal. Its images load lazily: below the fold, they must not compete with the hero image.
 - The Argument: the headline's words reveal on scroll.
 - Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
 - Two ways to start (ToolBand): Brand Pulse Check and Project Planner. Desktop: two columns. Phones: a two tab switch.
@@ -478,8 +490,8 @@ Studio, not in code.
 Homepage hero fieldset (Project documents, collapsed): "Show in the homepage hero" puts a project in the
 rotating homepage hero; "Hero order" sorts it (client work always first, then explorations, then by order and
 title, six at most); "Hero name" is the caption under the image; "Hero line" the short desktop line under it;
-"Field" its name in the homepage field list; "Field word" replaces "businesses" in "digital for growing
-businesses." (lower case, plural); "Hero images" are one to four images, the first rotates and all show when
-the field is picked; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
+"Field word" is the word in the homepage line while the project's image shows (lower case, plural); "Field" is
+not shown on the site at the moment, kept filled for later use; "Hero images" are one to four images, of which
+the homepage shows the first; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
-in src/lib/homepage-hero.ts); the homepage does not use it yet.
+in src/lib/homepage-hero.ts); the homepage hero shows them.

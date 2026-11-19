@@ -1,16 +1,5 @@
 import type { ProjectType } from "@/lib/initiatives/types";
 
-export const HERO = {
-  label: "Creative Direction Studio",
-  cycleWords: ["Your brand", "Your identity", "Your positioning", "Your visual system"],
-  headlineStatic: "is not an AI prompt.",
-  headlineLine2: "It demands direction and context.",
-  secondary: "A design studio for businesses that have outgrown their brand.",
-  cta: {
-    primary: { text: "Start a Project", href: "/start" },
-  },
-};
-
 interface ServiceBlock {
   title: string;
   sentence: string;

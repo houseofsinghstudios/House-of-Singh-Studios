@@ -37,6 +37,8 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 14 | /partners, a call to action; then Copy Text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
 | 15 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
 | 16 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
+| 17 | Homepage hero, the image or "View project" | `hero_project_click` | `project` the slug, `source` image or caption |
+| 18 | Homepage hero, the Pause button, twice | `hero_pause_toggle` | `state` paused, then playing |
 
 ## Network panel: what each collect request contains
 

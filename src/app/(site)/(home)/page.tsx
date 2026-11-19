@@ -8,7 +8,7 @@ import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import ProofSection from "@/components/homepage/ProofSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
-import { getFeaturedProjects } from "@/lib/sanity/projects";
+import { getFeaturedProjects, getHeroProjects } from "@/lib/sanity/projects";
 import { WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -30,11 +30,11 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const featuredProjects = await getFeaturedProjects();
+  const [heroProjects, featuredProjects] = await Promise.all([getHeroProjects(), getFeaturedProjects()]);
 
   return (
     <>
-      <HeroSection />
+      <HeroSection projects={heroProjects} />
       <WorkSection projects={featuredProjects} />
       <ArgumentSection />
       <ServicesSection />
