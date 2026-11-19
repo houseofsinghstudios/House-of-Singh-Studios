@@ -27,7 +27,7 @@ export default defineType({
     {
       name: "homepageHero",
       title: "Homepage hero",
-      description: "The rotating image at the top of the homepage, and the field visitors can pick.",
+      description: "The rotating image at the top of the homepage, its caption, and the word in the homepage line.",
       options: { collapsible: true, collapsed: true },
     },
     {

@@ -240,7 +240,7 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work →
   - Not read: the Studio "Field". It stays filled in Studio for later use.
   - Analytics: hero_project_click { project, source: image or caption }, hero_pause_toggle { state }.
 - Featured Work: case study cards from Sanity. Stagger reveal. Its images load lazily: below the fold, they must not compete with the hero image.
-- The Argument: the headline's words reveal on scroll.
+- The Argument: the headline's words reveal on scroll, each word mixing in colour from Accessible Ash to Obsidian (never faded with opacity, so every word passes text contrast); Obsidian from the start with reduced motion.
 - Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
 - Two ways to start (ToolBand): Brand Pulse Check and Project Planner. Desktop: two columns. Phones: a two tab switch.
 - Testimonials: carousel with auto rotate and pause.
@@ -455,7 +455,7 @@ src/lib/site-graph.ts) and described in plain sentences in llms.txt ("Who is who
 These look unusual or redundant but are deliberate. Any change touching them needs the owner's approval. Report a genuine defect in one of them as a defect; never remove or weaken it as cleanup.
 
 - SEO structure: the semantic H1 swap on service pages (the label is the H1, the hero line an H2), and visually hidden H1s (homepage, Brand Pulse and Project Planner states, the hidden "Brand Pulse result" H1).
-- Hidden descriptive link text: the sr-only text in "Learn More" links on /services and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
+- Hidden descriptive link text: the sr-only text in "Learn More" links on /services, after the title in the homepage Capabilities rows (no aria-label, so the name starts with the visible title), and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
 - Service FAQs and the questions accordion, with FAQPage JSON-LD.
 - The structured data graph: ProfessionalService and Organization with @id, founder Person, Service, CreativeWork, Article, BreadcrumbList.
 - RGD links (RgdLink and the auto linker in article bodies).

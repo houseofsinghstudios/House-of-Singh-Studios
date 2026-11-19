@@ -1,4 +1,7 @@
 "use client";
+// A client component: The Argument's words brighten one by one as the reader scrolls, which needs the
+// section's position. Each word goes from Accessible Ash to Obsidian (--p, 0 to 1, mixed in
+// homepage.css), so every word passes text contrast at every point of the scroll.
 
 import { useEffect, useRef } from "react";
 import { Link } from "next-view-transitions";
@@ -26,9 +29,9 @@ export default function ArgumentSection() {
     const allWords = [...wordsRef.current, ...payoffRef.current].filter(Boolean);
     const totalWords = allWords.length;
 
-    // Reduced motion: every word at full strength from the start, nothing tied to the scroll.
+    // Reduced motion: every word in Obsidian from the start, nothing tied to the scroll.
     if (reduceMotion) {
-      for (const word of allWords) word.style.opacity = "1";
+      for (const word of allWords) word.style.setProperty("--p", "1");
       return;
     }
 
@@ -46,14 +49,14 @@ export default function ArgumentSection() {
         const word = allWords[i];
         if (!word) continue;
 
-        // Each word has its own activation window
+        // Each word has its own activation window, ending by the end of the scroll range, so the last
+        // words reach Obsidian too.
         const wordStart = i / totalWords;
-        const wordEnd = (i + 1.5) / totalWords;
+        const wordEnd = Math.min(1, (i + 1.5) / totalWords);
         const wordProgress = Math.max(0, Math.min(1, (progress - wordStart) / (wordEnd - wordStart)));
 
-        // Opacity goes from 0.08 to 1
-        const opacity = 0.08 + wordProgress * 0.92;
-        word.style.opacity = String(opacity);
+        // From Accessible Ash (0) to Obsidian (1).
+        word.style.setProperty("--p", wordProgress.toFixed(3));
       }
     }
 

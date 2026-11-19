@@ -211,10 +211,12 @@
   margin: 0;
 }
 
+/* Each word mixes from Accessible Ash (4.64:1 on Silver Mist) to Obsidian as --p goes from 0 to 1
+   (ArgumentSection.tsx sets it per word from the scroll), so no word ever fails text contrast. */
 .argument-word {
-  opacity: 0.08;
-  will-change: opacity;
-  transition: opacity 0.1s linear;
+  --p: 0;
+  color: color-mix(in srgb, var(--text-primary) calc(var(--p) * 100%), var(--text-label));
+  transition: color 0.1s linear;
 }
 
 .argument-payoff {
@@ -576,9 +578,9 @@
   .testimonials-ghost-number {
     transition: none;
   }
-  /* The Argument's words at full strength from the start, not brightened by the scroll */
+  /* The Argument's words in Obsidian from the start, not brightened by the scroll */
   .argument-word {
-    opacity: 1;
+    color: var(--text-primary);
     transition: none;
   }
 }
