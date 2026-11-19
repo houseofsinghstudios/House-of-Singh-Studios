@@ -1885,13 +1885,6 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   align-items: center;
   gap: 32px;
 }
-/* Just above the drawer breakpoint the links and "Plan your project" stay on one line, so the
-   wordmark gives way: a closer gap keeps it at 11px or more down to 1081px. */
-@media (min-width: 1081px) and (max-width: 1279px) {
-  .header-desktop-nav {
-    gap: 24px;
-  }
-}
 
 /* ── Interaction 1: Nav Link Hover Underline ── */
 .header-nav-link {
@@ -2120,7 +2113,8 @@ body.nav-open {
   .header-mobile-hamburger {
     display: flex;
   }
-  /* About 12px tall; on a narrow phone it shrinks to leave room for the menu button. */
+  /* 12px tall, at every width down to 360px. The artwork can still shrink rather than touch the menu
+     button on anything narrower. */
   .header-wordmark {
     margin-right: 16px;
   }

@@ -82,6 +82,12 @@ test("desktop header: the wordmark artwork home link, five links and Plan your p
   // The wordmark is artwork: outlined paths, no text and no font.
   const svg = readFileSync("public/hos-studios-wordmark.svg", "utf8");
   assert.doesNotMatch(svg, /<text|font-family|@font-face/);
+  // The owner's final artwork: trimmed to the letters, in Obsidian; the Image reserves the same box.
+  assert.match(svg, /viewBox="6\.26 9\.24 652\.8 32\.65"/);
+  assert.match(svg, /fill="#22211F"/);
+  assert.match(header, /width=\{652\.8\} height=\{32\.65\}/);
+  // No narrower gap above the breakpoint: the wordmark holds 14px with the links 32px apart.
+  assert.doesNotMatch(readFileSync("src/app/globals.css", "utf8"), /min-width: 1081px\) and \(max-width: 1279px/);
 });
 
 test("drawer: a modal dialog with six links including Contact, a close button, and no Plan your project", () => {
