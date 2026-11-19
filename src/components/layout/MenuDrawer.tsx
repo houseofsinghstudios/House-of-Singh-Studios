@@ -2,11 +2,15 @@
 // The phone and tablet menu (1080px and below): a drawer from the right over a scrim. A client
 // component because it handles focus, keys, touch and the scroll lock while it is open.
 //
-// Opens from the header's menu button. Closes on the X, the scrim, Escape, a link, or a swipe to the
-// right of more than 60px. While open it is a modal dialog: the page behind is inert and does not
-// scroll (Lenis is paused too), focus starts on the close button and Tab stays inside the drawer.
-// Focus returns to the menu button on close (Header's onClose). Always rendered, so the menu button's
-// aria-controls always points at it; inert while closed.
+// Opens and closes from the header's menu button, which stays above the drawer and turns into a cross:
+// one control, in one place. Also closes on the scrim, Escape, a link, or a swipe to the right of more
+// than 60px. A disclosure, not a dialog: the menu button (outside the drawer) controls it, so the
+// drawer is a named region, not a dialog: role="dialog" with aria-modal would hide that button from
+// screen readers.
+// While open, everything else is inert (the rest of the header included), so the page behind cannot
+// be reached by keyboard or screen reader, and it does not scroll (Lenis is paused too). Focus goes
+// to the menu button, and Tab wraps between it and the drawer's links. Always rendered, so the menu
+// button's aria-controls always points at it; inert while closed.
 
 import { Link } from "next-view-transitions";
 import { useEffect, useRef } from "react";
@@ -17,15 +21,16 @@ import TorontoTime from "./TorontoTime";
 // The header's pages, then Contact (on desktop it has no link in the header).
 const DRAWER_LINKS = [...SITE_LINKS, { label: "Contact", href: "/contact" }];
 
-// Everything outside the drawer that can take focus. Inert while the drawer is open.
-const OUTSIDE = "header.site-header, main, footer, .ft-reveal, .skip-link";
+// Everything outside the drawer that can take focus, except the menu button. Inert while open.
+const OUTSIDE = "header.site-header > :not(.header-mobile-hamburger), main, footer, .ft-reveal, .skip-link";
 const SWIPE_CLOSE_PX = 60;
 const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 type LenisWindow = Window & { __lenis?: { stop: () => void; start: () => void } };
 
-// While open: the page behind is inert and still, Escape closes, Tab wraps inside the drawer.
-function useModal(open: boolean, panel: React.RefObject<HTMLDivElement | null>, close: React.RefObject<HTMLButtonElement | null>, onClose: () => void) {
+// While open: the page behind is inert and still, Escape closes, Tab wraps between the menu button
+// and the drawer's links.
+function useModal(open: boolean, panel: React.RefObject<HTMLDivElement | null>, toggle: React.RefObject<HTMLButtonElement | null>, onClose: () => void) {
   useEffect(() => {
     if (!open) return;
     const outside = [...document.querySelectorAll<HTMLElement>(OUTSIDE)];
@@ -33,7 +38,7 @@ function useModal(open: boolean, panel: React.RefObject<HTMLDivElement | null>, 
     const lenis = (window as LenisWindow).__lenis;
     lenis?.stop();
     document.body.classList.add("nav-open");
-    const focusFrame = requestAnimationFrame(() => close.current?.focus({ preventScroll: true }));
+    const focusFrame = requestAnimationFrame(() => toggle.current?.focus({ preventScroll: true }));
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -42,7 +47,7 @@ function useModal(open: boolean, panel: React.RefObject<HTMLDivElement | null>, 
         return;
       }
       if (e.key !== "Tab" || !panel.current) return;
-      const items = [...panel.current.querySelectorAll<HTMLElement>(FOCUSABLE)];
+      const items = [toggle.current, ...panel.current.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el): el is HTMLElement => !!el);
       if (items.length === 0) return;
       const first = items[0];
       const last = items[items.length - 1];
@@ -62,7 +67,7 @@ function useModal(open: boolean, panel: React.RefObject<HTMLDivElement | null>, 
       document.body.classList.remove("nav-open");
       lenis?.start();
     };
-  }, [open, panel, close, onClose]);
+  }, [open, panel, toggle, onClose]);
 }
 
 // A swipe to the right closes: more than 60px across, and more across than down.
@@ -99,10 +104,17 @@ function DrawerFoot({ open }: { open: boolean }) {
   );
 }
 
-export default function MenuDrawer({ id, open, onClose }: { id: string; open: boolean; onClose: () => void }) {
+interface Props {
+  id: string;
+  open: boolean;
+  onClose: () => void;
+  // The header's menu button: the drawer's one open and close control.
+  toggleRef: React.RefObject<HTMLButtonElement | null>;
+}
+
+export default function MenuDrawer({ id, open, onClose, toggleRef }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
-  const closeRef = useRef<HTMLButtonElement>(null);
-  useModal(open, panelRef, closeRef, onClose);
+  useModal(open, panelRef, toggleRef, onClose);
   const swipe = useSwipeRight(onClose);
 
   return (
@@ -113,17 +125,14 @@ export default function MenuDrawer({ id, open, onClose }: { id: string; open: bo
         ref={panelRef}
         className="menu-drawer"
         data-open={open}
-        role="dialog"
-        aria-modal="true"
+        // A named region, so all of it (the links and the studio's place and time) sits in a landmark.
+        role="region"
         aria-label="Menu"
         inert={!open}
         data-lenis-prevent
         onTouchStart={swipe.onTouchStart}
         onTouchEnd={swipe.onTouchEnd}
       >
-        <div className="menu-drawer-top">
-          <button ref={closeRef} type="button" className="menu-drawer-close" onClick={onClose} aria-label="Close menu" />
-        </div>
         <nav className="menu-drawer-links" aria-label="Site pages">
           {DRAWER_LINKS.map((link, i) => (
             <Link
