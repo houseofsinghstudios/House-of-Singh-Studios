@@ -109,7 +109,7 @@ export default function Header() {
       <header className={className} onFocus={reveal}>
         {/* The wordmark is artwork (outlined letters), not text; its alt is the home link's name. */}
         <Link href="/" className="header-wordmark">
-          <Image src="/hos-studios-wordmark.svg" alt="House of Singh Studios" width={1291} height={45} className="header-wordmark-img" unoptimized priority />
+          <Image src="/hos-studios-wordmark.svg" alt="House of Singh Studios" width={652.8} height={32.65} className="header-wordmark-img" unoptimized priority />
         </Link>
         <div className="header-spacer" />
         <DesktopNav />
