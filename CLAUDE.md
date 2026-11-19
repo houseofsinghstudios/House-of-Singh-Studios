@@ -76,6 +76,7 @@ Left-aligned by default. Maximum 2 font weights per page.
 Known exceptions, as built:
 - Box shadow: one, deliberate. Form fields show keyboard focus as a 2px Obsidian bottom rule; the second pixel is an inset shadow so the field keeps its size (globals.css, contact-input focus-visible, shared by the contact form, the Project Planner and Brand Pulse; careers.css for the careers form). No other shadow is allowed.
 - Font weights: only 400 and 500 are loaded (src/app/fonts.ts, shared by the root layout and the error page), so only those render.
+- Colour: Canada red #D52B1E, for one element only: the 11 point maple leaf before "Proudly Canadian owned and operated." in the closing crest section (src/components/layout/FooterReveal.tsx), 12px, decorative (aria-hidden). Nowhere else: no buttons, accents, borders or text. The line itself stays on the page only, never in metadata, structured data or llms.txt.
 
 ---
 
