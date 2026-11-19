@@ -50,7 +50,6 @@ export default function WorkSection({ projects }: WorkSectionProps) {
                   src={project.image}
                   alt={project.name}
                   fill
-                  priority={project === projects[0]}
                   sizes="(max-width: 767px) 100vw, 50vw"
                   style={{
                     objectFit: "cover",
