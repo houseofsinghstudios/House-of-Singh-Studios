@@ -85,34 +85,52 @@ export function heroImagesMessage(images: unknown, shown: boolean): string | und
 }
 
 // ── What the hero shows (src/components/homepage/Hero*.tsx) ──
-// HeroSection (a server component) turns each HeroProject into a HeroEntry: plain data with finished
-// image URLs, safe to hand to the client components.
-
-// One image as the hero renders it: the Studio crop already in the URL, the focal point as a CSS
-// object-position.
-export interface HeroSlide {
-  src: string;
-  alt: string;
-  lqip?: string;
-  position: string;
-}
+// HeroSection (a server component) turns each HeroProject into a HeroEntry: plain data with a finished
+// image URL, safe to hand to the client components. One image per project: its first hero image.
+// heroField and heroWord stay in Studio for a later version that pairs the word with the image; the
+// homepage does not read them now.
 
 export interface HeroEntry {
   slug: string;
   heroName: string;
   heroLine: string;
-  heroField: string;
-  heroWord: string;
   heroFit: HeroFit;
-  slides: HeroSlide[];
+  // The Studio crop already in the URL; the focal point as a CSS object-position.
+  image: { src: string; alt: string; lqip?: string; position: string };
 }
 
-// The word in "digital for growing businesses." before a field is chosen.
-export const DEFAULT_WORD = "businesses";
+// The word that cycles in "Brand identity, design and digital for growing businesses.", in this order,
+// on its own clock. "businesses" first, the sentence screen readers hear. Lower case, 14 characters
+// at most, so the reserved three lines always hold the sentence.
+export const HERO_WORDS = [
+  "businesses",
+  "cafés",
+  "restaurants",
+  "clinics",
+  "law firms",
+  "contractors",
+  "retailers",
+  "food brands",
+  "beauty labels",
+  "startups",
+] as const;
+export const HERO_WORD_MAX = 14;
 
-// The word button's accessible name, which follows the word: "Growing home brands. Show work by field".
-export function wordLabel(word: string): string {
-  return `Growing ${word}. Show work by field`;
+// The two clocks, in milliseconds. The words: the first change 4.5s after the entrance has finished,
+// then every 3s. The images: 6s each, including the first. They never change within 500ms of each
+// other: an image that would, waits until 500ms after the word.
+export const HERO_ENTRANCE_MS = 1700;
+export const WORD_FIRST_MS = HERO_ENTRANCE_MS + 4500;
+export const WORD_EVERY_MS = 3000;
+export const IMAGE_HOLD_MS = 6000;
+export const CLOCK_GAP_MS = 500;
+
+// How much longer an image that is due now waits, given the last and the next word change (the next is
+// Infinity while the words are stopped).
+export function imageWait(now: number, lastWord: number, nextWord: number): number {
+  if (now - lastWord < CLOCK_GAP_MS) return lastWord + CLOCK_GAP_MS - now;
+  if (nextWord - now < CLOCK_GAP_MS) return nextWord + CLOCK_GAP_MS - now;
+  return 0;
 }
 
 const clamp01 = (n: number) => Math.min(1, Math.max(0, n));
@@ -129,30 +147,4 @@ export function heroObjectPosition(image: Pick<HeroImage, "hotspot" | "crop">): 
   const x = w > 0 ? (image.hotspot.x - c.left) / w : 0.5;
   const y = h > 0 ? (image.hotspot.y - c.top) / h : 0.5;
   return `${percent(x)} ${percent(y)}`;
-}
-
-// The field list: every project with both a field name and a field word, in hero order. A project
-// missing either still rotates, but has no place in the list.
-export function heroFieldItems(entries: readonly HeroEntry[]): { index: number; field: string; word: string }[] {
-  return entries.flatMap((e, index) => (e.heroField.trim() && e.heroWord.trim() ? [{ index, field: e.heroField.trim(), word: e.heroWord.trim() }] : []));
-}
-
-// One image in the rotation: which project, which of its images.
-export interface HeroFrame {
-  project: number;
-  image: number;
-}
-
-// At rest: each project's first image, in hero order. A chosen field: that project's images in order.
-export function heroFrames(entries: readonly HeroEntry[], field: number | null): HeroFrame[] {
-  if (field !== null && entries[field]) return entries[field].slides.map((_, image) => ({ project: field, image }));
-  return entries.map((_, project) => ({ project, image: 0 }));
-}
-
-// How long an image holds before the next, in milliseconds: the first image of a set longer, so the
-// visitor can take in the page; phones longer than desktop.
-export const HOLD_MS = { desktop: { first: 7000, rest: 6000 }, phone: { first: 9000, rest: 8000 } } as const;
-export function holdMs(first: boolean, phone: boolean): number {
-  const hold = phone ? HOLD_MS.phone : HOLD_MS.desktop;
-  return first ? hold.first : hold.rest;
 }

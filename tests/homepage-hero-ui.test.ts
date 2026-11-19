@@ -1,56 +1,67 @@
-// The homepage hero as it renders (src/components/homepage/Hero*.tsx): the helpers that decide what
-// shows (src/lib/homepage-hero.ts) and the parts of the markup that must not drift: the hidden H1,
-// the label, the client component comments, the image sizes and the analytics events. Run with:
-// npm run test
+// The homepage hero as it renders (src/components/homepage/Hero*.tsx): the word list and the two clocks
+// (src/lib/homepage-hero.ts), and the parts of the markup that must not drift: the hidden H1, the
+// label, the client component comments, the images and the analytics events. Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import {
-  DEFAULT_WORD,
-  HOLD_MS,
-  heroFieldItems,
-  heroFrames,
+  CLOCK_GAP_MS,
+  HERO_ENTRANCE_MS,
+  HERO_WORDS,
+  HERO_WORD_MAX,
+  IMAGE_HOLD_MS,
+  WORD_EVERY_MS,
+  WORD_FIRST_MS,
   heroObjectPosition,
-  holdMs,
-  wordLabel,
-  type HeroEntry,
+  imageWait,
 } from "@/lib/homepage-hero";
 
-const slide = (n: number) => ({ src: `/img-${n}.jpg`, alt: `Image ${n}`, position: "50% 50%" });
-const entry = (slug: string, field: string, word: string, images = 1): HeroEntry => ({
-  slug,
-  heroName: slug,
-  heroLine: "",
-  heroField: field,
-  heroWord: word,
-  heroFit: "cover",
-  slides: Array.from({ length: images }, (_, i) => slide(i)),
-});
-const ENTRIES = [entry("tairn", "Home and lifestyle", "home brands", 3), entry("bruno", "Food and drink", "food brands", 2), entry("nivora", "", "", 1)];
 const read = (file: string) => readFileSync(file, "utf8");
 
-test("at rest each project's first image, in hero order; a field shows that project's images in order", () => {
-  assert.deepEqual(heroFrames(ENTRIES, null), [{ project: 0, image: 0 }, { project: 1, image: 0 }, { project: 2, image: 0 }]);
-  assert.deepEqual(heroFrames(ENTRIES, 0), [{ project: 0, image: 0 }, { project: 0, image: 1 }, { project: 0, image: 2 }]);
-  assert.deepEqual(heroFrames(ENTRIES, 9), heroFrames(ENTRIES, null), "an unknown field falls back to the rest set");
-  assert.deepEqual(heroFrames([], null), []);
+test("the cycling words: the agreed list in order, businesses first", () => {
+  assert.deepEqual([...HERO_WORDS], ["businesses", "cafés", "restaurants", "clinics", "law firms", "contractors", "retailers", "food brands", "beauty labels", "startups"]);
+  assert.equal(HERO_WORDS[0], "businesses");
 });
 
-test("a project without a field or a field word rotates but is left out of the field list", () => {
-  assert.deepEqual(heroFieldItems(ENTRIES), [
-    { index: 0, field: "Home and lifestyle", word: "home brands" },
-    { index: 1, field: "Food and drink", word: "food brands" },
-  ]);
-  assert.deepEqual(heroFieldItems([entry("a", "Jewellery", "  "), entry("b", " ", "jewellers")]), []);
-  assert.equal(heroFrames(ENTRIES, null).length, 3, "nivora still rotates");
+test("every word is lower case and 14 characters at most", () => {
+  assert.equal(HERO_WORD_MAX, 14);
+  for (const word of HERO_WORDS) {
+    assert.equal(word, word.toLowerCase(), `${word} is lower case`);
+    assert.ok([...word].length <= HERO_WORD_MAX, `${word} is ${[...word].length} characters`);
+  }
 });
 
-test("hold: desktop 7s for the first image then 6s; phones 9s then 8s", () => {
-  assert.equal(holdMs(true, false), 7000);
-  assert.equal(holdMs(false, false), 6000);
-  assert.equal(holdMs(true, true), 9000);
-  assert.equal(holdMs(false, true), 8000);
-  assert.deepEqual(HOLD_MS, { desktop: { first: 7000, rest: 6000 }, phone: { first: 9000, rest: 8000 } });
+test("the clocks: words 4.5s after the entrance then every 3s; images 6s each; 500ms apart", () => {
+  assert.equal(WORD_FIRST_MS, HERO_ENTRANCE_MS + 4500);
+  assert.equal(WORD_EVERY_MS, 3000);
+  assert.equal(IMAGE_HOLD_MS, 6000);
+  assert.equal(CLOCK_GAP_MS, 500);
+});
+
+test("an image due within 500ms of a word change waits until 500ms after it", () => {
+  // Nothing near: moves at once.
+  assert.equal(imageWait(10_000, 8_000, 11_000), 0);
+  // A word changed 200ms ago: wait 300ms more.
+  assert.equal(imageWait(10_000, 9_800, 12_800), 300);
+  // A word changes in 200ms: wait for it, then 500ms.
+  assert.equal(imageWait(10_000, 7_000, 10_200), 700);
+  // Exactly 500ms either side is far enough.
+  assert.equal(imageWait(10_000, 9_500, 13_000), 0);
+  assert.equal(imageWait(10_000, 7_000, 10_500), 0);
+  // Words stopped (paused): only the last change counts.
+  assert.equal(imageWait(10_000, -Infinity, Infinity), 0);
+  // Simulated: words at 6.2s, 9.2s, 12.2s...; images every 6s after they may move. None within 500ms.
+  const words = Array.from({ length: 20 }, (_, k) => WORD_FIRST_MS + k * WORD_EVERY_MS);
+  let image = 0;
+  for (let n = 0; n < 8; n++) {
+    let due = image + IMAGE_HOLD_MS;
+    const last = Math.max(-Infinity, ...words.filter((w) => w <= due));
+    const next = Math.min(Infinity, ...words.filter((w) => w > due));
+    due += imageWait(due, last, next);
+    for (const w of words) assert.ok(Math.abs(due - w) >= CLOCK_GAP_MS, `image at ${due}, word at ${w}`);
+    image = due;
+  }
 });
 
 test("the focal point: the hotspot measured inside the crop, centred without one", () => {
@@ -61,40 +72,56 @@ test("the focal point: the hotspot measured inside the crop, centred without one
   assert.equal(heroObjectPosition({ hotspot: { x: 0.05, y: 0.95 }, crop: { left: 0.1, right: 0, top: 0, bottom: 0.1 } }), "0% 100%", "kept inside the frame");
 });
 
-test("the word button's name follows the word", () => {
-  assert.equal(DEFAULT_WORD, "businesses");
-  assert.equal(wordLabel("businesses"), "Growing businesses. Show work by field");
-  assert.equal(wordLabel("home brands"), "Growing home brands. Show work by field");
-});
-
-test("HeroSection: a server component with the hidden H1 unchanged and the label", () => {
+test("HeroSection: a server component with the hidden H1 unchanged, the label, one image per project", () => {
   const src = read("src/components/homepage/HeroSection.tsx");
   assert.doesNotMatch(src, /^"use client"/);
   assert.match(src, /<h1 className="sr-only">\s*House of Singh Studios, Toronto: brand identity, visual design and creative direction\s*<\/h1>/);
   assert.match(src, /<EditorialLabel text="Brand identity studio, Toronto" \/>/);
+  assert.match(src, /const image = project\.heroImages\[0\];/);
   assert.match(src, /heroImageUrl\(image\)/, "image URLs from the Sanity image builder, so the Studio crop applies");
+  assert.doesNotMatch(src, /heroField|heroWord/, "the homepage does not read the field or the field word yet");
   const page = read("src/app/(site)/(home)/page.tsx");
   assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getFeaturedProjects\(\)\]\)/);
   assert.match(page, /export const revalidate = 60;/);
 });
 
 test("every hero client component says why it is a client component", () => {
-  for (const name of ["HeroInteractive", "HeroImages", "HeroCaption", "HeroLine", "HeroFieldList", "HeroPause"]) {
+  for (const name of ["HeroInteractive", "HeroImages", "HeroCaption", "HeroLine", "HeroPause"]) {
     const src = read(`src/components/homepage/${name}.tsx`);
     assert.match(src, /^"use client";\n\/\/ A client component: /, name);
     assert.ok(src.split("\n").length < 300, `${name} under 300 lines`);
   }
 });
 
-test("images: next/image with the agreed sizes, the first preloaded, alt from Sanity, the View cursor", () => {
+test("the value line: nothing interactive, hidden from screen readers, read once from a hidden sentence", () => {
+  const src = read("src/components/homepage/HeroLine.tsx");
+  assert.match(src, /<p ref=\{ref\} className="hero-value" aria-hidden="true">/);
+  assert.match(src, /<p className="sr-only">\{`\$\{LEAD\.join\(" "\)\} \$\{HERO_WORDS\[0\]\}\.`\}<\/p>/);
+  assert.doesNotMatch(src, /<button|<a |href=|aria-live|onClick/);
+  assert.match(src, /<span className="hero-band" aria-hidden="true" \/>/);
+});
+
+test("images: next/image with the agreed sizes and quality, the first preloaded, the View cursor", () => {
   const src = read("src/components/homepage/HeroImages.tsx");
   assert.match(src, /const SIZES = "\(max-width: 1080px\) 100vw, 54vw";/);
+  assert.match(src, /quality=\{60\}/);
   assert.match(src, /preload=\{first\}/);
   assert.match(src, /fetchPriority=\{first \? "high" : "auto"\}/);
   assert.match(src, /loading=\{first \? "eager" : "lazy"\}/);
-  assert.match(src, /alt=\{slide\.alt\}/);
+  assert.match(src, /alt=\{image\.alt\}/);
+  assert.match(src, /href=\{`\/work\/\$\{entry\.slug\}`\}/);
   assert.match(src, /aria-label=\{`View the \$\{entry\.heroName\} project`\}/);
   assert.match(src, /data-cursor="view"/);
+  assert.match(read("src/lib/sanity/image.ts"), /width\(2400\)\.fit\("max"\)\.auto\("format"\)\.quality\(90\)/);
+});
+
+test("image settings: AVIF and WebP; qualities 60 for the hero and 75, every other image\x27s", () => {
+  const config = read("next.config.ts");
+  assert.match(config, /formats: \["image\/avif", "image\/webp"\],/);
+  assert.match(config, /qualities: \[60, 75\],/);
+  // No other next/image sets a quality, so every other image stays at the default 75.
+  const uses = execSync("grep -rln 'quality={' src || true", { encoding: "utf8" }).trim().split("\n").filter(Boolean);
+  assert.deepEqual(uses, ["src/components/homepage/HeroImages.tsx"]);
 });
 
 test("the caption carries no Client or Exploration tag", () => {
@@ -102,25 +129,37 @@ test("the caption carries no Client or Exploration tag", () => {
   assert.doesNotMatch(src, /projectType|PROJECT_TYPE_LABELS|Exploration"|Client"/);
 });
 
-test("Pause: pressed state and both labels", () => {
-  const src = read("src/components/homepage/HeroPause.tsx");
-  assert.match(src, /aria-pressed=\{paused\}/);
-  assert.match(src, /"Play the project images" : "Pause the project images"/);
+test("Pause: pressed state and both labels, and it stops the word as well as the images", () => {
+  assert.match(read("src/components/homepage/HeroPause.tsx"), /aria-pressed=\{paused\}/);
+  assert.match(read("src/components/homepage/HeroPause.tsx"), /"Play the project images" : "Pause the project images"/);
+  const interactive = read("src/components/homepage/HeroInteractive.tsx");
+  assert.match(interactive, /useWordClock\(moving && !paused\)/);
+  assert.match(interactive, /useImageClock\(entries\.length, paused \|\| hold\.held, times\)/);
 });
 
-test("analytics: the four hero events with their parameters", () => {
+test("analytics: hero_project_click from the image or the caption, and hero_pause_toggle", () => {
   const interactive = read("src/components/homepage/HeroInteractive.tsx");
-  assert.match(interactive, /trackOnce\("hero_field_preview", entries\[field\]\.heroField, \{ field: entries\[field\]\.heroField \}\)/);
   assert.match(interactive, /track\("hero_project_click", \{ project: slug, source \}\)/);
   assert.match(interactive, /openProject\("image"\)/);
   assert.match(interactive, /openProject\("caption"\)/);
-  assert.match(interactive, /openProject\("list"\)/);
-  assert.match(read("src/components/homepage/HeroFieldList.tsx"), /track\("hero_unlisted_field_click"\)/);
   assert.match(read("src/components/homepage/HeroPause.tsx"), /track\("hero_pause_toggle", \{ state: paused \? "playing" : "paused" \}\)/);
+  for (const file of ["HeroInteractive", "HeroImages", "HeroCaption", "HeroLine", "HeroPause"]) {
+    assert.doesNotMatch(read(`src/components/homepage/${file}.tsx`), /hero_field_preview|hero_unlisted_field_click/, file);
+  }
 });
 
-test("the old hero is gone: no HERO constant, no cycling words, no scroll indicator", () => {
+test("the old hero and the field list are gone", () => {
   assert.doesNotMatch(read("src/lib/constants/homepage-data.ts"), /export const HERO\b/);
   const css = read("src/components/homepage/homepage.css");
   for (const old of ["hero-cycle", "hero-headline", "scroll-indicator", "scroll-track", "heroHeadingEnter"]) assert.ok(!css.includes(old), old);
+  const hero = read("src/components/homepage/hero.css");
+  for (const old of ["hero-fields", "hero-field", "hero-pick", "hero-word-button", "hero-plus", "aria-expanded"]) assert.ok(!hero.includes(old), old);
+});
+
+test("hero.css: every grid-area a part asks for exists in each layout (desktop and 1080px and below)", () => {
+  const css = read("src/components/homepage/hero.css");
+  const used = new Set([...css.matchAll(/grid-area:\s*([\w-]+)/g)].map((m) => m[1]));
+  const templates = [...css.matchAll(/grid-template-areas:([\s\S]*?);/g)].map((m) => new Set(m[1].replace(/"/g, " ").trim().split(/\s+/)));
+  assert.equal(templates.length, 2, "one template for each layout");
+  for (const template of templates) for (const area of used) assert.ok(template.has(area), `${area} is in ${[...template].join(" ")}`);
 });

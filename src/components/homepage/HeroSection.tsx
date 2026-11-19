@@ -1,6 +1,6 @@
 // The homepage hero. A server component: it builds each image's URL with the Studio crop (the
 // Sanity image builder stays on the server) and hands plain data to HeroInteractive, which owns
-// everything that moves: the rotating images, the caption, the value line and the field list.
+// everything that moves: the rotating images, the caption and the cycling word in the value line.
 //
 // With no hero projects the hero shows the text column only, beside an empty Cloudy White column.
 
@@ -10,20 +10,20 @@ import { heroObjectPosition, type HeroEntry, type HeroProject } from "@/lib/home
 import HeroInteractive from "./HeroInteractive";
 import "./hero.css";
 
+// One image per project: its first hero image (the query keeps only projects that have one).
 function heroEntry(project: HeroProject): HeroEntry {
+  const image = project.heroImages[0];
   return {
     slug: project.slug,
     heroName: project.heroName,
     heroLine: project.heroLine,
-    heroField: project.heroField,
-    heroWord: project.heroWord,
     heroFit: project.heroFit,
-    slides: project.heroImages.map((image) => ({
+    image: {
       src: heroImageUrl(image),
       alt: image.alt,
       ...(image.lqip ? { lqip: image.lqip } : {}),
       position: heroObjectPosition(image),
-    })),
+    },
   };
 }
 

@@ -1,11 +1,10 @@
 /* The homepage hero: HeroSection.tsx and its client parts (HeroInteractive, HeroImages, HeroCaption,
-   HeroLine, HeroFieldList, HeroPause).
+   HeroLine, HeroPause).
 
    Desktop (above 1080px): the hero fills the first screen under the header. The image column runs
    from 46% of the width to the right edge, full height; the text column runs from the page margin to
    64px before it, with the label 64px under the header and the caption 44px above the hero's foot.
-   1080px and below: the image first, full width, then the caption, the label, the value line and
-   the field list. */
+   1080px and below: the image first, full width, then the caption, the label and the value line. */
 
 .hero {
   position: relative;
@@ -13,10 +12,10 @@
   grid-template-columns: var(--page-px) minmax(0, 1fr) 64px 54%;
   grid-template-rows: auto auto 1fr auto;
   grid-template-areas:
-    ". eyebrow . media"
-    ". pick    . media"
-    ". .       . media"
-    ". caption . media";
+    ". eyebrow   . media"
+    ". statement . media"
+    ". .         . media"
+    ". caption   . media";
   min-height: 100svh;
   padding-top: var(--header-bar);
 }
@@ -26,8 +25,8 @@
   padding-top: 64px;
 }
 
-.hero-pick {
-  grid-area: pick;
+.hero-statement {
+  grid-area: statement;
   margin-top: 24px;
 }
 
@@ -187,81 +186,78 @@
   display: inline-block;
 }
 
-.hero-word-button {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  font: inherit;
-  letter-spacing: inherit;
-  color: inherit;
-  text-align: inherit;
-  cursor: pointer;
-}
-
-.hero-word-button:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 4px;
-}
-
-/* The word's clipped box: the old word leaves upwards and the new one rises into it. */
+/* The cycling word in its clipped box, on its marker band. The box clips the letters top and bottom
+   as they rise; it leaves room for the band (3px each side) and for a longer word on its way out.
+   3px on the right so the full stop sits just outside the band. */
 .hero-word-box {
   position: relative;
   display: inline-block;
-  clip-path: inset(0 -50vw 0 -0.2em);
+  margin-right: 3px;
+  clip-path: inset(0 -50vw 0 -3px);
 }
 
 .hero-word {
   position: relative;
   display: inline-block;
+  isolation: isolate;
+  white-space: nowrap;
 }
 
-.hero-word::after {
-  content: "";
+/* The marker band: Cloudy White behind the word, 3px wider each side, from 0.12em below the line's top
+   to 0.02em above its bottom. Decorative. */
+.hero-band {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.08em;
-  height: 1.5px;
-  background: var(--text-label);
-  transform-origin: left;
-  transition: background-color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: -1;
+  top: 0.12em;
+  right: -3px;
+  bottom: 0.02em;
+  left: -3px;
+  background: var(--bg-shift);
 }
 
-@media (hover: hover) {
-  .hero-word-button:hover .hero-word::after {
-    background: var(--text-primary);
-  }
+/* One letter: rises on its own; a space keeps its width. */
+.hero-letter {
+  display: inline-block;
+  white-space: pre;
 }
 
+/* Out: the band wipes away to the right while the letters rise out, 12ms apart. */
 .hero-word--out {
   position: absolute;
-  left: 0;
   top: 0;
-  white-space: nowrap;
-  animation: hero-word-out 240ms cubic-bezier(0.55, 0, 0.75, 0) forwards;
+  left: 0;
 }
 
-.hero-word--out::after {
+.hero-word--out .hero-band {
   transform-origin: right;
-  animation: hero-underline-out 220ms cubic-bezier(0.55, 0, 0.75, 0) forwards;
+  animation: hero-band-out 240ms cubic-bezier(0.55, 0, 0.75, 0) forwards;
 }
 
+.hero-word--out .hero-letter {
+  animation: hero-letter-out 240ms cubic-bezier(0.55, 0, 0.75, 0) calc(var(--i) * 12ms) forwards;
+}
+
+/* In, once the old band has gone: the letters rise in 25ms apart while the band wipes in from the left. */
 .hero-word--in {
-  animation: hero-word-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  --in-after: 240ms;
 }
 
-.hero-word--in::after {
-  animation: hero-underline-in 600ms cubic-bezier(0.23, 1, 0.32, 1) 180ms both;
+.hero-word--in .hero-letter {
+  animation: hero-letter-in 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(var(--in-after) + var(--i) * 25ms) both;
 }
 
-@keyframes hero-word-out {
+.hero-word--in .hero-band {
+  transform-origin: left;
+  animation: hero-band-in 700ms cubic-bezier(0.23, 1, 0.32, 1) calc(var(--in-after) + 50ms) both;
+}
+
+@keyframes hero-letter-out {
   to {
     transform: translateY(-110%);
   }
 }
 
-@keyframes hero-word-in {
+@keyframes hero-letter-in {
   from {
     transform: translateY(110%);
   }
@@ -270,7 +266,7 @@
   }
 }
 
-@keyframes hero-underline-out {
+@keyframes hero-band-out {
   from {
     transform: scaleX(1);
   }
@@ -279,133 +275,13 @@
   }
 }
 
-@keyframes hero-underline-in {
+@keyframes hero-band-in {
   from {
     transform: scaleX(0);
   }
   to {
     transform: scaleX(1);
   }
-}
-
-/* The plus after the full stop: turns 45 degrees while the list is open. */
-.hero-plus {
-  position: relative;
-  display: inline-block;
-  width: 13px;
-  height: 13px;
-  margin-left: 0.35em;
-  vertical-align: 0.12em;
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.hero-plus::before,
-.hero-plus::after {
-  content: "";
-  position: absolute;
-  background: var(--text-label);
-}
-
-.hero-plus::before {
-  left: 0;
-  right: 0;
-  top: calc(50% - 0.75px);
-  height: 1.5px;
-}
-
-.hero-plus::after {
-  top: 0;
-  bottom: 0;
-  left: calc(50% - 0.75px);
-  width: 1.5px;
-}
-
-.hero-word-button[aria-expanded="true"] .hero-plus {
-  transform: rotate(45deg);
-}
-
-/* ── Field list ── */
-
-.hero-fields {
-  margin: 28px 0 0;
-  padding: 0;
-  list-style: none;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-6px);
-  transition:
-    opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-    transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-    visibility 0s linear 0.4s;
-}
-
-.hero-fields[data-open="true"] {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  transition:
-    opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-    transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
-    visibility 0s;
-}
-
-.hero-field {
-  display: inline-flex;
-  align-items: center;
-  margin: 0;
-  padding: 5px 0;
-  border: 0;
-  background: none;
-  font-family: var(--sans);
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.4;
-  text-align: left;
-  color: var(--text-label);
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    color 0.3s cubic-bezier(0.23, 1, 0.32, 1),
-    transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.hero-field[aria-current="true"] {
-  color: var(--text-primary);
-}
-
-@media (hover: hover) {
-  .hero-field:hover {
-    color: var(--text-primary);
-    transform: translateX(8px);
-  }
-}
-
-.hero-field:focus-visible {
-  outline: 1px solid var(--text-primary);
-  outline-offset: 2px;
-}
-
-/* The active field's tick: 18px by 1px, drawn in as it becomes active. */
-.hero-field-tick {
-  display: inline-block;
-  width: 0;
-  height: 1px;
-  margin-right: 0;
-  background: var(--text-primary);
-  transition:
-    width 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-    margin-right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.hero-field[aria-current="true"] .hero-field-tick {
-  width: 18px;
-  margin-right: 10px;
-}
-
-.hero-fields-other {
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
 }
 
 /* ── Caption ── */
@@ -538,10 +414,10 @@
     grid-template-columns: var(--page-px) minmax(0, 1fr) var(--page-px);
     grid-template-rows: auto;
     grid-template-areas:
-      "media   media   media"
-      ".       caption ."
-      ".       eyebrow ."
-      ".       pick    .";
+      "media media     media"
+      ".     caption   ."
+      ".     eyebrow   ."
+      ".     statement .";
     min-height: 0;
   }
 
@@ -609,56 +485,12 @@
     padding-top: 36px;
   }
 
-  .hero-pick {
+  .hero-statement {
     margin-top: 20px;
   }
 
   .hero-value {
     font-size: 30px;
-  }
-
-  /* Two columns, opened by height. */
-  .hero-fields {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 24px;
-    max-height: 0;
-    margin-top: 0;
-    overflow: hidden;
-    transform: none;
-    transition:
-      max-height 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      margin-top 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      visibility 0s linear 0.6s;
-  }
-
-  .hero-fields[data-open="true"] {
-    max-height: 520px;
-    margin-top: 20px;
-    transform: none;
-    transition:
-      max-height 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      margin-top 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-      visibility 0s;
-  }
-
-  .hero-field {
-    padding: 7px 0;
-    font-size: 15px;
-  }
-
-  .hero-field[aria-current="true"] {
-    font-weight: 500;
-  }
-
-  .hero-field-tick {
-    display: none;
-  }
-
-  .hero-fields-other {
-    grid-column: 1 / -1;
   }
 }
 
@@ -668,21 +500,17 @@
   }
 }
 
-/* ── Reduced motion: nothing slides or fades; no rotation (HeroInteractive), so no Pause ── */
+/* ── Reduced motion: nothing slides or fades; no rotation and no word changes (HeroInteractive), so
+   no Pause; "businesses" stays on its band ── */
 
 @media (prefers-reduced-motion: reduce) {
   .hero-slide,
-  .hero-caption-body,
-  .hero-fields,
-  .hero-fields[data-open="true"],
-  .hero-field,
-  .hero-field-tick,
-  .hero-plus {
+  .hero-caption-body {
     transition: none;
   }
 
-  .hero-word--in,
-  .hero-word--in::after {
+  .hero-word--in .hero-letter,
+  .hero-word--in .hero-band {
     animation: none;
   }
 

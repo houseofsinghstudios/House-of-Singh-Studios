@@ -1,64 +1,63 @@
 "use client";
-// A client component: it crossfades between images as the rotation moves, mounts each image only
-// when it is about to show (so a phone does not fetch every project image at once), and runs the
-// progress line whose animation times the rotation.
+// A client component: it crossfades between the projects' images as the rotation moves, mounts each
+// image only when it is about to show (so a phone does not fetch every project image at once), and
+// runs the progress line along the image's foot.
 //
-// The whole image is one link to the current project. The progress line's CSS animation is the
-// timer: when it ends the next image shows, and pausing the animation pauses the rotation, so the
-// line and the timer can never disagree.
+// The whole image is one link to the project on screen. The progress line's CSS animation times the
+// hold: when it ends the image is due, and HeroInteractive decides when it moves (never within 500ms
+// of a word change). Pausing the animation pauses the hold, so the line and the timer agree.
 
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useState } from "react";
-import type { HeroEntry, HeroFrame } from "@/lib/homepage-hero";
+import { IMAGE_HOLD_MS, type HeroEntry } from "@/lib/homepage-hero";
 
 const SIZES = "(max-width: 1080px) 100vw, 54vw";
-const keyOf = (f: HeroFrame) => `${f.project}:${f.image}`;
 
 interface Props {
   entries: HeroEntry[];
-  frames: HeroFrame[];
   index: number;
-  // Counts every move of the rotation, so the progress line restarts even on the same image.
+  // Counts every move, so the progress line restarts for each image.
   step: number;
-  holdMs: number;
   rotating: boolean;
   halted: boolean;
-  onDone: () => void;
+  onDue: () => void;
   onOpen: () => void;
 }
 
 // Which images are mounted and which one shows. An image fades in only once it has loaded; until
 // then the one before stays.
-function useSlides(current: string, next: string) {
-  const [mounted, setMounted] = useState<string[]>([current]);
-  const [loaded, setLoaded] = useState<string[]>([]);
+function useSlides(current: number, next: number) {
+  const [mounted, setMounted] = useState<number[]>([current]);
+  const [loaded, setLoaded] = useState<number[]>([]);
   const [shown, setShown] = useState(current);
   const missing = [current, next].filter((k) => !mounted.includes(k));
   // Adjusting state while rendering (React's pattern for state that follows props): no extra pass.
   if (missing.length) setMounted([...mounted, ...missing]);
   if (shown !== current && loaded.includes(current)) setShown(current);
-  const onLoad = (key: string) => setLoaded((l) => (l.includes(key) ? l : [...l, key]));
+  const onLoad = (key: number) => setLoaded((l) => (l.includes(key) ? l : [...l, key]));
   return { mounted, shown, onLoad };
 }
 
-function Slide({ entry, image, visible, first, onLoad }: { entry: HeroEntry; image: number; visible: boolean; first: boolean; onLoad: () => void }) {
-  const slide = entry.slides[image];
+function Slide({ entry, visible, first, onLoad }: { entry: HeroEntry; visible: boolean; first: boolean; onLoad: () => void }) {
+  const { image } = entry;
   return (
     <div className={`hero-slide hero-slide--${entry.heroFit}`} data-visible={visible}>
       <div className="hero-slide-frame">
         <Image
-          src={slide.src}
-          alt={slide.alt}
+          src={image.src}
+          alt={image.alt}
           fill
           sizes={SIZES}
+          // Quality 60 from a clean quality 90 source (heroImageUrl), served as AVIF where possible.
+          quality={60}
           // The first image is the page's largest paint: preloaded and fetched first. The rest load lazily.
           preload={first}
           loading={first ? "eager" : "lazy"}
           fetchPriority={first ? "high" : "auto"}
-          placeholder={slide.lqip ? "blur" : "empty"}
-          blurDataURL={slide.lqip}
-          style={{ objectFit: entry.heroFit === "contain" ? "contain" : "cover", objectPosition: slide.position }}
+          placeholder={image.lqip ? "blur" : "empty"}
+          blurDataURL={image.lqip}
+          style={{ objectFit: entry.heroFit === "contain" ? "contain" : "cover", objectPosition: image.position }}
           onLoad={onLoad}
           // A broken image counts as loaded, so the rotation never waits on it.
           onError={onLoad}
@@ -68,25 +67,16 @@ function Slide({ entry, image, visible, first, onLoad }: { entry: HeroEntry; ima
   );
 }
 
-export default function HeroImages({ entries, frames, index, step, holdMs, rotating, halted, onDone, onOpen }: Props) {
-  const frame = frames[index] ?? frames[0];
-  const current = keyOf(frame);
-  const { mounted, shown, onLoad } = useSlides(current, keyOf(frames[(index + 1) % frames.length] ?? frame));
-  const entry = entries[frame.project];
+export default function HeroImages({ entries, index, step, rotating, halted, onDue, onOpen }: Props) {
+  const { mounted, shown, onLoad } = useSlides(index, (index + 1) % entries.length);
+  const entry = entries[index];
 
   return (
     <>
-      <Link
-        href={`/work/${entry.slug}`}
-        className="hero-media-link"
-        aria-label={`View the ${entry.heroName} project`}
-        data-cursor="view"
-        onClick={onOpen}
-      >
-        {mounted.map((key) => {
-          const [p, i] = key.split(":").map(Number);
-          return <Slide key={key} entry={entries[p]} image={i} visible={key === shown} first={key === "0:0"} onLoad={() => onLoad(key)} />;
-        })}
+      <Link href={`/work/${entry.slug}`} className="hero-media-link" aria-label={`View the ${entry.heroName} project`} data-cursor="view" onClick={onOpen}>
+        {mounted.map((key) => (
+          <Slide key={key} entry={entries[key]} visible={key === shown} first={key === 0} onLoad={() => onLoad(key)} />
+        ))}
       </Link>
       {rotating && (
         <div className="hero-progress" aria-hidden="true">
@@ -94,8 +84,8 @@ export default function HeroImages({ entries, frames, index, step, holdMs, rotat
             key={step}
             className="hero-progress-fill"
             data-halted={halted}
-            style={{ animationDuration: `${holdMs}ms` }}
-            onAnimationEnd={(e) => e.target === e.currentTarget && onDone()}
+            style={{ animationDuration: `${IMAGE_HOLD_MS}ms` }}
+            onAnimationEnd={(e) => e.target === e.currentTarget && onDue()}
           />
         </div>
       )}

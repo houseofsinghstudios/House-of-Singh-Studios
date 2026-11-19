@@ -1,7 +1,7 @@
 "use client";
-// A client component: the button that stops and restarts the hero's rotating images. WCAG 2.2.2
-// (Pause, Stop, Hide) asks for one on anything that moves on its own for more than five seconds.
-// Hidden with reduced motion, where nothing rotates.
+// A client component: the button that stops and restarts what moves in the hero, the rotating images
+// and the cycling word together. WCAG 2.2.2 (Pause, Stop, Hide) asks for one on anything that moves
+// on its own for more than five seconds. Hidden with reduced motion, where nothing moves.
 
 import { track } from "@/lib/analytics";
 
