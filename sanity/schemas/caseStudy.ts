@@ -1,6 +1,17 @@
 import { defineType, defineField, defineArrayMember } from "sanity";
+import {
+  heroImagesMessage,
+  heroLengthMessage,
+  heroRequiredMessage,
+  heroWordCaseMessage,
+} from "../../src/lib/homepage-hero";
 
 // The four studio services. Shared by serviceCategories and the legacy serviceCategory field.
+// Whether the document being edited shows in the homepage hero: the Homepage hero fields are
+// required only then. The checks themselves live in src/lib/homepage-hero.ts.
+const heroShown = (context: { document?: unknown }) => (context.document as { heroShow?: unknown } | undefined)?.heroShow === true;
+const pass = (message: string | undefined) => message ?? true;
+
 const SERVICE_CATEGORY_OPTIONS = [
   { title: "Brand Identity and Visual Design", value: "brand-identity" },
   { title: "Visual Media and Content Production", value: "visual-media" },
@@ -13,6 +24,12 @@ export default defineType({
   title: "Project",
   type: "document",
   fieldsets: [
+    {
+      name: "homepageHero",
+      title: "Homepage hero",
+      description: "The rotating image at the top of the homepage, and the field visitors can pick.",
+      options: { collapsible: true, collapsed: true },
+    },
     {
       name: "legacy",
       title: "Legacy content",
@@ -60,6 +77,104 @@ export default defineType({
       },
       // New projects start as client work. Existing projects have no value and read as client.
       initialValue: "client",
+    }),
+    defineField({
+      name: "heroShow",
+      title: "Show in the homepage hero",
+      type: "boolean",
+      fieldset: "homepageHero",
+      initialValue: false,
+    }),
+    defineField({
+      name: "heroOrder",
+      title: "Hero order",
+      type: "number",
+      fieldset: "homepageHero",
+      description: "Lower shows first. Client work first, then explorations.",
+    }),
+    defineField({
+      name: "heroName",
+      title: "Hero name",
+      type: "string",
+      fieldset: "homepageHero",
+      description: "Shown under the homepage image.",
+      validation: (rule) => [
+        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the hero name: it is shown under the homepage image."))),
+        rule.custom((value) => pass(heroLengthMessage(value, 28, "Keep it under 28 characters so it fits one line on a phone."))).warning(),
+      ],
+    }),
+    defineField({
+      name: "heroLine",
+      title: "Hero line",
+      type: "string",
+      fieldset: "homepageHero",
+      description: "One short line under the name on desktop, for example Ceramics identity and lookbook.",
+      validation: (rule) => [
+        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the hero line: it is shown under the name on desktop."))),
+        rule.custom((value) => pass(heroLengthMessage(value, 40, "Keep it under 40 characters so it fits one line."))).warning(),
+      ],
+    }),
+    defineField({
+      name: "heroField",
+      title: "Field",
+      type: "string",
+      fieldset: "homepageHero",
+      description: "The name in the homepage list, for example Home and lifestyle.",
+      validation: (rule) => [
+        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field: it is the name in the homepage list."))),
+        rule.custom((value) => pass(heroLengthMessage(value, 22, "Keep it under 22 characters so it fits the homepage list."))).warning(),
+      ],
+    }),
+    defineField({
+      name: "heroWord",
+      title: "Field word",
+      type: "string",
+      fieldset: "homepageHero",
+      description: "Replaces \"businesses\" in \"digital for growing businesses.\", lower case and plural, for example home brands.",
+      validation: (rule) => [
+        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field word: it replaces businesses in the homepage line."))),
+        rule.custom((value) => pass(heroWordCaseMessage(value))),
+        rule.custom((value) => pass(heroLengthMessage(value, 14, "Keep it under 14 characters so the homepage line stays short."))).warning(),
+      ],
+    }),
+    defineField({
+      name: "heroImages",
+      title: "Hero images",
+      type: "array",
+      fieldset: "homepageHero",
+      description:
+        "The first image rotates on the homepage. All of them show when a visitor picks this field. 2400px wide or more.",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt Text",
+              type: "string",
+              description: "Describe the image for people using screen readers.",
+              validation: (rule) => rule.required().error("Describe the image: screen readers read it aloud."),
+            }),
+          ],
+        }),
+      ],
+      validation: (rule) => rule.custom((value, context) => pass(heroImagesMessage(value, heroShown(context)))),
+    }),
+    defineField({
+      name: "heroFit",
+      title: "Hero fit",
+      type: "string",
+      fieldset: "homepageHero",
+      description: "Fit inside the frame suits website screens.",
+      options: {
+        list: [
+          { title: "Fill the frame", value: "cover" },
+          { title: "Fit inside the frame", value: "contain" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "cover",
     }),
     defineField({
       name: "serviceCategories",
