@@ -118,12 +118,12 @@ test("/services: each Learn More link carries its topic as hidden text, and no a
 test("header logo and footer social links: their name is their text, not an aria-label", async () => {
   const { readFileSync } = await import("node:fs");
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
-  // The header's home link is the wordmark artwork (it replaced the crest in the header).
+  // The header's home link is the studio's name as live text: its own text is its accessible name.
   const start = header.indexOf('<Link href="/" className="header-wordmark">');
-  assert.ok(start > 0, "the wordmark is the home link");
+  assert.ok(start > 0, "the name is the home link");
   const logo = header.slice(start, header.indexOf("</Link>", start));
   assert.doesNotMatch(logo, /aria-label=/);
-  assert.match(logo, /alt="House of Singh Studios"/, "the wordmark's alt is the link text");
+  assert.match(logo, />\s*House of Singh Studios\s*$/, "the link text is the name, in normal case");
   const footer = readFileSync("src/components/layout/Footer.tsx", "utf8");
   const social = footer.slice(footer.indexOf("{SOCIAL.map("), footer.indexOf("</a>", footer.indexOf("{SOCIAL.map(")));
   assert.doesNotMatch(social, /aria-label=/);

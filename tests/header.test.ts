@@ -66,9 +66,11 @@ test("the drawer's time is Toronto time whatever the visitor's zone, as in 1:05 
   assert.deepEqual(torontoTime(new Date(Date.UTC(2026, 0, 15, 6, 5))), { hour: "1", minute: "05", dayPeriod: "AM", zone: "EST" });
 });
 
-test("desktop header: the wordmark artwork home link, five links and Plan your project; no Contact", () => {
+test("desktop header: the studio's name as the home link, five links and Plan your project; no Contact", () => {
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
-  assert.match(header, /src="\/hos-studios-wordmark\.svg" alt="House of Singh Studios"/);
+  // The home link is live text, written in normal case (CSS makes the capitals).
+  assert.match(header, /<Link href="\/" className="header-wordmark">\s*House of Singh Studios\s*<\/Link>/);
+  assert.doesNotMatch(header, /next\/image|<Image|hos-studios-wordmark/);
   assert.doesNotMatch(header, /hos-studios-logo\.svg|header-crest/);
   // One list of the main pages for the header and the drawer (site-links.ts).
   assert.deepEqual(SITE_LINKS.map((l) => l.label), ["Services", "Work", "AI Lab", "About", "Insights"]);
@@ -79,15 +81,11 @@ test("desktop header: the wordmark artwork home link, five links and Plan your p
   assert.match(header, /aria-controls=\{DRAWER_ID\}/);
   // The crest file stays for the footer.
   assert.ok(readFileSync("public/hos-studios-logo.svg", "utf8").length > 0);
-  // The wordmark is artwork: outlined paths, no text and no font.
-  const svg = readFileSync("public/hos-studios-wordmark.svg", "utf8");
-  assert.doesNotMatch(svg, /<text|font-family|@font-face/);
-  // The owner's final artwork: trimmed to the letters, in Obsidian; the Image reserves the same box.
-  assert.match(svg, /viewBox="6\.26 9\.24 652\.8 32\.65"/);
-  assert.match(svg, /fill="#22211F"/);
-  assert.match(header, /width=\{652\.8\} height=\{32\.65\}/);
-  // No narrower gap above the breakpoint: the wordmark holds 14px with the links 32px apart.
-  assert.doesNotMatch(readFileSync("src/app/globals.css", "utf8"), /min-width: 1081px\) and \(max-width: 1279px/);
+  // In the nav's own type, Obsidian where the links are Gunmetal; no width rule for it.
+  const css = readFileSync("src/app/globals.css", "utf8");
+  const home = css.slice(css.indexOf(".header-wordmark {"), css.indexOf("}", css.indexOf(".header-wordmark {")));
+  for (const rule of ["font-family: var(--sans);", "font-size: 11px;", "font-weight: 500;", "text-transform: uppercase;", "letter-spacing: 0.14em;", "white-space: nowrap;", "color: var(--text-primary);", "view-transition-name: site-logo;"]) assert.ok(home.includes(rule), rule);
+  assert.doesNotMatch(css, /header-wordmark-img|min-width: 1081px\) and \(max-width: 1279px/);
 });
 
 test("drawer: a modal dialog with six links including Contact, a close button, and no Plan your project", () => {
