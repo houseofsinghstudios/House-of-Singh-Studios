@@ -1851,27 +1851,27 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   transform: translateY(-100%);
 }
 
-/* ── Wordmark: artwork, sized by height (the width follows the artwork) ── */
+/* ── Home link: the studio's name as live text, in the nav's own type (Inter 500, 11px, uppercase,
+   0.14em). Obsidian, where the links are Gunmetal: the one difference, so it reads as the home link.
+   The same size at every width. ── */
 .header-wordmark {
-  display: flex;
-  align-items: center;
-  /* Never touches the links or the menu button: where the bar is too narrow for the artwork at full
-     size, the artwork shrinks instead. */
-  min-width: 0;
+  display: block;
+  flex-shrink: 0;
   margin-right: 32px;
-  /* Touch target: padding adds tap area around the artwork without moving it. */
+  /* Touch target: padding adds tap area around the name without moving it. */
   padding: 12px 0;
   margin-top: -12px;
   margin-bottom: -12px;
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: var(--text-primary);
+  text-decoration: none;
   view-transition-name: site-logo;
-}
-.header-wordmark-img {
-  display: block;
-  height: 14px;
-  width: auto;
-  max-width: 100%;
-  object-fit: contain;
-  object-position: left center;
 }
 
 /* ── Spacer ── */
@@ -2113,13 +2113,8 @@ body.nav-open {
   .header-mobile-hamburger {
     display: flex;
   }
-  /* 12px tall, at every width down to 360px. The artwork can still shrink rather than touch the menu
-     button on anything narrower. */
   .header-wordmark {
     margin-right: 16px;
-  }
-  .header-wordmark-img {
-    height: 12px;
   }
 }
 

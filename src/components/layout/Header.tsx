@@ -1,6 +1,6 @@
 "use client";
-// The site header: one fixed bar, 72px on desktop and 56px at 1080px and below. The wordmark artwork
-// on the left is the home link at every width. Above 1080px: five links and "Plan your project".
+// The site header: one fixed bar, 72px on desktop and 56px at 1080px and below. The studio's name,
+// as live text in the nav's type, is the home link at every width. Above 1080px: five links and "Plan your project".
 // At 1080px and below: the menu button, which opens the drawer (MenuDrawer.tsx).
 //
 // A client component because it follows the scroll (the line under the bar once scrolled, hiding on
@@ -8,7 +8,6 @@
 // state. Never hidden while the drawer is open or with reduced motion, and shown at once when
 // keyboard focus moves into it, so focus never lands on a hidden element.
 
-import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
@@ -107,9 +106,10 @@ export default function Header() {
   return (
     <>
       <header className={className} onFocus={reveal}>
-        {/* The wordmark is artwork (outlined letters), not text; its alt is the home link's name. */}
+        {/* The home link is the studio's name as live text, in the nav's type; written in normal case
+            (capitals come from CSS), so screen readers say the name naturally. */}
         <Link href="/" className="header-wordmark">
-          <Image src="/hos-studios-wordmark.svg" alt="House of Singh Studios" width={652.8} height={32.65} className="header-wordmark-img" unoptimized priority />
+          House of Singh Studios
         </Link>
         <div className="header-spacer" />
         <DesktopNav />
