@@ -4,11 +4,18 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "next-view-transitions";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { SERVICES_SECTION } from "@/lib/constants/homepage-data";
-import { serviceLinkLabel } from "@/lib/linking";
+import { serviceTopic } from "@/lib/service-names";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import "./homepage.css";
 
 const NUMBERS = ["01", "02", "03", "04"];
+
+// The row's descriptive topic (src/lib/service-names.ts), read by screen readers right after the
+// visible title: "Brand Identity and Visual Design: Brand identity design and rebranding in Toronto".
+function TopicText({ slug }: { slug: string }) {
+  const topic = serviceTopic(slug);
+  return topic ? <span className="sr-only">: {topic}</span> : null;
+}
 
 export default function ServicesSection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -88,12 +95,14 @@ export default function ServicesSection() {
             <Link
               key={service.href}
               href={service.href}
-              aria-label={serviceLinkLabel(service.href.split("/").pop() || "", service.title)}
               className={`svc-accordion-row row-bleed${isActive ? " svc-mob-active" : ""}`}
               data-cursor="view"
               onClick={(e) => handleTap(i, e)}
             >
-              <span className="svc-accordion-num">{NUMBERS[i]}</span>
+              {/* The link's name is its text, starting with the visible title (WCAG 2.5.3): the number
+                  and the toggle are hidden from screen readers, and the descriptive topic follows the
+                  title as visually hidden text, as in the Learn More links on /services. */}
+              <span className="svc-accordion-num" aria-hidden="true">{NUMBERS[i]}</span>
               <div className="svc-accordion-content">
                 <h3
                   className="svc-accordion-title"
@@ -103,6 +112,7 @@ export default function ServicesSection() {
                 >
                   {service.title}
                 </h3>
+                <TopicText slug={service.href.split("/").pop() || ""} />
                 <div className="svc-accordion-body">
                   <p className="svc-accordion-desc">{service.sentence}</p>
                   {/* Plain text inside the row link, not a control of its own. */}
@@ -129,7 +139,7 @@ export default function ServicesSection() {
                 </svg>
               </div>
               <div className={`svc-accordion-arrow-col svc-mob-toggle${isActive ? " svc-mob-toggle--active" : ""}`}>
-                <span className="svc-mob-plus">+</span>
+                <span className="svc-mob-plus" aria-hidden="true">+</span>
               </div>
             </Link>
           );
