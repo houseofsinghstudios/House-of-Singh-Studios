@@ -9,6 +9,7 @@ import type { PortableTextBlock as PortableTextBody } from "@portabletext/react"
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
 import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
+import { sortHeroProjects, type HeroFit, type HeroImage, type HeroProject } from "@/lib/homepage-hero";
 
 // ── GROQ Queries ──
 
@@ -89,6 +90,29 @@ const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true && ${P
   overview,
   projectType,
   featuredImage
+}`;
+
+// The homepage hero: case studies marked "Show in the homepage hero" that have a slug and at least one
+// hero image. Ordered in code (src/lib/homepage-hero.ts), not here.
+const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined(slug.current) && count(heroImages) > 0 && ${PUBLISHED}] {
+  title,
+  "slug": slug.current,
+  heroName,
+  heroLine,
+  heroField,
+  heroWord,
+  heroFit,
+  heroOrder,
+  projectType,
+  "heroImages": heroImages[defined(asset)] {
+    alt,
+    hotspot,
+    crop,
+    "url": asset->url,
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height,
+    "lqip": asset->metadata.lqip
+  }
 }`;
 
 // ── What the case study queries return ──
@@ -489,6 +513,80 @@ export async function getFeaturedProjects(): Promise<HomepageProject[]> {
       return docs && docs.length > 0 ? docs.map(mapSanityToHomepageProject) : localFeaturedProjects();
     },
     localFeaturedProjects
+  );
+}
+
+// A hero project as the query returns it. Every field may be missing on a document that skipped
+// Studio's checks, so the mapper below never assumes one is there.
+interface HeroProjectDoc {
+  title?: string;
+  slug?: string;
+  heroName?: string;
+  heroLine?: string;
+  heroField?: string;
+  heroWord?: string;
+  heroFit?: string;
+  heroOrder?: number;
+  projectType?: unknown;
+  heroImages?: Array<{
+    alt?: string;
+    hotspot?: { x: number; y: number };
+    crop?: { top: number; bottom: number; left: number; right: number };
+    url?: string;
+    width?: number;
+    height?: number;
+    lqip?: string;
+  }> | null;
+}
+
+const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
+
+// Images without a file are left out, and so is a project left with none. The hero name falls back
+// to the title; the alt text falls back to the hero name.
+export function mapHeroProject(doc: HeroProjectDoc): HeroProject | null {
+  const title = str(doc.title);
+  const slug = str(doc.slug);
+  const heroName = str(doc.heroName) || title;
+  const heroImages: HeroImage[] = (doc.heroImages || []).flatMap((image) => {
+    const url = str(image?.url);
+    if (!url) return [];
+    return [{
+      url,
+      alt: str(image.alt) || heroName,
+      ...(typeof image.width === "number" ? { width: image.width } : {}),
+      ...(typeof image.height === "number" ? { height: image.height } : {}),
+      ...(str(image.lqip) ? { lqip: str(image.lqip) } : {}),
+      ...(image.hotspot ? { hotspot: { x: image.hotspot.x, y: image.hotspot.y } } : {}),
+      ...(image.crop ? { crop: { top: image.crop.top, bottom: image.crop.bottom, left: image.crop.left, right: image.crop.right } } : {}),
+    }];
+  });
+  if (!title || !slug || heroImages.length === 0) return null;
+  const heroFit: HeroFit = doc.heroFit === "contain" ? "contain" : "cover";
+  return {
+    title,
+    slug,
+    heroName,
+    heroLine: str(doc.heroLine),
+    heroField: str(doc.heroField),
+    heroWord: str(doc.heroWord),
+    heroFit,
+    ...(typeof doc.heroOrder === "number" && Number.isFinite(doc.heroOrder) ? { heroOrder: doc.heroOrder } : {}),
+    projectType: projectType(doc.projectType),
+    heroImages,
+  };
+}
+
+// The homepage hero's projects, in hero order, at most HERO_MAX. Read with readSanity like the
+// featured projects; with nothing to show (or Sanity unreachable while building) the list is empty.
+export async function getHeroProjects(): Promise<HeroProject[]> {
+  return readSanity(
+    "homepage hero projects",
+    async () => {
+      const docs = await client.fetch<HeroProjectDoc[]>(heroProjectsQuery);
+      const projects = (docs || []).map(mapHeroProject).filter((p): p is HeroProject => p !== null);
+      return sortHeroProjects(projects);
+    },
+    () => []
   );
 }
 

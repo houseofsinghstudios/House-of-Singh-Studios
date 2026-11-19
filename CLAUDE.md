@@ -468,3 +468,12 @@ SANITY_REVALIDATE_SECRET (set on Vercel and on the webhook). Without it, changes
 Insights order (src/lib/insights-listing.ts): one hero, the newest post marked Featured, then every other
 post newest first. Featured never pushes a newer post below an older one. A future publishedAt is fixed in
 Studio, not in code.
+
+Homepage hero fieldset (Project documents, collapsed): "Show in the homepage hero" puts a project in the
+rotating homepage hero; "Hero order" sorts it (client work always first, then explorations, then by order and
+title, six at most); "Hero name" is the caption under the image; "Hero line" the short desktop line under it;
+"Field" its name in the homepage field list; "Field word" replaces "businesses" in "digital for growing
+businesses." (lower case, plural); "Hero images" are one to four images, the first rotates and all show when
+the field is picked; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
+and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
+in src/lib/homepage-hero.ts); the homepage does not use it yet.
