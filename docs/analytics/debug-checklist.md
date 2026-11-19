@@ -35,6 +35,8 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 12 | Any "Book a Discovery Call" link | `discovery_call_click` | `page_path` the page you clicked on |
 | 13 | Homepage, "Two ways to start", a chip | `tool_band_click` | `tool`, `kind` chip, `value` the answer or service |
 | 14 | /partners, a call to action; then Copy Text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
+| 15 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
+| 16 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
 
 ## Network panel: what each collect request contains
 

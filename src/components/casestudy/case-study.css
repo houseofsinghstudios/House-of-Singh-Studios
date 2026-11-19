@@ -293,9 +293,9 @@
 }
 
 @media (max-width: 767px) {
-  /* Starts below the header crest, which reaches 128px on phones. */
+  /* 24px below the header bar, as the hero started 24px below the old crest (which ended at 128px). */
   .cs-hero {
-    padding-top: var(--header-clearance) !important;
+    padding-top: calc(var(--header-bar) + 24px) !important;
   }
   .cs-hero-heading {
     font-size: clamp(28px, 7vw, 40px);

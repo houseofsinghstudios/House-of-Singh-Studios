@@ -1,189 +1,128 @@
 "use client";
-// Sticky site header with crest, wordmark, desktop nav links, and mobile overlay menu.
-// Client component because it tracks scroll position for header shrink behavior
-// and manages open/close state for the mobile navigation overlay. While the overlay is open,
-// Escape closes it, the page behind is inert and focus returns to the menu button on close.
+// The site header: one fixed bar, 72px on desktop and 56px at 1080px and below. The wordmark artwork
+// on the left is the home link at every width. Above 1080px: five links and "Plan your project".
+// At 1080px and below: the menu button, which opens the drawer (MenuDrawer.tsx).
+//
+// A client component because it follows the scroll (the line under the bar once scrolled, hiding on
+// the way down and showing on the way up, src/lib/header-scroll.ts) and owns the drawer's open
+// state. Never hidden while the drawer is open or with reduced motion, and shown at once when
+// keyboard focus moves into it, so focus never lands on a hidden element.
 
 import Image from "next/image";
 import { Link } from "next-view-transitions";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { track } from "@/lib/analytics";
+import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
+import { useHeaderScroll } from "@/lib/use-header-scroll";
+import MenuDrawer from "./MenuDrawer";
 
-// The mobile menu panel, which the menu button controls.
-const PANEL_ID = "mobile-nav-panel";
-// Everything outside the header and the panel that can take focus. While the menu is open these are
-// inert, so Tab stays inside the menu; the header's own home links are made inert below.
-const OUTSIDE_MENU = "main, footer, .ft-reveal, .skip-link, .cx-root";
+const DRAWER_ID = "site-menu-drawer";
+// The drawer only exists at these widths: past them an open drawer closes.
+const DRAWER_WIDTHS = "(max-width: 1080px)";
 
-const navLinks = [
+const NAV_LINKS = [
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "AI Lab", href: "/ai" },
   { label: "About", href: "/about" },
   { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
 ];
 
-export default function Header() {
-  const [scrolled, setScrolled] = useState(() =>
-    typeof window !== 'undefined' ? window.scrollY > 20 : false
+// Above 1080px: the five links, then "Plan your project" (hidden at 1080px and below, where the
+// drawer's Contact covers it).
+function DesktopNav() {
+  return (
+    <nav className="header-desktop-nav" aria-label="Primary navigation">
+      {NAV_LINKS.map((link) => (
+        <Link key={link.href} href={link.href} className="header-nav-link">
+          {link.label}
+        </Link>
+      ))}
+      <Link href="/start" className="btn-primary header-cta" data-cursor="link" onClick={() => track("header_cta_click", { location: "header" })}>
+        Plan your project
+      </Link>
+    </nav>
   );
-  const [hidden, setHidden] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const lastScrollY = useRef(0);
-  const rafRef = useRef(0);
+}
+
+// At 1080px and below: opens the drawer. Two lines; the drawer has its own close button.
+function MenuButton({ buttonRef, open, onClick }: { buttonRef: React.RefObject<HTMLButtonElement | null>; open: boolean; onClick: () => void }) {
+  return (
+    <button
+      ref={buttonRef}
+      type="button"
+      className="header-mobile-hamburger"
+      onClick={onClick}
+      aria-label={open ? "Close menu" : "Open menu"}
+      aria-expanded={open}
+      aria-controls={DRAWER_ID}
+    >
+      <span className="hamburger-line" />
+      <span className="hamburger-line" />
+    </button>
+  );
+}
+
+// After the drawer closes: focus back to the menu button. While open: closing it if the window widens.
+function useDrawerEffects(
+  open: boolean,
+  close: () => void,
+  returnFocusRef: React.RefObject<boolean>,
+  menuButtonRef: React.RefObject<HTMLButtonElement | null>,
+) {
+  // The focus moves here, not in close(): until the drawer's own cleanup has run, the header is
+  // still inert and cannot take focus. React runs every cleanup before any new effect.
+  useEffect(() => {
+    if (open || !returnFocusRef.current) return;
+    returnFocusRef.current = false;
+    menuButtonRef.current?.focus({ preventScroll: true });
+  }, [open, returnFocusRef, menuButtonRef]);
+
+  // Widening the window past 1080px with the drawer open closes it, so the page is never left locked.
+  useEffect(() => {
+    if (!open) return;
+    const mq = window.matchMedia(DRAWER_WIDTHS);
+    const onChange = () => {
+      if (!mq.matches) close();
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, [open, close]);
+}
+
+export default function Header() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const reduceMotion = useMediaQuery(REDUCED_MOTION);
+  const { scrolled, hidden, reveal } = useHeaderScroll(drawerOpen || reduceMotion);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
-  // One way to close, whatever closes it (the button, Escape or a link): the menu shuts and focus
-  // goes back to the menu button, without scrolling the page.
-  const closeMenu = useCallback(() => {
-    setMobileOpen(false);
-    menuButtonRef.current?.focus({ preventScroll: true });
-  }, []);
+  const openDrawer = () => {
+    setDrawerOpen(true);
+    track("menu_open");
+  };
+  // Whatever closes the drawer, focus goes back to the menu button, without scrolling the page.
+  // The header shows again too, so the menu button is in view to take the focus.
+  const returnFocus = useRef(false);
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+    reveal();
+    returnFocus.current = true;
+  }, [reveal]);
+  useDrawerEffects(drawerOpen, closeDrawer, returnFocus, menuButtonRef);
 
-  /* ── Scroll detection (rAF-throttled) ── */
-  useEffect(() => {
-    let ticking = false;
-
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      rafRef.current = requestAnimationFrame(() => {
-        const y = window.scrollY;
-
-        setScrolled(y >= 20);
-
-        if (y > 400 && y > lastScrollY.current) {
-          setHidden(true);
-        } else if (y < lastScrollY.current) {
-          setHidden(false);
-        }
-
-        lastScrollY.current = y;
-        ticking = false;
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  /* ── While open: Escape closes, and the page behind the menu is inert ── */
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const outside = [...document.querySelectorAll<HTMLElement>(OUTSIDE_MENU)];
-    for (const el of outside) el.inert = true;
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      e.preventDefault();
-      closeMenu();
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      for (const el of outside) el.inert = false;
-    };
-  }, [mobileOpen, closeMenu]);
-
-  /* ── Body scroll lock ── */
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-      document.body.classList.add("nav-open");
-    } else {
-      document.body.style.overflow = "";
-      document.body.classList.remove("nav-open");
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.body.classList.remove("nav-open");
-    };
-  }, [mobileOpen]);
-
+  const className = `site-header${scrolled ? " site-header--scrolled" : ""}${hidden ? " site-header--hidden" : ""}`;
   return (
     <>
-      <header
-        className={`site-header${scrolled ? " site-header--scrolled" : ""}`}
-        style={{
-          transform: hidden ? "translateY(-100%)" : "translateY(0)",
-        }}
-      >
-        {/* Crest Logo — visible at page top only (desktop). Once hidden it is inert, so its home
-            link cannot take keyboard focus; the wordmark link is the home link then. */}
-        <div className="header-crest-wrap" aria-hidden={scrolled || mobileOpen} inert={scrolled || mobileOpen}>
-          {/* The crest's alt is the link's text and its accessible name. */}
-          <Link href="/">
-            <Image
-              src="/hos-studios-logo.svg"
-              alt="House of Singh Studios"
-              className="header-crest"
-              width={140}
-              height={115}
-              unoptimized
-            />
-          </Link>
-        </div>
-
-        {/* Text Wordmark — visible once scrolled, at every width. While hidden at the page top it is
-            inert, like the crest once scrolled, so keyboard focus never lands on it. */}
-        <div className="header-wordmark-wrap" aria-hidden={!scrolled || mobileOpen} inert={!scrolled || mobileOpen}>
-          <Link href="/" className="header-wordmark">
-            House of Singh Studios
-          </Link>
-        </div>
-
-        {/* Spacer */}
+      <header className={className} onFocus={reveal}>
+        {/* The wordmark is artwork (outlined letters), not text; its alt is the home link's name. */}
+        <Link href="/" className="header-wordmark">
+          <Image src="/hos-studios-wordmark.svg" alt="House of Singh Studios" width={1291} height={45} className="header-wordmark-img" unoptimized priority />
+        </Link>
         <div className="header-spacer" />
-
-        {/* Desktop Nav Links — visible at top, hidden when scrolled */}
-        <nav className="header-desktop-nav" aria-label="Primary navigation">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="header-nav-link"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Mobile hamburger */}
-        <button
-          ref={menuButtonRef}
-          className="header-mobile-hamburger"
-          onClick={() => (mobileOpen ? closeMenu() : setMobileOpen(true))}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          aria-controls={PANEL_ID}
-        >
-          <span className={`hamburger-line hamburger-line--top${mobileOpen ? " open" : ""}`} />
-          <span className={`hamburger-line hamburger-line--bottom${mobileOpen ? " open" : ""}`} />
-        </button>
+        <DesktopNav />
+        <MenuButton buttonRef={menuButtonRef} open={drawerOpen} onClick={drawerOpen ? closeDrawer : openDrawer} />
       </header>
-
-      {/* Always rendered, so the button's aria-controls always points at it; hidden while closed. */}
-      <div id={PANEL_ID} className="mobile-nav-panel" hidden={!mobileOpen}>
-        <nav className="mobile-nav-links">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="mobile-nav-link"
-              onClick={closeMenu}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="mobile-nav-footer">
-          <span>{STUDIO_EMAIL}</span>
-          <span>Toronto, Canada</span>
-        </div>
-      </div>
+      <MenuDrawer id={DRAWER_ID} open={drawerOpen} onClose={closeDrawer} />
     </>
   );
 }

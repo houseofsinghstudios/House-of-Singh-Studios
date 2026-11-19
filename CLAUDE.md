@@ -87,14 +87,20 @@ Inspired by Dash Digital's interaction philosophy, adapted to our editorial lang
 
 Philosophy: Minimal. The nav should almost disappear. Content is king.
 
-AS BUILT (src/components/layout/Header.tsx):
-- Sticky header. At the top of the page the crest logo sits top left; once scrolled, the header becomes a thin bar with the text wordmark on the left.
-- Above 1080px: six text links on the right (Services, Work, AI Lab, About, Insights, Contact), with the underline wipe.
-- At 1080px and below: a hamburger button (aria-label "Open menu" / "Close menu", aria-expanded) replaces the links. It opens a full screen panel on --bg with the same six links stacked large and left aligned, and the studio email and location at the bottom. The page behind does not scroll while it is open.
+AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scroll rules in src/lib/header-scroll.ts):
+- One fixed bar on --bg, at every width and scroll position: 72px above 1080px, 56px at 1080px and below. The single token is --header-bar; pages that clear the header use it (the old --header-logo-top, --header-logo-height and --header-clearance are gone).
+- Home link: the wordmark artwork, public/hos-studios-wordmark.svg (outlined letters, never set in a font), alt "House of Singh Studios", view-transition-name site-logo. About 14px tall on desktop and 12px at 1080px and below; it gives way first when space is short (about 11px just above 1080px, about 10px on a 390px phone, 9px at 360px). The crest no longer appears in the header; the file stays for the footer.
+- A 1px --border line fades in under the bar after 20px of scroll (0.3s).
+- Hides on the way down and shows on the way up: hides only past 400px and after more than 8px down since the last change of direction, shows after more than 8px up, translateY(-100%) over 0.35s cubic-bezier(0.23, 1, 0.32, 1). Always shown at the top, while the drawer is open, and when keyboard focus moves into it. With reduced motion it never hides.
+- Above 1080px: five links (Services, Work, AI Lab, About, Insights) with the underline wipe, 32px apart (24px between 1081px and 1279px), then "Plan your project" to /start: .btn-primary at the nav's size (Obsidian, Silver Mist text), data-cursor="link", tracked as header_cta_click { location: "header" }. Contact is not in the desktop header.
+- At 1080px and below: the menu button (aria-label "Open menu" / "Close menu", aria-expanded, aria-controls) opens the drawer, tracked as menu_open. No "Plan your project" on phones.
+- The drawer: from the right, 85vw up to 420px, translateX(100%) to 0 over 0.55s, over a var(--overlay-50) scrim fading over 0.45s. An 18px close X (1.5px strokes, 44px tap area, "Close menu"). Six links (Services, Work, AI Lab, About, Insights, Contact), about 55px each, entering from 24px with a stagger from 0.16s, 50ms apart. At the foot: "(Studio)" over "Toronto, Canada" and "(Local time)" over the live Toronto time (America/Toronto whatever the visitor's zone, shown after mount only, refreshed every 15s while open, the colon dimming every 2s).
+- The drawer is a modal dialog (role dialog, aria-modal, aria-label "Menu"): the page behind is inert and does not scroll (Lenis paused), focus starts on Close and stays inside, and returns to the menu button on close. It closes on the X, the scrim, Escape, a link, a swipe right of more than 60px, and when the window widens past 1080px. Reduced motion: a 0.3s fade, no slide or stagger. This closes health check F-10.
+- Design exception, decided for the drawer: its links have no dividers between them, unlike the rest of the site's rows.
 - Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
-NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped. Do not rebuild it without the owner's approval. Open accessibility work on the mobile panel (health check F-10): Escape to close, focus kept inside the panel, aria-controls.
+NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped, and the full screen panel it replaced is gone. Do not rebuild either without the owner's approval.
 
 ### Layer 2: Page Transitions
 
@@ -320,7 +326,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 - All hover interactions disabled (CSS @media(hover: hover) wrapper)
 - Accordion sections: all content visible by default, no hover-reveal
 - Custom cursor: hidden on touch devices
-- Navigation: crest or wordmark + hamburger at 1080px and below. Full screen panel for nav.
+- Navigation: wordmark + menu button at 1080px and below, in the 56px bar. The menu opens as a drawer from the right (Layer 1).
 - Image sizes reduced for performance
 - Stagger delays reduced or removed
 - Column layouts collapse to single column

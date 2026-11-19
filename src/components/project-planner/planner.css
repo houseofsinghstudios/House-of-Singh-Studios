@@ -398,7 +398,8 @@
 /* ── Print: the brief only ── */
 @media print {
   .site-header,
-  .header-crest-wrap,
+  .menu-drawer,
+  .menu-scrim,
   footer,
   .ft-reveal,
   .next-page-link,
