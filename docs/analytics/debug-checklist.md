@@ -37,6 +37,10 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 14 | /partners, a call to action; then Copy Text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
 | 15 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
 | 16 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
+| 17 | Homepage hero, the word "businesses", then a field in the list | `hero_field_preview` | `field` the field name; once per field per visit |
+| 18 | Homepage hero, the image, "View project" or a field (desktop click) | `hero_project_click` | `project` the slug, `source` image, caption or list |
+| 19 | Homepage hero list, "Not on the list? Tell us yours" | `hero_unlisted_field_click` | none |
+| 20 | Homepage hero, the Pause button, twice | `hero_pause_toggle` | `state` paused, then playing |
 
 ## Network panel: what each collect request contains
 

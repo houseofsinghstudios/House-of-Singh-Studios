@@ -43,7 +43,7 @@ and tool error (contact, careers, newsletter, Project Planner, Brand Pulse) uses
 13px Inter, line height 1.5, Oxide, 8px above (.form-error--lead for a message that opens a form). The written
 message always shows next to its field or button; colour is never the only signal. Oxide is for nothing else.
 
-Overlays: --overlay-3, -8, -15, -50 and -60 are #1A1A1A at those strengths, for soft hairlines, tints and scrims.
+Overlays: --overlay-3, -8, -15, -28, -42, -50 and -60 are #1A1A1A at those strengths, for soft hairlines, tints and scrims (28 and 42: the homepage hero's Pause button at rest and on hover).
 
 Accessible Ash (decided 30 Oct 2026): every small text element on a light background uses --text-label,
 never Marble Ash: editorial labels, metadata lines, numbers, tags, back links, share labels, placeholders.
@@ -226,7 +226,16 @@ EVOLVED APPROACH:
 ### Homepage
 Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
 
-- Hero: page load entrance with staggered data attributes. Label "Creative Direction Studio"; the H1 is visually hidden (sr-only) and the visible headline is presentational.
+- Hero (src/components/homepage/HeroSection.tsx, a server component, with the client parts HeroInteractive, HeroImages, HeroCaption, HeroLine, HeroFieldList and HeroPause; styles in hero.css; logic in src/lib/homepage-hero.ts). Projects from getHeroProjects, the Studio "Homepage hero" fieldset. The H1 stays visually hidden (protected), then the label "(Brand identity studio, Toronto)".
+  - Layout: above 1080px the hero fills the first screen under the header; the image runs from 46% of the width to the right edge, full height, and the text column holds the label (64px under the header), the value line, the field list and, at its foot, the caption (44px above the hero's bottom). At 1080px and below: the image first (full width, clamp(380px, 110vw, 620px) tall), the caption 12px under it, then the label, the value line and the list.
+  - Value line: "Brand identity, design and digital for growing businesses.", weight 500, -0.03em, three lines kept so nothing moves. "businesses" is a button (aria-expanded, aria-controls the list, named "Growing businesses. Show work by field") with its own Accessible Ash underline and a plus after the full stop that turns 45 degrees while the list is open. Choosing a field rolls the word to that project's field word (old word up and out, new word up and in; instant with reduced motion).
+  - Field list: "All work", each project's field, then "Not on the list? Tell us yours" to /start. Desktop: opens on hover or focus of the word (click toggles, leaving or Escape closes); hover or focus previews a field, click opens its case study. 1080px and below: tap the word to open; a tap on a field previews it, the image and caption link to the project. A project with no field or field word still rotates but is not listed.
+  - Rotation: at rest each project's first hero image in hero order; a field shows that project's images; All work returns. Crossfade 1.2s (1.4s on phones). Hold 7s for the first image then 6s (phones 9s then 8s), timed by the 2px progress line along the image's foot. It waits while a pointer or a finger is on the image, while the list is open and while paused. Reduced motion: no rotation, first image only.
+  - Pause: a small button over the image, bottom right, because anything that moves on its own for more than five seconds needs one (WCAG 2.2.2). Hidden with reduced motion.
+  - Caption: the project's hero name, its hero line (desktop only) and "View project". Intended: no Client or Exploration tag in the hero; the case study page carries it. The name is announced to screen readers when the visitor picks a field, not on every timed change.
+  - Images: next/image with the Studio crop applied by the Sanity image builder and the hotspot as object-position; sizes "(max-width: 1080px) 100vw, 54vw"; the first image preloaded with high fetch priority (it is the LCP element), the rest lazy. "Contain" images sit inside the frame on Cloudy White.
+  - With no hero projects: the text column only, beside an empty Cloudy White column (no image column on phones).
+  - Analytics: hero_field_preview { field } once per field per visit, hero_project_click { project, source: image, caption or list }, hero_unlisted_field_click, hero_pause_toggle { state }.
 - Featured Work: case study cards from Sanity. Stagger reveal.
 - The Argument: the headline's words reveal on scroll.
 - Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
@@ -482,4 +491,4 @@ title, six at most); "Hero name" is the caption under the image; "Hero line" the
 businesses." (lower case, plural); "Hero images" are one to four images, the first rotates and all show when
 the field is picked; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
-in src/lib/homepage-hero.ts); the homepage does not use it yet.
+in src/lib/homepage-hero.ts); the homepage hero shows them.

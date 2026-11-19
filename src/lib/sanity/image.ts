@@ -24,3 +24,11 @@ export const insightImageUrl = {
   hero: (source: SanityImageSource) => urlFor(source).width(1600).height(900).url(),
   body: (source: SanityImageSource) => urlFor(source).width(1200).height(675).url(),
 };
+
+// A homepage hero image: the Studio crop applied (as rect), at most 2400px wide, automatic format,
+// quality 80. next/image then serves the width each screen needs. The query gives the asset's URL
+// rather than its reference; the builder reads the asset from it.
+export function heroImageUrl(image: { url: string; crop?: { top: number; bottom: number; left: number; right: number } }) {
+  const source: SanityImageSource = { asset: { url: image.url }, ...(image.crop ? { crop: image.crop } : {}) };
+  return urlFor(source).width(2400).fit("max").auto("format").quality(80).url();
+}

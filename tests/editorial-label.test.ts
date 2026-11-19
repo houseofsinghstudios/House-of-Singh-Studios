@@ -6,7 +6,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { Children, isValidElement, type ReactNode } from "react";
 import EditorialLabel from "@/components/ui/EditorialLabel";
-import { HERO } from "@/lib/constants/homepage-data";
 
 const text = (node: ReactNode): string =>
   Children.toArray(node).map((c) => (isValidElement<{ children?: ReactNode }>(c) ? text(c.props.children) : String(c))).join("");
@@ -34,7 +33,6 @@ test("no label in src renders doubled brackets", () => {
       if (text !== undefined) labels.push({ file, label: text, number });
     }
   }
-  labels.push({ file: "HERO.label", label: HERO.label });
   assert.ok(labels.length > 5, "found the labels");
   for (const { file, label, number } of labels) {
     const out = rendered(label, number);
