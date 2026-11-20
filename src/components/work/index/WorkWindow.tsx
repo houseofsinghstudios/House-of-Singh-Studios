@@ -30,15 +30,18 @@ interface Props {
   cycling: boolean;
   onCycleEnd: () => void;
   windowRef: React.RefObject<HTMLDivElement | null>;
+  // False until the visitor shows intent (the homepage): the frame stays empty, so nothing here
+  // loads alongside the hero image. /work shows its first image at once.
+  armed?: boolean;
 }
 
-export default function WorkWindow({ item, image, step, cycling, onCycleEnd, windowRef }: Props) {
+export default function WorkWindow({ item, image, step, cycling, onCycleEnd, windowRef, armed = true }: Props) {
   const shown = item?.images[image] ?? item?.images[0];
   const total = item?.images.length ?? 0;
   return (
     <div className="wi-window" aria-hidden="true" ref={windowRef}>
       <div className="wi-frame" style={shown ? ({ "--ratio": shown.height / shown.width } as React.CSSProperties) : undefined}>
-        {shown && (
+        {shown && armed && (
           <Image
             src={shown.src}
             alt=""
@@ -51,7 +54,7 @@ export default function WorkWindow({ item, image, step, cycling, onCycleEnd, win
             style={{ objectFit: "cover", objectPosition: shown.position }}
           />
         )}
-        {cycling && <span key={step} className="wi-timer" onAnimationEnd={(e) => e.target === e.currentTarget && onCycleEnd()} />}
+        {cycling && armed && <span key={step} className="wi-timer" onAnimationEnd={(e) => e.target === e.currentTarget && onCycleEnd()} />}
       </div>
       {item && (
         <div className="wi-caption">

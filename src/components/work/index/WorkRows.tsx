@@ -17,22 +17,30 @@ interface RowHandlers {
 interface RowProps extends RowHandlers {
   item: WorkItem;
   dim: boolean;
+  // How many strip images show: six on /work, three on the homepage.
+  stripMax: number;
+  // False until intent on the homepage: the strip keeps its space but loads nothing with the hero.
+  armed: boolean;
 }
 
 // The strip: up to six images, 24px tall at their true proportions. Decorative: the name is the link.
-function Strip({ item, onImageEnter, onImageLeave }: Pick<RowProps, "item" | "onImageEnter" | "onImageLeave">) {
+function Strip({ item, stripMax, armed, onImageEnter, onImageLeave }: Pick<RowProps, "item" | "stripMax" | "armed" | "onImageEnter" | "onImageLeave">) {
   return (
     <div className="wi-strip" aria-hidden="true">
-      {item.images.map((image, i) => (
+      {item.images.slice(0, stripMax).map((image, i) => (
         <span key={image.src} className="wi-strip-item" onPointerEnter={() => onImageEnter(item, i)} onPointerLeave={onImageLeave}>
-          <Image src={image.src} alt="" width={image.width} height={image.height} sizes="60px" loading="lazy" className="wi-strip-img" />
+          {armed ? (
+            <Image src={image.src} alt="" width={image.width} height={image.height} sizes="60px" loading="lazy" className="wi-strip-img" />
+          ) : (
+            <span className="wi-strip-img" style={{ aspectRatio: `${image.width} / ${image.height}` }} />
+          )}
         </span>
       ))}
     </div>
   );
 }
 
-function Row({ item, dim, onRowEnter, onRowFocus, onImageEnter, onImageLeave }: RowProps) {
+function Row({ item, dim, stripMax, armed, onRowEnter, onRowFocus, onImageEnter, onImageLeave }: RowProps) {
   return (
     <li className="wi-row" data-dim={dim || undefined} data-slug={item.slug} onPointerEnter={() => onRowEnter(item)} onFocus={() => onRowFocus(item)}>
       <span className="wi-num" aria-hidden="true">
@@ -44,7 +52,7 @@ function Row({ item, dim, onRowEnter, onRowFocus, onImageEnter, onImageLeave }: 
           {item.title}
         </Link>
       </h3>
-      <Strip item={item} onImageEnter={onImageEnter} onImageLeave={onImageLeave} />
+      <Strip item={item} stripMax={stripMax} armed={armed} onImageEnter={onImageEnter} onImageLeave={onImageLeave} />
       <p className="wi-meta">
         <span>{item.meta}</span>
         {(item.year || item.typeLabel) && (
@@ -65,20 +73,21 @@ interface Props extends RowHandlers {
   question: string | null;
   listRef: React.RefObject<HTMLDivElement | null>;
   onListLeave: () => void;
+  // The homepage: three strip images, and "More from the studio" as a small label (the section's
+  // sentence is its h2) where /work has the h2 "Other work".
+  home?: boolean;
+  // The homepage holds the strip images until intent (HomeWorkIndex); /work shows them at once.
+  armed?: boolean;
 }
 
-export default function WorkRows({ matches, rest, hasChoice, question, listRef, onListLeave, ...handlers }: Props) {
+export default function WorkRows({ matches, rest, hasChoice, question, listRef, onListLeave, home, armed = true, ...handlers }: Props) {
   const noMatch = hasChoice && matches.length === 0;
+  const stripMax = home ? 3 : 6;
+  const row = (item: WorkItem, dim: boolean) => <Row key={item.slug} item={item} dim={dim} stripMax={stripMax} armed={armed} {...handlers} />;
   return (
     <div className="wi-list" ref={listRef} onPointerLeave={onListLeave}>
       {noMatch && <p className="wi-empty">Nothing for that combination yet.</p>}
-      {matches.length > 0 && (
-        <ul className="wi-rows">
-          {matches.map((item) => (
-            <Row key={item.slug} item={item} dim={false} {...handlers} />
-          ))}
-        </ul>
-      )}
+      {matches.length > 0 && <ul className="wi-rows">{matches.map((item) => row(item, false))}</ul>}
       {matches.length > 0 && question && (
         <div className="wi-invite">
           <p className="wi-invite-question">{question}</p>
@@ -87,12 +96,8 @@ export default function WorkRows({ matches, rest, hasChoice, question, listRef, 
           </Link>
         </div>
       )}
-      {hasChoice && rest.length > 0 && <h2 className="editorial-label wi-other">Other work</h2>}
-      <ul className="wi-rows">
-        {rest.map((item) => (
-          <Row key={item.slug} item={item} dim={hasChoice} {...handlers} />
-        ))}
-      </ul>
+      {hasChoice && rest.length > 0 && (home ? <p className="editorial-label wi-other">More from the studio</p> : <h2 className="editorial-label wi-other">Other work</h2>)}
+      <ul className="wi-rows">{rest.map((item) => row(item, hasChoice))}</ul>
     </div>
   );
 }

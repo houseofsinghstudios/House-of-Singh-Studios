@@ -1,6 +1,7 @@
 "use client";
 // A client component: the two choices in "Work for [your kind of business], in [every discipline]."
-// open and close their lists from the keyboard as well as the pointer.
+// open and close their lists from the keyboard as well as the pointer. Choice is shared with the
+// homepage's Selected work ("See our work for [your kind of business].").
 //
 // Each choice is a span with role="button", not a <button>: a button cannot break across lines, and
 // at 76px "your kind of business" has to wrap with the sentence. Its words carry one continuous 2px
@@ -17,7 +18,7 @@ interface ChoiceProps {
   choiceRef: React.RefObject<HTMLSpanElement | null>;
 }
 
-function Choice({ words, open, controls, onToggle, choiceRef }: ChoiceProps) {
+export function Choice({ words, open, controls, onToggle, choiceRef }: ChoiceProps) {
   const parts = words.split(" ");
   const last = parts.pop();
   const lead = parts.join(" ");

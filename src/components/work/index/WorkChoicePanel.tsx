@@ -5,6 +5,7 @@
 // page down; it stays in the page (inert) while closed so the choice's aria-controls always points
 // at it.
 
+import { useState } from "react";
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import type { WorkImage } from "./types";
@@ -39,7 +40,7 @@ function Thumbs({ images }: { images: WorkImage[] }) {
   );
 }
 
-function Option({ option }: { option: ChoiceOption }) {
+function Option({ option, withThumbs }: { option: ChoiceOption; withThumbs: boolean }) {
   const disabled = option.count === 0;
   return (
     <li>
@@ -52,7 +53,7 @@ function Option({ option }: { option: ChoiceOption }) {
       >
         <span className="wi-option-label">{option.label}</span>
         <span className="wi-option-side">
-          <Thumbs images={option.thumbs} />
+          {withThumbs && <Thumbs images={option.thumbs} />}
           <span className="wi-option-count">
             <span aria-hidden="true">{String(option.count).padStart(2, "0")}</span>
             <span className="sr-only">{`, ${option.count} ${option.count === 1 ? "project" : "projects"}`}</span>
@@ -64,6 +65,9 @@ function Option({ option }: { option: ChoiceOption }) {
 }
 
 export default function WorkChoicePanel({ id, open, label, options, withOther, onClose }: Props) {
+  // The thumbnails load once the list has first opened, never with the page.
+  const [opened, setOpened] = useState(open);
+  if (open && !opened) setOpened(true);
   return (
     <div id={id} className="wi-panel" data-open={open} inert={!open}>
       <div className="wi-panel-clip">
@@ -76,7 +80,7 @@ export default function WorkChoicePanel({ id, open, label, options, withOther, o
           </div>
           <ul className="wi-options">
             {options.map((option) => (
-              <Option key={option.key} option={option} />
+              <Option key={option.key} option={option} withThumbs={opened} />
             ))}
             {withOther && (
               <li>

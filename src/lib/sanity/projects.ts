@@ -7,7 +7,6 @@ import { coverAlt, projectAlt } from "@/lib/alt-text";
 import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
-import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
 import { sortHeroProjects, type HeroFit, type HeroImage, type HeroProject } from "@/lib/homepage-hero";
 import { sortIndexProjects, toIndexProject, type IndexProject, type IndexProjectDoc } from "@/lib/work-index";
@@ -82,15 +81,6 @@ const projectBySlugQuery = `*[_type == "caseStudy" && slug.current == $slug && $
 const projectDetailQuery = `{
   "doc": ${projectBySlugQuery},
   "order": *[_type == "caseStudy" && ${PUBLISHED}] | order(publishedAt desc) { "slug": slug.current, title }
-}`;
-
-const featuredProjectsQuery = `*[_type == "caseStudy" && featured == true && ${PUBLISHED}] | order(publishedAt desc) {
-  _id,
-  title,
-  "slug": slug.current,
-  overview,
-  projectType,
-  featuredImage
 }`;
 
 // The homepage hero: case studies marked "Show in the homepage hero" that have a slug and at least one
@@ -522,36 +512,6 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
 }
 
 // ── Map Sanity caseStudy → HomepageProject (for homepage featured work) ──
-
-function mapSanityToHomepageProject(doc: CaseStudyDoc): HomepageProject {
-  const overviewText = typeof doc.overview === "string" ? doc.overview : "";
-  const imageUrl = sanityImageUrl(doc.featuredImage);
-
-  return {
-    name: doc.title || "",
-    label: "Brand Identity",
-    sentence: overviewText.length > 160 ? overviewText.slice(0, 160) + "…" : overviewText,
-    href: `/work/${doc.slug || ""}`,
-    projectType: projectType(doc.projectType),
-    image: imageUrl,
-  };
-}
-
-async function localFeaturedProjects(): Promise<HomepageProject[]> {
-  const { PROJECTS } = await import("@/lib/constants/homepage-data");
-  return PROJECTS;
-}
-
-export async function getFeaturedProjects(): Promise<HomepageProject[]> {
-  return readSanity(
-    "featured case studies",
-    async () => {
-      const docs = await client.fetch<CaseStudyDoc[]>(featuredProjectsQuery);
-      return docs && docs.length > 0 ? docs.map(mapSanityToHomepageProject) : localFeaturedProjects();
-    },
-    localFeaturedProjects
-  );
-}
 
 // A hero project as the query returns it. Every field may be missing on a document that skipped
 // Studio's checks, so the mapper below never assumes one is there.

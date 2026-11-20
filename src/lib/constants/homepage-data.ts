@@ -1,4 +1,3 @@
-import type { ProjectType } from "@/lib/initiatives/types";
 
 interface ServiceBlock {
   title: string;
@@ -37,27 +36,6 @@ export const SERVICES_SECTION = {
     },
   ] satisfies ServiceBlock[],
 };
-
-export interface Project {
-  name: string;
-  label: string;
-  sentence: string;
-  href: string;
-  // Missing means client work: no label.
-  projectType?: ProjectType;
-  image: string;
-}
-
-export const PROJECTS: Project[] = [
-  {
-    name: "TEDxToronto Visual Identity",
-    label: "Brand Identity",
-    sentence:
-      "Event branding and visual system for one of Canada's largest TEDx events.",
-    href: "/work/tedxtoronto",
-    image: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-  },
-];
 
 interface Testimonial {
   quote: string;

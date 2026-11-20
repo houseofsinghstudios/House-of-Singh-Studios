@@ -182,10 +182,6 @@
     padding-top: 80px !important;
     padding-bottom: 80px !important;
   }
-  .work-section-mobile {
-    padding-top: 80px !important;
-    padding-bottom: 80px !important;
-  }
   .services-section-mobile {
     padding-top: 80px !important;
     padding-bottom: 80px !important;
@@ -472,103 +468,6 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-}
-
-/* ── Featured work grid (4-col horizontal) ── */
-/* ── Featured work ── */
-.featured-work-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px 24px;
-}
-
-.featured-work-item {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-.featured-work-img-wrap {
-  overflow: hidden;
-  aspect-ratio: 3 / 2;
-  position: relative;
-}
-
-.featured-work-img-inner {
-  width: 100%;
-  height: 100%;
-  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-@media (hover: hover) {
-  .featured-work-item:hover .featured-work-img-inner {
-    transform: scale(1.03);
-  }
-  .featured-work-item:hover .featured-work-name {
-    opacity: 0;
-  }
-  .featured-work-item:hover .featured-work-desc {
-    opacity: 1;
-  }
-}
-
-.featured-work-tags {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-label);
-  margin: 12px 0 0;
-}
-
-.featured-work-text-swap {
-  position: relative;
-  min-height: 1.6em;
-}
-
-.featured-work-name {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: clamp(15px, 1.2vw, 18px);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: var(--text-primary);
-  margin: 6px 0 0;
-  transition: opacity 0.35s ease;
-}
-
-.featured-work-desc {
-  position: absolute;
-  top: 6px;
-  left: 0;
-  right: 0;
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 0;
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-@media (max-width: 767px) {
-  .featured-work-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  .featured-work-img-wrap {
-    aspect-ratio: 4 / 3;
-  }
-  .featured-work-desc {
-    position: static;
-    opacity: 1;
-    margin-top: 4px;
-  }
-  .featured-work-text-swap {
-    min-height: auto;
   }
 }
 

@@ -134,7 +134,7 @@ test("the choices: role button, expanded state, controls, Enter and Space", () =
   const sentence = code("src/components/work/index/WorkSentence.tsx");
   for (const attr of ['role="button"', "tabIndex={0}", "aria-expanded={open}", "aria-controls={controls}"]) assert.ok(sentence.includes(attr), attr);
   assert.match(sentence, /e\.key !== "Enter" && e\.key !== " "/);
-  assert.match(code("src/components/work/index/WorkIndex.tsx"), /e\.key === "Escape"/);
+  assert.match(code("src/components/work/index/index-shared.ts"), /e\.key === "Escape"/);
   assert.match(code("src/components/work/index/WorkChoicePanel.tsx"), /aria-disabled=\{disabled \|\| undefined\}/);
 });
 

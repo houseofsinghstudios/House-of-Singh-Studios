@@ -362,3 +362,37 @@ export function workKindLabel(type: ProjectType): string {
 export function frameCode(projectNumber: number, imageIndex: number): string {
   return `${String(projectNumber).padStart(2, "0")}${String.fromCharCode(65 + imageIndex)}`;
 }
+
+// ── The homepage's Selected work: a short Living Index ──
+
+export type HomeKey = BusinessTypeId | "all";
+
+// The homepage six for every choice, as slugs in order. Worked out on the server, where the Studio
+// fields homeSelection reads (Show on Homepage, Homepage order) are; the browser gets only the slugs.
+export function homeOrders(projects: readonly IndexProject[]): Record<HomeKey, string[]> {
+  const orders = { all: homeSelection(projects).map((p) => p.slug) } as Record<HomeKey, string[]>;
+  for (const t of BUSINESS_TYPES) orders[t.id] = homeSelection(projects, t.id).map((p) => p.slug);
+  return orders;
+}
+
+// The rows as the homepage shows them, numbered 1 to 6 in the order shown (not the /work number).
+// With a business type: its matches first, then the rest ("More from the studio").
+export function homeRows<T extends { slug: string; sector: SectorId; number: number }>(
+  items: readonly T[],
+  order: readonly string[],
+  sector?: BusinessTypeId,
+): { matches: T[]; rest: T[] } {
+  const bySlug = new Map(items.map((p) => [p.slug, p]));
+  const shown = order.flatMap((slug) => bySlug.get(slug) ?? []).map((p, i) => ({ ...p, number: i + 1 }));
+  if (!sector) return { matches: [], rest: shown };
+  return { matches: shown.filter((p) => p.sector === sector), rest: shown.filter((p) => p.sector !== sector) };
+}
+
+// The closing link: "All work (08)" to /work, or "All work for food and drink (03)" to
+// /work?for=food-and-drink, so /work opens with the same choice. count: across the whole portfolio.
+export function homeAllWorkLink(sector: BusinessTypeId | undefined, count: number): { text: string; href: string } {
+  const type = businessType(sector);
+  const n = String(count).padStart(2, "0");
+  if (!type) return { text: `All work (${n})`, href: workHref({}) };
+  return { text: `All work for ${type.label.toLowerCase()} (${n})`, href: workHref({ sector: type.id }) };
+}
