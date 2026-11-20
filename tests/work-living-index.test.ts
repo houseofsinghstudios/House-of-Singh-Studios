@@ -137,3 +137,16 @@ test("the choices: role button, expanded state, controls, Enter and Space", () =
   assert.match(code("src/components/work/index/WorkIndex.tsx"), /e\.key === "Escape"/);
   assert.match(code("src/components/work/index/WorkChoicePanel.tsx"), /aria-disabled=\{disabled \|\| undefined\}/);
 });
+
+test("phones: the window follows the header, from the one hidden state the header sets", () => {
+  const header = code("src/components/layout/Header.tsx");
+  assert.match(header, /document\.documentElement\.toggleAttribute\("data-header-hidden", hidden\)/);
+  const globals = read("src/app/globals.css");
+  assert.match(globals, /--header-slide: 0\.35s cubic-bezier\(0\.23, 1, 0\.32, 1\);/);
+  assert.match(globals, /html\[data-header-hidden\] \{\s*--header-edge: 0px;/);
+  assert.match(globals, /\.site-header \{[^}]*transition: transform var\(--header-slide\)/);
+  const css = read("src/components/work/index/work-index.css");
+  assert.match(css, /top: var\(--header-edge\);\s*transition: top var\(--header-slide\);/);
+  // Reduced motion: the window does not slide (the header never hides then anyway).
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.wi-window,[\s\S]*transition: none;/);
+});

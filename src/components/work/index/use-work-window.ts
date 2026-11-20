@@ -67,7 +67,8 @@ export function useWorkWindow(ordered: readonly WorkItem[], key: string, reduced
 }
 
 // At 1080px and below there is no pointer to follow: the row crossing the window's bottom edge is the
-// one shown. Watches a one pixel line at that edge.
+// one shown. Watches a one pixel line at that edge, and moves the line when the window follows the
+// header up or down (html[data-header-hidden], --header-edge).
 export function useRowAtWindowEdge(
   enabled: boolean,
   listRef: React.RefObject<HTMLDivElement | null>,
@@ -79,19 +80,31 @@ export function useRowAtWindowEdge(
     const list = listRef.current;
     const win = windowRef.current;
     if (!enabled || !list || !win) return;
-    const edge = (parseFloat(getComputedStyle(win).top) || 0) + win.offsetHeight;
-    const bottom = Math.max(0, window.innerHeight - edge - 1);
+    const root = document.documentElement;
     const bySlug = new Map(ordered.map((p) => [p.slug, p]));
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const found = entry.isIntersecting && bySlug.get((entry.target as HTMLElement).dataset.slug ?? "");
-          if (found) onActive(found);
-        }
-      },
-      { rootMargin: `-${Math.round(edge)}px 0px -${Math.round(bottom)}px 0px` },
-    );
-    list.querySelectorAll<HTMLElement>(".wi-row").forEach((row) => observer.observe(row));
-    return () => observer.disconnect();
+    let observer: IntersectionObserver | undefined;
+    const watch = () => {
+      observer?.disconnect();
+      // The window's resting top (the header's edge, not a value mid transition) plus its height.
+      const edge = (parseFloat(getComputedStyle(root).getPropertyValue("--header-edge")) || 0) + win.offsetHeight;
+      const bottom = Math.max(0, window.innerHeight - edge - 1);
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const found = entry.isIntersecting && bySlug.get((entry.target as HTMLElement).dataset.slug ?? "");
+            if (found) onActive(found);
+          }
+        },
+        { rootMargin: `-${Math.round(edge)}px 0px -${Math.round(bottom)}px 0px` },
+      );
+      list.querySelectorAll<HTMLElement>(".wi-row").forEach((row) => observer?.observe(row));
+    };
+    watch();
+    const header = new MutationObserver(watch);
+    header.observe(root, { attributes: true, attributeFilter: ["data-header-hidden"] });
+    return () => {
+      header.disconnect();
+      observer?.disconnect();
+    };
   }, [enabled, listRef, windowRef, ordered, onActive]);
 }

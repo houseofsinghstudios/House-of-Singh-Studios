@@ -429,7 +429,9 @@
   .wi-window {
     order: -1;
     grid-column: 1;
-    top: var(--header-bar);
+    /* Follows the header: under it while it shows, at the top while it is slid away. */
+    top: var(--header-edge);
+    transition: top var(--header-slide);
     width: 100%;
     z-index: 2;
     background: var(--bg);
@@ -480,6 +482,7 @@
   .wi-page {
     animation: none;
   }
+  .wi-window,
   .wi-panel,
   .wi-chev,
   .wi-frame,
