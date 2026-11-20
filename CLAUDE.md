@@ -536,6 +536,12 @@ the homepage shows the first; "Hero fit" fills the frame or fits inside it (webs
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
 in src/lib/homepage-hero.ts); the homepage hero shows them.
 
+Site Settings (sanity/schemas/siteSettings.ts): only the About page fields are read (studio image, founder portrait,
+name, role, bio and second bio paragraph; src/lib/sanity/queries.ts). Founder role, bio and second paragraph say "When
+empty, the About page shows the text written in the code." Hidden since 20 Nov 2026, not deleted (their data stays):
+studioName, tagline, description, email, phone, location, instagramUrl, linkedinUrl, ogImage; nothing in src reads
+them (tests/site-settings.test.ts).
+
 Testimonials (listed in Studio as "Testimonials"; read by getProofChapters in src/lib/sanity/testimonials.ts, rules in
 src/lib/proof.ts): quote, author, role, company, photo, related case study and featured as before, plus "Excerpt" (required,
 the part shown in the homepage (03) Proof, copied exactly from the quote), "Key phrase" (required, the words on the

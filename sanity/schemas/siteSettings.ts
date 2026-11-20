@@ -1,5 +1,8 @@
 import { defineType, defineField } from "sanity";
 
+// Site Settings. Only the About page fields are read (src/lib/sanity/queries.ts). The studio details,
+// social links and default share image are hidden: the site takes them from the code. Hidden, not
+// deleted, so their data stays.
 export default defineType({
   name: "siteSettings",
   title: "Site Settings",
@@ -9,42 +12,50 @@ export default defineType({
       name: "studioName",
       title: "Studio Name",
       type: "string",
+      hidden: true,
     }),
     defineField({
       name: "tagline",
       title: "Tagline",
       type: "string",
+      hidden: true,
     }),
     defineField({
       name: "description",
       title: "Description",
       type: "text",
       rows: 3,
+      hidden: true,
     }),
     defineField({
       name: "email",
       title: "Email",
       type: "string",
+      hidden: true,
     }),
     defineField({
       name: "phone",
       title: "Phone",
       type: "string",
+      hidden: true,
     }),
     defineField({
       name: "location",
       title: "Location",
       type: "string",
+      hidden: true,
     }),
     defineField({
       name: "instagramUrl",
       title: "Instagram URL",
       type: "url",
+      hidden: true,
     }),
     defineField({
       name: "linkedinUrl",
       title: "LinkedIn URL",
       type: "url",
+      hidden: true,
     }),
     defineField({
       name: "ogImage",
@@ -52,6 +63,7 @@ export default defineType({
       type: "image",
       description:
         "Default social sharing image used when no page-specific image is set.",
+      hidden: true,
     }),
     defineField({
       name: "aboutStudioImage",
@@ -76,20 +88,21 @@ export default defineType({
       name: "aboutFounderRole",
       title: "About Page — Founder Role",
       type: "string",
+      description: "When empty, the About page shows the text written in the code.",
     }),
     defineField({
       name: "aboutFounderBio",
       title: "About Page — Founder Bio",
       type: "text",
       rows: 6,
-      description: "Main founder biography paragraph.",
+      description: "Main founder biography paragraph. When empty, the About page shows the text written in the code.",
     }),
     defineField({
       name: "aboutFounderBioSecondary",
       title: "About Page — Founder Bio (secondary)",
       type: "text",
       rows: 3,
-      description: "Second paragraph, shown with lighter opacity.",
+      description: "Second paragraph. When empty, the About page shows the text written in the code.",
     }),
   ],
   preview: {
