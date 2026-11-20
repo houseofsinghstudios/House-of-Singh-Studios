@@ -420,46 +420,6 @@ body {
   }
 }
 
-.wp-grid-cat-tag {
-  position: relative;
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-label);
-  background: none;
-  border: none;
-  /* Touch target: 4px above and below take the tap area to 24px or more; the matching negative
-     margin keeps the tag exactly where it was, and the underline sits 4px higher in the box so it
-     stays 2px under the text. */
-  padding: 4px 0;
-  margin: -4px 0;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-.wp-grid-cat-tag::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--text-primary);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-@media (hover: hover) {
-  .wp-grid-cat-tag:hover {
-    color: var(--text-primary);
-  }
-  .wp-grid-cat-tag:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-}
-
 /* ═══════════════════════════════════════════════════════
    Case Study Template v2
    ═══════════════════════════════════════════════════════ */
@@ -894,8 +854,11 @@ body {
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
   /* ── Global: prevent horizontal scroll ── */
+  /* clip, not hidden: hidden makes body a scroll container, and nothing inside it can stick (the
+     /work image window). hidden stays as the fallback where clip is not supported. */
   html, body {
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
 }

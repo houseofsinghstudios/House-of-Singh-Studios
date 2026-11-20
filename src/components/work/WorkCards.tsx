@@ -1,5 +1,5 @@
-// The /work project cards, shared with the Initiatives pages. No hooks, so they render in server and
-// client components alike. onSelect turns the discipline tags into filter buttons (the /work page).
+// The project cards on the Initiatives programme pages (once the /work grid). No hooks, so they render
+// in server and client components alike.
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
@@ -7,13 +7,8 @@ import DisciplineTags, { type DisciplineTag } from "@/components/work/Discipline
 import { disciplineLabel } from "@/lib/disciplines";
 import "./work-cards.css";
 
-// What a card shows. The /work page sends only these fields to the browser, never a case study's
-// text (see workCard).
-export type WorkCard = Pick<Project, "slug" | "name" | "image" | "workType" | "shortDescription" | "disciplines" | "projectType">;
-
-export function workCard({ slug, name, image, workType, shortDescription, disciplines, projectType }: Project): WorkCard {
-  return { slug, name, image, workType, shortDescription, disciplines, projectType };
-}
+// What a card shows.
+type WorkCard = Pick<Project, "slug" | "name" | "image" | "workType" | "shortDescription" | "disciplines" | "projectType">;
 
 const FALLBACK_IMAGES: Record<string, string> = {
   tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
@@ -23,7 +18,7 @@ export function projectImage(project: WorkCard): string {
   return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
 }
 
-export function projectTags(project: WorkCard): DisciplineTag[] {
+function projectTags(project: WorkCard): DisciplineTag[] {
   if (project.disciplines && project.disciplines.length > 0) {
     return project.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) }));
   }
@@ -35,15 +30,10 @@ export function projectTags(project: WorkCard): DisciplineTag[] {
 
 interface CardProps {
   project: WorkCard;
-  onSelect?: (value: string) => void;
-  // The card title's heading level: 2 where the cards sit straight under the page's h1 (/work),
-  // 3 inside a section that has its own h2 (the Initiatives pages). The look is the same.
-  headingLevel?: 2 | 3;
 }
 
 // Desktop grid card (1024px and wider), in .wp-grid.
-export function WorkGridCard({ project, index, onSelect, headingLevel = 3 }: CardProps & { index: number }) {
-  const Heading = headingLevel === 2 ? "h2" : "h3";
+export function WorkGridCard({ project, index }: CardProps & { index: number }) {
   return (
     <Link
       href={`/work/${project.slug}`}
@@ -65,14 +55,14 @@ export function WorkGridCard({ project, index, onSelect, headingLevel = 3 }: Car
           />
         </div>
       </div>
-      <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={onSelect} />
+      <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" />
       <div className="wp-grid-text-swap">
-        <Heading
+        <h3
           className="wp-grid-name"
           style={{ viewTransitionName: `project-${project.slug}` }}
         >
           {project.name}
-        </Heading>
+        </h3>
         <p className="wp-grid-desc">{project.shortDescription}</p>
       </div>
     </Link>
@@ -80,8 +70,7 @@ export function WorkGridCard({ project, index, onSelect, headingLevel = 3 }: Car
 }
 
 // Phone and tablet card (below 1024px), in .wp-mobile-grid.
-export function WorkMobileCard({ project, onSelect, headingLevel = 3 }: CardProps) {
-  const Heading = headingLevel === 2 ? "h2" : "h3";
+export function WorkMobileCard({ project }: CardProps) {
   return (
     <Link
       href={`/work/${project.slug}`}
@@ -98,8 +87,8 @@ export function WorkMobileCard({ project, onSelect, headingLevel = 3 }: CardProp
           />
         </div>
       </div>
-      <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" onSelect={onSelect} />
-      <Heading className="wp-grid-name">{project.name}</Heading>
+      <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" />
+      <h3 className="wp-grid-name">{project.name}</h3>
       <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
     </Link>
   );

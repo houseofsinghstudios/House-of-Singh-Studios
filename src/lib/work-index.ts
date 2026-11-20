@@ -6,16 +6,18 @@
 // discipline they care about ("in packaging"). Matching projects move to the top; nothing is hidden.
 
 import { compareClientFirst, type HeroImage } from "@/lib/homepage-hero";
-import { projectType, type ProjectType } from "@/lib/initiatives/types";
+import { projectType, projectTypeLabel, type ProjectType } from "@/lib/initiatives/types";
 
 // ── Business types (Studio: "Business type", the sector field) ──
 
+// label: the list and the project line. word: the sentence ("Work for food and drink brands").
+// question: the invitation under the matching projects on /work.
 export const BUSINESS_TYPES = [
-  { id: "food-and-drink", label: "Food and drink", word: "food and drink brands" },
-  { id: "events", label: "Events", word: "events" },
-  { id: "beauty-and-fragrance", label: "Beauty and fragrance", word: "beauty and fragrance labels" },
-  { id: "fashion-and-jewellery", label: "Fashion and jewellery", word: "fashion and jewellery houses" },
-  { id: "home-and-lifestyle", label: "Home and lifestyle", word: "home and lifestyle brands" },
+  { id: "food-and-drink", label: "Food and drink", word: "food and drink brands", question: "Building a food or drink brand?" },
+  { id: "events", label: "Events", word: "events", question: "Planning an event people will remember?" },
+  { id: "beauty-and-fragrance", label: "Beauty and fragrance", word: "beauty and fragrance labels", question: "Launching a beauty or fragrance label?" },
+  { id: "fashion-and-jewellery", label: "Fashion and jewellery", word: "fashion and jewellery houses", question: "Building a fashion or jewellery house?" },
+  { id: "home-and-lifestyle", label: "Home and lifestyle", word: "home and lifestyle brands", question: "Growing a home or lifestyle brand?" },
 ] as const;
 export type BusinessTypeId = (typeof BUSINESS_TYPES)[number]["id"];
 
@@ -37,10 +39,10 @@ const isBusinessType = (value: unknown): value is BusinessTypeId => typeof value
 // ── Disciplines, in the words a buyer uses ──
 
 export const BUYER_DISCIPLINES = [
-  { id: "identity", label: "Identity", word: "identity" },
-  { id: "packaging", label: "Packaging", word: "packaging" },
-  { id: "websites", label: "Websites", word: "websites" },
-  { id: "photography", label: "Photography", word: "photography" },
+  { id: "identity", label: "Identity", word: "identity", question: "Ready for an identity that fits where you are going?" },
+  { id: "packaging", label: "Packaging", word: "packaging", question: "Need packaging that earns its place on the shelf?" },
+  { id: "websites", label: "Websites", word: "websites", question: "Planning a website that works as hard as you do?" },
+  { id: "photography", label: "Photography", word: "photography", question: "Need photography that shows your brand at its best?" },
 ] as const;
 export type BuyerDisciplineId = (typeof BUYER_DISCIPLINES)[number]["id"];
 
@@ -94,6 +96,8 @@ export interface IndexProject {
   deliveredLine: string;
   // The Studio "Year" field; null when it is not set (then no year is shown). Never the publish date.
   year: number | null;
+  // One short line about the project: its Hero line, else the first sentence of its overview.
+  line: string;
   isExploration: boolean;
   // Kept for the order: client work first (projectType), then newest (publishedAt).
   projectType: ProjectType;
@@ -141,6 +145,8 @@ export interface IndexProjectDoc {
   projectType?: unknown;
   featured?: boolean;
   homeOrder?: number;
+  heroLine?: string;
+  overview?: string;
   indexImages?: (IndexImageDoc | null)[] | null;
   featuredImage?: IndexImageDoc | null;
   // The page blocks in page order, each with whichever images it has.
@@ -148,6 +154,13 @@ export interface IndexProjectDoc {
 }
 
 const text = (value: unknown) => (typeof value === "string" ? value.trim() : "");
+
+// The first sentence of a text: up to the first full stop, question or exclamation mark.
+function firstSentence(value: unknown): string {
+  const all = text(value).replace(/\s+/g, " ");
+  const match = all.match(/^.*?[.!?](?=\s|$)/);
+  return (match ? match[0] : all).trim();
+}
 
 const num = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
 
@@ -209,6 +222,7 @@ export function toIndexProject(doc: IndexProjectDoc): IndexProject | null {
     disciplines,
     deliveredLine: deliveredPhrase(disciplines),
     year,
+    line: text(doc.heroLine) || firstSentence(doc.overview),
     isExploration: type === "exploration",
     projectType: type,
     publishedAt,
@@ -289,4 +303,62 @@ export function parseWorkParams(params: SearchParamsLike): IndexChoice {
     ...(isBusinessType(sector) ? { sector } : {}),
     ...(isBuyerDiscipline(discipline) ? { discipline } : {}),
   };
+}
+
+// ── The words on /work ──
+
+const businessType = (id: BusinessTypeId | undefined) => BUSINESS_TYPES.find((t) => t.id === id);
+const buyerDiscipline = (id: BuyerDisciplineId | undefined) => BUYER_DISCIPLINES.find((d) => d.id === id);
+
+// The two words in "Work for [your kind of business], in [every discipline].", for a choice.
+export function sentenceWords(choice: IndexChoice): { business: string; discipline: string } {
+  return {
+    business: businessType(choice.sector)?.word ?? DEFAULT_BUSINESS_WORD,
+    discipline: buyerDiscipline(choice.discipline)?.word ?? DEFAULT_DISCIPLINE_WORD,
+  };
+}
+
+// The invitation under the matching projects: the business type's question, else the discipline's.
+export function invitationQuestion(choice: IndexChoice): string | null {
+  return businessType(choice.sector)?.question ?? buyerDiscipline(choice.discipline)?.question ?? null;
+}
+
+// The address for a choice: /work, /work?for=food-and-drink, /work?for=food-and-drink&in=packaging.
+export function workHref(choice: IndexChoice): string {
+  const params = new URLSearchParams();
+  if (choice.sector) params.set("for", choice.sector);
+  if (choice.discipline) params.set("in", choice.discipline);
+  const query = params.toString();
+  return query ? `/work?${query}` : "/work";
+}
+
+const projectsWord = (n: number) => `${n} ${n === 1 ? "project" : "projects"}`;
+
+// What the polite status reads after a choice: "3 projects for food and drink brands. 5 more below."
+// With nothing chosen, the count of everything. With no match, says so.
+export function statusText(choice: IndexChoice, matches: number, rest: number): string {
+  const business = businessType(choice.sector);
+  const discipline = buyerDiscipline(choice.discipline);
+  if (!business && !discipline) return `${projectsWord(matches + rest)}.`;
+  if (matches === 0) return `Nothing for that combination yet. ${projectsWord(rest)} below.`;
+  const what = [business ? `for ${business.word}` : "", discipline ? `in ${discipline.word}` : ""].filter(Boolean).join(", ");
+  return `${projectsWord(matches)} ${what}.${rest > 0 ? ` ${rest} more below.` : ""}`;
+}
+
+// The line under a project name: "Food and drink. Identity, packaging and photography." Either part
+// alone when the other is empty.
+export function projectMeta(project: Pick<IndexProject, "sectorLabel" | "deliveredLine">): string {
+  return [project.sectorLabel, project.deliveredLine].filter(Boolean).map((part) => `${part}.`).join(" ");
+}
+
+// The kind of work, under the image window: "Client work", "Studio exploration", or the initiative.
+export function workKindLabel(type: ProjectType): string {
+  if (type === "client") return "Client work";
+  if (type === "exploration") return "Studio exploration";
+  return projectTypeLabel(type) ?? "";
+}
+
+// The image window's frame code: the project's number and the image's letter, "05B".
+export function frameCode(projectNumber: number, imageIndex: number): string {
+  return `${String(projectNumber).padStart(2, "0")}${String.fromCharCode(65 + imageIndex)}`;
 }
