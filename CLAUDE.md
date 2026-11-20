@@ -225,7 +225,7 @@ EVOLVED APPROACH:
 ## PAGE-SPECIFIC INTERACTION MAPS
 
 ### Homepage
-Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
+Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
 
 - Hero (src/components/homepage/HeroSection.tsx, a server component, with the client parts HeroInteractive, HeroImages, HeroCaption, HeroLine and HeroPause; styles in hero.css; words, timings and helpers in src/lib/homepage-hero.ts). Projects from getHeroProjects, the Studio "Homepage hero" fieldset. The H1 stays visually hidden (protected), then the label "(Brand identity studio, Toronto)".
   - Layout: above 1080px the hero fills the first screen under the header; the image runs from 46% of the width to the right edge, full height, and the text column holds the label (64px under the header), the value line and, at its foot, the caption (44px above the hero's bottom). At 1080px and below: the image first (full width, clamp(380px, 110vw, 620px) tall), the caption 12px under it, then the label and the value line.
@@ -240,7 +240,13 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work →
   - With no hero projects: the text column only, beside an empty Cloudy White column (no image column on phones); nothing moves and there is no Pause.
   - Not read: the Studio "Field". It stays filled in Studio for later use.
   - Analytics: hero_project_click { project, source: image or caption }, hero_pause_toggle { state }.
-- Featured Work: case study cards from Sanity. Stagger reveal. Its images load lazily: below the fold, they must not compete with the hero image.
+- (01) Selected work (src/components/homepage/SelectedWorkSection.tsx, server; the client island src/components/work/index/HomeWorkIndex.tsx with home-work.css): a short Living Index, the /work parts in a "home" mode (rows, lists and window shared through index-shared.ts; the six for each choice from homeOrders, rows numbered by homeRows, the closing link from homeAllWorkLink, all in src/lib/work-index.ts; data from getIndexProjects).
+  - Header row on the 12 column grid: the label "(01) Selected work" on 1 to 2; on 3 to 12 the h2 "See our work for [your kind of business]." (Inter 500, 46px, -0.03em, Gunmetal, the choice Obsidian; 32px at 1080px and below), its one choice built as on /work (the shared Choice: one continuous 2px underline under the chevron, role button, aria-expanded and aria-controls, Enter, Space, Escape). No discipline choice.
+  - The list it opens: All work, the five business types with counts and up to three thumbnails across the whole portfolio (zero count options disabled), then "Something else? Tell us about yours" to /start. Thumbnails load only once the list has first opened.
+  - Six rows from homeSelection: with no choice, the projects with Show on Homepage on, by Homepage order (fewer than six when fewer are featured); with a choice, every match from the whole portfolio first, then the curated ones fill to six. Numbers 01 to 06 in the order shown (the frame code follows), names 44px h3 links with the project's one view transition name (the hero names none), strips of three. With a choice: the matches (Obsidian), the question row with Plan your project, then the label "More from the studio" and the rest in Accessible Ash.
+  - The choice is page state only: the address never changes. It carries forward through the closing row under the grid (hairline above): "Client work first; studio explorations are marked" and "All work (08)", or "All work for food and drink (03)" to /work?for=food-and-drink.
+  - Window and phones as on /work (sticky window, under the header and following it at 1080px and below, the row at its edge shown).
+  - Performance: the hero image stays the LCP. Nothing here is priority or preloaded; the window image and the strip images render only after intent (a pointer or focus in the section, or the window scrolling into view once the page has loaded), and the home items carry no blurred placeholders, to keep the first download small. The page source carries the h2 and the six h3 links in the default order. No css-reveal on the rows; the section itself reveals.
 - The Argument: the headline's words reveal on scroll, each word mixing in colour from Accessible Ash to Obsidian (never faded with opacity, so every word passes text contrast); Obsidian from the start with reduced motion.
 - Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
 - Two ways to start (ToolBand): Brand Pulse Check and Project Planner. Desktop: two columns. Phones: a two tab switch.
@@ -263,6 +269,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - The address: ?for=<business type>&in=<discipline> (parseWorkParams), written with router.replace (scroll false). The page stays static (ISR 60 s): the island reads the address in the browser, and its Suspense fallback is the full list in the default order, every name an h3 link, in the page source. Canonical /work for every address; not in the sitemap.
 - An aria-live polite status says what a choice did: "2 projects for food and drink brands. 6 more below."
 - The case study cards (WorkCards.tsx, DisciplineTags) stay for the Initiatives pages and /services; their tags are plain text.
+- Shared with the homepage's (01) Selected work, which uses these parts in a home mode (see Homepage).
 
 ### Services Overview
 - Compact hero (~60vh) with full-width image below
@@ -506,7 +513,7 @@ and images are required once the project shows. Read by getHeroProjects (src/lib
 in src/lib/homepage-hero.ts); the homepage hero shows them.
 
 Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
-homepage's Selected work, not shown yet, and on /work): "Business type" (sector) is one of Food and drink,
+homepage's Selected work and on /work): "Business type" (sector) is one of Food and drink,
 Events, Beauty and fragrance, Fashion and jewellery, Home and lifestyle, or Other (on /work, in no business
 type; unset reads as Other), the list in src/lib/work-index.ts; "Index images" are up to six images with
 required alt text, in order, for the strip under the project name and the image window (empty: the featured

@@ -52,7 +52,7 @@ test("HeroSection: a server component with the hidden H1 unchanged, the label, o
   assert.match(src, /heroWord: project\.heroWord,/, "the word for each project's turn");
   assert.doesNotMatch(src, /heroField/, "the homepage does not read the field");
   const page = read("src/app/(site)/(home)/page.tsx");
-  assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getFeaturedProjects\(\)\]\)/);
+  assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getIndexProjects\(\)\]\)/);
   assert.match(page, /export const revalidate = 60;/);
 });
 
@@ -135,7 +135,12 @@ test("hero.css: every grid-area a part asks for exists in each layout (desktop a
   for (const template of templates) for (const area of used) assert.ok(template.has(area), `${area} is in ${[...template].join(" ")}`);
 });
 
-test("Featured Work images load lazily: below the fold, they never compete with the hero image", () => {
-  const src = read("src/components/homepage/WorkSection.tsx");
-  assert.doesNotMatch(src, /\bpriority\b|\bpreload\b|fetchPriority|loading="eager"/);
+test("Selected work never competes with the hero image: nothing priority, the window waits for intent", () => {
+  for (const file of ["src/components/homepage/SelectedWorkSection.tsx", "src/components/work/index/HomeWorkIndex.tsx", "src/components/work/index/WorkRows.tsx", "src/components/work/index/WorkChoicePanel.tsx", "src/components/work/index/WorkWindow.tsx"]) {
+    const src = read(file).replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    assert.doesNotMatch(src, /\bpriority\b|fetchPriority|<link[^>]+preload/, file);
+  }
+  // The window's image (loading eager on /work) only renders once armed; the homepage arms it on intent.
+  assert.match(read("src/components/work/index/WorkWindow.tsx"), /\{shown && armed && \(/);
+  assert.match(read("src/components/work/index/HomeWorkIndex.tsx"), /armed=\{armed\}/);
 });

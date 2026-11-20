@@ -6,12 +6,8 @@ import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import Button from "@/components/ui/Button";
 import NextPageLink from "@/components/layout/NextPageLink";
 import WorkIndex, { WorkIndexFromUrl } from "@/components/work/index/WorkIndex";
-import type { WorkItem } from "@/components/work/index/types";
+import { toWorkItem } from "@/components/work/index/work-items";
 import { getIndexProjects } from "@/lib/sanity/projects";
-import { heroImageUrl } from "@/lib/sanity/image";
-import { heroObjectPosition } from "@/lib/homepage-hero";
-import { projectMeta, workKindLabel, type IndexProject } from "@/lib/work-index";
-import { projectTypeLabel } from "@/lib/initiatives/types";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PAGE_DESCRIPTIONS } from "@/lib/page-descriptions";
 
@@ -30,35 +26,6 @@ export const metadata: Metadata = {
     images: [DEFAULT_SHARE_IMAGE],
   },
 };
-
-// What the browser gets for each project: finished image URLs (the Studio crop applied), cropped
-// proportions and focal points, and the words already chosen. No case study text.
-function toWorkItem(project: IndexProject, index: number): WorkItem {
-  return {
-    slug: project.slug,
-    title: project.title,
-    number: index + 1,
-    sector: project.sector,
-    disciplines: project.disciplines,
-    meta: projectMeta(project),
-    year: project.year,
-    typeLabel: projectTypeLabel(project.projectType),
-    kind: workKindLabel(project.projectType),
-    line: project.line,
-    images: project.images.map((image, i) => {
-      const c = image.crop;
-      return {
-        src: heroImageUrl(image),
-        width: Math.round(image.width * (c ? 1 - c.left - c.right : 1)),
-        height: Math.round(image.height * (c ? 1 - c.top - c.bottom : 1)),
-        alt: image.alt,
-        // The blurred placeholder for the first image only: the one the window opens on.
-        ...(i === 0 && image.lqip ? { lqip: image.lqip } : {}),
-        position: heroObjectPosition(image),
-      };
-    }),
-  };
-}
 
 export default async function WorkPage() {
   const items = (await getIndexProjects()).map(toWorkItem);

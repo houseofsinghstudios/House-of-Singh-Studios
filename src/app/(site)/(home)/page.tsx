@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/homepage/HeroSection";
-import WorkSection from "@/components/homepage/WorkSection";
+import SelectedWorkSection from "@/components/homepage/SelectedWorkSection";
 import ArgumentSection from "@/components/homepage/ArgumentSection";
 import ServicesSection from "@/components/homepage/ServicesSection";
 import ToolBand from "@/components/homepage/ToolBand";
@@ -8,7 +8,7 @@ import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import ProofSection from "@/components/homepage/ProofSection";
 import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
-import { getFeaturedProjects, getHeroProjects } from "@/lib/sanity/projects";
+import { getHeroProjects, getIndexProjects } from "@/lib/sanity/projects";
 import { WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -30,12 +30,12 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [heroProjects, featuredProjects] = await Promise.all([getHeroProjects(), getFeaturedProjects()]);
+  const [heroProjects, indexProjects] = await Promise.all([getHeroProjects(), getIndexProjects()]);
 
   return (
     <>
       <HeroSection projects={heroProjects} />
-      <WorkSection projects={featuredProjects} />
+      <SelectedWorkSection projects={indexProjects} />
       <ArgumentSection />
       <ServicesSection />
       <ToolBand />
