@@ -3,14 +3,14 @@
 // services, with a slash between words on the same line only: each term carries its slash in front,
 // and the list is pulled left by one slash cell inside a clipping frame, so the first slash of every
 // line is hidden. A word with real work links to its case study; pointing at it shows a small preview
-// that follows the pointer (decorative). Preview images load only after the pointer first enters the
-// field, so they never compete with the hero image.
+// that follows the pointer (decorative) and never covers the word or its line (placePreview). Preview
+// images load only after the pointer first enters the field, so they never compete with the hero image.
 
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { track } from "@/lib/analytics";
-import { caseStudyHref, previewCaption, type WwdService, type WwdTerm, type WwdWork } from "@/lib/what-we-do";
+import { caseStudyHref, placePreview, previewCaption, type WwdService, type WwdTerm, type WwdWork } from "@/lib/what-we-do";
 
 interface Props {
   terms: WwdTerm[];
@@ -21,11 +21,20 @@ interface Props {
   onWord: (service: string | null) => void;
 }
 
-// The preview sits 28px right of the pointer and 130px above it.
-const OFFSET_X = 28;
-const OFFSET_Y = -130;
-
 const isMouse = (e: React.PointerEvent) => e.pointerType === "mouse";
+
+// Moves the preview to its place for this pointer and the line of the word pointed at. The visible top
+// is the header's edge (0 while the header is slid away), so the preview never hides under the bar.
+function movePreview(el: HTMLDivElement | null, line: Element | null, pointer: { x: number; y: number }) {
+  if (!el || !line) return;
+  const root = document.documentElement;
+  const edge = parseFloat(getComputedStyle(root).getPropertyValue("--header-edge")) || 0;
+  const place = placePreview(pointer, line.getBoundingClientRect(), { width: el.offsetWidth, height: el.offsetHeight }, { width: root.clientWidth, top: edge });
+  el.style.setProperty("--x", `${place.left}px`);
+  el.style.setProperty("--y", `${place.top}px`);
+  el.dataset.side = place.side;
+  el.toggleAttribute("data-below", place.below);
+}
 
 export default function WwdField({ terms, services, work, litService, onWord }: Props) {
   const [armed, setArmed] = useState(false);
@@ -34,15 +43,20 @@ export default function WwdField({ terms, services, work, litService, onWord }: 
   const [seen, setSeen] = useState<WwdWork[]>([]);
   const preview = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
+  const pointerRef = useRef({ x: 0, y: 0 });
+  // The line of the word pointed at (its term, one line tall).
+  const lineRef = useRef<Element | null>(null);
+
+  // A new word changes the caption, and so the preview's height: place it once React has drawn it.
+  useLayoutEffect(() => {
+    if (active) movePreview(preview.current, lineRef.current, pointerRef.current);
+  }, [active]);
 
   const follow = (e: React.PointerEvent) => {
     if (!isMouse(e)) return;
-    const { clientX, clientY } = e;
+    pointerRef.current = { x: e.clientX, y: e.clientY };
     cancelAnimationFrame(frame.current);
-    frame.current = requestAnimationFrame(() => {
-      preview.current?.style.setProperty("--x", `${clientX + OFFSET_X}px`);
-      preview.current?.style.setProperty("--y", `${clientY + OFFSET_Y}px`);
-    });
+    frame.current = requestAnimationFrame(() => movePreview(preview.current, lineRef.current, pointerRef.current));
   };
 
   const enter = (e: React.PointerEvent, term: WwdTerm) => {
@@ -50,6 +64,8 @@ export default function WwdField({ terms, services, work, litService, onWord }: 
     onWord(term.service);
     const w = work[term.name];
     if (!w) return;
+    pointerRef.current = { x: e.clientX, y: e.clientY };
+    lineRef.current = e.currentTarget.closest(".wwd-term");
     setActive(term);
     setSeen((list) => (list.some((s) => s.image.src === w.image.src) ? list : [...list, w]));
   };

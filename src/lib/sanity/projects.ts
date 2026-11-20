@@ -769,8 +769,8 @@ const whatWeDoQuery = `*[_type == "caseStudy" && defined(slug.current) && count(
   }
 }`;
 
-// For each of the 30 disciplines, the case study that shows it: the first project listing it that is
-// not an exploration, by Homepage order, then newest. A discipline without one stays plain text.
+// For each of the 30 disciplines, the case study that shows it: the first client or Commons project
+// listing it (never an exploration or a Parallel project), by Homepage order, then newest. A discipline without one stays plain text.
 export async function getWhatWeDoWork(): Promise<Record<string, WwdWork>> {
   const disciplines = services.flatMap((s) => s.deliverables.map((d) => d.name));
   return readSanity(

@@ -81,6 +81,36 @@ export const detailLinkText = (serviceName: string) => `${serviceName} in detail
 export const seeItText = (client: string) => `See it in ${client}`;
 export const previewCaption = (discipline: string, client: string) => `${discipline} for ${client}`;
 
+// ── The desktop preview's place ──
+
+// The preview never covers the word pointed at or its line. Its bottom left corner sits 24px right of
+// the pointer and 24px above it, and never lower than the top of the word's line. If it would leave the
+// viewport on the right, it mirrors to the left of the pointer; if it would rise above the visible top
+// (under the header, when the header shows), it drops below the pointer's line instead.
+const PREVIEW_GAP = 24;
+
+export interface PreviewPlace {
+  left: number;
+  top: number;
+  // Which corner sits nearest the pointer, so the preview grows from there.
+  side: "right" | "left";
+  below: boolean;
+}
+
+export function placePreview(
+  pointer: { x: number; y: number },
+  line: { top: number; bottom: number },
+  size: { width: number; height: number },
+  view: { width: number; top: number },
+): PreviewPlace {
+  const side = pointer.x + PREVIEW_GAP + size.width > view.width ? "left" : "right";
+  const left = side === "right" ? pointer.x + PREVIEW_GAP : pointer.x - PREVIEW_GAP - size.width;
+  const bottom = Math.min(pointer.y - PREVIEW_GAP, line.top);
+  const below = bottom - size.height < view.top;
+  const top = below ? Math.max(pointer.y + PREVIEW_GAP, line.bottom) : bottom - size.height;
+  return { left, top, side, below };
+}
+
 // ── The work behind each discipline ──
 
 // A project as getWhatWeDoWork reads it. Any field may be missing.
@@ -104,11 +134,14 @@ export interface WwdImageDoc {
 const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const order = (p: WwdProjectDoc) => (typeof p.homeOrder === "number" && Number.isFinite(p.homeOrder) ? p.homeOrder : Infinity);
 
-// Client work first in the sense of the Studio rule: explorations are never used (no type counts as
-// client). Then by Homepage order (none last), then newest, then title.
+// Only commissioned work is used: client and Commons projects (no type counts as client). Explorations
+// and Parallel projects are never used, so "See it in <name>" never reads as client work when it is
+// not. Then by Homepage order (none last), then newest, then title.
+const NOT_COMMISSIONED = new Set(["exploration", "parallel"]);
+
 export function rankWorkProjects(docs: readonly WwdProjectDoc[]): WwdProjectDoc[] {
   return docs
-    .filter((p) => text(p.slug) && p.projectType !== "exploration")
+    .filter((p) => text(p.slug) && !NOT_COMMISSIONED.has(text(p.projectType)))
     .sort((a, b) => order(a) - order(b) || text(b.publishedAt).localeCompare(text(a.publishedAt)) || text(a.title).localeCompare(text(b.title)));
 }
 

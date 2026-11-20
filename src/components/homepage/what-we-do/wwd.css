@@ -161,6 +161,16 @@
 .wwd-preview[data-show] .wwd-preview-frame {
   transform: scale(1);
 }
+/* The frame grows from the corner nearest the pointer. */
+.wwd-preview[data-side="left"] .wwd-preview-frame {
+  transform-origin: right bottom;
+}
+.wwd-preview[data-below] .wwd-preview-frame {
+  transform-origin: left top;
+}
+.wwd-preview[data-side="left"][data-below] .wwd-preview-frame {
+  transform-origin: right top;
+}
 .wwd-preview-img {
   opacity: 0;
 }

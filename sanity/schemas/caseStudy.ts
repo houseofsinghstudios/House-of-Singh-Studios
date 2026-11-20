@@ -238,7 +238,7 @@ export default defineType({
       title: "What we do",
       type: "array",
       fieldset: "homepageWhatWeDo",
-      description: "Choose the disciplines this project shows on the homepage, and the image for each. Client work only; explorations are never used.",
+      description: "Choose the disciplines this project shows on the homepage, and the image for each. Client and Commons work only. Explorations and Parallel projects are never shown here.",
       of: [
         defineArrayMember({
           type: "object",

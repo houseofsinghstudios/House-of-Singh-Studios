@@ -11,6 +11,7 @@ import {
   detailLinkText,
   interleave,
   pickWork,
+  placePreview,
   previewCaption,
   rankWorkProjects,
   repeatedDiscipline,
@@ -67,7 +68,7 @@ test("counts and the heading: derived from the data, the number written as a wor
 const img = (id: string) => ({ url: `https://cdn.sanity.io/images/x/y/${id}.jpg`, alt: `${id} alt`, hotspot: { x: 0.5, y: 0.25 } });
 const build = (image: { url?: string }) => ({ src: `${image.url}?w=900`, position: "50% 25%" });
 
-test("picking the work per discipline: explorations out, Homepage order first, then newest", () => {
+test("picking the work per discipline: Homepage order first, then newest", () => {
   const docs: WwdProjectDoc[] = [
     { slug: "late", title: "Late Co", projectType: "client", publishedAt: "2026-11-01", whatWeDo: [{ discipline: "Logo System", image: img("late") }] },
     { slug: "ordered", title: "Ordered Co", heroName: "Ordered", projectType: "client", homeOrder: 2, publishedAt: "2025-01-01", whatWeDo: [{ discipline: "Logo System", image: img("ordered") }, { discipline: "Brand Naming", image: img("naming") }] },
@@ -92,6 +93,46 @@ test("picking the work per discipline: explorations out, Homepage order first, t
   assert.deepEqual(pickWork([], ALL, build), {});
 });
 
+test("which projects count: client, untyped and Commons in; explorations and Parallel out", () => {
+  const entry = (id: string) => [{ discipline: "Logo System", image: img(id) }];
+  const docs: WwdProjectDoc[] = [
+    { slug: "explore", title: "Explore", projectType: "exploration", homeOrder: 1, whatWeDo: entry("explore") },
+    { slug: "parallel", title: "Parallel", projectType: "parallel", homeOrder: 2, whatWeDo: entry("parallel") },
+    { slug: "commons", title: "Commons", projectType: "commons", homeOrder: 3, whatWeDo: entry("commons") },
+    { slug: "client", title: "Client", projectType: "client", homeOrder: 4, whatWeDo: entry("client") },
+    { slug: "untyped", title: "Untyped", homeOrder: 5, whatWeDo: entry("untyped") },
+  ];
+  assert.deepEqual(rankWorkProjects(docs).map((p) => p.slug), ["commons", "client", "untyped"]);
+  assert.equal(pickWork(docs, ALL, build)["Logo System"].slug, "commons", "a Commons project ahead in Homepage order is used");
+  // With only explorations and Parallel projects behind a word, it stays plain text.
+  assert.deepEqual(pickWork(docs.slice(0, 2), ALL, build), {});
+});
+
+test("the preview never covers the word or its line", () => {
+  const size = { width: 300, height: 264 };
+  const view = { width: 1440, top: 72 };
+  const line = { top: 600, bottom: 640 };
+  // Pointer near the line's top: bottom left corner 24px right of the pointer and 24px above it.
+  assert.deepEqual(placePreview({ x: 400, y: 610 }, line, size, view), { left: 424, top: 586 - 264, side: "right", below: false });
+  // Pointer low on the line: 24px above it would still be on the line, so the preview ends at its top.
+  const low = placePreview({ x: 400, y: 636 }, line, size, view);
+  assert.equal(low.top + size.height, line.top);
+  // Near the right edge: mirrored to the left of the pointer.
+  const right = placePreview({ x: 1300, y: 630 }, line, size, view);
+  assert.deepEqual([right.left, right.side], [1300 - 24 - 300, "left"]);
+  // Near the top (under the header): below the pointer's line instead.
+  const top = placePreview({ x: 400, y: 200 }, { top: 180, bottom: 220 }, size, view);
+  assert.deepEqual([top.top, top.below], [224, true]);
+  assert.ok(top.top >= 220, "below the line, not on it");
+  // With the header slid away, the whole viewport counts.
+  assert.equal(placePreview({ x: 400, y: 320 }, { top: 300, bottom: 340 }, size, { width: 1440, top: 0 }).below, false);
+  // The component reads the line and the header edge, never fixed offsets.
+  const field = read("src/components/homepage/what-we-do/WwdField.tsx");
+  assert.match(field, /closest\(".wwd-term"\)/);
+  assert.match(field, /--header-edge/);
+  assert.doesNotMatch(field, /OFFSET_/);
+});
+
 test("the link builders and the words around them", () => {
   assert.equal(caseStudyHref("tairn"), "/work/tairn");
   assert.equal(serviceHref("brand-identity"), "/services/brand-identity");
@@ -104,7 +145,7 @@ test("Studio: the What we do fieldset, its list from the services, each discipli
   const schema = read("sanity/schemas/caseStudy.ts");
   assert.match(schema, /import \{ services \} from "\.\.\/\.\.\/src\/data\/services";/);
   assert.match(schema, /services\.flatMap\(\(s\) => s\.deliverables\.map\(\(d\) => \(\{ title: `\$\{d\.name\} \(\$\{s\.name\}\)`, value: d\.name \}\)\)\)/);
-  assert.match(schema, /description: "Choose the disciplines this project shows on the homepage, and the image for each\. Client work only; explorations are never used\.",/);
+  assert.match(schema, /description: "Choose the disciplines this project shows on the homepage, and the image for each\. Client and Commons work only\. Explorations and Parallel projects are never shown here\.",/);
   const fieldsets = schema.slice(schema.indexOf("fieldsets: ["), schema.indexOf("fields: ["));
   assert.ok(fieldsets.indexOf('name: "workIndex"') < fieldsets.indexOf('name: "homepageWhatWeDo"'), "after Work index");
   assert.match(fieldsets, /name: "homepageWhatWeDo",\s*title: "What we do",[\s\S]*?collapsed: true/);
