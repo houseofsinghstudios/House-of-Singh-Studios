@@ -43,14 +43,20 @@ export interface HeroProject {
 // Infinity minus Infinity is NaN, so two projects without a number compare as equal here.
 const compareOrder = (a: number, b: number) => (a === b ? 0 : a - b);
 
-// The hero order: client work first (a project with no type is client work), then explorations and
-// the other types; within each group by Hero order, lowest first (no number goes last), then by
-// title. At most HERO_MAX.
+// Client work before everything else (a project with no type is client work), then explorations and
+// the other types together. The first step of the hero order, and of the work index order
+// (src/lib/work-index.ts), so the two lists always agree on it.
+export function compareClientFirst(a: { projectType?: unknown }, b: { projectType?: unknown }): number {
+  const group = (p: { projectType?: unknown }) => (projectType(p.projectType) === "client" ? 0 : 1);
+  return group(a) - group(b);
+}
+
+// The hero order: client work first, then within each group by Hero order, lowest first (no number
+// goes last), then by title. At most HERO_MAX.
 export function sortHeroProjects<T extends Pick<HeroProject, "title" | "heroOrder"> & { projectType?: unknown }>(projects: readonly T[]): T[] {
-  const group = (p: T) => (projectType(p.projectType) === "client" ? 0 : 1);
   const order = (p: T) => (typeof p.heroOrder === "number" && Number.isFinite(p.heroOrder) ? p.heroOrder : Infinity);
   return [...projects]
-    .sort((a, b) => group(a) - group(b) || compareOrder(order(a), order(b)) || a.title.localeCompare(b.title))
+    .sort((a, b) => compareClientFirst(a, b) || compareOrder(order(a), order(b)) || a.title.localeCompare(b.title))
     .slice(0, HERO_MAX);
 }
 

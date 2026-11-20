@@ -10,6 +10,7 @@ import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } fr
 import type { Project as HomepageProject } from "@/lib/constants/homepage-data";
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
 import { sortHeroProjects, type HeroFit, type HeroImage, type HeroProject } from "@/lib/homepage-hero";
+import { sortIndexProjects, toIndexProject, type IndexProject, type IndexProjectDoc } from "@/lib/work-index";
 
 // ── GROQ Queries ──
 
@@ -112,6 +113,37 @@ const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined
     "width": asset->metadata.dimensions.width,
     "height": asset->metadata.dimensions.height,
     "lqip": asset->metadata.lqip
+  }
+}`;
+
+// The work index (homepage Selected work and /work): every published case study, with only what the
+// index shows. Each image resolves to its asset id (to drop repeats), file, size, alt text and blurred
+// placeholder, as the hero's images do. No page text, no overview. Mapped in src/lib/work-index.ts.
+const indexImageProjection = `{
+    alt,
+    "id": asset->_id,
+    "url": asset->url,
+    "width": asset->metadata.dimensions.width,
+    "height": asset->metadata.dimensions.height,
+    "lqip": asset->metadata.lqip
+  }`;
+
+const indexProjectsQuery = `*[_type == "caseStudy" && defined(slug.current) && ${PUBLISHED}] | order(publishedAt desc) {
+  title,
+  "slug": slug.current,
+  sector,
+  disciplines,
+  year,
+  publishedAt,
+  projectType,
+  featured,
+  homeOrder,
+  "indexImages": indexImages[defined(asset)] ${indexImageProjection},
+  "featuredImage": featuredImage ${indexImageProjection},
+  "blockImages": blocks[] {
+    "image": image ${indexImageProjection},
+    "detail": detail ${indexImageProjection},
+    "images": images[] ${indexImageProjection}
   }
 }`;
 
@@ -585,6 +617,21 @@ export async function getHeroProjects(): Promise<HeroProject[]> {
       const docs = await client.fetch<HeroProjectDoc[]>(heroProjectsQuery);
       const projects = (docs || []).map(mapHeroProject).filter((p): p is HeroProject => p !== null);
       return sortHeroProjects(projects);
+    },
+    () => []
+  );
+}
+
+// Every published case study for the work index, in the index order (client work first, then newest).
+// Read with readSanity, so a failed read keeps the last good result; with nothing to fall back on (a
+// build without Sanity) the list is empty.
+export async function getIndexProjects(): Promise<IndexProject[]> {
+  return readSanity(
+    "work index projects",
+    async () => {
+      const docs = await client.fetch<IndexProjectDoc[]>(indexProjectsQuery);
+      const projects = (docs || []).map(toIndexProject).filter((p): p is IndexProject => p !== null);
+      return sortIndexProjects(projects);
     },
     () => []
   );
