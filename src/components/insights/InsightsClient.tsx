@@ -160,7 +160,9 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                       fill
                       style={{ objectFit: "cover" }}
                       sizes="(max-width: 768px) 100vw, 1200px"
-                      priority
+                      // The listing's LCP: the featured post's image, fetched first.
+                      fetchPriority="high"
+                      loading="eager"
                     />
                   </div>
                 </div>

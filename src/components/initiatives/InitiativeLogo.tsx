@@ -9,10 +9,9 @@ interface Props {
   // Empty in the rows and the hero, where the name is already given as text.
   alt: string;
   sizes: string;
-  priority?: boolean;
 }
 
-export default function InitiativeLogo({ logo, alt, sizes, priority }: Props) {
+export default function InitiativeLogo({ logo, alt, sizes }: Props) {
   return (
     <Image
       src={logo.url}
@@ -21,7 +20,6 @@ export default function InitiativeLogo({ logo, alt, sizes, priority }: Props) {
       height={logo.height}
       sizes={sizes}
       unoptimized={logo.svg}
-      priority={priority}
       className="init-logo-img"
     />
   );
