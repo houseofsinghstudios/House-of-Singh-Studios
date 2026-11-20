@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { DEFAULT_WORD, IMAGE_HOLD_MS, heroObjectPosition, heroWordFor } from "@/lib/homepage-hero";
 
 const read = (file: string) => readFileSync(file, "utf8");
@@ -121,8 +121,8 @@ test("analytics: hero_project_click from the image or the caption, and hero_paus
 
 test("the old hero and the field list are gone", () => {
   assert.doesNotMatch(read("src/lib/constants/homepage-data.ts"), /export const HERO\b/);
-  const css = read("src/components/homepage/homepage.css");
-  for (const old of ["hero-cycle", "hero-headline", "scroll-indicator", "scroll-track", "heroHeadingEnter"]) assert.ok(!css.includes(old), old);
+  // homepage.css itself went with the Testimonials carousel (tests/proof.test.ts).
+  assert.equal(existsSync("src/components/homepage/homepage.css"), false);
   const hero = read("src/components/homepage/hero.css");
   for (const old of ["hero-fields", "hero-field", "hero-pick", "hero-word-button", "hero-plus", "aria-expanded"]) assert.ok(!hero.includes(old), old);
 });

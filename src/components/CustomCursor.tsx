@@ -50,7 +50,7 @@ export default function CustomCursor() {
       const cursorEl = target.closest("[data-cursor]");
       const declared = cursorEl?.getAttribute("data-cursor") || "default";
       // "link" and "expand" have no look of their own: they take the hover state, the same feedback
-      // every other link and button gets. "view" and "pause" keep their own states.
+      // every other link and button gets. "view" keeps its own state.
       const state = declared === "link" || declared === "expand" ? "hover" : declared;
 
       // Check if hovering a link or button
@@ -92,10 +92,6 @@ export default function CustomCursor() {
       <div ref={dotRef} className="custom-cursor-dot" />
       <div ref={ringRef} className="custom-cursor-ring">
         <span className="cursor-label">View</span>
-        <span className="cursor-pause-icon">
-          <span />
-          <span />
-        </span>
       </div>
     </>
   );

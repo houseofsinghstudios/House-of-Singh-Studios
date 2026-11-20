@@ -1,0 +1,326 @@
+/* The homepage (03) Proof: "What every client can count on." Four chapters, one lit at a time.
+   Lit: Obsidian and the key phrase on its marker band. At rest: Accessible Ash, by colour only.
+   Desktop above 1080px: a sticky left column with the index; phones: one column and a compact bar. */
+
+.proof {
+  --proof-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 160px var(--page-px);
+  /* The phone bar lives inside the section, so it leaves with the section's end. */
+  overflow: clip;
+}
+
+/* The light: rest by default, lit for the chapter the island names */
+.proof-ch {
+  --proof-ink: var(--text-label);
+  --proof-band: 0%;
+  --proof-track: -0.025em;
+}
+.proof-light[data-lit="0"] [data-chapter="0"],
+.proof-light[data-lit="1"] [data-chapter="1"],
+.proof-light[data-lit="2"] [data-chapter="2"],
+.proof-light[data-lit="3"] [data-chapter="3"] {
+  --proof-ink: var(--text-primary);
+  --proof-band: 100%;
+  --proof-track: -0.02em;
+}
+
+/* Desktop layout */
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  align-items: start;
+}
+.proof-side {
+  grid-column: 1 / 5;
+  position: sticky;
+  top: calc(var(--header-edge) + 48px);
+  transition: top var(--header-slide);
+}
+.proof-main {
+  grid-column: 6 / 13;
+}
+.proof-label {
+  margin: 0;
+}
+.proof-h2 {
+  margin: 20px 0 0;
+  font-size: 48px;
+  line-height: 56px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+/* The index: one button per promise, a 2px Obsidian bar on the left for the lit one. */
+.proof-index {
+  max-width: 240px;
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.proof-index-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  padding: 12px 0 12px 20px;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.proof-index-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--text-primary);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.5s var(--proof-ease);
+}
+.proof-index-btn[aria-current="step"]::before {
+  transform: scaleY(1);
+}
+.proof-index-btn:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+.proof-index-num {
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+}
+.proof-index-name {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-label);
+  transition: color 0.5s var(--proof-ease);
+}
+.proof-index-btn[aria-current="step"] .proof-index-name {
+  color: var(--text-primary);
+}
+
+/* The chapters: one sits under the line at a time. */
+.proof-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.proof-ch {
+  min-height: 420px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.proof-ch-label {
+  display: none;
+}
+.proof-promise {
+  margin: 0;
+  font-size: 31px;
+  line-height: 40px;
+  font-weight: 500;
+  letter-spacing: var(--proof-track);
+  text-wrap: balance;
+  color: var(--proof-ink);
+  transition:
+    color 0.5s var(--proof-ease),
+    letter-spacing 0.5s ease;
+}
+.proof-figure {
+  max-width: 520px;
+  margin: 40px 0 0;
+}
+.proof-quote {
+  margin: 0;
+}
+.proof-quote p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: -0.015em;
+  color: var(--proof-ink);
+  transition: color 0.5s var(--proof-ease);
+}
+.proof-caption {
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--proof-ink);
+  transition: color 0.5s var(--proof-ease);
+}
+
+/* The marker band behind the key phrase: Cloudy White, from 0.14em below the line's top, 0.9em tall,
+   3px wider each side, wiping in from the left. The image is one flat colour, sized to draw the wipe;
+   clone repeats it on every line the phrase wraps to. */
+.proof-band {
+  padding: 0 3px;
+  margin: 0 -3px;
+  background-image: linear-gradient(var(--bg-shift), var(--bg-shift));
+  background-repeat: no-repeat;
+  background-position: 0 0.14em;
+  background-size: var(--proof-band) 0.9em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 0.7s var(--proof-ease) 0.12s;
+}
+
+/* The compact bar is for phones only. */
+.proof-bar-shell {
+  display: none;
+}
+
+/* Phones (1080px and below): one column, no index, the compact bar */
+@media (max-width: 1080px) {
+  .proof {
+    padding: 96px var(--page-px);
+  }
+  .proof-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .proof-side,
+  .proof-main {
+    grid-column: 1 / -1;
+  }
+  .proof-side {
+    position: static;
+  }
+  .proof-index {
+    display: none;
+  }
+  .proof-h2 {
+    margin-top: 16px;
+    font-size: 32px;
+    line-height: 40px;
+  }
+  .proof-main {
+    margin-top: 48px;
+  }
+  .proof-ch {
+    min-height: 360px;
+    padding-top: 24px;
+    --proof-track: -0.02em;
+  }
+  .proof-ch-label {
+    display: flex;
+    gap: 12px;
+    margin: 0;
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--proof-ink);
+    transition: color 0.5s var(--proof-ease);
+  }
+  .proof-promise {
+    margin-top: 12px;
+    font-size: 24px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+  }
+  .proof-figure {
+    margin-top: 24px;
+  }
+  .proof-quote p {
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.01em;
+  }
+  .proof-caption {
+    margin-top: 10px;
+  }
+
+  /* A zero height sticky shell: it takes no space and follows the header. The bar inside it is
+     decorative (the real H2 is in the page) and sits below the header and the menu drawer. */
+  .proof-bar-shell {
+    display: block;
+    position: sticky;
+    z-index: 20;
+    top: var(--header-edge);
+    height: 0;
+    transition: top var(--header-slide);
+  }
+  .proof-bar {
+    position: absolute;
+    top: 0;
+    left: calc(-1 * var(--page-px));
+    right: calc(-1 * var(--page-px));
+    padding: 12px var(--page-px);
+    background: var(--bg);
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.4s var(--proof-ease),
+      transform 0.4s var(--proof-ease);
+  }
+  .proof-bar[data-show] {
+    opacity: 1;
+    transform: none;
+  }
+  .proof-bar-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    font-size: 11px;
+    line-height: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-label);
+  }
+  .proof-bar-title {
+    margin: 4px 0 0;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+  }
+  .proof-bar-steps {
+    display: flex;
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .proof-bar-step {
+    flex: 1;
+    height: 2px;
+    background: var(--bg-shift);
+    transition: background-color 0.5s var(--proof-ease);
+  }
+  .proof-bar-step[data-on] {
+    background: var(--text-primary);
+  }
+}
+
+/* Reduced motion: every chapter lit and still; the index and the bar update at once */
+@media (prefers-reduced-motion: reduce) {
+  .proof-ch,
+  .proof-light [data-chapter] {
+    --proof-ink: var(--text-primary);
+    --proof-band: 100%;
+    --proof-track: -0.02em;
+  }
+  .proof-side,
+  .proof-index-btn::before,
+  .proof-index-name,
+  .proof-promise,
+  .proof-quote p,
+  .proof-caption,
+  .proof-ch-label,
+  .proof-band,
+  .proof-bar-shell,
+  .proof-bar,
+  .proof-bar-step {
+    transition: none;
+  }
+}
