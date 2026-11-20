@@ -41,6 +41,15 @@
   /* The fixed header bar's height: 72px on desktop, 56px at 1080px and below (one height at every
      scroll position). Anything that must clear the header measures from it. */
   --header-bar: 72px;
+  /* How the header slides away and back (src/lib/header-scroll.ts decides when). Anything that sits
+     under the header and follows it (the /work image window on phones) uses the same timing. */
+  --header-slide: 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  /* Where the header's bottom edge is now: under the bar, or the top of the screen while the header
+     is hidden (html[data-header-hidden], set by Header.tsx). */
+  --header-edge: var(--header-bar);
+}
+html[data-header-hidden] {
+  --header-edge: 0px;
 }
 
 @theme inline {
@@ -417,46 +426,6 @@ body {
   }
   .dtag-more {
     display: inline;
-  }
-}
-
-.wp-grid-cat-tag {
-  position: relative;
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-label);
-  background: none;
-  border: none;
-  /* Touch target: 4px above and below take the tap area to 24px or more; the matching negative
-     margin keeps the tag exactly where it was, and the underline sits 4px higher in the box so it
-     stays 2px under the text. */
-  padding: 4px 0;
-  margin: -4px 0;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-.wp-grid-cat-tag::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--text-primary);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-}
-@media (hover: hover) {
-  .wp-grid-cat-tag:hover {
-    color: var(--text-primary);
-  }
-  .wp-grid-cat-tag:hover::after {
-    transform: scaleX(1);
-    transform-origin: left;
   }
 }
 
@@ -894,8 +863,11 @@ body {
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 600px) {
   /* ── Global: prevent horizontal scroll ── */
+  /* clip, not hidden: hidden makes body a scroll container, and nothing inside it can stick (the
+     /work image window). hidden stays as the fallback where clip is not supported. */
   html, body {
     overflow-x: hidden;
+    overflow-x: clip;
   }
 
 }
@@ -1857,7 +1829,7 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   padding: 0 var(--page-px);
   background-color: var(--bg);
   border-bottom: 1px solid transparent;
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+  transition: transform var(--header-slide),
               border-color 0.3s ease;
 }
 .site-header--scrolled {

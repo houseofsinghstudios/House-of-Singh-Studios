@@ -1,0 +1,506 @@
+/* The Living Index on /work (src/components/work/index). The sentence and its two lists, the index
+   rows on columns 1 to 6, the sticky image window on columns 7 to 12. At 1080px and below: one
+   column, the window stuck under the header, the list scrolling beneath it. */
+
+.wi-page {
+  padding: calc(var(--header-bar) + clamp(56px, 7vw, 104px)) var(--page-px) 0;
+  animation: wi-enter 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes wi-enter {
+  from { opacity: 0; transform: translateY(30px); }
+}
+
+.wi-count {
+  margin-bottom: 24px;
+}
+
+/* ── The sentence ── */
+.wi-sentence {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 76px;
+  letter-spacing: -0.04em;
+  line-height: 1.08;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 1200px;
+}
+.wi-choice {
+  color: var(--text-primary);
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.wi-choice:focus-visible .wi-choice-words {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 6px;
+}
+/* One continuous 2px rule under the words and the chevron, on every line the choice wraps to. */
+.wi-choice-words {
+  border-bottom: 2px solid var(--text-primary);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.wi-nowrap {
+  white-space: nowrap;
+}
+.wi-chev {
+  display: inline-block;
+  width: 0.2em;
+  height: 0.2em;
+  margin: 0 0.12em 0 0.22em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  vertical-align: 0.3em;
+  rotate: 45deg;
+  translate: 0 0;
+  transition: rotate 0.4s cubic-bezier(0.23, 1, 0.32, 1), translate 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.wi-choice[aria-expanded="true"] .wi-chev {
+  rotate: 225deg;
+  translate: 0 0.08em;
+}
+@media (hover: hover) {
+  .wi-choice:hover .wi-chev {
+    translate: 0 2px;
+  }
+}
+
+/* ── The lists: open by height, pushing the page down ── */
+.wi-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.wi-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.wi-panel-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+.wi-panel-body {
+  padding: 40px 0 16px;
+}
+.wi-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 16px;
+}
+.wi-close {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  background: none;
+  border: 0;
+  padding: 12px 0 12px 16px;
+  margin: -12px 0;
+  cursor: pointer;
+}
+.wi-options {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+.wi-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  min-height: 72px;
+  padding: 16px 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  background: none;
+  font-family: var(--sans);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-primary);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: letter-spacing 0.5s ease;
+}
+.wi-option[aria-disabled="true"] {
+  color: var(--text-label);
+  cursor: default;
+}
+.wi-option[aria-current="true"] .wi-option-label {
+  border-bottom: 2px solid var(--text-primary);
+}
+.wi-option:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+@media (hover: hover) {
+  .wi-option:not([aria-disabled="true"]):hover {
+    letter-spacing: 0.01em;
+  }
+}
+.wi-option-side {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+.wi-option-thumbs {
+  display: flex;
+  gap: 4px;
+}
+.wi-option-thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  background: var(--bg-shift);
+}
+.wi-option-count {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+  min-width: 2.5em;
+  text-align: right;
+}
+
+/* ── The index: list and window ── */
+.wi-index {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  margin-top: clamp(56px, 7vw, 96px);
+}
+.wi-list {
+  grid-column: 1 / 7;
+}
+.wi-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.wi-row {
+  position: relative;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+/* The number hangs in the page margin, outside the list's left edge. */
+.wi-num {
+  position: absolute;
+  top: 34px;
+  right: calc(100% + 16px);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+}
+.wi-name {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 48px;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  margin: 0;
+}
+.wi-name-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.3s cubic-bezier(0.23, 1, 0.32, 1), letter-spacing 0.5s ease;
+}
+.wi-name-link:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 4px;
+}
+.wi-row[data-dim] .wi-name-link {
+  color: var(--text-label);
+}
+/* The row pointed at or focused keeps Obsidian and loosens; every other name steps back to Accessible
+   Ash. Colour, never opacity, so every name still passes text contrast. */
+@media (hover: hover) {
+  .wi-list:has(.wi-row:hover) .wi-name-link {
+    color: var(--text-label);
+  }
+  .wi-list .wi-row:hover .wi-name-link {
+    color: var(--text-primary);
+    letter-spacing: -0.025em;
+  }
+}
+.wi-list:has(.wi-name-link:focus-visible) .wi-name-link {
+  color: var(--text-label);
+}
+.wi-list .wi-name-link:focus-visible {
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
+}
+
+.wi-strip {
+  display: flex;
+  gap: 4px;
+  height: 24px;
+  margin-top: 16px;
+}
+.wi-strip-item {
+  display: block;
+  height: 24px;
+  flex-shrink: 0;
+}
+.wi-strip-img {
+  display: block;
+  height: 24px;
+  width: auto;
+  background: var(--bg-shift);
+}
+.wi-row[data-dim] .wi-strip {
+  opacity: 0.3;
+}
+.wi-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.wi-year {
+  flex-shrink: 0;
+}
+.wi-type {
+  display: inline;
+  margin-left: 12px;
+}
+
+.wi-empty {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-secondary);
+  margin: 0;
+  padding: 0 0 32px;
+}
+.wi-invite {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  padding: 24px 0;
+  border-top: 1px solid var(--text-primary);
+}
+.wi-invite-question {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
+}
+.wi-invite-link {
+  position: relative;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.wi-invite-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .wi-invite-link:hover::after {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+}
+.wi-other {
+  margin-top: clamp(48px, 6vw, 80px);
+  padding-bottom: 16px;
+}
+
+/* ── The image window: decorative, follows the list ── */
+.wi-window {
+  grid-column: 7 / 13;
+  justify-self: end;
+  align-self: start;
+  position: sticky;
+  top: 120px;
+  width: min(590px, 100%);
+  container-type: inline-size;
+}
+.wi-frame {
+  position: relative;
+  height: clamp(400px, calc(100cqw * var(--ratio, 1.25)), 590px);
+  overflow: hidden;
+  background: var(--bg-shift);
+  transition: height 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.wi-timer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--bg);
+  transform-origin: left;
+  animation: wi-timer 1.4s linear both;
+}
+@keyframes wi-timer {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.wi-caption {
+  padding-top: 16px;
+}
+.wi-caption-codes {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+  margin: 0 0 12px;
+}
+.wi-caption-name {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+.wi-caption-name .editorial-label {
+  display: inline;
+  margin-left: 8px;
+}
+.wi-caption-line {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+  max-width: 480px;
+}
+.wi-caption-view {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  margin: 16px 0 0;
+}
+
+/* ── 1080px and below ── */
+@media (max-width: 1080px) {
+  .wi-sentence {
+    font-size: 34px;
+  }
+  .wi-chev {
+    border-width: 0 1.5px 1.5px 0;
+  }
+  .wi-panel-body {
+    padding-top: 24px;
+  }
+  .wi-option {
+    min-height: 48px;
+    padding: 12px 0;
+    font-size: 20px;
+  }
+  .wi-option-thumbs {
+    display: none;
+  }
+  .wi-index {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wi-list {
+    grid-column: 1;
+  }
+  .wi-window {
+    order: -1;
+    grid-column: 1;
+    /* Follows the header: under it while it shows, at the top while it is slid away. */
+    top: var(--header-edge);
+    transition: top var(--header-slide);
+    width: 100%;
+    z-index: 2;
+    background: var(--bg);
+    padding-bottom: 12px;
+  }
+  .wi-frame {
+    height: 220px;
+    transition: none;
+  }
+  .wi-caption {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding-top: 8px;
+  }
+  .wi-caption-codes {
+    margin: 0;
+  }
+  .wi-caption-codes span + span,
+  .wi-caption-line,
+  .wi-caption-view,
+  .wi-caption-name .editorial-label {
+    display: none;
+  }
+  .wi-caption-name {
+    font-size: 14px;
+  }
+  .wi-name {
+    font-size: clamp(28px, 8vw, 48px);
+  }
+  /* The phone margin is too narrow to hang the number in: it sits above the name. */
+  .wi-num {
+    position: static;
+    display: block;
+    margin-bottom: 8px;
+  }
+  /* No pointer to follow on a phone: the strip images are not tappable. */
+  .wi-strip {
+    pointer-events: none;
+  }
+  .wi-invite {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wi-page {
+    animation: none;
+  }
+  .wi-window,
+  .wi-panel,
+  .wi-chev,
+  .wi-frame,
+  .wi-name-link,
+  .wi-option {
+    transition: none;
+  }
+  .wi-timer {
+    display: none;
+  }
+}
+
+/* The note under the index (moved from the old work-page.css). */
+.wp-initiatives-note {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+  padding: clamp(48px, 6vw, 72px) var(--page-px) 0;
+}

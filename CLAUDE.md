@@ -92,7 +92,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - One fixed bar on --bg, at every width and scroll position: 72px above 1080px, 56px at 1080px and below. The single token is --header-bar; pages that clear the header use it (the old --header-logo-top, --header-logo-height and --header-clearance are gone).
 - Home link: the text "House of Singh Studios", never artwork, in the nav's own type: Inter 500, 11px, uppercase (written in normal case in the markup, capitals from CSS, so screen readers say the name naturally), 0.14em, Obsidian (the links are Gunmetal; that is the one difference). Its own text is its accessible name; view-transition-name site-logo. The same size at every width, on one line (about 180px wide), with at least 132px before the links and 100px before the menu button from 360px up, so no width rule. The owner keeps the master wordmark artwork outside the site. The crest no longer appears in the header; the file stays for the footer.
 - A 1px --border line fades in under the bar after 20px of scroll (0.3s).
-- Hides on the way down and shows on the way up: hides only past 400px and after more than 8px down since the last change of direction, shows after more than 8px up, translateY(-100%) over 0.35s cubic-bezier(0.23, 1, 0.32, 1). Always shown at the top, while the drawer is open, and when keyboard focus moves into it. With reduced motion it never hides.
+- Hides on the way down and shows on the way up: hides only past 400px and after more than 8px down since the last change of direction, shows after more than 8px up, translateY(-100%) over 0.35s cubic-bezier(0.23, 1, 0.32, 1) (the token --header-slide). Always shown at the top, while the drawer is open, and when keyboard focus moves into it. With reduced motion it never hides. Header.tsx sets html[data-header-hidden] while it is hidden, so --header-edge reads 0px instead of the bar height: anything that sits under the header and follows it uses --header-edge and --header-slide, never its own scroll logic.
 - Above 1080px: five links (Services, Work, AI Lab, About, Insights; one list in src/components/layout/site-links.ts, which the drawer shares and adds Contact to) with the underline wipe, 32px apart, then "Plan your project" to /start: .btn-primary at the nav's size (Obsidian, Silver Mist text), data-cursor="link", tracked as header_cta_click { location: "header" }. Contact is not in the desktop header.
 - At 1080px and below: the menu button (aria-label "Open menu" / "Close menu", aria-expanded, aria-controls, 44px tap area) opens and closes the drawer, tracked as menu_open on opening. No "Plan your project" on phones. Its two lines (22px, 1.5px, Obsidian) morph into the close cross: opening, they slide to the middle (translateY 3.75px, 180ms) and then turn to 45 and minus 45 degrees (280ms, from 180ms); closing is the exact reverse. Reduced motion: the icon swaps at once. The header sits above the drawer and its scrim (z-index 130 over 121 and 120), so the button stays in place, visible and usable, while the drawer is open.
 - The drawer: from the right, 85vw up to 420px, translateX(100%) to 0 over 0.55s, over a var(--overlay-50) scrim fading over 0.45s, its top under the header bar. No close X of its own: the morphing menu button is the one control. Six links (Services, Work, AI Lab, About, Insights, Contact), about 55px each, entering from 24px with a stagger from 0.16s, 50ms apart. At the foot: "(Studio)" over "Toronto, Canada" and "(Local time)" over the live Toronto time (America/Toronto whatever the visitor's zone, shown after mount only, refreshed every 15s while open, the colon dimming every 2s).
@@ -147,7 +147,7 @@ CURRENT BEHAVIOR — Various hover effects across components.
 
 EVOLVED BEHAVIOR — Standardize to a consistent interaction vocabulary:
 
-ACCORDION ROWS (services, brands, work list):
+ACCORDION ROWS (services, brands):
 - Background: ::before pseudo with --bg-shift, opacity 0 → 1 over 0.5s, extends full bleed
 - Title: letter-spacing loosens from -0.02em to +0.01em over 0.5s
 - Metadata: color shifts from --text-muted to --text-secondary over 0.3s
@@ -204,7 +204,7 @@ ASYMMETRIC LAYOUTS:
 EVOLVED APPROACH:
 
 - Images are DOMINANT. They should be the largest visual element in any section that contains them.
-- Minimum image height on desktop: 400px for inline images, 500px for hero/featured images
+- Minimum image height on desktop: 400px for inline images, 500px for hero/featured images. Exception: the /work image window, 400px to 590px, following each image's proportion
 - Aspect ratios: 3:4 portrait for project cards, 4:3 landscape for case study heroes, 16:9 for full-width banners
 - Images enter viewport with clip-path reveal: inset(0 100% 0 0) → inset(0 0 0 0) over 0.8s
 - On hover (when image is a link): scale(1.03) zoom
@@ -249,12 +249,20 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Featured Work →
 - CTA: dark inverted. The close.
 - About Preview and Brands sections no longer exist.
 
-### Work Page
-- Default view: GRID (2 columns of image cards), with a GRID / LIST switch in the filter bar (WorkPageClient.tsx).
-- List view: text rows with dividers, hover background shift.
-- Filter bar: disciplines, in a fixed order.
-- Heading: "Work" with the project count beside it, outside the H1.
-- Phones: single column grid, no list/grid switch.
+### Work Page (the Living Index)
+As built (src/app/(site)/work/page.tsx, server; the client island in src/components/work/index: WorkIndex, WorkSentence, WorkChoicePanel, WorkRows, WorkWindow, use-work-window.ts, work-index.css; words and rules in src/lib/work-index.ts; data from getIndexProjects).
+- Top: the label "Work (08)" (the count), a visually hidden H1 "Work: brand identity, packaging, websites and photography by House of Singh Studios, Toronto", then the sentence "Work for [your kind of business], in [every discipline]." (Inter 500, 76px, -0.04em, line height 1.08, Gunmetal; the choices Obsidian; 34px at 1080px and below).
+- The choices: span role="button" (a button cannot wrap across lines), aria-expanded and aria-controls, Enter and Space open, Escape closes and returns focus. One continuous 2px Obsidian underline (a bottom border, box-decoration-break clone) runs under the words and a CSS chevron glued to the last word; the chevron turns 180 degrees when open (0.4s) and drops 2px on hover. Choosing writes the chosen words into the sentence.
+- The lists: one open at a time, opening by height (0.55s) and pushing the page down; a "Close" text button. Business: All work, the five business types, then "Something else? Tell us about yours" (Plan your project, /start). Discipline: Every discipline, Identity, Packaging, Websites, Photography. Rows 28px Inter 500 with a hairline above; on the right up to three 32px thumbnails and the count, combined with the other current choice. An option with no match is Accessible Ash, aria-disabled, and cannot be chosen. At 1080px and below: 48px rows, no thumbnails.
+- The index (12 columns): the list on 1 to 6, the image window on 7 to 12. A row: the number hanging in the page margin (above the name on phones), the name as an h3 link (48px, -0.035em) carrying the project's one view transition name (project-<slug>), a strip of up to six index images 24px tall at their true proportions (decorative), then "Sector. Deliverables." in 12px Gunmetal with the year and, for non client work, its type label on the right. 24px padding, hairline above.
+- Order: rankProjects. Matches first, then an invitation row (1px Obsidian rule, the business type's question, else the discipline's, and "Plan your project" to /start), then an h2 "Other work" and the rest, names in Accessible Ash and strips at 30 percent. No match: "Nothing for that combination yet." and everything under Other work. Nothing is ever hidden. Rows that reorder carry no css-reveal; the page section enters once instead.
+- Hover: the row pointed at (or focused) keeps Obsidian and loosens to -0.025em; every other name turns Accessible Ash (colour, never opacity).
+- The image window: decorative (aria-hidden, no links, nothing focusable), sticky at 120px, 590px wide, object-fit cover at the hotspot, height clamp(400px, the image's proportion, 590px) easing over 0.6s. Under it: the frame code ("04B") and "02 / 03" (not for single image projects), the name with "Client work" or "Studio exploration", the one line (Hero line, else the overview's first sentence), "View case study". Pointing at a row flips its images every 1.4s on a 2px Silver Mist time line; pointing at a strip image holds it; keyboard focus plays one round, then holds; leaving the list keeps the last project. The next image is fetched before its turn (getImageProps). Never priority; strip images sizes 60px, lazy.
+- 1080px and below: one column; the window full width, 220px tall, sticky at --header-edge (under the header, or at the top while the header is slid away, moving with it over --header-slide), with the frame code and name; the row crossing the window's bottom edge (IntersectionObserver) is the one shown. Strip images are not tappable. No grid, list or switch.
+- Reduced motion: no flip, no time line, no height easing, no list or entrance animation.
+- The address: ?for=<business type>&in=<discipline> (parseWorkParams), written with router.replace (scroll false). The page stays static (ISR 60 s): the island reads the address in the browser, and its Suspense fallback is the full list in the default order, every name an h3 link, in the page source. Canonical /work for every address; not in the sitemap.
+- An aria-live polite status says what a choice did: "2 projects for food and drink brands. 6 more below."
+- The case study cards (WorkCards.tsx, DisciplineTags) stay for the Initiatives pages and /services; their tags are plain text.
 
 ### Services Overview
 - Compact hero (~60vh) with full-width image below
@@ -345,7 +353,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 - Column layouts collapse to single column
 - Scroll-driven animations: simplified to basic fade-in via IntersectionObserver
 - Stats: 2x2 grid below 600px
-- Work page: single column grid, no list/grid toggle
+- Work page: one column, the image window sticky under the header, the row at its bottom edge shown
 
 ---
 
@@ -498,7 +506,7 @@ and images are required once the project shows. Read by getHeroProjects (src/lib
 in src/lib/homepage-hero.ts); the homepage hero shows them.
 
 Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
-homepage's Selected work and on /work, not shown yet): "Business type" (sector) is one of Food and drink,
+homepage's Selected work, not shown yet, and on /work): "Business type" (sector) is one of Food and drink,
 Events, Beauty and fragrance, Fashion and jewellery, Home and lifestyle, or Other (on /work, in no business
 type; unset reads as Other), the list in src/lib/work-index.ts; "Index images" are up to six images with
 required alt text, in order, for the strip under the project name and the image window (empty: the featured

@@ -118,8 +118,8 @@ const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined
 
 // The work index (homepage Selected work and /work): every published case study, with only what the
 // index shows. Each image resolves to its asset id (to drop repeats), file, size, alt text and blurred
-// placeholder, as the hero's images do, with the editor's hotspot and crop. No page text, no overview.
-// Mapped in src/lib/work-index.ts.
+// placeholder, as the hero's images do, with the editor's hotspot and crop. No page text; the hero line
+// and the overview only for the project's one line (its first sentence). Mapped in src/lib/work-index.ts.
 const indexImageProjection = `{
     alt,
     hotspot,
@@ -141,6 +141,8 @@ const indexProjectsQuery = `*[_type == "caseStudy" && defined(slug.current) && $
   projectType,
   featured,
   homeOrder,
+  heroLine,
+  overview,
   "indexImages": indexImages[defined(asset)] ${indexImageProjection},
   "featuredImage": featuredImage ${indexImageProjection},
   "blockImages": blocks[] {
@@ -638,29 +640,6 @@ export async function getIndexProjects(): Promise<IndexProject[]> {
     },
     () => []
   );
-}
-
-// Canonical discipline order for the filter bar
-const DISCIPLINE_ORDER = [
-  "brand-identity",
-  "packaging",
-  "publication",
-  "art-direction",
-  "website",
-  "video",
-  "photography",
-  "social-content",
-  "strategy",
-];
-
-
-export interface DisciplineFilter {
-  value: string;
-  label: string;
-}
-
-export function getWorkTypeFilters(): DisciplineFilter[] {
-  return DISCIPLINE_ORDER.map((d) => ({ value: d, label: disciplineLabel(d) }));
 }
 
 // ── Service category project type ──

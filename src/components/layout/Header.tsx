@@ -103,6 +103,12 @@ export default function Header() {
   }, [reveal]);
   useDrawerEffects(drawerOpen, closeDrawer, returnFocus, menuButtonRef);
 
+  // The hidden state, once, for anything that follows the header (--header-edge in globals.css).
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-header-hidden", hidden);
+    return () => document.documentElement.removeAttribute("data-header-hidden");
+  }, [hidden]);
+
   const className = `site-header${scrolled ? " site-header--scrolled" : ""}${hidden ? " site-header--hidden" : ""}`;
   return (
     <>
