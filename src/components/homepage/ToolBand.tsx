@@ -15,7 +15,7 @@ import { QUESTIONS, VITALS } from "@/lib/brand-pulse/content";
 import "./tool-band.css";
 
 export const TOOL_BAND = {
-  label: "(04) Two ways to start",
+  label: "(05) Two ways to start",
   heading: "Start with a check, or start with a plan.",
   pulse: {
     tag: "Brand Pulse · About a minute",

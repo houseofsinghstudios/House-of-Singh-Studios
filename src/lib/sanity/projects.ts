@@ -1,5 +1,5 @@
 import { client } from "./client";
-import { shareImageUrl, urlFor } from "./image";
+import { shareImageUrl, urlFor, wwdPreviewUrl } from "./image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { readSanity } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
@@ -8,8 +8,10 @@ import type { Project } from "@/data/projects";
 import type { PortableTextBlock as PortableTextBody } from "@portabletext/react";
 import type { BlockImage, CaseStudyBlock, ProjectDetail, ProjectDetailImage } from "@/data/projectDetails";
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
-import { sortHeroProjects, type HeroFit, type HeroImage, type HeroProject } from "@/lib/homepage-hero";
+import { heroObjectPosition, sortHeroProjects, type HeroFit, type HeroImage, type HeroProject } from "@/lib/homepage-hero";
 import { sortIndexProjects, toIndexProject, type IndexProject, type IndexProjectDoc } from "@/lib/work-index";
+import { pickWork, type WwdProjectDoc, type WwdWork } from "@/lib/what-we-do";
+import { services } from "@/data/services";
 
 // ── GROQ Queries ──
 
@@ -748,5 +750,36 @@ export async function getProjectsByType(types: ProjectType[]): Promise<Record<Pr
       return grouped;
     },
     empty
+  );
+}
+
+// ── Homepage (02) What we do: the real work behind each discipline ──
+
+// Projects with at least one "What we do" entry. Ordered and filtered in code (src/lib/what-we-do.ts).
+const whatWeDoQuery = `*[_type == "caseStudy" && defined(slug.current) && count(whatWeDo) > 0 && ${PUBLISHED}] {
+  "slug": slug.current,
+  title,
+  heroName,
+  projectType,
+  homeOrder,
+  publishedAt,
+  "whatWeDo": whatWeDo[] {
+    discipline,
+    "image": image { alt, hotspot, crop, "url": asset->url }
+  }
+}`;
+
+// For each of the 30 disciplines, the case study that shows it: the first project listing it that is
+// marked client or Commons (never an exploration, a Parallel project or one with no type), by Homepage
+// order, then newest. A discipline without one stays plain text.
+export async function getWhatWeDoWork(): Promise<Record<string, WwdWork>> {
+  const disciplines = services.flatMap((s) => s.deliverables.map((d) => d.name));
+  return readSanity(
+    "what we do work",
+    async () => {
+      const docs = await client.fetch<WwdProjectDoc[]>(whatWeDoQuery);
+      return pickWork(docs || [], disciplines, (image) => ({ src: wwdPreviewUrl({ url: image.url!, crop: image.crop }), position: heroObjectPosition(image) }));
+    },
+    () => ({})
   );
 }

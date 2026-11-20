@@ -100,7 +100,7 @@ export function buildDocument(project, refs) {
     disciplines: meta.disciplines,
     deliverables: meta.deliverables,
     featured: meta.featured,
-    // Always written, also with --overwrite: "client" when project.json does not set it.
+    // Always written, also with --overwrite. Required in project.json (checkProjectType).
     projectType: meta.projectType,
     publishedAt: `${meta.publishedAt}T12:00:00.000Z`,
     seoDescription: meta.seoDescription,

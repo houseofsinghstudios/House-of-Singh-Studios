@@ -52,7 +52,7 @@ test("HeroSection: a server component with the hidden H1 unchanged, the label, o
   assert.match(src, /heroWord: project\.heroWord,/, "the word for each project's turn");
   assert.doesNotMatch(src, /heroField/, "the homepage does not read the field");
   const page = read("src/app/(site)/(home)/page.tsx");
-  assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getIndexProjects\(\)\]\)/);
+  assert.match(page, /Promise\.all\(\[getHeroProjects\(\), getIndexProjects\(\), getWhatWeDoWork\(\)\]\)/);
   assert.match(page, /export const revalidate = 60;/);
 });
 

@@ -79,7 +79,7 @@ export default function ProofSection() {
       `}</style>
 
       <section ref={sectionRef} className="proof-section">
-        <p className="proof-label">(07) Proof</p>
+        <p className="proof-label">(04) Proof</p>
 
         <div className="proof-grid">
           {ITEMS.map((item, i) => (

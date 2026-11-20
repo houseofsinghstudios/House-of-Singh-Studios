@@ -270,18 +270,6 @@ body {
   to { transform: scaleX(1); }
 }
 
-.svc-accordion-row {
-  display: grid;
-  grid-template-columns: 48px 1fr 88px;
-  position: relative;
-  text-decoration: none;
-  color: inherit;
-  border-top: 1px solid var(--border);
-  isolation: isolate;
-}
-.svc-accordion-row:last-child {
-  border-bottom: 1px solid var(--border);
-}
 /* Full-bleed hover background, shared by the list rows (.row-bleed): Services rows, the Work list,
    the next project row and the About process steps. Each row sets its own hover strength. */
 .row-bleed::before {
@@ -295,43 +283,6 @@ body {
   opacity: 0;
   transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1);
   z-index: -1;
-}
-@media (hover: hover) {
-  .svc-accordion-row:hover::before {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 1023px) {
-  .svc-accordion-row {
-    grid-template-columns: 36px 1fr 44px;
-    cursor: pointer;
-  }
-
-  .svc-accordion-row::before {
-    display: none;
-  }
-
-  /* Stagger entrance for mobile */
-  .svc-accordion-row {
-    opacity: 0;
-    transform: translateY(16px);
-    transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-                transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .svc-accordion-row.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .svc-accordion-row:nth-child(2).in-view { transition-delay: 0.1s; }
-  .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.2s; }
-  .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.3s; }
-}
-
-@media (max-width: 600px) {
-  .svc-accordion-row {
-    grid-template-columns: 36px 1fr 40px;
-  }
 }
 
 /* ── Arrow links ── */
@@ -2106,30 +2057,6 @@ body.nav-open {
 /* ── Interaction 3: Staggered Scroll Reveals ── */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    /* Services accordion stagger (desktop only; mobile has tap accordion) */
-    @media (min-width: 1024px) {
-      .svc-accordion-row:nth-child(1) {
-        animation: revealFadeUp linear both;
-        animation-timeline: view();
-        animation-range: entry 0% entry 30%;
-      }
-      .svc-accordion-row:nth-child(2) {
-        animation: revealFadeUp linear both;
-        animation-timeline: view();
-        animation-range: entry 5% entry 35%;
-      }
-      .svc-accordion-row:nth-child(3) {
-        animation: revealFadeUp linear both;
-        animation-timeline: view();
-        animation-range: entry 10% entry 40%;
-      }
-      .svc-accordion-row:nth-child(4) {
-        animation: revealFadeUp linear both;
-        animation-timeline: view();
-        animation-range: entry 15% entry 45%;
-      }
-    }
-
     /* About page stagger */
     .about-process-step:nth-child(odd) {
       animation: revealFadeUp linear both;
@@ -2361,23 +2288,6 @@ td a {
     }
     .founder-photo-reveal.in-view {
       clip-path: inset(0% 0% 0% 0%);
-    }
-
-    /* ── Services accordion rows (desktop only; mobile has its own stagger) ── */
-    @media (min-width: 1024px) {
-      .svc-accordion-row {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
-                    transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-      }
-      .svc-accordion-row.in-view {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .svc-accordion-row:nth-child(2).in-view { transition-delay: 0.06s; }
-      .svc-accordion-row:nth-child(3).in-view { transition-delay: 0.12s; }
-      .svc-accordion-row:nth-child(4).in-view { transition-delay: 0.18s; }
     }
 
     /* ── reveal-clip: image curtain wipe (fallback) ── */
@@ -2774,14 +2684,5 @@ td a {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none;
-  }
-}
-/* Mobile homepage service rows: visible at once. Their stagger waits for the scroll observer's
-   in-view class, which never comes when motion is reduced. */
-@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
-  .svc-accordion-row {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
