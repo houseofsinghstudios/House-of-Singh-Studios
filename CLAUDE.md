@@ -491,7 +491,7 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 - Related thinking, related work and related services modules, and src/lib/linking.ts.
 - Sitemap lastmod (the static page date map) and llms.txt with its tests.
 - Redirects in next.config.ts, and the intentional /initiatives/foundry 404.
-- Consent gated GA4 and Clarity (nothing loads before consent).
+- Consent gated GA4, Clarity and Speed Insights: in strict regions nothing loads before consent; elsewhere they load by default with notice and opt out (src/lib/consent.ts)
 - The analytics helper (src/lib/analytics.ts): page view parameters, trackOnce, the "set" call.
 - Lead events and the ?hos_internal and ?hos_debug flags.
 - Lead source capture (src/lib/lead-source.ts, src/lib/referrer.ts).

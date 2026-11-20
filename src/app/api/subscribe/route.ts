@@ -1,4 +1,5 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
+import { refuseRequest } from "@/lib/request-guards";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { cleanField } from "@/lib/lead";
 import { checkSubscribeEmail, SUBSCRIBE_EMAIL_MAX } from "@/lib/subscribe";
@@ -18,6 +19,10 @@ const isRateLimited = createRateLimiter(5);
 // Logs never include the email address or the webhook URL.
 export async function POST(request: Request) {
   try {
+    // Only JSON from the site itself (src/lib/request-guards.ts), before the rate limiter or the body.
+    const refused = refuseRequest(request);
+    if (refused) return refused;
+
     if (isRateLimited(clientIp(request))) {
       return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }

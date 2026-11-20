@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { refuseRequest } from "@/lib/request-guards";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { checkCareers, cleanCareers } from "@/lib/careers";
@@ -13,6 +14,10 @@ const isRateLimited = createRateLimiter(5);
 
 export async function POST(request: NextRequest) {
   try {
+    // Only JSON from the site itself (src/lib/request-guards.ts), before the rate limiter or the body.
+    const refused = refuseRequest(request);
+    if (refused) return refused;
+
     if (isRateLimited(clientIp(request))) {
       return json({ error: "Too many requests. Please try again later." }, 429);
     }

@@ -1,11 +1,11 @@
 import { ViewTransitions } from "next-view-transitions";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "../globals.css";
 import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FooterReveal from "@/components/layout/FooterReveal";
 import ClientShell from "@/components/ClientShell";
+import ConsentedSpeedInsights from "@/components/ConsentedSpeedInsights";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
 import ConsentManager from "@/components/consent/ConsentManager";
@@ -38,7 +38,8 @@ export default async function SiteLayout({
         <Footer consentEnabled={analyticsEnabled} />
       </div>
       <FooterReveal />
-      <SpeedInsights />
+      {/* Speed Insights follows the same consent rule as GA4 and Clarity (src/lib/consent.ts). */}
+      <ConsentedSpeedInsights />
       {analyticsEnabled && <GoogleAnalytics />}
       {analyticsEnabled && <MicrosoftClarity />}
       {/* The studio and its founder, on every site page. Other nodes reference them by @id. */}

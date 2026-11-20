@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { forbiddenOrigin, isJsonRequest, originAllowed } from "@/lib/request-guards";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
 import { cleanSubmissionId, isEmail } from "@/lib/form-input";
@@ -47,8 +48,14 @@ export async function POST(request: Request) {
   try {
     log.info("request received");
 
+    // A browser post from another website is refused (src/lib/request-guards.ts).
+    if (!originAllowed(request)) {
+      log.info("foreign origin rejected");
+      return forbiddenOrigin();
+    }
+
     // Only the JSON the contact page sends is accepted. A plain form post is never read or treated as a lead.
-    if (!(request.headers.get("content-type") || "").toLowerCase().startsWith("application/json")) {
+    if (!isJsonRequest(request)) {
       log.info("non JSON request rejected");
       return new NextResponse(NO_SCRIPT_PAGE, { status: 415, headers: { "content-type": "text/html; charset=utf-8" } });
     }

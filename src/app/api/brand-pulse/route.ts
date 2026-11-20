@@ -1,4 +1,5 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
+import { refuseRequest } from "@/lib/request-guards";
 import { createRateLimiter } from "@/lib/rate-limit";
 import { referralCode } from "@/lib/campaign";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
@@ -125,6 +126,10 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
 
 export async function POST(request: Request) {
   try {
+    // Only JSON from the site itself (src/lib/request-guards.ts), before the rate limiter or the body.
+    const refused = refuseRequest(request);
+    if (refused) return refused;
+
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded?.split(",")[0]?.trim() || "unknown";
     if (isRateLimited(ip)) {
