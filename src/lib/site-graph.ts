@@ -50,7 +50,6 @@ export function siteGraph({ founderImage }: { founderImage?: string } = {}) {
         parentOrganization: PARENT_ORG,
         numberOfEmployees: { "@type": "QuantitativeValue", value: "1-10" },
         foundingDate: "2023",
-        priceRange: "$$$$",
       },
       {
         "@type": "Person",

@@ -1,9 +1,8 @@
 import { defineType, defineField } from "sanity";
-import { BRAND_FOUNDATION } from "../../src/data/packages";
 
-// Singleton: one document, _id "servicePricing". Read by the Project Planner on the server.
-// Brand identity has no number here: it always uses the Brand Foundation package price set in
-// src/data/packages.ts, so the two can never disagree.
+// Singleton: one document, _id "servicePricing". NOT READ BY THE SITE since 20 Nov 2026: the site
+// never shows the studio's own prices, and the Project Planner ends in a call. The fields stay as they
+// were, so the published document is untouched; the schema and the document can be removed later.
 
 const priced = (name: string, title: string) =>
   defineField({
@@ -39,13 +38,13 @@ export default defineType({
   name: "servicePricing",
   title: "Service Pricing",
   type: "document",
-  description: "Starting prices shown in the Project Planner. Published changes follow the website's content refresh schedule.",
+  description: "Not used by the website since 20 Nov 2026: the site shows no studio prices. Kept for reference until it is removed.",
   fields: [
     defineField({
       name: "identity",
       title: "Brand identity",
       type: "object",
-      description: `Uses the Brand Foundation package price (currently ${BRAND_FOUNDATION.price}). That price is set with the packages in the site code, not here. This switch only decides whether it is shown in the planner.`,
+      description: "Not used by the website.",
       options: { collapsible: false },
       fields: [
         defineField({

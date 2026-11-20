@@ -67,7 +67,9 @@ test("the studio: founded in 2023, a venture of House of Singh", () => {
     founder: { "@id": PERSON },
   });
   // Every other studio field is as before.
-  for (const key of ["name", "url", "logo", "image", "description", "email", "address", "areaServed", "knowsAbout", "sameAs", "numberOfEmployees", "priceRange"]) assert.ok(key in s, key);
+  for (const key of ["name", "url", "logo", "image", "description", "email", "address", "areaServed", "knowsAbout", "sameAs", "numberOfEmployees"]) assert.ok(key in s, key);
+  // No price signal of the studio's own, not even a range symbol (decided 20 Nov 2026).
+  assert.ok(!("priceRange" in s), "no priceRange");
   assert.equal(s.name, "House of Singh Studios");
   assert.deepEqual(s["@type"], ["ProfessionalService", "Organization"]);
 });

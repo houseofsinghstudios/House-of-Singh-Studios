@@ -8,7 +8,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { buildBrief, validateAnswers, withNeeds, withPrimary, type Draft } from "@/lib/project-planner/engine";
 import { bookingUrl } from "@/lib/project-planner/links";
 import { FLOW, INTRO } from "@/lib/project-planner/content";
-import type { ActionId, Optional, Pricing, ServiceId } from "@/lib/project-planner/types";
+import type { ActionId, Optional, ServiceId } from "@/lib/project-planner/types";
 import PlannerIntro from "./PlannerIntro";
 import PlannerStep, { type StepKey } from "./PlannerStep";
 import PlannerBrief, { type CaseStudyLink } from "./PlannerBrief";
@@ -20,7 +20,6 @@ import { readLeadSource } from "@/lib/lead-source";
 import "./planner.css";
 
 interface Props {
-  pricing: Pricing;
   related: CaseStudyLink[];
   initialService: ServiceId | null;
   // ?begin=1: skip the intro and open the first question, with any preselected service showing.
@@ -39,7 +38,7 @@ function scrollToTop(el: HTMLElement | null) {
   else el.scrollIntoView({ block: "start" });
 }
 
-export default function ProjectPlanner({ pricing, related, initialService, begin = false }: Props) {
+export default function ProjectPlanner({ related, initialService, begin = false }: Props) {
   const [screen, setScreen] = useState<Screen>(begin ? "step" : "intro");
   const [stepIndex, setStepIndex] = useState(0);
   const [draft, setDraft] = useState<Draft>(() => emptyDraft(initialService));
@@ -55,7 +54,7 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
   const steps = stepsFor(draft);
   const valid = useMemo(() => validateAnswers(draft), [draft]);
   const answers = valid.ok ? valid.answers : null;
-  const brief = useMemo(() => (answers ? buildBrief(answers, pricing, optional) : null), [answers, pricing, optional]);
+  const brief = useMemo(() => (answers ? buildBrief(answers) : null), [answers]);
 
   function go(next: Screen, index = stepIndex) {
     setScreen(next);
@@ -170,7 +169,7 @@ export default function ProjectPlanner({ pricing, related, initialService, begin
               related={related}
               bookingHref={bookingUrl(briefId, brief, answers)}
               onEditStep={(step) => { setEditing(true); go("step", step - 1); }}
-              onOptional={(patch) => { setOptional((o) => ({ ...o, ...patch })); if (patch.investment) announce(); }}
+              onOptional={(patch) => setOptional((o) => ({ ...o, ...patch }))}
               onAction={onAction}
               onEdit={() => { setEditing(true); go("step", 0); }}
               onPrint={() => window.print()}

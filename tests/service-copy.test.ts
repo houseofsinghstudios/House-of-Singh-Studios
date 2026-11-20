@@ -42,10 +42,12 @@ test("price only where it is asked: a dollar figure only in answers to cost ques
     if (/cost|how much/i.test(f.question)) { if (figure) asked.push(f.question); continue; }
     assert.ok(!figure, `${s.slug}: "${f.question}" names a price but does not ask about one`);
   }
-  assert.ok(asked.length >= 4, "the cost questions still answer with figures");
+  // Market figures only (decided 20 Nov 2026): the video answer gives the market in words, since its only
+  // figure was the studio's own starting price.
+  assert.ok(asked.length >= 3, "the cost questions still answer with market figures");
   const branding = services.find((s) => s.slug === "brand-identity")!.faqs!.find((f) => f.question === "How much does branding cost in Canada?")!;
   assert.doesNotMatch(plainText(branding.answer), /projects start from/i, "no studio starting price");
-  assert.ok(plainText(branding.answer).includes("The Project Planner gives you a personal estimate for your business in two minutes."));
+  assert.ok(plainText(branding.answer).includes("Plan your project in two minutes with the Project Planner. We come to the call prepared."));
 });
 
 test("Canadian spelling", () => {

@@ -24,7 +24,7 @@ test("origin and path only; anything else is dropped", () => {
 test("Project Planner: the server trims whatever the browser sent", () => {
   const e = parseEvent({ event: "started", briefId: "3f1c2b6e-8a4d-4c1e-9b7a-2d5e6f708192", attribution: { referrer: LEAKY } });
   assert.ok(typeof e !== "string");
-  assert.equal((buildPayload(e, null, "2026-10-29T00:00:00.000Z") as { attribution: { referrer: string } }).attribution.referrer, "https://www.google.com/search");
+  assert.equal((buildPayload(e, "2026-10-29T00:00:00.000Z") as { attribution: { referrer: string } }).attribution.referrer, "https://www.google.com/search");
 });
 
 const realFetch = globalThis.fetch;

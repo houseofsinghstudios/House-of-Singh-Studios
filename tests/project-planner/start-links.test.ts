@@ -28,6 +28,6 @@ test("the n8n payload records the band placement as entryPlacement", () => {
   const attribution = { source: "", medium: "", campaign: "", landingPage: "/start", entryPlacement: "home_band_chip", referrer: "https://studios.houseofsingh.com/" };
   const e = parseEvent({ event: "started", briefId: "3f1c2b6e-8a4d-4c1e-9b7a-2d5e6f708192", attribution });
   assert.ok(typeof e !== "string");
-  const p = buildPayload(e, null, "2026-10-21T12:00:00.000Z") as { attribution: { entryPlacement: string } };
+  const p = buildPayload(e, "2026-10-21T12:00:00.000Z") as { attribution: { entryPlacement: string } };
   assert.equal(p.attribution.entryPlacement, "home_band_chip");
 });

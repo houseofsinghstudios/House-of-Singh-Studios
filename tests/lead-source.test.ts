@@ -5,7 +5,6 @@ import { afterEach, test } from "node:test";
 import assert from "node:assert/strict";
 import { LEAD_SOURCE_KEY, cleanLeadSource, leadSourceAtStart, readLeadSource, rememberLeadSource } from "@/lib/lead-source";
 import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
-import { pricingFromDocument } from "@/lib/project-planner/pricing";
 import { allAnswers } from "./brand-pulse/all-answers";
 import { POST as lead } from "@/app/api/lead/route";
 import { POST as brandPulse } from "@/app/api/brand-pulse/route";
@@ -107,13 +106,13 @@ test("Project Planner: the sent brief carries the lead source, earlier events ne
   const who = { name: "Test", email: "test@example.test", company: "", location: "", note: "", marketingConsent: false };
   const sent = parseEvent({ event: "sent", briefId: ID, attribution: {}, answers, optional: {}, contact: who, leadSource: FULL });
   assert.ok(typeof sent !== "string");
-  assert.deepEqual((buildPayload(sent, pricingFromDocument(null), "2026-10-29T00:00:00.000Z") as Record<string, unknown>).leadSource, FULL);
+  assert.deepEqual((buildPayload(sent, "2026-10-29T00:00:00.000Z") as Record<string, unknown>).leadSource, FULL);
   const direct = parseEvent({ event: "sent", briefId: ID, attribution: {}, answers, optional: {}, contact: who, leadSource: DIRECT });
   assert.ok(typeof direct !== "string");
-  assert.deepEqual((buildPayload(direct, pricingFromDocument(null), "2026-10-29T00:00:00.000Z") as Record<string, unknown>).leadSource, DIRECT);
+  assert.deepEqual((buildPayload(direct, "2026-10-29T00:00:00.000Z") as Record<string, unknown>).leadSource, DIRECT);
   const viewed = parseEvent({ event: "viewed", briefId: ID, attribution: {}, answers, leadSource: FULL });
   assert.ok(typeof viewed !== "string");
-  assert.ok(!("leadSource" in buildPayload(viewed, pricingFromDocument(null), "2026-10-29T00:00:00.000Z")));
+  assert.ok(!("leadSource" in buildPayload(viewed, "2026-10-29T00:00:00.000Z")));
 });
 
 test("Brand Pulse: the email and details forms carry the lead source; the completed result does not", async () => {

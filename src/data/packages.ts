@@ -1,14 +1,11 @@
-// The brand packages: the single source for their prices and timelines. The public Packages page is
-// retired; the Project Planner reads the Brand Foundation price and the package durations from here.
-// Prices are CAD, excluding HST.
+// The brand packages: their contents and timelines. The public Packages page is retired; the Project
+// Planner reads the package durations from here. No prices: the site never shows the studio's own
+// prices (decided 20 Nov 2026).
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-import { formatDollars } from "@/lib/money";
 
 export interface PackageTier {
   number: string;
   title: string;
-  startsFrom: number;
-  readonly price: string;
   description: string;
   includes: string[];
   timeline: string;
@@ -21,8 +18,6 @@ export const PACKAGE_TIERS: PackageTier[] = [
   {
     number: "01",
     title: "Brand Foundation",
-    startsFrom: 4000,
-    get price() { return formatDollars(this.startsFrom); },
     description:
       "For businesses launching or formalizing their visual identity for the first time.",
     includes: [
@@ -40,8 +35,6 @@ export const PACKAGE_TIERS: PackageTier[] = [
   {
     number: "02",
     title: "Brand Identity System",
-    startsFrom: 10000,
-    get price() { return formatDollars(this.startsFrom); },
     description:
       "For businesses that need a complete visual identity built to scale.",
     includes: [
@@ -61,8 +54,6 @@ export const PACKAGE_TIERS: PackageTier[] = [
   {
     number: "03",
     title: "Brand Ecosystem",
-    startsFrom: 20000,
-    get price() { return formatDollars(this.startsFrom); },
     description:
       "For businesses that need brand identity, digital presence, content systems, and ongoing creative direction under one roof.",
     includes: [
@@ -79,6 +70,3 @@ export const PACKAGE_TIERS: PackageTier[] = [
     recommended: false,
   },
 ];
-
-// The entry package. Its price is the brand identity starting price in the Project Planner.
-export const BRAND_FOUNDATION = PACKAGE_TIERS[0];

@@ -2,9 +2,9 @@
 
 export const SERVICE_IDS = ["identity", "website", "photo", "video", "packaging", "strategy", "unsure"] as const;
 export type ServiceId = (typeof SERVICE_IDS)[number];
-// Services with a starting price. "unsure" never has one.
-export const PRICED_SERVICES = ["identity", "website", "photo", "video", "packaging", "strategy"] as const;
-export type PricedService = (typeof PRICED_SERVICES)[number];
+// Services the visitor can name, each with its own priorities. "unsure" is not one of them.
+export const NAMED_SERVICES = ["identity", "website", "photo", "video", "packaging", "strategy"] as const;
+export type NamedService = (typeof NAMED_SERVICES)[number];
 
 // P2: the starting point options depend on the primary service.
 export const START_IDS = {
@@ -29,9 +29,9 @@ export const PRIORITY_IDS = {
   video: ["brand_story", "campaign_video", "short_form", "interviews", "demos"],
   packaging: ["pack_system", "variants", "print_ready", "production"],
   strategy: ["positioning", "messaging", "workshop", "direction", "governance"],
-} as const satisfies Record<PricedService, readonly string[]>;
+} as const satisfies Record<NamedService, readonly string[]>;
 export const HELP = "help";
-export type PriorityId = (typeof PRIORITY_IDS)[PricedService][number] | typeof HELP;
+export type PriorityId = (typeof PRIORITY_IDS)[NamedService][number] | typeof HELP;
 
 export const TIMING_IDS = ["now", "one_three", "three_six", "flexible"] as const;
 export type TimingId = (typeof TIMING_IDS)[number];
@@ -64,33 +64,15 @@ export interface Optional {
   importantDate?: string;
 }
 
-// Where the starting prices came from. "sanity": the published Service Pricing document.
-// "initial": the request worked but nothing is published yet, so the owner approved initial prices apply.
-// "unavailable": the request failed, so no price is shown.
-export type PriceSource = "sanity" | "initial" | "unavailable";
-
-export interface Pricing {
-  source: PriceSource;
-  // CAD, excluding HST. null means do not show a figure for this service.
-  prices: Record<PricedService, number | null>;
-}
-
-export type ActionId = "book" | "send" | "focused";
+// The brief ends in the call: "book" chooses a time, "send" sends the brief with contact details.
+export type ActionId = "book" | "send";
 
 // What a case study says it delivered (caseStudy.workDelivered in Sanity).
 export const DELIVERED_IDS = ["identity", "strategy", "website_design", "website_build", "photography", "video", "packaging", "print"] as const;
 export type DeliveredId = (typeof DELIVERED_IDS)[number];
 
-export interface PriceLine {
-  service: PricedService;
-  label: string;
-  text: string;
-  amount: number | null;
-}
-
 export interface Brief {
   engineVersion: string;
-  priceSource: PriceSource;
   intro: string;
   headline: string;
   primaryService: ServiceId;
@@ -101,16 +83,10 @@ export interface Brief {
   dependencyNote: string | null;
   success: string;
   toConfirm: string[];
-  investment: {
-    title: string;
-    lines: PriceLine[];
-    message: string | null;
-    timelines: { label: string; text: string } | null;
-    note: string;
-  };
+  // How long the brand packages take: only for brand identity as the main focus. Never a price.
+  timelines: { title: string; label: string; text: string } | null;
   relatedWork: { deliveredType: DeliveredId; title: string } | null;
   nextSteps: { title: string; text: string };
-  fitNote: string | null;
   actions: { primary: ActionId; secondary: ActionId | null };
   serviceSlug: string;
 }

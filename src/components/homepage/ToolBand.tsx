@@ -26,7 +26,7 @@ export const TOOL_BAND = {
   planner: {
     tag: "Project Planner · Two minutes",
     heading: "Know what you need?",
-    body: "Turn it into a first phase brief with starting prices, before you share any details.",
+    body: "Plan your project in two minutes. We come to the call prepared.",
     question: "What are you looking to create or improve?",
     button: "Plan Your Project",
   },
