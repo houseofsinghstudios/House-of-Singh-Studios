@@ -118,9 +118,12 @@ const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined
 
 // The work index (homepage Selected work and /work): every published case study, with only what the
 // index shows. Each image resolves to its asset id (to drop repeats), file, size, alt text and blurred
-// placeholder, as the hero's images do. No page text, no overview. Mapped in src/lib/work-index.ts.
+// placeholder, as the hero's images do, with the editor's hotspot and crop. No page text, no overview.
+// Mapped in src/lib/work-index.ts.
 const indexImageProjection = `{
     alt,
+    hotspot,
+    crop,
     "id": asset->_id,
     "url": asset->url,
     "width": asset->metadata.dimensions.width,

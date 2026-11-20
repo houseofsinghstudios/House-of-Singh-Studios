@@ -502,7 +502,9 @@ homepage's Selected work and on /work, not shown yet): "Business type" (sector) 
 Events, Beauty and fragrance, Fashion and jewellery, Home and lifestyle, or Other (on /work, in no business
 type; unset reads as Other), the list in src/lib/work-index.ts; "Index images" are up to six images with
 required alt text, in order, for the strip under the project name and the image window (empty: the featured
-image, then the page blocks' images in page order, each asset once, six at most); "Homepage order" sorts the
+image, then the page blocks' images in page order, each asset once, six at most; each image carries its hotspot
+and crop, for heroObjectPosition); "Homepage order" sorts the
 projects with "Show on Homepage" on in Selected work, lowest first, six at most. Read by getIndexProjects
 (src/lib/sanity/projects.ts), mapped, ranked and selected in src/lib/work-index.ts (client work first, then
-newest; a chosen business type or discipline moves matches to the top and hides nothing; ?for= and ?in=).
+newest; a chosen business type or discipline moves matches to the top and hides nothing; ?for= and ?in=). The year
+shown is the Studio "Year" only, nothing when it is empty; the publish date only orders the list.

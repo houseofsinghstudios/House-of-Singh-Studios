@@ -3,6 +3,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { heroObjectPosition } from "@/lib/homepage-hero";
 import {
   BUSINESS_TYPES,
   BUYER_DISCIPLINES,
@@ -87,9 +88,11 @@ test("a project as the index shows it: label, delivered line, year, type", () =>
   assert.equal(projects.find((p) => p.slug === "the-floreans")!.deliveredLine, "Identity and packaging");
   assert.equal(projects.find((p) => p.slug === "bruno-bakehouse")!.deliveredLine, "Identity");
   assert.equal(projects.find((p) => p.slug === "studio-notes")!.deliveredLine, "");
-  // The year field wins; without it, the year it was published.
+  // The Studio year, or null when it is not set: never the publish date (that only orders the list).
   assert.equal(projects.find((p) => p.slug === "christmas-carnival")!.year, 2023);
-  assert.equal(tairn.year, 2026);
+  assert.equal(tairn.year, null, "no year set, though published in 2026");
+  assert.equal(tairn.publishedAt, "2026-10-14T12:00:00.000Z");
+  assert.equal(toIndexProject({ title: "T", slug: "t", year: Number.NaN })!.year, null);
   assert.equal(projects.find((p) => p.slug === "nivora")!.isExploration, true);
   // No business type set in Studio reads as Other, with no label.
   const untyped = projects.find((p) => p.slug === "no-type-yet")!;
@@ -182,6 +185,26 @@ test("image fallback: the Index images when set, otherwise the featured image th
   assert.deepEqual(skipped.map((i) => i.alt), ["Title"]);
   // The blur placeholder comes through when there is one.
   assert.equal(indexImages({ featuredImage: img("q", { lqip: "data:image/jpeg;base64,AAAA" }) }, "T")[0].lqip, "data:image/jpeg;base64,AAAA");
+});
+
+test("images carry the editor's hotspot and crop, so the focal point works as in the hero", () => {
+  const hotspot = { x: 0.7, y: 0.4 };
+  const crop = { top: 0, bottom: 0.1, left: 0.1, right: 0.3 };
+  const [own] = indexImages({ indexImages: [img("a", { hotspot, crop })] }, "Own");
+  assert.deepEqual(own.hotspot, hotspot);
+  assert.deepEqual(own.crop, crop);
+  // Through the fallback too: the featured image and the block images.
+  const fallback = indexImages({ featuredImage: img("cover", { hotspot: { x: 0.2, y: 0.8 } }), blockImages: [{ image: img("b", { hotspot }) }] }, "Fallback");
+  assert.deepEqual(fallback.map((i) => i.hotspot), [{ x: 0.2, y: 0.8 }, hotspot]);
+  // The hero's helper reads it as is: the crop keeps 0.1 to 0.7 across and 0 to 0.9 down, so x 0.7 is
+  // its right edge (100%) and y 0.4 is 44.4% of the way down.
+  assert.equal(heroObjectPosition(own), "100% 44.4%");
+  assert.equal(heroObjectPosition(fallback[0]), "20% 80%");
+  // None set, or half set: left off, so the image is centred.
+  const plain = indexImages({ featuredImage: img("p", { hotspot: null, crop: { top: 0.1 } }) }, "Plain")[0];
+  assert.equal("hotspot" in plain, false);
+  assert.equal("crop" in plain, false);
+  assert.equal(heroObjectPosition(plain), "50% 50%");
 });
 
 test("parseWorkParams: ?for= a business type and ?in= a discipline; unknown values are ignored", () => {

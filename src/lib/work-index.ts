@@ -5,7 +5,7 @@
 // A visitor can say what kind of business they run ("Work for food and drink brands") and which
 // discipline they care about ("in packaging"). Matching projects move to the top; nothing is hidden.
 
-import { compareClientFirst } from "@/lib/homepage-hero";
+import { compareClientFirst, type HeroImage } from "@/lib/homepage-hero";
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
 
 // ── Business types (Studio: "Business type", the sector field) ──
@@ -68,12 +68,17 @@ export function buyerDisciplines(disciplines: readonly unknown[] | null | undefi
 
 // ── What the UI reads ──
 
+// The url is the original file; the editor's hotspot and crop (fractions of the original, as Sanity
+// stores them) come along when set, so the image window can keep the focal point in frame the way the
+// hero does (heroObjectPosition in src/lib/homepage-hero.ts).
 export interface IndexImage {
   url: string;
   width: number;
   height: number;
   alt: string;
   lqip?: string;
+  hotspot?: HeroImage["hotspot"];
+  crop?: HeroImage["crop"];
 }
 
 export interface IndexProject {
@@ -87,6 +92,7 @@ export interface IndexProject {
   disciplines: BuyerDisciplineId[];
   // The buyer disciplines as a phrase: "Identity, packaging and photography". Empty when none.
   deliveredLine: string;
+  // The Studio "Year" field; null when it is not set (then no year is shown). Never the publish date.
   year: number | null;
   isExploration: boolean;
   // Kept for the order: client work first (projectType), then newest (publishedAt).
@@ -121,6 +127,8 @@ export interface IndexImageDoc {
   height?: number;
   alt?: string;
   lqip?: string;
+  hotspot?: { x?: number; y?: number } | null;
+  crop?: { top?: number; bottom?: number; left?: number; right?: number } | null;
 }
 
 export interface IndexProjectDoc {
@@ -141,12 +149,25 @@ export interface IndexProjectDoc {
 
 const text = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
+const num = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value);
+
+// The hotspot only when both coordinates are numbers; the crop only when all four sides are.
+function focalPoint(raw: IndexImageDoc["hotspot"]): IndexImage["hotspot"] {
+  return raw && num(raw.x) && num(raw.y) ? { x: raw.x, y: raw.y } : undefined;
+}
+
+function cropBox(raw: IndexImageDoc["crop"]): IndexImage["crop"] {
+  return raw && num(raw.top) && num(raw.bottom) && num(raw.left) && num(raw.right) ? { top: raw.top, bottom: raw.bottom, left: raw.left, right: raw.right } : undefined;
+}
+
 function toIndexImage(doc: IndexImageDoc | null | undefined, title: string): IndexImage | null {
   const url = text(doc?.url);
   const { width, height } = doc || {};
   if (!url || typeof width !== "number" || typeof height !== "number" || width <= 0 || height <= 0) return null;
   const lqip = text(doc?.lqip);
-  return { url, width, height, alt: text(doc?.alt) || title, ...(lqip ? { lqip } : {}) };
+  const hotspot = focalPoint(doc?.hotspot);
+  const crop = cropBox(doc?.crop);
+  return { url, width, height, alt: text(doc?.alt) || title, ...(lqip ? { lqip } : {}), ...(hotspot ? { hotspot } : {}), ...(crop ? { crop } : {}) };
 }
 
 // The images for the strip and the image window: the Index images when there are any; otherwise
@@ -176,9 +197,9 @@ export function toIndexProject(doc: IndexProjectDoc): IndexProject | null {
   if (!title || !slug) return null;
   const sector: SectorId = isBusinessType(doc.sector) ? doc.sector : "other";
   const disciplines = buyerDisciplines(doc.disciplines);
+  // publishedAt orders the list; it never stands in for the year.
   const publishedAt = text(doc.publishedAt);
-  const publishedYear = publishedAt ? new Date(publishedAt).getUTCFullYear() : NaN;
-  const year = typeof doc.year === "number" && Number.isFinite(doc.year) ? doc.year : Number.isFinite(publishedYear) ? publishedYear : null;
+  const year = num(doc.year) ? doc.year : null;
   const type = projectType(doc.projectType);
   return {
     slug,
