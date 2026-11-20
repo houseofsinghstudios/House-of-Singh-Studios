@@ -126,7 +126,9 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
               alt={post.featuredImage.alt || post.title}
               fill
               style={{ objectFit: "cover" }}
-              priority
+              // The article's LCP: the first large image under the title, fetched first.
+              fetchPriority="high"
+              loading="eager"
               sizes="100vw"
               {...(post.featuredImage.asset.metadata?.lqip
                 ? {

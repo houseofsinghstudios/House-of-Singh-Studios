@@ -54,7 +54,7 @@ export default function InitiativeHero({ heading, intro, programme, glance, logo
           {logo && (
             <div className="init-hero-logo svc-hero-stagger">
               {/* Decorative: the breadcrumb label above already names the programme. */}
-              <InitiativeLogo logo={logo} alt="" sizes={logoSizes(logo, "hero")} priority />
+              <InitiativeLogo logo={logo} alt="" sizes={logoSizes(logo, "hero")} />
             </div>
           )}
           <h1

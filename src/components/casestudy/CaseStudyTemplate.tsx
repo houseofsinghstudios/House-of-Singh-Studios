@@ -116,7 +116,9 @@ export default function CaseStudyTemplate({
           fill
           sizes="100vw"
           style={{ objectFit: "cover" }}
-          priority
+          // The largest thing on the first screen (the LCP): fetched first, never lazily.
+          fetchPriority="high"
+          loading="eager"
         />
       </div>
 

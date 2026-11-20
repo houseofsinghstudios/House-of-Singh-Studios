@@ -73,6 +73,8 @@ const components: PortableTextComponents = {
               src={value.src}
               alt={value.alt || "Article image"}
               fill
+              // The real column: the page less its 24px margins on phones, at most 740px wide.
+              sizes="(max-width: 787px) calc(100vw - 48px), 740px"
               style={{ objectFit: "cover" }}
             />
           </div>
