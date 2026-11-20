@@ -537,10 +537,12 @@ with hotspot, crop and a required alt; each discipline at most once per project.
 it that is marked client or Commons (explorations, Parallel projects and projects with no type are never used, so "See it in" never reads as client work when it is not), by Homepage order, then newest. The homepage (02) What
 we do links that word to the case study and shows the image in its preview.
 
-Project type (projectType, required since 20 Nov 2026; Studio: "Every project must say what it is. Explorations and
-Parallel projects never show as client work."): Client, Exploration, Parallel or Commons; new projects start as
-Client. A project without a type cannot be published. Elsewhere on the site a missing type still reads as client
-work (projectType() in src/lib/initiatives/types.ts); only What we do refuses it.
+Project type (projectType, required since 20 Nov 2026): Client, Exploration, Parallel or Commons; new projects start
+as Client. Studio requires it (a project without a type cannot be published; the field carries the three definitions)
+and the portfolio import refuses a project.json without one (scripts/import-portfolio, checkProjectType, an error
+naming the file). Every published project has a type. The client fallback in projectType()
+(src/lib/initiatives/types.ts), used by the work index, the hero order, case study labels and tags, only guards old
+data; What we do refuses an untyped project outright.
 
 Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
 homepage's Selected work and on /work): "Business type" (sector) is one of Food and drink,

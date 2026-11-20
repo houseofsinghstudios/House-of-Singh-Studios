@@ -33,12 +33,14 @@ before(() => {
 });
 after(() => fs.rmSync(root, { recursive: true, force: true }));
 
-test("checkProjectType: missing means client; every allowed value passes; anything else names the allowed values", () => {
+test("checkProjectType: missing fails naming the file; every allowed value passes; anything else names the allowed values", () => {
   const missing: Record<string, unknown> = {};
   const errors: string[] = [];
-  checkProjectType(missing, errors);
-  assert.equal(missing.projectType, "client");
-  assert.deepEqual(errors, []);
+  checkProjectType(missing, errors, "imports/bruno/project.json");
+  assert.equal(missing.projectType, undefined, "never defaulted to client");
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /^imports\/bruno\/project\.json has no "projectType"\./);
+  assert.match(errors[0], /add one of client, exploration, parallel, commons/);
 
   assert.deepEqual(PROJECT_TYPES, ["client", "exploration", "parallel", "commons"]);
   for (const value of PROJECT_TYPES) {
@@ -54,8 +56,27 @@ test("checkProjectType: missing means client; every allowed value passes; anythi
   }
 });
 
-test("validateProject: the default and an invalid value, read from project.json", async () => {
-  const ok = await validateProject("default-type", await makeProject("default-type"));
+test("import: a project.json without a type fails, naming the file, and is never imported as client work", async () => {
+  const dir = await makeProject("no-type");
+  const missing = await validateProject("no-type", dir);
+  const message = missing.errors.find((e: string) => e.includes('has no "projectType"'));
+  assert.ok(message, "a missing type is an error");
+  assert.ok(message.startsWith(`${path.relative(process.cwd(), path.join(dir, "project.json"))} has no "projectType".`), message);
+  assert.notEqual(missing.meta?.projectType, "client", "never defaulted to client");
+  // The run stops before anything is processed or uploaded.
+  const log = console.log;
+  console.log = () => {};
+  try {
+    const result = await runProject("no-type", { dryRun: true, client: null, overwrite: false, importDir: root });
+    assert.equal(result.status, "failed");
+    assert.equal(result.projectType, "");
+  } finally {
+    console.log = log;
+  }
+});
+
+test("validateProject: a typed project passes; an invalid value names the allowed values", async () => {
+  const ok = await validateProject("client-type", await makeProject("client-type", "client"));
   assert.deepEqual(ok.errors, []);
   assert.equal(ok.meta.projectType, "client");
 

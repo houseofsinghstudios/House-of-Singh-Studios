@@ -81,7 +81,8 @@ export default defineType({
       name: "projectType",
       title: "Project type",
       type: "string",
-      description: "Every project must say what it is. Explorations and Parallel projects never show as client work.",
+      description:
+        "Every project must say what it is. Explorations and Parallel projects never show as client work. Exploration: self initiated work for an invented brand. Parallel: a real business reimagined with written permission. Commons: pro bono work.",
       options: {
         // Must match src/lib/initiatives/types.ts and scripts/import-portfolio/lib/config.mjs.
         list: [

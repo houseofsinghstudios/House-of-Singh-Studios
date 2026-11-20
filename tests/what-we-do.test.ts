@@ -111,7 +111,7 @@ test("which projects count: client and Commons in; explorations, Parallel and un
   // Studio: the type is required, so every new project says what it is.
   const schema = read("sanity/schemas/caseStudy.ts");
   const field = schema.slice(schema.indexOf('name: "projectType"'), schema.indexOf('name: "heroShow"'));
-  assert.match(field, /description: "Every project must say what it is\. Explorations and Parallel projects never show as client work\.",/);
+  assert.match(field, /description:\s*"Every project must say what it is\. Explorations and Parallel projects never show as client work\. Exploration: self initiated work for an invented brand\. Parallel: a real business reimagined with written permission\. Commons: pro bono work\.",/);
   assert.match(field, /validation: \(rule\) => rule\.required\(\)/);
 });
 
