@@ -496,3 +496,15 @@ not shown on the site at the moment, kept filled for later use; "Hero images" ar
 the homepage shows the first; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
 in src/lib/homepage-hero.ts); the homepage hero shows them.
+
+Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
+homepage's Selected work and on /work, not shown yet): "Business type" (sector) is one of Food and drink,
+Events, Beauty and fragrance, Fashion and jewellery, Home and lifestyle, or Other (on /work, in no business
+type; unset reads as Other), the list in src/lib/work-index.ts; "Index images" are up to six images with
+required alt text, in order, for the strip under the project name and the image window (empty: the featured
+image, then the page blocks' images in page order, each asset once, six at most; each image carries its hotspot
+and crop, for heroObjectPosition); "Homepage order" sorts the
+projects with "Show on Homepage" on in Selected work, lowest first, six at most. Read by getIndexProjects
+(src/lib/sanity/projects.ts), mapped, ranked and selected in src/lib/work-index.ts (client work first, then
+newest; a chosen business type or discipline moves matches to the top and hides nothing; ?for= and ?in=). The year
+shown is the Studio "Year" only, nothing when it is empty; the publish date only orders the list.

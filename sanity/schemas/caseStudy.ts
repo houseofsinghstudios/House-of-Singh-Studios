@@ -5,6 +5,7 @@ import {
   heroRequiredMessage,
   heroWordCaseMessage,
 } from "../../src/lib/homepage-hero";
+import { INDEX_IMAGE_MAX, SECTOR_OPTIONS } from "../../src/lib/work-index";
 
 // Whether the document being edited shows in the homepage hero: the Homepage hero fields are
 // required only then. The checks themselves live in src/lib/homepage-hero.ts.
@@ -28,6 +29,12 @@ export default defineType({
       name: "homepageHero",
       title: "Homepage hero",
       description: "The rotating image at the top of the homepage, its caption, and the word in the homepage line.",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "workIndex",
+      title: "Work index",
+      description: "How this project shows in Selected work on the homepage and in the list on /work.",
       options: { collapsible: true, collapsed: true },
     },
     {
@@ -121,8 +128,8 @@ export default defineType({
       fieldset: "homepageHero",
       description: "Not shown on the site at the moment. Keep it filled for later use.",
       validation: (rule) => [
-        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field: it is the name in the homepage list."))),
-        rule.custom((value) => pass(heroLengthMessage(value, 22, "Keep it under 22 characters so it fits the homepage list."))).warning(),
+        rule.custom((value, context) => pass(heroRequiredMessage(value, heroShown(context), "Add the field: keep it filled for later use."))),
+        rule.custom((value) => pass(heroLengthMessage(value, 22, "Keep it under 22 characters."))).warning(),
       ],
     }),
     defineField({
@@ -142,8 +149,7 @@ export default defineType({
       title: "Hero images",
       type: "array",
       fieldset: "homepageHero",
-      description:
-        "The first image rotates on the homepage. All of them show when a visitor picks this field. 2400px wide or more.",
+      description: "One to four images. The homepage shows the first. 2400px wide or more.",
       of: [
         defineArrayMember({
           type: "image",
@@ -175,6 +181,46 @@ export default defineType({
         layout: "radio",
       },
       initialValue: "cover",
+    }),
+    defineField({
+      name: "sector",
+      title: "Business type",
+      type: "string",
+      fieldset: "workIndex",
+      description: "Which business is this work for? Used by 'your kind of business' on the homepage and /work.",
+      // The list lives in src/lib/work-index.ts, which the homepage and /work read too.
+      options: { list: SECTOR_OPTIONS, layout: "radio" },
+    }),
+    defineField({
+      name: "indexImages",
+      title: "Index images",
+      type: "array",
+      fieldset: "workIndex",
+      description:
+        "Up to six images, in order, for the small strip under the project name and the image window. Leave empty to use the featured image and the case study's own images.",
+      of: [
+        defineArrayMember({
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt Text",
+              type: "string",
+              description: "Describe the image for people using screen readers.",
+              validation: (rule) => rule.required().error("Describe the image: screen readers read it aloud."),
+            }),
+          ],
+        }),
+      ],
+      validation: (rule) => rule.max(INDEX_IMAGE_MAX).error("Use six images at most."),
+    }),
+    defineField({
+      name: "homeOrder",
+      title: "Homepage order",
+      type: "number",
+      fieldset: "workIndex",
+      description: "Lower numbers show first in Selected work on the homepage. Only projects with 'Show on Homepage' on are used, six at most.",
     }),
     defineField({
       name: "serviceCategories",
