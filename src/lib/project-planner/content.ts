@@ -1,11 +1,14 @@
 // Every visitor facing word in the Project Planner lives here, so copy can change without touching logic.
 // Plain everyday words, no design jargon, no dashes of any kind. Buttons in Title Case.
 
-import type { BandId, GoalId, PricedService, ServiceId, TimingId } from "./types";
+import type { BandId, GoalId, NamedService, ServiceId, TimingId } from "./types";
+
+// No studio prices anywhere in the planner (decided 20 Nov 2026): every path ends in the call, and
+// price comes after it, in the written proposal.
 
 export const PAGE = {
   title: "Plan Your Project",
-  description: "Plan your project in a few minutes: build a first phase brief and see a price guide, all before you share any contact details.",
+  description: "Plan your project in two minutes. We come to the call prepared.",
 };
 
 export const INTRO = {
@@ -95,7 +98,7 @@ export const PRIORITIES = {
     video: { brand_story: "A brand story film", campaign_video: "A campaign video", short_form: "Short clips for social", interviews: "Interviews or testimonials", demos: "Product demonstrations" },
     packaging: { pack_system: "One look across our products", variants: "Adapting to variants or sizes", print_ready: "Print ready artwork", production: "Help working with printers" },
     strategy: { positioning: "Positioning", messaging: "Messaging", workshop: "A workshop with our team", direction: "Creative direction", governance: "Keeping everything consistent" },
-  } as Record<PricedService, Record<string, string>>,
+  } as Record<NamedService, Record<string, string>>,
   help: "Help me prioritise",
 };
 
@@ -130,10 +133,10 @@ export const BRIEF = {
   alsoNote: "Also requested; scope and sequence to confirm together.",
   successTitle: "Success to confirm",
   toConfirmTitle: "Still to confirm",
-  investmentTitle: "Time and investment",
+  timelinesTitle: "Typical timelines",
   relatedTitle: "Related work",
   nextTitle: "What happens next",
-  next: "Share your brief. We review the scope. If it's a fit, we talk it through. A written proposal confirms deliverables, timeline and investment.",
+  next: "Choose a time for your call. We read your answers first, so the call starts with your business. After the call, a written proposal confirms deliverables, timeline and investment.",
 };
 
 // Headline by primary service and starting point. Only what the visitor asked for.
@@ -181,27 +184,6 @@ export const TO_CONFIRM: Record<ServiceId, string[]> = {
   unsure: ["What has changed in the business", "What exists today"],
 };
 
-// One line per selected service. Never added together. {price} becomes "$4,000".
-export const PRICE_LINES: Record<PricedService, string> = {
-  identity: "Brand identity work starts from {price} (Brand Foundation).",
-  website: "Websites start from {price}.",
-  photo: "Photography starts from {price} for a half day shoot.",
-  video: "Video starts from {price}.",
-  packaging: "Packaging design starts from {price} for the first product.",
-  strategy: "Strategy starts from {price} for a positioning workshop.",
-};
-// Short labels beside each price line.
-export const PRICE_LABELS: Record<PricedService, string> = {
-  identity: "Brand identity",
-  website: "Website",
-  photo: "Photography",
-  video: "Video",
-  packaging: "Packaging design",
-  strategy: "Strategy",
-};
-export const PRICE_CONFIRM = "We'll confirm the investment when we review your brief.";
-export const PRICE_UNSURE = "We'll suggest a realistic first step when we review your brief.";
-export const PRICE_NOTE = "A planning guide, not a quote. Your proposal confirms scope, price and timing. Prices exclude HST.";
 // The brand package durations. Only when brand identity is the main focus.
 export const TIMELINES = {
   label: "Package examples, not the timeline for your project.",
@@ -226,19 +208,17 @@ export const OPTIONAL = {
   importantDatePlaceholder: "For example, a launch in spring",
 };
 
-// Never say a budget fits or is aligned.
-export const FIT = {
-  below: "Your range is below our usual starting point for this work. A focused first step may be possible, and we'll tell you honestly what fits.",
-  scope: "The exact scope will determine the investment.",
-};
-
 export const ACTIONS = {
-  book: "Book a Discovery Call",
+  book: "Choose a time for your call",
   send: "Send My Brief",
-  focused: "Ask About a Focused First Phase",
   edit: "Edit Brief",
   print: "Print",
   startAgain: "Start Again",
+};
+
+// Under the main action: what happens to the answers before the call.
+export const CALL = {
+  line: "Your answers go to the studio before the call, so we start with your business.",
 };
 
 export const SEND = {

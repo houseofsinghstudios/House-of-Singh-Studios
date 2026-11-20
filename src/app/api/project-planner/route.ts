@@ -1,6 +1,5 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
-import { loadPublishedPricing } from "@/lib/project-planner/pricing";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
@@ -8,7 +7,7 @@ import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 const log = routeLog("project-planner");
 
 // Project Planner events: started, viewed, call_clicked, sent. The brief is always recomputed here
-// with the same rule based engine and the server's own prices; whatever the browser sends is ignored.
+// with the same rule based engine; whatever the browser sends is ignored. No prices.
 // Logs record only the event type and outcome. Never a name, email, note, website, full referrer,
 // the webhook URL or the n8n response body: Vercel keeps logs.
 
@@ -53,9 +52,7 @@ export async function POST(request: Request) {
       return json({ success: false, error: "Server configuration error" }, 500);
     }
 
-    // started and call_clicked carry no answers, so they never need prices.
-    const pricing = parsed.event === "viewed" || parsed.event === "sent" ? await loadPublishedPricing() : null;
-    const response = await postToN8n(target, buildPayload(parsed, pricing, new Date().toISOString()), 10000);
+    const response = await postToN8n(target, buildPayload(parsed, new Date().toISOString()), 10000);
 
     if (!response.ok) {
       log.error(`${parsed.event}: n8n webhook failed with status ${response.status}`);

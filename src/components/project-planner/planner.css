@@ -269,23 +269,6 @@
 .pp-list strong {
   font-weight: 500;
 }
-.pp-prices {
-  margin: 0 0 8px;
-}
-.pp-price {
-  display: grid;
-  grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
-  gap: 4px 16px;
-  padding: 6px 0;
-  font-size: 15px;
-}
-.pp-price dt {
-  color: var(--text-secondary);
-}
-.pp-price dd {
-  margin: 0;
-  color: var(--text-primary);
-}
 .pp-optional {
   margin-top: 16px;
   padding: 24px 0;
@@ -317,17 +300,14 @@
 .pp-textarea {
   resize: vertical;
 }
-.pp-fit {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--text-primary);
-  margin: 24px 0 0;
-  max-width: 640px;
-}
 .pp-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0 16px;
+}
+/* Under the actions: what happens to the answers before the call. */
+.pp-call-line {
+  margin-top: 4px;
 }
 .pp-quiet-links {
   display: flex;
@@ -377,15 +357,9 @@
     padding: 12px;
   }
   .pp-chip,
-  .pp-price {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
   .pp-chip-a {
     grid-column: 1 / -1;
     grid-row: 2;
-  }
-  .pp-price dd {
-    grid-column: 1 / -1;
   }
 }
 

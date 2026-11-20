@@ -313,11 +313,13 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 
 ### Packages (retired)
 - The Packages page no longer exists. /packages redirects (301) to /start, the Project Planner.
-- src/data/packages.ts stays: the planner takes its Brand Foundation price and timelines from it.
+- src/data/packages.ts stays, without prices: the planner takes the package timelines from it.
 
 ### Project Planner (/start)
-- Multi step brief builder; the result can be sent to the studio. Rendered on every request (it reads ?service and ?begin).
-- Prices come from the Sanity Service Pricing document; if Sanity fails, prices are hidden and the planner still works.
+- Multi step brief builder. Rendered on every request (it reads ?service and ?begin). Described everywhere as "Plan your project in two minutes. We come to the call prepared."
+- No prices (decided 20 Nov 2026): no price guide, starting price, fit note or budget comparison, in the planner, its brief, its result, its share image or anywhere it is described. Only the brand package timelines show, for brand identity as the main focus. The optional "investment range" question stays: it is the visitor's own range, sent to the studio.
+- It ends in the call: the brief's main action is "Choose a time for your call" (DISCOVERY_CALL_URL, with the brief's notes), under it "Your answers go to the studio before the call, so we start with your business."; "Send My Brief" stays second, with every form protection. The viewed event has already sent the answers to n8n, keyed by the brief id that the booking notes carry.
+- The Sanity Service Pricing document and its schema (sanity/schemas/servicePricing.ts) are no longer read; both stay, unchanged in their fields, until they are removed. The n8n payload keeps its price fields, always empty (docs/integrations/n8n.md).
 
 ### Brand Pulse Check (/brand-pulse)
 - Self contained multi step tool with a shareable result (?r=, never indexed). Rendered on every request.
@@ -465,6 +467,14 @@ src/lib/site-graph.ts) and described in plain sentences in llms.txt ("Who is who
   houseofsingh.com.
 - houseofsinghstudios.com redirects to https://studios.houseofsingh.com at the Vercel domain level
   (not in next.config.ts); studios.houseofsingh.com stays the only canonical address.
+
+## PRICING
+
+Decided by Maninder, 20 Nov 2026: the site never shows the studio's own prices, not even a starting
+price or a floor, in copy, the Project Planner, the contact form, structured data (no priceRange) or
+llms.txt. Every path leads to a call or meeting; price comes last, after the call, in the written
+proposal. Market price ranges for the industry (service FAQs, Insights articles) are allowed. The guard
+is tests/no-studio-prices.test.ts. Insights articles live in Sanity: edit them there to the same rule.
 
 ## Protected: intentional work, do not remove
 

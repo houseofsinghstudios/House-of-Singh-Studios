@@ -1,6 +1,6 @@
 // The brief: every section in order. No hooks: the ProjectPlanner flow owns the state and passes callbacks.
 import Link from "next/link";
-import { ACTIONS, BRIEF, OPTIONAL } from "@/lib/project-planner/content";
+import { ACTIONS, BRIEF, CALL, OPTIONAL } from "@/lib/project-planner/content";
 import { BAND_IDS, type ActionId, type BandId, type Brief, type Optional } from "@/lib/project-planner/types";
 import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "@/lib/project-planner/config";
 import OptionList from "./OptionList";
@@ -101,25 +101,13 @@ export default function PlannerBrief(p: Props) {
         <ul className="pp-list">{brief.toConfirm.map((i) => <li key={i}>{i}</li>)}</ul>
       </Section>
 
-      <Section title={brief.investment.title}>
-        {brief.investment.lines.length > 0 && (
-          <dl className="pp-prices">
-            {brief.investment.lines.map((l) => (
-              <div key={l.service} className="pp-price">
-                <dt>{l.label}</dt>
-                <dd>{l.text}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
-        {brief.investment.message && <p className="pp-text">{brief.investment.message}</p>}
-        {brief.investment.timelines && (
+      {brief.timelines && (
+        <Section title={brief.timelines.title}>
           <p className="pp-text">
-            {brief.investment.timelines.text} <span className="pp-muted">{brief.investment.timelines.label}</span>
+            {brief.timelines.text} <span className="pp-muted">{brief.timelines.label}</span>
           </p>
-        )}
-        <p className="pp-small">{brief.investment.note}</p>
-      </Section>
+        </Section>
+      )}
 
       {related.length > 0 && (
         <Section title={brief.relatedWork!.title}>
@@ -131,11 +119,12 @@ export default function PlannerBrief(p: Props) {
 
       <div className="pp-no-print">
         <OptionalDetails optional={p.optional} onOptional={p.onOptional} />
-        {brief.fitNote && <p className="pp-fit" role="status">{brief.fitNote}</p>}
+        {/* The planner ends in the call: choosing a time first, sending the brief second. */}
         <div className="pp-actions">
           <ActionButton action={brief.actions.primary} primary href={p.bookingHref} onAction={p.onAction} />
           {brief.actions.secondary && <ActionButton action={brief.actions.secondary} primary={false} href={p.bookingHref} onAction={p.onAction} />}
         </div>
+        <p className="pp-small pp-call-line">{CALL.line}</p>
         <nav className="pp-quiet-links" aria-label={BRIEF.nextTitle}>
           <button type="button" className="pp-quiet" onClick={p.onEdit}>{ACTIONS.edit}</button>
           <button type="button" className="pp-quiet" onClick={p.onPrint}>{ACTIONS.print}</button>

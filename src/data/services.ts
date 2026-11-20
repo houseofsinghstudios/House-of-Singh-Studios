@@ -174,7 +174,7 @@ export const services: ServiceData[] = [
       {
         question: "How much does branding cost in Canada?",
         answer:
-          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. [The Project Planner](/start) gives you a personal estimate for your business in two minutes. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
+          "Most Canadian businesses pay $8,000 to $35,000 for a complete brand identity from an established studio, before HST. Freelancers typically charge $1,500 to $8,000, and larger agencies start around $25,000. A rebrand usually costs about the same as a new identity, while a refresh typically costs 30 to 50 percent of one. Plan your project in two minutes with the [Project Planner](/start). We come to the call prepared. For a full breakdown, read [what brand identity design costs in Canada](/insights/how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown) and [what Toronto branding agencies charge](/insights/branding-agency-pricing-toronto).",
       },
       {
         question: "What does a brand identity package include?",
@@ -295,12 +295,12 @@ export const services: ServiceData[] = [
       {
         question: "How much does a corporate video cost?",
         answer:
-          `A corporate video with House of Singh Studios starts from $2,000 for a short interview or social video. Directed brand films, multi day shoots, extra locations, larger crews or animation increase the cost, and in Toronto, broader brand films commonly run into five figures. Length matters less than shoot days, locations, crew and editing. A well planned shoot can also produce short cut downs for social media, so one budget serves several channels. Get a personal estimate in two minutes with the [Project Planner](/start), or [book a discovery call](${DISCOVERY_CALL_URL}) to scope your video.`,
+          `A short interview or social video costs the least. Directed brand films, multi day shoots, extra locations, larger crews or animation increase the cost, and in Toronto, broader brand films commonly run into five figures. Length matters less than shoot days, locations, crew and editing. A well planned shoot can also produce short cut downs for social media, so one budget serves several channels. Plan your project in two minutes with the [Project Planner](/start), or [book a discovery call](${DISCOVERY_CALL_URL}) to scope your video.`,
       },
       {
         question: "How much does product and brand photography cost?",
         answer:
-          "Product photography on a clean background is usually priced per image, roughly $50 to $150 each in Toronto. Styled product, food and brand photography is usually priced by the half or full day, typically $1,500 to $5,000, depending on styling, locations and retouching. The real cost driver is how many final images you need and where you will use them. One well planned brand shoot can supply your [website](/services/digital-design), social channels and print for months. [Plan your project](/start) for a personal estimate.",
+          "Product photography on a clean background is usually priced per image, roughly $50 to $150 each in Toronto. Styled product, food and brand photography is usually priced by the half or full day, typically $1,500 to $5,000, depending on styling, locations and retouching. The real cost driver is how many final images you need and where you will use them. One well planned brand shoot can supply your [website](/services/digital-design), social channels and print for months. [Plan your project](/start) in two minutes. We come to the call prepared.",
       },
       {
         question: "What is brand photography, and how is it different from stock photos?",
@@ -425,7 +425,7 @@ export const services: ServiceData[] = [
       {
         question: "How much does a website cost in Canada?",
         answer:
-          "A business website in Canada typically costs $3,000 to $12,000 from a freelancer, $12,000 to $45,000 from a design studio, and $45,000 and beyond from a large agency, before HST. Template builders can cost under $3,000, plus your own time. What changes the price is how much strategy, custom design and content goes in. Website design cost in Toronto sits toward the top of the Canadian range. For a full breakdown, read [how much a website costs in Canada](/insights/how-much-does-a-website-cost-in-canada), or get a personal estimate in two minutes with the [Project Planner](/start).",
+          "A business website in Canada typically costs $3,000 to $12,000 from a freelancer, $12,000 to $45,000 from a design studio, and $45,000 and beyond from a large agency, before HST. Template builders can cost under $3,000, plus your own time. What changes the price is how much strategy, custom design and content goes in. Website design cost in Toronto sits toward the top of the Canadian range. For a full breakdown, read [how much a website costs in Canada](/insights/how-much-does-a-website-cost-in-canada), or plan your project in two minutes with the [Project Planner](/start).",
       },
       {
         question: "How long does it take to build a website?",

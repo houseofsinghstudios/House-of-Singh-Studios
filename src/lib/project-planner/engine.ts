@@ -1,23 +1,22 @@
-// Project Planner engine. Pure and rule based: buildBrief(answers, pricing) always gives the same
-// brief for the same input. No randomness, no dates, no network. Pricing is passed in by the server.
+// Project Planner engine. Pure and rule based: buildBrief(answers) always gives the same brief for
+// the same input. No randomness, no dates, no network, and no prices: every brief ends in the call.
 
-import { BRAND_TIMELINES, BUDGET_BANDS, DELIVERED_FOR, MINIMUM_REVIEW_BUDGET, SERVICE_SLUGS } from "./config";
+import { BRAND_TIMELINES, DELIVERED_FOR, SERVICE_SLUGS } from "./config";
 import {
-  BRIEF, DEPENDENCY_NOTE, DISCOVERY, FIT, GOAL, HEADLINES, PRICE_CONFIRM, PRICE_LABELS, PRICE_LINES, PRICE_NOTE,
-  PRICE_UNSURE, PRIORITIES, SERVICE_LABELS, START, SUCCESS, TIMELINES, TIMING, TOLD_QUESTIONS, TO_CONFIRM,
+  BRIEF, DEPENDENCY_NOTE, DISCOVERY, GOAL, HEADLINES, PRIORITIES, SERVICE_LABELS, START, SUCCESS, TIMELINES, TIMING,
+  TOLD_QUESTIONS, TO_CONFIRM,
 } from "./content";
-import { formatDollars } from "@/lib/money";
 import {
-  BAND_IDS, GOAL_IDS, HELP, MAX_NEEDS, MAX_PRIORITIES, PRICED_SERVICES, PRIORITY_IDS, SERVICE_IDS, START_IDS, TIMING_IDS,
-  type ActionId, type Answers, type BandId, type Brief, type Optional, type PriceLine, type PricedService, type Pricing, type ServiceId,
+  BAND_IDS, GOAL_IDS, HELP, MAX_NEEDS, MAX_PRIORITIES, NAMED_SERVICES, PRIORITY_IDS, SERVICE_IDS, START_IDS, TIMING_IDS,
+  type ActionId, type Answers, type BandId, type Brief, type NamedService, type ServiceId,
 } from "./types";
 
-export const ENGINE_VERSION = "1.0.0";
+export const ENGINE_VERSION = "2.0.0";
 
-const isPriced = (s: ServiceId): s is PricedService => (PRICED_SERVICES as readonly string[]).includes(s);
+const isNamed = (s: ServiceId): s is NamedService => (NAMED_SERVICES as readonly string[]).includes(s);
 
 export function priorityOptions(primary: ServiceId): readonly string[] {
-  return isPriced(primary) ? PRIORITY_IDS[primary] : [];
+  return isNamed(primary) ? PRIORITY_IDS[primary] : [];
 }
 
 // Steps for this path: P4 is skipped when the visitor is unsure what they need.
@@ -81,7 +80,7 @@ export function validBand(v: unknown): v is BandId {
 // ── Pieces of the brief ──
 
 const startLabel = (a: Answers) => START.options[a.primary][a.start];
-const priorityLabel = (primary: ServiceId, p: string) => (p === HELP ? PRIORITIES.help : isPriced(primary) ? PRIORITIES.options[primary][p] : p);
+const priorityLabel = (primary: ServiceId, p: string) => (p === HELP ? PRIORITIES.help : isNamed(primary) ? PRIORITIES.options[primary][p] : p);
 
 export function answerLabels(a: Answers): Record<string, string> {
   return {
@@ -117,47 +116,21 @@ function firstPhase(a: Answers): Brief["firstPhase"] {
   return { title: BRIEF.firstPhaseTitle, items: a.priorities.map((p) => priorityLabel(a.primary, p)) };
 }
 
-function investment(a: Answers, pricing: Pricing): Brief["investment"] {
-  const base = { title: BRIEF.investmentTitle, note: PRICE_NOTE };
-  if (a.primary === "unsure") return { ...base, lines: [], message: PRICE_UNSURE, timelines: null };
-  // One line per selected service, primary first. Never a sum.
-  const ordered = [a.primary, ...a.needs.filter((n) => n !== a.primary)].filter(isPriced);
-  const lines: PriceLine[] = ordered.map((s) => {
-    const amount = pricing.prices[s];
-    return { service: s, label: PRICE_LABELS[s], amount, text: amount ? PRICE_LINES[s].replace("{price}", formatDollars(amount)) : PRICE_CONFIRM };
-  });
-  // Brand package durations: only for brand identity as the main focus, and never for packaging.
-  const relevant = a.primary === "identity" && a.start !== "ready";
-  const timelines = relevant ? { label: TIMELINES.label, text: TIMELINES.text(BRAND_TIMELINES().map((t) => `${t.timeline} (${t.name})`)) } : null;
-  return { ...base, lines, message: null, timelines };
+// Brand package durations: only for brand identity as the main focus, and never for packaging.
+function timelines(a: Answers): Brief["timelines"] {
+  if (a.primary !== "identity" || a.start === "ready") return null;
+  return { title: BRIEF.timelinesTitle, label: TIMELINES.label, text: TIMELINES.text(BRAND_TIMELINES().map((t) => `${t.timeline} (${t.name})`)) };
 }
 
-// Compares a stated range with the published starting price of the main service only.
-export function budgetPosition(band: BandId | undefined, a: Answers, pricing: Pricing): "below" | "scope" | null {
-  if (!band || band === "not_sure") return null;
-  const upper = BUDGET_BANDS[band].upper;
-  if (band === "under_1k" || (upper !== null && upper < MINIMUM_REVIEW_BUDGET)) return "below";
-  const price = isPriced(a.primary) ? pricing.prices[a.primary] : null;
-  // Hidden or unavailable price: never infer fit.
-  if (!price) return null;
-  return upper !== null && upper < price ? "below" : "scope";
-}
+// Every brief ends in the call: choosing a time comes first, sending the brief second.
+const ACTIONS: Brief["actions"] = { primary: "book", secondary: "send" };
 
-function actions(a: Answers, band: BandId | undefined, position: "below" | "scope" | null): Brief["actions"] {
-  if (band === "under_1k") return { primary: "focused", secondary: null };
-  if (position === "below") return { primary: "focused", secondary: "book" };
-  const soon = (a.timing === "now" || a.timing === "one_three") && a.primary !== "unsure";
-  return soon ? { primary: "book", secondary: "send" } : { primary: "send", secondary: "book" };
-}
-
-export function buildBrief(a: Answers, pricing: Pricing, optional: Optional = {}): Brief {
-  const position = budgetPosition(optional.investment, a, pricing);
+export function buildBrief(a: Answers): Brief {
   const also = a.needs.filter((n) => n !== a.primary);
   const delivered = DELIVERED_FOR[a.primary];
   const dependency = a.primary === "identity" && a.start === "new" && also.includes("website");
   return {
     engineVersion: ENGINE_VERSION,
-    priceSource: pricing.source,
     intro: BRIEF.intro,
     headline: HEADLINES[a.primary][a.start],
     primaryService: a.primary,
@@ -168,11 +141,10 @@ export function buildBrief(a: Answers, pricing: Pricing, optional: Optional = {}
     dependencyNote: dependency ? DEPENDENCY_NOTE : null,
     success: SUCCESS[a.goal],
     toConfirm: TO_CONFIRM[a.primary],
-    investment: investment(a, pricing),
+    timelines: timelines(a),
     relatedWork: delivered ? { deliveredType: delivered, title: BRIEF.relatedTitle } : null,
     nextSteps: { title: BRIEF.nextTitle, text: BRIEF.next },
-    fitNote: position === "below" ? FIT.below : position === "scope" ? FIT.scope : null,
-    actions: actions(a, optional.investment, position),
+    actions: ACTIONS,
     serviceSlug: SERVICE_SLUGS[a.primary],
   };
 }

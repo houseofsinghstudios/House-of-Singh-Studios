@@ -1,5 +1,7 @@
 // Server side of Project Planner events: validate each event's own shape, recompute the brief, and
-// build the payload for n8n. Whatever brief, fit or price the browser sends is ignored.
+// build the payload for n8n. Whatever brief the browser sends is ignored. The planner shows no prices
+// (decided 20 Nov 2026); the price fields stay in the payload, always empty, so the n8n workflow keeps
+// working (docs/integrations/n8n.md).
 import "server-only";
 import { buildBrief, ENGINE_VERSION, answerLabels, validateAnswers, validBand } from "./engine";
 import { bookingUrl } from "./links";
@@ -10,7 +12,7 @@ import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
 import { capRaw, isEmail, stripTags } from "@/lib/form-input";
 import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "./config";
-import type { Answers, Optional, Pricing } from "./types";
+import type { Answers, Optional } from "./types";
 
 export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
 export type PlannerEvent = (typeof PLANNER_EVENTS)[number];
@@ -108,8 +110,8 @@ export function parseEvent(body: unknown): ParsedEvent | string {
 }
 
 // The brief fields n8n receives. No contact details, no free text.
-function briefFields(e: { briefId: string; answers: Answers }, pricing: Pricing, opt: Optional = {}) {
-  const brief = buildBrief(e.answers, pricing, opt);
+function briefFields(e: { briefId: string; answers: Answers }) {
+  const brief = buildBrief(e.answers);
   return {
     headline: brief.headline,
     primaryService: brief.primaryService,
@@ -119,32 +121,33 @@ function briefFields(e: { briefId: string; answers: Answers }, pricing: Pricing,
     dependencyNote: brief.dependencyNote,
     success: brief.success,
     toConfirm: brief.toConfirm,
-    // Only approved, published figures. A hidden price is sent as null.
-    priceLines: brief.investment.lines.map((l) => ({ service: l.service, amount: l.amount, text: l.text })),
-    fitNote: brief.fitNote,
+    // Kept for the n8n contract, always empty: the planner shows no prices.
+    priceLines: [] as { service: string; amount: number | null; text: string }[],
+    fitNote: null,
     action: brief.actions,
     bookingUrl: bookingUrl(e.briefId, brief, e.answers),
   };
 }
 
-export function buildPayload(e: ParsedEvent, pricing: Pricing | null, submittedAt: string) {
+export function buildPayload(e: ParsedEvent, submittedAt: string) {
   const base = {
     event: e.event,
     briefId: e.briefId,
     eventIdempotencyKey: `${e.briefId}:${e.event}`,
     statusRank: STATUS_RANK[e.event],
     engineVersion: ENGINE_VERSION,
-    priceSource: pricing ? pricing.source : null,
+    // Kept for the n8n contract, always null: there are no prices.
+    priceSource: null,
     submittedAt,
     attribution: e.attribution,
   };
   if (e.event === "started" || e.event === "call_clicked") return base;
-  if (e.event === "viewed") return { ...base, answers: e.answers, brief: briefFields(e, pricing!) };
+  if (e.event === "viewed") return { ...base, answers: e.answers, brief: briefFields(e) };
   return {
     ...base,
     answers: e.answers,
     answerLabels: answerLabels(e.answers),
-    brief: briefFields(e, pricing!, e.optional),
+    brief: briefFields(e),
     optional: { investment: e.optional.investment ?? null, website: e.optional.website ?? "", importantDate: e.optional.importantDate ?? "" },
     contact: e.contact,
     hearAbout: e.hearAbout,

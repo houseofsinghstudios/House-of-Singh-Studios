@@ -231,7 +231,6 @@ export default function ContactClient({ initialService = "" }: { initialService?
                       name="budget"
                       className="contact-input"
                       defaultValue=""
-                      aria-describedby="contact-budget-help"
                     >
                       <option value="" disabled>Select a range</option>
                       {BUDGET_OPTIONS.map((range) => (
@@ -239,7 +238,6 @@ export default function ContactClient({ initialService = "" }: { initialService?
                       ))}
                     </select>
                     <span className="focus-line" />
-                    <p id="contact-budget-help" className="contact-helper">Projects start from $1,000.</p>
                   </div>
                 )}
                 <div>

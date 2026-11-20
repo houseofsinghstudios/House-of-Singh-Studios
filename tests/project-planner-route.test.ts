@@ -1,5 +1,5 @@
 // /api/project-planner end to end: each event's own checks and payload, the 64 KB cap, the honeypot,
-// the in instance duplicate guard, prices from Sanity (or hidden when Sanity fails), the rate limit,
+// the in instance duplicate guard, no price read at all (the planner shows no prices), the rate limit,
 // and n8n refusing or timing out. tests/api-errors.test.ts covers the failures every form route
 // shares; this file covers what only the planner does. fetch is replaced, so nothing leaves the
 // process. Run with: npm run test
@@ -9,15 +9,12 @@ import { POST as planner } from "@/app/api/project-planner/route";
 
 process.env.N8N_PROJECT_PLANNER_WEBHOOK_URL = "http://n8n.test/planner";
 process.env.N8N_WEBHOOK_SECRET = "test-secret";
-// The price read uses the Sanity client, which needs a project to load; its answer is a stand in.
-process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ||= "test";
-process.env.NEXT_PUBLIC_SANITY_DATASET ||= "test";
 
 const realFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = realFetch; });
 
 type Sent = { url: string; headers: Record<string, string>; signal: unknown; body: Record<string, any> }; // eslint-disable-line @typescript-eslint/no-explicit-any
-// n8n answers with n8nStatus (or times out); Sanity's price read answers with no document, or fails.
+// n8n answers with n8nStatus (or times out). Any request to Sanity is recorded: there should be none.
 function stub({ n8nStatus = 200, n8nTimesOut = false, sanityFails = false } = {}) {
   const n8n: Sent[] = [];
   const sanity: string[] = [];
@@ -105,26 +102,30 @@ test("call_clicked: an intention with no rank and no prices; an unknown placemen
   assert.equal(n8n[0].body.attribution.entryPlacement, "direct");
 });
 
-test("viewed: the brief is recomputed with the published prices and sent without contact details", async () => {
+test("viewed: the brief is recomputed and sent without contact details or prices", async () => {
   const { n8n, sanity } = stub();
   const res = await send({ event: "viewed", briefId: briefId(), attribution: {}, answers, brief: { headline: "forged by the browser" } });
   assert.equal(res.status, 200);
-  assert.equal(sanity.length, 1, "viewed reads the prices once");
+  assert.equal(sanity.length, 0, "no price read: the planner shows no prices");
   const body = n8n[0].body;
   assert.equal(body.statusRank, 2);
   assert.deepEqual(body.answers, answers);
   assert.equal(typeof body.brief.headline, "string");
   assert.notEqual(body.brief.headline, "forged by the browser", "whatever brief the browser sends is ignored");
-  assert.ok(Array.isArray(body.brief.priceLines));
+  // The price fields stay for the n8n contract, always empty.
+  assert.deepEqual(body.brief.priceLines, []);
+  assert.equal(body.brief.fitNote, null);
+  assert.equal(body.priceSource, null);
+  assert.deepEqual(body.brief.action, { primary: "book", secondary: "send" });
   assert.ok(!("contact" in body));
 });
 
-test("viewed: when Sanity fails, prices are hidden and the event still goes through", async () => {
-  const { n8n } = stub({ sanityFails: true });
+test("viewed: goes through even when Sanity is down, since nothing is read from it", async () => {
+  const { n8n, sanity } = stub({ sanityFails: true });
   const res = await send({ event: "viewed", briefId: briefId(), attribution: {}, answers });
   assert.equal(res.status, 200);
-  assert.equal(n8n[0].body.priceSource, "unavailable");
-  for (const line of n8n[0].body.brief.priceLines) assert.equal(line.amount, null, "a hidden price is null");
+  assert.equal(sanity.length, 0);
+  assert.equal(n8n.length, 1);
 });
 
 test("sent: contact details, labels and optional fields reach n8n; a filled honeypot sends nothing", async () => {

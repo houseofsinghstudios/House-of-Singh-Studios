@@ -337,8 +337,8 @@ export default function AILabClient() {
             maxWidth: 480,
           }}
         >
-          Our AI powered Studio Guide can answer questions about services,
-          process, and pricing. Coming soon.
+          Our AI powered Studio Guide can answer questions about services
+          and process. Coming soon.
         </p>
       </section>
 
