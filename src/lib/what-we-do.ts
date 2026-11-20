@@ -134,14 +134,14 @@ export interface WwdImageDoc {
 const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const order = (p: WwdProjectDoc) => (typeof p.homeOrder === "number" && Number.isFinite(p.homeOrder) ? p.homeOrder : Infinity);
 
-// Only commissioned work is used: client and Commons projects (no type counts as client). Explorations
-// and Parallel projects are never used, so "See it in <name>" never reads as client work when it is
+// Only commissioned work is used: projects marked client or Commons. Explorations, Parallel projects and
+// projects with no type are never used, so "See it in <name>" never reads as client work when it is
 // not. Then by Homepage order (none last), then newest, then title.
-const NOT_COMMISSIONED = new Set(["exploration", "parallel"]);
+const COMMISSIONED = new Set(["client", "commons"]);
 
 export function rankWorkProjects(docs: readonly WwdProjectDoc[]): WwdProjectDoc[] {
   return docs
-    .filter((p) => text(p.slug) && !NOT_COMMISSIONED.has(text(p.projectType)))
+    .filter((p) => text(p.slug) && COMMISSIONED.has(text(p.projectType)))
     .sort((a, b) => order(a) - order(b) || text(b.publishedAt).localeCompare(text(a.publishedAt)) || text(a.title).localeCompare(text(b.title)));
 }
 

@@ -534,8 +534,13 @@ What we do fieldset (Project documents, collapsed, after the Work index): "What 
 entries, each a discipline (a dropdown of the thirty deliverable names from src/data/services.ts) and an image
 with hotspot, crop and a required alt; each discipline at most once per project. Read by getWhatWeDoWork
 (src/lib/sanity/projects.ts, picked in src/lib/what-we-do.ts): for each discipline, the first project listing
-it that is client or Commons work (no type counts as client; explorations and Parallel projects are never used, so "See it in" never reads as client work when it is not), by Homepage order, then newest. The homepage (02) What
+it that is marked client or Commons (explorations, Parallel projects and projects with no type are never used, so "See it in" never reads as client work when it is not), by Homepage order, then newest. The homepage (02) What
 we do links that word to the case study and shows the image in its preview.
+
+Project type (projectType, required since 20 Nov 2026; Studio: "Every project must say what it is. Explorations and
+Parallel projects never show as client work."): Client, Exploration, Parallel or Commons; new projects start as
+Client. A project without a type cannot be published. Elsewhere on the site a missing type still reads as client
+work (projectType() in src/lib/initiatives/types.ts); only What we do refuses it.
 
 Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
 homepage's Selected work and on /work): "Business type" (sector) is one of Food and drink,

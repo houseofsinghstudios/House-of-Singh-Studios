@@ -81,8 +81,7 @@ export default defineType({
       name: "projectType",
       title: "Project type",
       type: "string",
-      description:
-        "Exploration: self initiated work for an invented brand. Parallel: a real business reimagined with written permission. Commons: pro bono work.",
+      description: "Every project must say what it is. Explorations and Parallel projects never show as client work.",
       options: {
         // Must match src/lib/initiatives/types.ts and scripts/import-portfolio/lib/config.mjs.
         list: [
@@ -93,8 +92,10 @@ export default defineType({
         ],
         layout: "radio",
       },
-      // New projects start as client work. Existing projects have no value and read as client.
+      // New projects start as client work. Required: a project without a type cannot be published, and
+      // the homepage What we do never uses one (src/lib/what-we-do.ts).
       initialValue: "client",
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "heroShow",

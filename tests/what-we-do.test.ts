@@ -73,9 +73,9 @@ test("picking the work per discipline: Homepage order first, then newest", () =>
     { slug: "late", title: "Late Co", projectType: "client", publishedAt: "2026-11-01", whatWeDo: [{ discipline: "Logo System", image: img("late") }] },
     { slug: "ordered", title: "Ordered Co", heroName: "Ordered", projectType: "client", homeOrder: 2, publishedAt: "2025-01-01", whatWeDo: [{ discipline: "Logo System", image: img("ordered") }, { discipline: "Brand Naming", image: img("naming") }] },
     { slug: "explore", title: "Explore", projectType: "exploration", homeOrder: 1, publishedAt: "2026-11-10", whatWeDo: [{ discipline: "Brand Audit", image: img("explore") }, { discipline: "Logo System", image: img("x") }] },
-    { slug: "untyped", title: "Untyped Co", publishedAt: "2026-10-01", whatWeDo: [{ discipline: "UX Research", image: img("ux") }] },
-    { slug: "no-image", title: "No Image", publishedAt: "2026-11-20", whatWeDo: [{ discipline: "Positioning", image: null }, { discipline: "Brand Voice", image: { alt: "x" } }] },
-    { slug: "unknown", title: "Unknown", publishedAt: "2026-11-20", whatWeDo: [{ discipline: "Juggling", image: img("j") }] },
+    { slug: "plain", title: "Plain Co", projectType: "client", publishedAt: "2026-10-01", whatWeDo: [{ discipline: "UX Research", image: img("ux") }] },
+    { slug: "no-image", title: "No Image", projectType: "client", publishedAt: "2026-11-20", whatWeDo: [{ discipline: "Positioning", image: null }, { discipline: "Brand Voice", image: { alt: "x" } }] },
+    { slug: "unknown", title: "Unknown", projectType: "client", publishedAt: "2026-11-20", whatWeDo: [{ discipline: "Juggling", image: img("j") }] },
   ];
   const work = pickWork(docs, ALL, build);
   assert.equal(work["Logo System"].slug, "ordered", "Homepage order beats a newer project");
@@ -83,29 +83,36 @@ test("picking the work per discipline: Homepage order first, then newest", () =>
   assert.equal(work["Logo System"].image.src, "https://cdn.sanity.io/images/x/y/ordered.jpg?w=900");
   assert.equal(work["Logo System"].image.alt, "ordered alt");
   assert.equal(work["Brand Naming"].slug, "ordered");
-  assert.equal(work["UX Research"].client, "Untyped Co", "no type counts as client; the title when no Hero name");
+  assert.equal(work["UX Research"].client, "Plain Co", "the title when no Hero name");
   assert.equal(work["Brand Audit"], undefined, "explorations are never used");
   assert.equal(work["Positioning"], undefined, "no image: the word stays plain text");
   assert.equal(work["Brand Voice"], undefined, "an image without its file: plain text");
   assert.equal(work["Juggling"], undefined, "only the thirty disciplines");
-  assert.deepEqual(rankWorkProjects(docs).map((p) => p.slug), ["ordered", "no-image", "unknown", "late", "untyped"]);
+  assert.deepEqual(rankWorkProjects(docs).map((p) => p.slug), ["ordered", "no-image", "unknown", "late", "plain"]);
   // Nothing from Sanity: every word plain text.
   assert.deepEqual(pickWork([], ALL, build), {});
 });
 
-test("which projects count: client, untyped and Commons in; explorations and Parallel out", () => {
+test("which projects count: client and Commons in; explorations, Parallel and untyped out", () => {
   const entry = (id: string) => [{ discipline: "Logo System", image: img(id) }];
   const docs: WwdProjectDoc[] = [
     { slug: "explore", title: "Explore", projectType: "exploration", homeOrder: 1, whatWeDo: entry("explore") },
     { slug: "parallel", title: "Parallel", projectType: "parallel", homeOrder: 2, whatWeDo: entry("parallel") },
-    { slug: "commons", title: "Commons", projectType: "commons", homeOrder: 3, whatWeDo: entry("commons") },
-    { slug: "client", title: "Client", projectType: "client", homeOrder: 4, whatWeDo: entry("client") },
-    { slug: "untyped", title: "Untyped", homeOrder: 5, whatWeDo: entry("untyped") },
+    { slug: "untyped", title: "Untyped", homeOrder: 3, whatWeDo: entry("untyped") },
+    { slug: "empty", title: "Empty", projectType: "", homeOrder: 4, whatWeDo: entry("empty") },
+    { slug: "commons", title: "Commons", projectType: "commons", homeOrder: 5, whatWeDo: entry("commons") },
+    { slug: "client", title: "Client", projectType: "client", homeOrder: 6, whatWeDo: entry("client") },
   ];
-  assert.deepEqual(rankWorkProjects(docs).map((p) => p.slug), ["commons", "client", "untyped"]);
-  assert.equal(pickWork(docs, ALL, build)["Logo System"].slug, "commons", "a Commons project ahead in Homepage order is used");
-  // With only explorations and Parallel projects behind a word, it stays plain text.
-  assert.deepEqual(pickWork(docs.slice(0, 2), ALL, build), {});
+  assert.deepEqual(rankWorkProjects(docs).map((p) => p.slug), ["commons", "client"]);
+  // An untyped project earlier in Homepage order never wins the word: the Commons project after it does.
+  assert.equal(pickWork(docs, ALL, build)["Logo System"].slug, "commons");
+  // With only explorations, Parallel and untyped projects behind a word, it stays plain text.
+  assert.deepEqual(pickWork(docs.slice(0, 4), ALL, build), {});
+  // Studio: the type is required, so every new project says what it is.
+  const schema = read("sanity/schemas/caseStudy.ts");
+  const field = schema.slice(schema.indexOf('name: "projectType"'), schema.indexOf('name: "heroShow"'));
+  assert.match(field, /description: "Every project must say what it is\. Explorations and Parallel projects never show as client work\.",/);
+  assert.match(field, /validation: \(rule\) => rule\.required\(\)/);
 });
 
 test("the preview never covers the word or its line", () => {
