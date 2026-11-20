@@ -285,7 +285,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
           </p>
 
           <Button href={DISCOVERY_CALL_URL} className="mt-6" data-cursor="link" target="_blank" rel="noopener noreferrer">
-            Book a Discovery Call
+            Book a discovery call
           </Button>
 
           <div className="mt-8">

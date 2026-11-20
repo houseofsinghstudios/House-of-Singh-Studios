@@ -4,9 +4,9 @@
 // the Brand Pulse content, so the band always matches the check itself.
 //
 // Placement rule: no two tool prompts within one viewport. On phones and desktops the band sits
-// more than a viewport from the hero's Start a Project button and from the final call to action.
+// more than a viewport from the hero's "Plan your project" button and from the final call to action.
 // Documented exception: tall portrait tablets (about 820x1180 and 1024x1366), where the band's
-// buttons and the final Start a Project button come within about 0.85 to 0.9 of a viewport.
+// buttons and the final "Plan your project" button come within about 0.85 to 0.9 of a viewport.
 
 import { Link } from "next-view-transitions";
 import Button from "@/components/ui/Button";
@@ -28,7 +28,7 @@ export const TOOL_BAND = {
     heading: "Know what you need?",
     body: "Plan your project in two minutes. We come to the call prepared.",
     question: "What are you looking to create or improve?",
-    button: "Plan Your Project",
+    button: "Plan your project",
   },
 };
 

@@ -101,6 +101,8 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
+- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts.
+
 NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped, and the full screen panel it replaced is gone. Do not rebuild either without the owner's approval.
 
 ### Layer 2: Page Transitions

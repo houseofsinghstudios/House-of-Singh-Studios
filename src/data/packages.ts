@@ -29,7 +29,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     timeline: "4 to 6 weeks",
     bestFor:
       "Founders, new ventures, businesses operating without a formal brand system.",
-    cta: { text: "Start a Project", href: "/start", variant: "secondary" as const },
+    cta: { text: "Plan your project", href: "/start", variant: "secondary" as const },
     recommended: false,
   },
   {
@@ -48,7 +48,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     timeline: "8 to 12 weeks",
     bestFor:
       "Businesses that have outgrown their current brand.",
-    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
+    cta: { text: "Book a discovery call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
     recommended: true,
   },
   {
@@ -66,7 +66,7 @@ export const PACKAGE_TIERS: PackageTier[] = [
     timeline: "12 to 16 weeks",
     bestFor:
       "Businesses preparing for a major growth phase, market expansion, or rebrand.",
-    cta: { text: "Book a Discovery Call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
+    cta: { text: "Book a discovery call", href: DISCOVERY_CALL_URL, variant: "primary" as const },
     recommended: false,
   },
 ];

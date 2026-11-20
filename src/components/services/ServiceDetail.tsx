@@ -203,7 +203,7 @@ export default function ServiceDetail({
           </p>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
+              Book a discovery call
             </Button>
             <Button href={startHref("services", planService)} variant="secondary-inverted" data-cursor="link">
               Plan a {service.name} Project

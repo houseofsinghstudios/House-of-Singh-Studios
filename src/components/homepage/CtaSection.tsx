@@ -19,10 +19,10 @@ export default function CtaSection() {
         </h2>
         <div className="cta-buttons">
           <Button href="/start" variant="primary-inverted" data-cursor="link">
-            Start a Project
+            Plan your project
           </Button>
           <Button href={DISCOVERY_CALL_URL} variant="secondary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-            Book a Discovery Call
+            Book a discovery call
           </Button>
         </div>
       </div>
