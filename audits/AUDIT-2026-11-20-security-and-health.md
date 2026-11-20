@@ -138,6 +138,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 8. Studio prices remain in Insights articles
 
+- **Status:** Done 20 Nov 2026 in Sanity (all 29 articles rescanned clean).
 - **Severity:** Medium
 - **Confidence:** High confidence. This is Sanity content, not code, found by a read only check of published posts.
 - **Where:** Sanity Insights articles. Nine articles say "projects start from $1,000": why-your-brand-looks-different-everywhere, 5-signs-your-brand-is-actively-costing-you-business, what-a-brand-identity-system-actually-includes, how-much-does-brand-identity-design-cost-in-canada-a-studio-s-honest-breakdown, branding-agency-pricing-toronto, design-studio-vs-agency-vs-freelancer-vs-canva, how-much-does-a-logo-cost-in-canada, logo-vs-brand-kit-vs-brand-identity and how-much-does-a-website-cost-in-canada. Also: packaging-design-cost-canada ("packaging projects start from $2,000"), what-is-brand-strategy-and-what-does-it-cost ("strategy projects start from $2,000") and full-cost-of-rebranding-in-canada ("a focused project can start from about $1,000"). Most posts also promise "a personal estimate" or "an estimate" from the Project Planner.
@@ -372,7 +373,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 | 5 | Speed Insights loads before consent (Protected, owner decision) | Medium | High |
 | 6 | Article images have no sizes | Medium | High |
 | 7 | Large client components | Medium | High |
-| 8 | Studio prices in Insights articles | Medium | High |
+| 8 | Studio prices in Insights articles (Done 20 Nov 2026 in Sanity, all 29 articles rescanned clean) | Medium | High |
 | 9 | Dependency advisories | Low | High |
 | 10 | Outdated packages | Low | High |
 | 11 | Unmaintained page transition package | Low | High |
@@ -407,7 +408,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 2. Require `application/json` on careers, subscribe, brand-pulse and project-planner (finding 2).
 3. Add `Cross-Origin-Opener-Policy: same-origin` (finding 4).
 4. Add CSP violation reporting (finding 3).
-5. Edit the price sentences and estimate promises in the Insights articles in Studio (finding 8).
+5. Edit the price sentences and estimate promises in the Insights articles in Studio (finding 8). Done 20 Nov 2026 in Sanity (all 29 articles rescanned clean).
 
 ### Next
 

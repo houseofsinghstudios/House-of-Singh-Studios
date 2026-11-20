@@ -1,4 +1,5 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
+import { refuseRequest } from "@/lib/request-guards";
 import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
 import { clientIp, createRateLimiter } from "@/lib/rate-limit";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
@@ -21,6 +22,10 @@ const DELIVERED_MAX = 5000;
 
 export async function POST(request: Request) {
   try {
+    // Only JSON from the site itself (src/lib/request-guards.ts), before the rate limiter or the body.
+    const refused = refuseRequest(request);
+    if (refused) return refused;
+
     if (isRateLimited(clientIp(request))) {
       log.info("rate limit exceeded");
       return json({ success: false, error: "Too many requests. Please try again later." }, 429);

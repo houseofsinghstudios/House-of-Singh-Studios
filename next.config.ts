@@ -18,6 +18,8 @@ const SITE_CSP = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
+  // Violations are reported to /api/csp-report, named "csp" in the Reporting-Endpoints header below.
+  "report-to csp",
 ].join("; ");
 
 // The embedded Sanity Studio at /studio: exactly what it ran with before the split, minus the
@@ -98,6 +100,11 @@ const nextConfig: NextConfig = {
           },
           { key: "Content-Security-Policy", value: SITE_CSP },
           { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          // Keeps other sites' windows from reaching back into this page, while windows this page
+          // opens (the Cal.com booking link) still work: same-origin would cut them off.
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
+          // Where the browser sends Content Security Policy violation reports (report-to csp).
+          { key: "Reporting-Endpoints", value: 'csp="/api/csp-report"' },
         ],
       },
       // The Studio replaces the site policy with its own (a later match wins for the same header).
