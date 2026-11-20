@@ -7,12 +7,12 @@ import type { BandId, GoalId, NamedService, ServiceId, TimingId } from "./types"
 // price comes after it, in the written proposal.
 
 export const PAGE = {
-  title: "Plan Your Project",
+  title: "Plan your project",
   description: "Plan your project in two minutes. We come to the call prepared.",
 };
 
 export const INTRO = {
-  eyebrow: "Start a Project",
+  eyebrow: "Plan your project",
   heading: "A clearer brief. A better starting point.",
   text: "Tell us what you're building and what matters most. We'll organize your priorities into a practical first phase brief you can keep, edit or send to the studio.",
   trust: "Free to use. No account required. Your contact details are only collected if you choose to send your brief.",
@@ -247,7 +247,7 @@ export const SEND = {
 export const PLACEMENTS = {
   servicesHeading: "Let's turn your ideas into a clear project.",
   servicesText: "Choose what you're building, set your priorities, and leave with a practical project brief. No sign up required.",
-  servicesButton: "Plan Your Project",
+  servicesButton: "Plan your project",
   servicesTalk: "Prefer to talk? Book a discovery call.",
   caseStudy: "Planning something similar? Build your brief.",
   brandPulse: "Turn this into a project brief.",

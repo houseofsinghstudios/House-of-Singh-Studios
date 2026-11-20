@@ -46,10 +46,10 @@ export default async function ServicesPage() {
           <h2 className="cta-heading">Ready to start a conversation?</h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
+              Book a discovery call
             </Button>
             <Button href="/start" variant="secondary-inverted" data-cursor="link">
-              Plan Your Project
+              Plan your project
             </Button>
           </div>
         </div>

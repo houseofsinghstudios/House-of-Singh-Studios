@@ -360,7 +360,7 @@ export default function AILabClient() {
           </h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
+              Book a discovery call
             </Button>
             <Button href="/work" variant="secondary-inverted" data-cursor="link">
               View Our Work

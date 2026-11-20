@@ -216,10 +216,10 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
           <h2 className="cta-heading">Ready to build a brand that works?</h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
+              Book a discovery call
             </Button>
             <Button href="/start" variant="secondary-inverted" data-cursor="link">
-              Start a Project
+              Plan your project
             </Button>
           </div>
         </div>

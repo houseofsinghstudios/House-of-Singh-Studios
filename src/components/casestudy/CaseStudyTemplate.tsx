@@ -294,13 +294,13 @@ export default function CaseStudyTemplate({
       >
         <div className="cta-centered">
           <p className="cta-label">(Next step)</p>
-          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>Start a project.</h2>
+          <h2 className="cta-heading" style={{ fontSize: "clamp(28px, 3.5vw, 40px)" }}>Plan your project.</h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
-              Book a Discovery Call
+              Book a discovery call
             </Button>
             <Button href="/start" variant="secondary-inverted" data-cursor="link">
-              Start a Project
+              Plan your project
             </Button>
           </div>
         </div>

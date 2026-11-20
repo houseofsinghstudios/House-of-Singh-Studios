@@ -24,9 +24,9 @@ const COMPANY_LINKS = [
 ];
 
 const START_LINKS = [
-  { label: "Plan Your Project", href: "/start" },
+  { label: "Plan your project", href: "/start" },
   { label: "Brand Pulse Check", href: "/brand-pulse" },
-  { label: "Book a Discovery Call", href: DISCOVERY_CALL_URL, external: true },
+  { label: "Book a discovery call", href: DISCOVERY_CALL_URL, external: true },
   { label: "Contact", href: "/contact" },
 ];
 
