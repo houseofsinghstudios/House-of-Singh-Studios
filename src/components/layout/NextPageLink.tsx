@@ -4,7 +4,6 @@
 import { Link } from "next-view-transitions";
 
 const NEXT_MAP: Record<string, { name: string; href: string }> = {
-  "/": { name: "Services", href: "/services" },
   "/services": { name: "Work", href: "/work" },
   "/work": { name: "Contact", href: "/contact" },
   "/about": { name: "Contact", href: "/contact" },

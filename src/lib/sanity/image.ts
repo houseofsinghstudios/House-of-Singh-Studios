@@ -33,3 +33,10 @@ export function heroImageUrl(image: { url: string; crop?: { top: number; bottom:
   const source: SanityImageSource = { asset: { url: image.url }, ...(image.crop ? { crop: image.crop } : {}) };
   return urlFor(source).width(2400).fit("max").auto("format").quality(90).url();
 }
+
+// The homepage What we do preview (a 300 by 220 frame, so 900px covers three times density): the
+// Studio crop applied, at most 900px wide, automatic format, quality 90. next/image serves the rest.
+export function wwdPreviewUrl(image: { url: string; crop?: { top: number; bottom: number; left: number; right: number } }) {
+  const source: SanityImageSource = { asset: { url: image.url }, ...(image.crop ? { crop: image.crop } : {}) };
+  return urlFor(source).width(900).fit("max").auto("format").quality(90).url();
+}

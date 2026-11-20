@@ -1,0 +1,520 @@
+/* (02) What we do (WhatWeDoSection). Desktop from the WWDFinal artboard: major third type scale, line
+   heights on the 8px grid, tracking tightening with size. Phone (1080px and below) from WWDPhoneM1:
+   minor third scale, no keyword field, the disciplines inside each open service. Colour changes only,
+   never opacity, for anything that dims. */
+
+.wwd {
+  --wwd-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  padding: 160px var(--page-px);
+}
+.wwd-head,
+.wwd-island {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+}
+.wwd-label {
+  grid-column: 1 / 3;
+}
+.wwd-intro {
+  grid-column: 3 / 11;
+}
+.wwd-heading {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 56px;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  text-wrap: balance;
+  margin: 0;
+}
+.wwd-line {
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--text-secondary);
+  margin: 24px 0 0;
+  max-width: 680px;
+}
+.wwd-line--phone {
+  display: none;
+}
+
+/* ── The keyword field ── */
+.wwd-field-wrap {
+  grid-column: 3 / -1;
+  margin-top: 96px;
+}
+/* The clipping frame. 4px of padding keeps focus outlines visible; the slash cell pulled into it is
+   wider than that, and its slash sits in the cell's middle, so nothing of it shows. */
+.wwd-field-frame {
+  overflow: hidden;
+  max-width: 1100px;
+  padding: 4px;
+  margin: -4px;
+}
+.wwd-field {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 -0.9em;
+  display: flex;
+  flex-wrap: wrap;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 31px;
+  line-height: 40px;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+/* A term never splits: its slash and its words stay on one line together. */
+.wwd-term {
+  display: inline-flex;
+  white-space: nowrap;
+}
+.wwd-sep {
+  display: inline-block;
+  width: 0.9em;
+  text-align: center;
+  font-weight: 400;
+  color: var(--text-label);
+}
+.wwd-word {
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  color: var(--text-primary);
+  transition: color 0.3s var(--wwd-ease);
+  /* Lighting from the rows moves through the field in reading order, 12ms apart. */
+  transition-delay: calc(var(--i, 0) * 12ms);
+}
+.wwd-term[data-dim] .wwd-word {
+  color: var(--text-label);
+}
+
+/* A word with real work: a quiet underline at rest, the hero's marker band on hover or focus. */
+.wwd-word--work,
+.wwd-word-btn[data-work] {
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 0.16em;
+}
+.wwd-word--work::before,
+.wwd-word-btn::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -3px;
+  right: -3px;
+  top: 0.14em;
+  height: 0.9em;
+  background: var(--bg-shift);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--wwd-ease);
+}
+.wwd-word--work:focus-visible,
+.wwd-word-btn:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+.wwd-word--work:focus-visible::before {
+  transform: scaleX(1);
+}
+.wwd-word--work:focus-visible {
+  text-decoration-color: transparent;
+}
+@media (hover: hover) and (pointer: fine) {
+  .wwd-word--work:hover::before {
+    transform: scaleX(1);
+  }
+  .wwd-word--work:hover {
+    text-decoration-color: transparent;
+  }
+}
+
+/* ── The hover preview: decorative, follows the pointer ── */
+.wwd-preview {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  width: 300px;
+  pointer-events: none;
+  transform: translate3d(var(--x, -9999px), var(--y, -9999px), 0);
+  opacity: 0;
+  transition: opacity 0.25s var(--wwd-ease);
+}
+.wwd-preview[data-show] {
+  opacity: 1;
+}
+.wwd-preview-frame {
+  position: relative;
+  width: 300px;
+  height: 220px;
+  overflow: hidden;
+  background: var(--bg-shift);
+  transform: scale(0.94);
+  transform-origin: left bottom;
+  transition: transform 0.35s var(--wwd-ease);
+}
+.wwd-preview[data-show] .wwd-preview-frame {
+  transform: scale(1);
+}
+.wwd-preview-img {
+  opacity: 0;
+}
+.wwd-preview-img[data-on] {
+  opacity: 1;
+}
+.wwd-preview-caption {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 10px 0 0;
+  background: var(--bg);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+}
+.wwd-preview-what {
+  color: var(--text-primary);
+}
+
+/* ── The service rows ── */
+.wwd-rows {
+  grid-column: 1 / -1;
+  margin-top: 96px;
+  border-bottom: 1px solid var(--border);
+}
+.wwd-row {
+  border-top: 1px solid var(--border);
+}
+.wwd-row-h {
+  margin: 0;
+  font: inherit;
+}
+.wwd-row-btn {
+  display: flex;
+  align-items: baseline;
+  gap: 40px;
+  width: 100%;
+  padding: 32px 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.wwd-row-btn:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 4px;
+}
+.wwd-num {
+  flex: 0 0 40px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+}
+.wwd-name {
+  flex: 1;
+  font-size: 25px;
+  line-height: 32px;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  transition: color 0.3s var(--wwd-ease);
+}
+.wwd-row[data-dim] .wwd-name {
+  color: var(--text-label);
+}
+.wwd-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+/* A 12px plus that turns into a minus when the row is open. */
+.wwd-plus {
+  position: relative;
+  width: 12px;
+  height: 12px;
+}
+.wwd-plus::before,
+.wwd-plus::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5.5px;
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+  transition: transform 0.4s var(--wwd-ease);
+}
+.wwd-plus::after {
+  transform: rotate(90deg);
+}
+.wwd-row-btn[aria-expanded="true"] .wwd-plus::after {
+  transform: rotate(0deg);
+}
+
+/* Panels open by height; a closed one stays in the page, inert. */
+.wwd-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.6s var(--wwd-ease);
+}
+.wwd-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.wwd-panel-clip {
+  min-height: 0;
+  overflow: hidden;
+}
+.wwd-panel-desktop {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 24px;
+  padding-bottom: 56px;
+}
+.wwd-panel-about {
+  grid-column: 2 / 6;
+}
+.wwd-panel-list {
+  grid-column: 7 / -1;
+}
+.wwd-panel-phone {
+  display: none;
+}
+.wwd-tagline {
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--text-primary);
+  margin: 0;
+}
+.wwd-desc {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-secondary);
+  margin: 8px 0 0;
+}
+.wwd-panel-about .wwd-desc {
+  margin-top: 16px;
+}
+.wwd-includes {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 24px;
+}
+.wwd-include {
+  border-top: 1px solid var(--border);
+  padding: 16px 0;
+}
+.wwd-include-name {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* "<Service name> in detail": the site's underline wipe. */
+.wwd-detail {
+  position: relative;
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.wwd-detail::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--text-primary);
+  transform-origin: left;
+  transition: transform 0.3s var(--wwd-ease);
+}
+@media (hover: hover) {
+  .wwd-detail:hover::after {
+    transform: scaleX(0);
+    transform-origin: right;
+  }
+}
+.wwd-detail:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 4px;
+}
+
+/* ── Phone and tablet: 1080px and below ── */
+@media (max-width: 1080px) {
+  .wwd {
+    padding: 96px var(--page-px);
+  }
+  .wwd-head,
+  .wwd-island {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wwd-label,
+  .wwd-intro,
+  .wwd-rows {
+    grid-column: 1;
+  }
+  .wwd-intro {
+    margin-top: 24px;
+  }
+  .wwd-heading {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  .wwd-line {
+    margin-top: 16px;
+  }
+  .wwd-line--desktop,
+  .wwd-field-wrap,
+  .wwd-preview,
+  .wwd-panel-desktop {
+    display: none;
+  }
+  .wwd-line--phone {
+    display: block;
+  }
+  .wwd-rows {
+    margin-top: 48px;
+  }
+  .wwd-row-btn {
+    align-items: center;
+    gap: 16px;
+    min-height: 72px;
+    padding: 20px 0;
+  }
+  .wwd-num {
+    flex-basis: auto;
+  }
+  .wwd-name {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  .wwd-panel-phone {
+    display: block;
+    padding-bottom: 32px;
+  }
+  .wwd-tagline {
+    font-size: 16px;
+    line-height: 24px;
+    color: var(--text-secondary);
+  }
+  .wwd-field-frame--phone {
+    margin-top: 16px;
+  }
+  .wwd-field--phone {
+    font-size: 20px;
+    line-height: 32px;
+    letter-spacing: -0.02em;
+  }
+  /* Every word a button: at least 24px tall (the line is 32px), no button look. */
+  .wwd-word-btn {
+    min-height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    letter-spacing: inherit;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .wwd-word-btn[data-active]::before {
+    transform: scaleX(1);
+  }
+  .wwd-word-btn[data-active] {
+    text-decoration-color: transparent;
+  }
+  .wwd-card {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.45s var(--wwd-ease);
+  }
+  .wwd-card[data-open] {
+    grid-template-rows: 1fr;
+  }
+  .wwd-card-clip {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .wwd-card-body {
+    margin-top: 16px;
+    padding: 16px 0 8px;
+    border-top: 1px solid var(--border);
+  }
+  .wwd-card-name {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0;
+  }
+  .wwd-card-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .wwd-card-close {
+    display: block;
+    min-height: 44px;
+    min-width: 44px;
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-primary);
+    text-align: left;
+    cursor: pointer;
+  }
+  .wwd-card-close:focus-visible,
+  .wwd-card-link:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* ── Reduced motion: no stagger, the band at once, no height animation, no preview motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .wwd-word,
+  .wwd-name,
+  .wwd-plus::before,
+  .wwd-plus::after,
+  .wwd-panel,
+  .wwd-card,
+  .wwd-preview,
+  .wwd-preview-frame,
+  .wwd-detail::after,
+  .wwd-word--work::before,
+  .wwd-word-btn::before {
+    transition: none;
+  }
+  .wwd-preview-frame {
+    transform: none;
+  }
+}

@@ -6,6 +6,11 @@ import {
   heroWordCaseMessage,
 } from "../../src/lib/homepage-hero";
 import { INDEX_IMAGE_MAX, SECTOR_OPTIONS } from "../../src/lib/work-index";
+import { repeatedDiscipline, WWD_MAX_ENTRIES } from "../../src/lib/what-we-do";
+import { services } from "../../src/data/services";
+
+// The 30 disciplines of the homepage What we do, straight from the four services (one list, no copy).
+const WWD_DISCIPLINE_OPTIONS = services.flatMap((s) => s.deliverables.map((d) => ({ title: `${d.name} (${s.name})`, value: d.name })));
 
 // Whether the document being edited shows in the homepage hero: the Homepage hero fields are
 // required only then. The checks themselves live in src/lib/homepage-hero.ts.
@@ -35,6 +40,12 @@ export default defineType({
       name: "workIndex",
       title: "Work index",
       description: "How this project shows in Selected work on the homepage and in the list on /work.",
+      options: { collapsible: true, collapsed: true },
+    },
+    {
+      name: "homepageWhatWeDo",
+      title: "What we do",
+      description: "The real work behind each discipline in What we do on the homepage.",
       options: { collapsible: true, collapsed: true },
     },
     {
@@ -221,6 +232,53 @@ export default defineType({
       type: "number",
       fieldset: "workIndex",
       description: "Lower numbers show first in Selected work on the homepage. Only projects with 'Show on Homepage' on are used, six at most.",
+    }),
+    defineField({
+      name: "whatWeDo",
+      title: "What we do",
+      type: "array",
+      fieldset: "homepageWhatWeDo",
+      description: "Choose the disciplines this project shows on the homepage, and the image for each. Client work only; explorations are never used.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "whatWeDoEntry",
+          title: "Discipline",
+          fields: [
+            defineField({
+              name: "discipline",
+              title: "Discipline",
+              type: "string",
+              description: "One of the thirty disciplines of the four services.",
+              options: { list: WWD_DISCIPLINE_OPTIONS },
+              validation: (rule) => rule.required().error("Choose a discipline."),
+            }),
+            defineField({
+              name: "image",
+              title: "Image",
+              type: "image",
+              description: "Shown beside the word on the homepage, in a small frame. Set the hotspot on what matters.",
+              options: { hotspot: true },
+              fields: [
+                defineField({
+                  name: "alt",
+                  title: "Alt Text",
+                  type: "string",
+                  description: "Describe the image for people using screen readers.",
+                  validation: (rule) => rule.required().error("Describe the image: screen readers read it aloud."),
+                }),
+              ],
+              validation: (rule) => rule.required().error("Add the image for this discipline."),
+            }),
+          ],
+          preview: { select: { title: "discipline", media: "image" } },
+        }),
+      ],
+      validation: (rule) =>
+        rule.max(WWD_MAX_ENTRIES).error("Use twelve disciplines at most.").custom((entries) => {
+          const repeated = repeatedDiscipline(entries as Array<{ discipline?: unknown }> | undefined);
+          return repeated ? `${repeated} is chosen twice. Each discipline once per project.` : true;
+        }),
     }),
     defineField({
       name: "serviceCategories",

@@ -177,7 +177,7 @@ NAVIGATION LINKS:
 EVOLVED PATTERNS for how sections are structured:
 
 NUMBERED SECTIONS:
-- Major sections get a number label: "(01) Featured Work", "(02) The Argument", etc.
+- Major sections get a number label: "(01) Selected work", "(02) What we do", etc.
 - The number is rendered as part of the editorial label, not as a decorative element
 - Numbers create narrative progression and help the user orient within the page
 
@@ -227,7 +227,7 @@ EVOLVED APPROACH:
 ## PAGE-SPECIFIC INTERACTION MAPS
 
 ### Homepage
-Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work → (02) The Argument → (03) Capabilities → (04) Two ways to start → (06) Testimonials → (07) Proof → Next page link (Services) → CTA. There is no (05) label on the page today.
+Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work → (02) What we do → (03) Testimonials → (04) Proof → (05) Two ways to start → CTA. No Next page link on the homepage. (05) is the place the new Start section takes; final numbers come when (04) Proof is rebuilt.
 
 - Hero (src/components/homepage/HeroSection.tsx, a server component, with the client parts HeroInteractive, HeroImages, HeroCaption, HeroLine and HeroPause; styles in hero.css; words, timings and helpers in src/lib/homepage-hero.ts). Projects from getHeroProjects, the Studio "Homepage hero" fieldset. The H1 stays visually hidden (protected), then the label "(Brand identity studio, Toronto)".
   - Layout: above 1080px the hero fills the first screen under the header; the image runs from 46% of the width to the right edge, full height, and the text column holds the label (64px under the header), the value line and, at its foot, the caption (44px above the hero's bottom). At 1080px and below: the image first (full width, clamp(380px, 110vw, 620px) tall), the caption 12px under it, then the label and the value line.
@@ -249,11 +249,17 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work →
   - The choice is page state only: the address never changes. It carries forward through the closing row under the grid (hairline above): "Client work first; studio explorations are marked" and "All work (08)", or "All work for food and drink (03)" to /work?for=food-and-drink.
   - Window and phones as on /work (sticky window, under the header and following it at 1080px and below, the row at its edge shown).
   - Performance: the hero image stays the LCP. Nothing here is priority or preloaded; the window image and the strip images render only after intent (a pointer or focus in the section, or the window scrolling into view once the page has loaded), and the home items carry no blurred placeholders, to keep the first download small. The page source carries the h2 and the six h3 links in the default order. No css-reveal on the rows; the section itself reveals.
-- The Argument: the headline's words reveal on scroll, each word mixing in colour from Accessible Ash to Obsidian (never faded with opacity, so every word passes text contrast); Obsidian from the start with reduced motion.
-- Capabilities: the four services as rows (ServicesSection). Desktop: hover reveal, each row a link to its service page. Below 1024px: rows open and close on tap, the first opens after the stagger, "Learn More" follows the link.
-- Two ways to start (ToolBand): Brand Pulse Check and Project Planner. Desktop: two columns. Phones: a two tab switch.
-- Testimonials: carousel with auto rotate and pause.
-- Proof: animated counters (50+ projects, 12+ years, 8+ industries).
+- (02) What we do (src/components/homepage/what-we-do: WhatWeDoSection, a server component, with the client island WhatWeDo, WwdField, WwdRows and WwdPhoneWords; wwd.css; rules in src/lib/what-we-do.ts; approved on the canvas, desktop WWDFinal, phone WWDPhoneM1). It replaced The Argument and the Capabilities rows.
+  - Content: every word from src/data/services.ts (number, name, tagline, description, deliverables as the disciplines: 9, 6, 8, 7). Every count is derived, including the heading number written as a word: "Four services. Thirty disciplines. One studio." (wwdHeading). The real work behind a discipline comes from the Studio "What we do" fieldset (getWhatWeDoWork); without it the word is plain text.
+  - Desktop (above 1080px, major third scale): label on columns 1 to 2; on 3 to 10 the h2 (48/56, -0.03em, text-wrap balance) and, 24px lower, "Everything we make is built to work as one system, from the strategy to the last business card." (16/24 Gunmetal). 96px lower the keyword field (31/40, -0.025em, max 1100px): all thirty disciplines interleaved (interleave), a "/" at weight 400 in Accessible Ash in a 0.9em cell only between words on the same line (each term a nowrap flex item with its slash in front, the list pulled left one cell inside an overflow hidden frame). A word with work links to /work/<slug> with a 1px Marble Ash underline (0.16em offset); hover or focus swaps it for the hero's marker band (Cloudy White, 3px wider each side, from 0.14em below the line top, 0.9em tall, wiping in from the left over 0.4s), plus a 2px Obsidian focus outline. Pointing at a word shows a decorative 300 by 220 preview 28px right of the pointer and 130px above it (top left corner), with "<Discipline> for <Client>" and the service name under it; next/image at sizes 300px, never priority, loaded only after the pointer first enters the field.
+  - The rows, 96px lower: an h3 holding a button (aria-expanded, aria-controls), 32px padding, the number (40px wide), the name (25/32), the count (two digits) and a 12px plus that turns into a minus (0.4s). The first open; one at a time. The panel (grid rows 0fr to 1fr over 0.6s; closed panels inert): columns 2 to 5 the tagline (20/28), the description (14/20 Gunmetal) and "<Service name> in detail" to /services/<slug>; columns 7 to 12 "What it includes" and the disciplines in two columns, name over description, hairline above.
+  - Lighting (a mouse, or keyboard focus): pointing at a row keeps its disciplines Obsidian in the field and turns the rest Accessible Ash, 12ms apart in reading order, reset 150ms after leaving the rows; pointing at a field word turns the other services' names Accessible Ash. Colour only.
+  - Phone (1080px and below, minor third): heading 32/40, "Everything we make is built to work as one system.", no keyword field, the same rows (72px minimum, first open). An open row shows the tagline, the service's own disciplines as the slash field (20/32), every word a button (aria-expanded, aria-controls; underlined when it has work), then the detail link. A tap marks the word with the band and opens a card under the field (0.45s, one at a time, tap again or Close, a 44px target): the name, the description and, with work, "See it in <Client>". No images on phones.
+  - Reduced motion: no stagger, the band at once, no height animation, no preview motion.
+  - Analytics: home_wwd_service_open { service }, home_wwd_word_click { discipline, has_work, layout }, home_service_click { service } on the detail links. No hover events.
+- (03) Testimonials: carousel with auto rotate and pause.
+- (04) Proof: animated counters (50+ projects, 12+ years, 8+ industries).
+- (05) Two ways to start (ToolBand): Brand Pulse Check and Project Planner, after Proof until the new Start section replaces it. Desktop: two columns. Phones: a two tab switch.
 - CTA: dark inverted. The close.
 - About Preview and Brands sections no longer exist.
 
@@ -483,7 +489,7 @@ is tests/no-studio-prices.test.ts. Insights articles live in Sanity: edit them t
 These look unusual or redundant but are deliberate. Any change touching them needs the owner's approval. Report a genuine defect in one of them as a defect; never remove or weaken it as cleanup.
 
 - SEO structure: the semantic H1 swap on service pages (the label is the H1, the hero line an H2), and visually hidden H1s (homepage, Brand Pulse and Project Planner states, the hidden "Brand Pulse result" H1).
-- Hidden descriptive link text: the sr-only text in "Learn More" links on /services, after the title in the homepage Capabilities rows (no aria-label, so the name starts with the visible title), and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
+- Hidden descriptive link text: the sr-only text in "Learn More" links on /services, after the visible text of each "<Service name> in detail" link in the homepage (02) What we do (moved there from the old Capabilities rows, owner approved; no aria-label, so the name starts with the visible text), and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
 - Service FAQs and the questions accordion, with FAQPage JSON-LD.
 - The structured data graph: ProfessionalService and Organization with @id, founder Person, Service, CreativeWork, Article, BreadcrumbList.
 - RGD links (RgdLink and the auto linker in article bodies).
@@ -523,6 +529,13 @@ not shown on the site at the moment, kept filled for later use; "Hero images" ar
 the homepage shows the first; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
 in src/lib/homepage-hero.ts); the homepage hero shows them.
+
+What we do fieldset (Project documents, collapsed, after the Work index): "What we do" (whatWeDo) is up to twelve
+entries, each a discipline (a dropdown of the thirty deliverable names from src/data/services.ts) and an image
+with hotspot, crop and a required alt; each discipline at most once per project. Read by getWhatWeDoWork
+(src/lib/sanity/projects.ts, picked in src/lib/what-we-do.ts): for each discipline, the first project listing
+it that is not an exploration (no type counts as client), by Homepage order, then newest. The homepage (02) What
+we do links that word to the case study and shows the image in its preview.
 
 Work index fieldset (Project documents, collapsed, after the Homepage hero; for the Living Index on the
 homepage's Selected work and on /work): "Business type" (sector) is one of Food and drink,

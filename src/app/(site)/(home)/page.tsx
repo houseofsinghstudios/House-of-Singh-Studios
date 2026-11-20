@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/homepage/HeroSection";
 import SelectedWorkSection from "@/components/homepage/SelectedWorkSection";
-import ArgumentSection from "@/components/homepage/ArgumentSection";
-import ServicesSection from "@/components/homepage/ServicesSection";
+import WhatWeDoSection from "@/components/homepage/what-we-do/WhatWeDoSection";
 import ToolBand from "@/components/homepage/ToolBand";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import ProofSection from "@/components/homepage/ProofSection";
-import NextPageLink from "@/components/layout/NextPageLink";
 import CtaSection from "@/components/homepage/CtaSection";
-import { getHeroProjects, getIndexProjects } from "@/lib/sanity/projects";
+import { getHeroProjects, getIndexProjects, getWhatWeDoWork } from "@/lib/sanity/projects";
 import { WEBSITE_OG } from "@/lib/seo";
 
 export const revalidate = 60;
@@ -30,18 +28,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [heroProjects, indexProjects] = await Promise.all([getHeroProjects(), getIndexProjects()]);
+  const [heroProjects, indexProjects, whatWeDoWork] = await Promise.all([getHeroProjects(), getIndexProjects(), getWhatWeDoWork()]);
 
   return (
     <>
       <HeroSection projects={heroProjects} />
       <SelectedWorkSection projects={indexProjects} />
-      <ArgumentSection />
-      <ServicesSection />
-      <ToolBand />
+      <WhatWeDoSection work={whatWeDoWork} />
       <TestimonialsSection />
       <ProofSection />
-      <NextPageLink current="/" />
+      {/* (05): the place the new Start section takes when it lands. */}
+      <ToolBand />
       <CtaSection />
     </>
   );
