@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { HIDDEN_TYPES, SINGLETONS, structure } from "../sanity/structure";
 
-test("testimonial, teamMember and package are hidden in Studio, with their schemas kept", () => {
-  assert.deepEqual([...HIDDEN_TYPES].sort(), ["package", "teamMember", "testimonial"]);
+test("teamMember and package are hidden in Studio, with their schemas kept; testimonials are listed again", () => {
+  assert.deepEqual([...HIDDEN_TYPES].sort(), ["package", "teamMember"]);
   // Read as text: the sanity package cannot load under the test runner's react-server condition.
   const index = readFileSync("sanity/schemas/index.ts", "utf8");
   for (const [type, imported] of [["testimonial", "testimonial"], ["teamMember", "teamMember"], ["package", "packageSchema"]]) {
@@ -48,7 +48,7 @@ test("the desk: Service Pricing opens directly, then every type except the hidde
   assert.equal(pricing.idValue, "servicePricing");
   assert.equal((pricing.childValue as Node).documentIdValue, "servicePricing", "the singleton opens its one document");
   assert.equal(divider.kind, "divider");
-  assert.deepEqual(types.map((t) => t.type), ["service", "caseStudy", "post", "siteSettings", "role", "initiative", "networkMember", "redirect"]);
+  assert.deepEqual(types.map((t) => t.type), ["service", "caseStudy", "post", "testimonial", "siteSettings", "role", "initiative", "networkMember", "redirect"]);
   for (const hidden of HIDDEN_TYPES) assert.ok(!types.some((t) => t.type === hidden), `${hidden} is not on the desk`);
   // Services and network members are listed under their own titles, by their order field.
   for (const [type, title] of [["service", "Services (reference copy)"], ["networkMember", "Network members"]]) {
@@ -57,4 +57,8 @@ test("the desk: Service Pricing opens directly, then every type except the hidde
     assert.deepEqual((item.childValue as Node).defaultOrderingValue, [{ field: "order", direction: "asc" }]);
   }
   assert.equal(types.find((t) => t.type === "post")!.titleValue, undefined, "other types keep their own titles");
+  // Testimonials: listed under the plural title, for the homepage Proof.
+  const testimonials = types.find((t) => t.type === "testimonial")!;
+  assert.equal(testimonials.titleValue, "Testimonials");
+  assert.equal((testimonials.childValue as Node).titleValue, "Testimonials");
 });

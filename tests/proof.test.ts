@@ -6,15 +6,21 @@ import { existsSync, readFileSync } from "node:fs";
 import { TESTIMONIALS } from "@/lib/constants/homepage-data";
 import {
   LIGHT_ROOT_MARGIN,
+  PROMISE_OPTIONS,
+  PROMISE_TAKEN_QUERY,
   PROOF_PROMISES,
   PROOF_SECTION,
   bottomSpace,
   captionText,
   codedQuote,
   countText,
+  excerptError,
   indexScrollTop,
+  keyPhraseError,
   litFromCrossed,
   proofChapters,
+  promiseTakenError,
+  publishedId,
   splitOnKeyPhrase,
 } from "@/lib/proof";
 
@@ -136,4 +142,92 @@ test("no dashes, numbers, prices or exit lines in the Proof copy", () => {
     assert.doesNotMatch(line, /[‐-―-]/, line);
     assert.doesNotMatch(line, /\d|\$|price|refund|money back|guarantee/i, line);
   }
+});
+
+// Testimonials in Sanity
+
+const doc = (promise: string, over: Record<string, unknown> = {}) => ({
+  quote: "We came for a logo. We left with a clear way to talk about our business, and a team we trust.",
+  author: "Sample Person",
+  role: "Founder",
+  company: "Sample Co",
+  excerpt: "We left with a clear way to talk about our business",
+  keyPhrase: "a clear way to talk",
+  promise,
+  ...over,
+});
+
+test("the fallback per promise: Sanity first, the coded testimonial when there is none or it breaks a rule", () => {
+  const chapters = proofChapters([
+    doc("time"),
+    doc("effort", { excerpt: "Not in the quote at all." }),
+    doc("people", { keyPhrase: "not in the excerpt" }),
+    doc("other"),
+  ]);
+  assert.deepEqual(chapters.map((c) => c.id), ["understanding", "time", "effort", "people"]);
+  assert.deepEqual(chapters[1].quote, { excerpt: "We left with a clear way to talk about our business", keyPhrase: "a clear way to talk", name: "Sample Person", role: "Founder, Sample Co" });
+  assert.deepEqual(chapters[0].quote, codedQuote("understanding"), "no published testimonial: the coded one");
+  assert.deepEqual(chapters[2].quote, codedQuote("effort"), "an excerpt not in its quote: the coded one");
+  assert.deepEqual(chapters[3].quote, codedQuote("people"), "a key phrase not in its excerpt: the coded one");
+  // A missing part also falls back.
+  for (const field of ["quote", "author", "excerpt", "keyPhrase"]) {
+    assert.deepEqual(proofChapters([doc("time", { [field]: "" })])[1].quote, codedQuote("time"), field);
+  }
+  // Nothing from Sanity, or Sanity unreachable while building: all four coded, never empty.
+  assert.deepEqual(proofChapters([]).map((c) => c.quote), PROOF_PROMISES.map((p) => codedQuote(p.id)));
+  assert.equal(captionText(chapters[1].quote), "Sample Person, Founder, Sample Co");
+});
+
+test("the substring rules, as Studio applies them", () => {
+  assert.equal(excerptError("One two three.", "two three"), null);
+  assert.match(excerptError("One two three.", "two four") ?? "", /copied exactly from the quote/);
+  assert.equal(excerptError("One two three.", ""), null, "empty: the required rule speaks instead");
+  assert.equal(keyPhraseError("two three", "three"), null);
+  assert.match(keyPhraseError("two three", "Three") ?? "", /copied exactly from the excerpt/, "exact, case included");
+  for (const t of TESTIMONIALS) {
+    assert.equal(excerptError(t.quote, t.excerpt), null, t.author);
+    assert.equal(keyPhraseError(t.excerpt, t.keyPhrase), null, t.author);
+  }
+});
+
+test("no two published testimonials share a promise", async () => {
+  const asked: Array<{ promise: string; id: string }> = [];
+  const counts = (n: number) => async (params: { promise: string; id: string }) => (asked.push(params), n);
+  assert.equal(await promiseTakenError("time", "drafts.abc", counts(0)), null);
+  assert.deepEqual(asked.at(-1), { promise: "time", id: "abc" }, "a draft is compared without its own published copy");
+  assert.match((await promiseTakenError("time", "abc", counts(1))) ?? "", /Another published testimonial already supports Time\./);
+  assert.equal(await promiseTakenError(undefined, "abc", counts(5)), null, "optional: no promise, no check");
+  assert.equal(publishedId("versions.r1.abc"), "abc");
+  assert.match(PROMISE_TAKEN_QUERY, /_type == "testimonial" && promise == \$promise && _id != \$id && !\(_id in path\("drafts\.\*\*"\)\)/);
+});
+
+test("Studio: the testimonial fields, listed as Testimonials", () => {
+  const schema = read("sanity/schemas/testimonial.ts");
+  for (const field of ["quote", "author", "role", "company", "photo", "relatedCaseStudy", "featured"]) assert.match(schema, new RegExp(`name: "${field}"`), `kept: ${field}`);
+  assert.match(schema, /name: "excerpt",\s*title: "Excerpt",\s*type: "text",[\s\S]*?description: "The part of the quote shown in the homepage Proof section\.[\s\S]*?rule\.required\(\)\.custom/);
+  assert.match(schema, /name: "keyPhrase",\s*title: "Key phrase",\s*type: "string",[\s\S]*?description: "The words that get the marker band[\s\S]*?rule\.required\(\)\.custom/);
+  assert.match(schema, /name: "promise",\s*title: "Promise",\s*type: "string",[\s\S]*?options: \{ list: PROMISE_OPTIONS, layout: "radio" \}/);
+  assert.deepEqual(PROMISE_OPTIONS, [
+    { title: "Understanding", value: "understanding" },
+    { title: "Time", value: "time" },
+    { title: "Effort", value: "effort" },
+    { title: "People", value: "people" },
+  ]);
+  const structure = read("sanity/structure.ts");
+  assert.match(structure, /testimonial: "Testimonials"/);
+  assert.doesNotMatch(structure, /HIDDEN_TYPES = \[[^\]]*"testimonial"/);
+});
+
+test("the homepage reads the testimonials through the resilience helper", () => {
+  const reader = read("src/lib/sanity/testimonials.ts");
+  assert.match(reader, /readSanity\(\s*"proof testimonials",[\s\S]*?\(\) => proofChapters\(\),?\s*\)/);
+  assert.match(reader, /_type == "testimonial" && defined\(promise\) && !\(_id in path\("drafts\.\*\*"\)\)/);
+  assert.match(read("src/app/(site)/(home)/page.tsx"), /getProofChapters\(\)/);
+});
+
+test("publishing a testimonial refreshes the homepage: the webhook refreshes the whole site, whatever the type", async () => {
+  const { REVALIDATE_TARGETS } = await import("@/lib/revalidate");
+  assert.ok(REVALIDATE_TARGETS.some((t) => t.path === "/" && t.type === "layout"), "the root layout, so the homepage too");
+  const route = read("src/app/api/revalidate/route.ts");
+  assert.doesNotMatch(route, /_type|testimonial|caseStudy/, "no document type filter in the route");
 });

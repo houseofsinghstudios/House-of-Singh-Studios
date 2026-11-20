@@ -536,6 +536,15 @@ the homepage shows the first; "Hero fit" fills the frame or fits inside it (webs
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
 in src/lib/homepage-hero.ts); the homepage hero shows them.
 
+Testimonials (listed in Studio as "Testimonials"; read by getProofChapters in src/lib/sanity/testimonials.ts, rules in
+src/lib/proof.ts): quote, author, role, company, photo, related case study and featured as before, plus "Excerpt" (required,
+the part shown in the homepage (03) Proof, copied exactly from the quote), "Key phrase" (required, the words on the
+marker band, copied exactly from the excerpt) and "Promise" (optional: Understanding, Time, Effort or People; no two
+published testimonials may share one). For each promise the homepage shows the published testimonial that supports it;
+without one, or when Sanity fails while building, the coded testimonial for that promise (TESTIMONIALS in
+src/lib/constants/homepage-data.ts, the fallback only), so a chapter is never empty. No Review or AggregateRating schema.
+Publishing one refreshes the homepage through /api/revalidate, which refreshes the whole site for any document type.
+
 What we do fieldset (Project documents, collapsed, after the Work index): "What we do" (whatWeDo) is up to twelve
 entries, each a discipline (a dropdown of the thirty deliverable names from src/data/services.ts) and an image
 with hotspot, crop and a required alt; each discipline at most once per project. Read by getWhatWeDoWork

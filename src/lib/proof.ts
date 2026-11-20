@@ -2,7 +2,8 @@
 // they are true on every project. Each is paired with one client quote. Pure, so the rules are tested
 // without React or Sanity. Never add numbers, statistics, prices or an exit or refund line here.
 
-import { TESTIMONIALS, type PromiseId, type Testimonial } from "@/lib/constants/homepage-data";
+// Relative, not "@/": the Studio schema (sanity/schemas/testimonial.ts) imports these rules too.
+import { TESTIMONIALS, type PromiseId, type Testimonial } from "./constants/homepage-data";
 
 export type { PromiseId };
 
@@ -43,9 +44,69 @@ export function codedQuote(id: PromiseId): ProofQuote {
   return toQuote(t);
 }
 
-// The four chapters, in order, each with its quote.
-export function proofChapters(): ProofChapter[] {
-  return PROOF_PROMISES.map((p) => ({ ...p, quote: codedQuote(p.id) }));
+// A published Sanity testimonial as getProofChapters reads it. Any field may be missing.
+export interface TestimonialDoc {
+  quote?: unknown;
+  author?: unknown;
+  role?: unknown;
+  company?: unknown;
+  excerpt?: unknown;
+  keyPhrase?: unknown;
+  promise?: unknown;
+}
+
+const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+// A Sanity testimonial the section can show: every part present and both substring rules kept.
+function sanityQuote(doc: TestimonialDoc): ProofQuote | null {
+  const quote = text(doc.quote);
+  const excerpt = text(doc.excerpt);
+  const keyPhrase = text(doc.keyPhrase);
+  const name = text(doc.author);
+  if (!quote || !name || !excerpt || !keyPhrase) return null;
+  if (excerptError(quote, excerpt) || keyPhraseError(excerpt, keyPhrase)) return null;
+  return { excerpt, keyPhrase, name, role: [text(doc.role), text(doc.company)].filter(Boolean).join(", ") };
+}
+
+// The four chapters, in order. For each promise, the published Sanity testimonial that supports it,
+// else the coded one, so a chapter is never empty. With no Sanity testimonials, all four are coded.
+export function proofChapters(published: readonly TestimonialDoc[] = []): ProofChapter[] {
+  return PROOF_PROMISES.map((p) => {
+    const fromSanity = published.filter((d) => d.promise === p.id).map(sanityQuote).find(Boolean);
+    return { ...p, quote: fromSanity ?? codedQuote(p.id) };
+  });
+}
+
+// Studio rules for the testimonial (sanity/schemas/testimonial.ts)
+
+// The promise list a testimonial can support: Studio titles, stored as the promise ids.
+export const PROMISE_OPTIONS = PROOF_PROMISES.map((p) => ({ title: p.name, value: p.id }));
+
+// The excerpt must be copied exactly from the quote, and the key phrase exactly from the excerpt.
+export function excerptError(quote: unknown, excerpt: unknown): string | null {
+  if (typeof excerpt !== "string" || !excerpt) return null;
+  return typeof quote === "string" && quote.includes(excerpt) ? null : "The excerpt must be copied exactly from the quote, word for word.";
+}
+export function keyPhraseError(excerpt: unknown, keyPhrase: unknown): string | null {
+  if (typeof keyPhrase !== "string" || !keyPhrase) return null;
+  return typeof excerpt === "string" && excerpt.includes(keyPhrase) ? null : "The key phrase must be copied exactly from the excerpt, word for word.";
+}
+
+// No two published testimonials may share a promise. countOthers counts the published testimonials,
+// other than this one, that already support it.
+export const PROMISE_TAKEN_QUERY = `count(*[_type == "testimonial" && promise == $promise && _id != $id && !(_id in path("drafts.**")) && !(_id in path("versions.**"))])`;
+export const publishedId = (id: string) => id.replace(/^drafts\./, "").replace(/^versions\.[^.]+\./, "");
+
+export async function promiseTakenError(
+  promise: unknown,
+  documentId: string | undefined,
+  countOthers: (params: { promise: string; id: string }) => Promise<number>,
+): Promise<string | null> {
+  if (typeof promise !== "string" || !promise) return null;
+  const taken = await countOthers({ promise, id: publishedId(documentId ?? "") });
+  if (!taken) return null;
+  const name = PROOF_PROMISES.find((p) => p.id === promise)?.name ?? promise;
+  return `Another published testimonial already supports ${name}. Each promise shows one testimonial: clear the promise on the other one first.`;
 }
 
 // The caption: "Name, Role".

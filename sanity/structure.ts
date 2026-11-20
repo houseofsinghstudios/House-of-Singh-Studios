@@ -6,13 +6,18 @@ import type { StructureResolver } from "sanity/structure";
 export const SINGLETONS = ["servicePricing"];
 
 // Types the site never reads: hidden from the desk and from every "create new" menu. Their schemas
-// and any existing documents stay (nothing is deleted). Testimonials and package prices live in the
-// code (src/lib/constants/homepage-data.ts, src/data/packages.ts).
-export const HIDDEN_TYPES = ["testimonial", "teamMember", "package"];
+// and any existing documents stay (nothing is deleted). Package timelines live in the code
+// (src/data/packages.ts). Testimonials are listed again since the homepage Proof reads them.
+export const HIDDEN_TYPES = ["teamMember", "package"];
 
 const ORDERED_LISTS: Record<string, string> = {
   service: "Services (reference copy)",
   networkMember: "Network members",
+};
+
+// Listed under a plural title of their own.
+const TITLED_LISTS: Record<string, string> = {
+  testimonial: "Testimonials",
 };
 
 export const structure: StructureResolver = (S) =>
@@ -28,9 +33,9 @@ export const structure: StructureResolver = (S) =>
         .filter((item) => ![...SINGLETONS, ...HIDDEN_TYPES].includes(item.getId() ?? ""))
         .map((item) => {
           const id = item.getId() ?? "";
-          const title = ORDERED_LISTS[id];
-          return title
-            ? item.title(title).child(S.documentTypeList(id).title(title).defaultOrdering([{ field: "order", direction: "asc" }]))
-            : item;
+          const ordered = ORDERED_LISTS[id];
+          if (ordered) return item.title(ordered).child(S.documentTypeList(id).title(ordered).defaultOrdering([{ field: "order", direction: "asc" }]));
+          const titled = TITLED_LISTS[id];
+          return titled ? item.title(titled).child(S.documentTypeList(id).title(titled)) : item;
         }),
     ]);
