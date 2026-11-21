@@ -20,6 +20,7 @@ import {
   totalDisciplines,
   WWD_MAX_ENTRIES,
   wwdHeading,
+  wwdLight,
   type WwdProjectDoc,
   type WwdService,
 } from "@/lib/what-we-do";
@@ -217,9 +218,39 @@ test("the desktop panel: tagline, description and the detail link only; the prot
   assert.match(rows, /<WwdPhoneWords key=\{`\$\{s\.slug\}-\$\{isOpen\}`\} service=\{s\} work=\{work\} \/>/);
 });
 
-test("the field's light: the row pointed at, else the open row, else every word Obsidian", () => {
+test("the field's light: the row pointed at lights its words with bands; else the open row, by colour only", () => {
+  // Pointed at (or focused): that row's words lit, with the marker band.
+  assert.deepEqual(wwdLight("digital-design", "brand-identity"), { lit: "digital-design", band: "digital-design" });
+  assert.deepEqual(wwdLight("brand-identity", "brand-identity"), { lit: "brand-identity", band: "brand-identity" }, "the open row pointed at bands too");
+  // Nothing pointed at: the open row, colour only, no bands at rest.
+  assert.deepEqual(wwdLight(null, "brand-identity"), { lit: "brand-identity", band: null });
+  // Every row closed: every word Obsidian, no bands.
+  assert.deepEqual(wwdLight(null, null), { lit: null, band: null });
+  assert.deepEqual(wwdLight("visual-media", null), { lit: "visual-media", band: "visual-media" });
   const island = read("src/components/homepage/what-we-do/WhatWeDo.tsx");
-  assert.match(island, /const fieldLight = litService \?\? \(open !== null \? services\[open\]\.slug : null\);/);
-  assert.match(island, /<WwdField [^>]*litService=\{fieldLight\}/);
+  assert.match(island, /const light = wwdLight\(litService, open !== null \? services\[open\]\.slug : null\);/);
+  assert.match(island, /<WwdField [^>]*litService=\{light\.lit\} bandService=\{light\.band\}/);
+  assert.match(island, /pointed=\{litService\}/);
+  // Leaving the rows returns the light to the open row after 150ms.
   assert.match(island, /const RESET_MS = 150;/);
+  const field = read("src/components/homepage/what-we-do/WwdField.tsx");
+  assert.match(field, /data-band=\{band \|\| undefined\}/);
+  assert.match(field, /<span className="wwd-ink">\{t\.name\}<\/span>/, "the band sits on an inner span");
+  const rows = read("src/components/homepage/what-we-do/WwdRows.tsx");
+  assert.match(rows, /data-pointed=\{pointed === s\.slug \|\| undefined\}/);
+});
+
+test("the light in CSS (desktop only): the row's background, the looser name, the word bands, reduced motion", () => {
+  const css = read("src/components/homepage/what-we-do/wwd.css");
+  const block = css.slice(css.indexOf("/* ── The shared light"), css.indexOf("/* ── End of the shared light"));
+  assert.match(block, /@media \(min-width: 1081px\)/, "desktop only");
+  assert.match(block, /\.wwd-row::before \{[^}]*left: -16px;\n\s*right: -16px;[^}]*background: var\(--bg-shift\);[^}]*opacity: 0;[^}]*transition: opacity 0\.5s var\(--wwd-ease\);/);
+  assert.match(block, /\.wwd-row\[data-pointed\]::before \{\s*opacity: 1;/);
+  assert.match(block, /\.wwd-row\[data-pointed\] \.wwd-name \{\s*letter-spacing: -0\.01em;/);
+  assert.match(block, /transition: color 0\.3s var\(--wwd-ease\), letter-spacing 0\.5s ease;/);
+  assert.match(block, /\.wwd-ink \{[^}]*background-position: 0 0\.14em;[^}]*background-size: 0% 0\.9em;[^}]*box-decoration-break: clone;[^}]*transition: background-size 0\.45s var\(--wwd-ease\);\s*transition-delay: calc\(var\(--i, 0\) \* 12ms\);/);
+  assert.match(block, /\.wwd-term\[data-band\] \.wwd-ink \{\s*background-size: 100% 0\.9em;/);
+  assert.match(block, /@media \(min-width: 1081px\) and \(prefers-reduced-motion: reduce\) \{\s*\.wwd-row::before,\s*\.wwd-ink,\s*\.wwd-name \{\s*transition: none;/);
+  // Phones: the inner span carries no band at all.
+  assert.doesNotMatch(css.slice(css.indexOf("@media (max-width: 1080px)")), /wwd-ink/);
 });

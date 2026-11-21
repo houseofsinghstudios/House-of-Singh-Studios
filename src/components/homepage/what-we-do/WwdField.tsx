@@ -16,8 +16,10 @@ interface Props {
   terms: WwdTerm[];
   services: WwdService[];
   work: Record<string, WwdWork>;
-  // A row pointed at: its service's words stay Obsidian, the rest turn Accessible Ash.
+  // The lit service: its words stay Obsidian, the rest turn Accessible Ash.
   litService: string | null;
+  // The row pointed at or focused: its words also take the marker band, 12ms apart in reading order.
+  bandService: string | null;
   onWord: (service: string | null) => void;
 }
 
@@ -36,8 +38,86 @@ function movePreview(el: HTMLDivElement | null, line: Element | null, pointer: {
   el.toggleAttribute("data-below", place.below);
 }
 
-export default function WwdField({ terms, services, work, litService, onWord }: Props) {
-  const [armed, setArmed] = useState(false);
+interface TermProps {
+  term: WwdTerm;
+  work: WwdWork | undefined;
+  dim: boolean;
+  band: boolean;
+  onEnter: (e: React.PointerEvent, term: WwdTerm) => void;
+  onLeave: (e: React.PointerEvent) => void;
+  onWord: (service: string | null) => void;
+}
+
+// One word in the field, with its slash. A word with work links to its case study. The word's text sits
+// on an inner span, which carries the row's marker band, so it never fights the link's underline or its
+// own hover band.
+function FieldTerm({ term: t, work: w, dim, band, onEnter, onLeave, onWord }: TermProps) {
+  return (
+    <li className="wwd-term" data-dim={dim || undefined} data-band={band || undefined} style={{ "--i": t.order } as React.CSSProperties}>
+      <span className="wwd-sep" aria-hidden="true">/</span>
+      {w ? (
+        <Link
+          href={caseStudyHref(w.slug)}
+          className="wwd-word wwd-word--work"
+          data-cursor="link"
+          onPointerEnter={(e) => onEnter(e, t)}
+          onPointerLeave={onLeave}
+          onFocus={() => onWord(t.service)}
+          onBlur={() => onWord(null)}
+          onClick={() => track("home_wwd_word_click", { discipline: t.name, has_work: true, layout: "desktop" })}
+        >
+          <span className="wwd-ink">{t.name}</span>
+        </Link>
+      ) : (
+        <span className="wwd-word" onPointerEnter={(e) => onEnter(e, t)} onPointerLeave={onLeave}>
+          <span className="wwd-ink">{t.name}</span>
+        </span>
+      )}
+    </li>
+  );
+}
+
+interface PreviewProps {
+  previewRef: React.RefObject<HTMLDivElement | null>;
+  armed: boolean;
+  seen: WwdWork[];
+  current: WwdWork | null | undefined;
+  caption: string;
+  serviceName: string;
+}
+
+// The decorative preview that follows the pointer. Every image shown so far stays rendered (hidden), so
+// coming back to a word never reloads it; images load only once the field is armed.
+function FieldPreview({ previewRef, armed, seen, current, caption, serviceName }: PreviewProps) {
+  return (
+    <div className="wwd-preview" ref={previewRef} aria-hidden="true" data-show={current ? true : undefined}>
+      <div className="wwd-preview-frame">
+        {armed &&
+          seen.map((w) => (
+            <Image
+              key={w.image.src}
+              src={w.image.src}
+              alt=""
+              fill
+              sizes="300px"
+              className="wwd-preview-img"
+              data-on={current?.image.src === w.image.src ? true : undefined}
+              style={{ objectFit: "cover", objectPosition: w.image.position }}
+            />
+          ))}
+      </div>
+      {caption && (
+        <p className="wwd-preview-caption">
+          <span className="wwd-preview-what">{caption}</span>
+          <span className="wwd-preview-service">{serviceName}</span>
+        </p>
+      )}
+    </div>
+  );
+}
+
+// The preview's state: the word pointed at, the images shown so far, and its place beside the pointer.
+function usePreview(work: Record<string, WwdWork>, onWord: (service: string | null) => void) {
   const [active, setActive] = useState<WwdTerm | null>(null);
   // Every preview shown so far stays rendered (hidden), so coming back to a word never reloads it.
   const [seen, setSeen] = useState<WwdWork[]>([]);
@@ -74,7 +154,12 @@ export default function WwdField({ terms, services, work, litService, onWord }: 
     onWord(null);
     setActive(null);
   };
+  return { preview, active, seen, follow, enter, leave };
+}
 
+export default function WwdField({ terms, services, work, litService, bandService, onWord }: Props) {
+  const [armed, setArmed] = useState(false);
+  const { preview, active, seen, follow, enter, leave } = usePreview(work, onWord);
   const current = active ? work[active.name] : null;
   const serviceName = active ? services.find((s) => s.slug === active.service)?.name : "";
 
@@ -82,57 +167,21 @@ export default function WwdField({ terms, services, work, litService, onWord }: 
     <div className="wwd-field-wrap" onPointerEnter={(e) => isMouse(e) && setArmed(true)} onPointerMove={follow}>
       <div className="wwd-field-frame">
         <ul className="wwd-field">
-          {terms.map((t) => {
-            const w = work[t.name];
-            return (
-              <li key={t.name} className="wwd-term" data-dim={litService !== null && t.service !== litService ? true : undefined} style={{ "--i": t.order } as React.CSSProperties}>
-                <span className="wwd-sep" aria-hidden="true">/</span>
-                {w ? (
-                  <Link
-                    href={caseStudyHref(w.slug)}
-                    className="wwd-word wwd-word--work"
-                    data-cursor="link"
-                    onPointerEnter={(e) => enter(e, t)}
-                    onPointerLeave={leave}
-                    onFocus={() => onWord(t.service)}
-                    onBlur={() => onWord(null)}
-                    onClick={() => track("home_wwd_word_click", { discipline: t.name, has_work: true, layout: "desktop" })}
-                  >
-                    {t.name}
-                  </Link>
-                ) : (
-                  <span className="wwd-word" onPointerEnter={(e) => enter(e, t)} onPointerLeave={leave}>
-                    {t.name}
-                  </span>
-                )}
-              </li>
-            );
-          })}
+          {terms.map((t) => (
+            <FieldTerm
+              key={t.name}
+              term={t}
+              work={work[t.name]}
+              dim={litService !== null && t.service !== litService}
+              band={bandService !== null && t.service === bandService}
+              onEnter={enter}
+              onLeave={leave}
+              onWord={onWord}
+            />
+          ))}
         </ul>
       </div>
-      <div className="wwd-preview" ref={preview} aria-hidden="true" data-show={current ? true : undefined}>
-        <div className="wwd-preview-frame">
-          {armed &&
-            seen.map((w) => (
-              <Image
-                key={w.image.src}
-                src={w.image.src}
-                alt=""
-                fill
-                sizes="300px"
-                className="wwd-preview-img"
-                data-on={current?.image.src === w.image.src ? true : undefined}
-                style={{ objectFit: "cover", objectPosition: w.image.position }}
-              />
-            ))}
-        </div>
-        {current && active && (
-          <p className="wwd-preview-caption">
-            <span className="wwd-preview-what">{previewCaption(active.name, current.client)}</span>
-            <span className="wwd-preview-service">{serviceName}</span>
-          </p>
-        )}
-      </div>
+      <FieldPreview previewRef={preview} armed={armed} seen={seen} current={current} caption={current && active ? previewCaption(active.name, current.client) : ""} serviceName={serviceName ?? ""} />
     </div>
   );
 }
