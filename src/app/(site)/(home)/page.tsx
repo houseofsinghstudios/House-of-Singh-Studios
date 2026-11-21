@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import HeroSection from "@/components/homepage/HeroSection";
 import SelectedWorkSection from "@/components/homepage/SelectedWorkSection";
 import WhatWeDoSection from "@/components/homepage/what-we-do/WhatWeDoSection";
-import ToolBand from "@/components/homepage/ToolBand";
 import ProofSection from "@/components/homepage/proof/ProofSection";
-import CtaSection from "@/components/homepage/CtaSection";
+import StartSection from "@/components/homepage/start/StartSection";
 import { getHeroProjects, getIndexProjects, getWhatWeDoWork } from "@/lib/sanity/projects";
 import { WEBSITE_OG } from "@/lib/seo";
 import { getProofChapters } from "@/lib/sanity/testimonials";
@@ -36,9 +35,7 @@ export default async function Home() {
       <SelectedWorkSection projects={indexProjects} />
       <WhatWeDoSection work={whatWeDoWork} />
       <ProofSection chapters={proofChapters} />
-      {/* (04): the place the new Start section takes when it lands. */}
-      <ToolBand />
-      <CtaSection />
+      <StartSection />
     </>
   );
 }

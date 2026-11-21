@@ -28,7 +28,11 @@ test("no old name for the main or second action anywhere under src", () => {
 });
 
 test("the main action and the second action keep their names and links", () => {
-  const cta = fs.readFileSync(path.join(process.cwd(), "src/components/homepage/CtaSection.tsx"), "utf8");
-  assert.match(cta, /href="\/start"[^>]*>\s*Plan your project\s*</);
-  assert.match(cta, /href=\{DISCOVERY_CALL_URL\}[^>]*>\s*Book a discovery call\s*</);
+  // The homepage closes with (04) Start: "Plan your project" into the planner, "Book a discovery call" to the call.
+  const read = (f: string) => fs.readFileSync(path.join(process.cwd(), f), "utf8");
+  assert.match(read("src/lib/home-start.ts"), /button: "Plan your project",/);
+  assert.match(read("src/lib/home-start.ts"), /callLink: "Book a discovery call",/);
+  assert.match(read("src/lib/home-start.ts"), /return selected\.length \? `\/start\?service=\$\{selected\.join\(","\)\}&begin=1` : "\/start\?begin=1";/);
+  const section = read("src/components/homepage/start/StartSection.tsx");
+  assert.match(section, /<a href=\{DISCOVERY_CALL_URL\} className="hs-door-link"[^>]*>\s*\{START_COPY\.callLink\}\s*<\/a>/);
 });

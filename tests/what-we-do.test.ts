@@ -177,11 +177,11 @@ test("events: the three names, with their parameters, and no hover events", () =
 
 test("the homepage: What we do replaces The Argument and Capabilities; the sections renumbered", () => {
   const page = read("src/app/(site)/(home)/page.tsx");
-  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<ProofSection", "<ToolBand", "<CtaSection"].map((tag) => page.indexOf(tag));
+  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<ProofSection", "<StartSection"].map((tag) => page.indexOf(tag));
   assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), `order ${order}`);
   assert.doesNotMatch(page, /ArgumentSection|ServicesSection|NextPageLink/);
   assert.match(read("src/components/homepage/what-we-do/WhatWeDoSection.tsx"), /<EditorialLabel number="02" text="What we do"/);
-  // (03) Proof and (04) Two ways to start: tests/proof.test.ts.
+  // (03) Proof: tests/proof.test.ts; (04) Start: tests/home-start.test.ts.
   // The preview images: next/image at 300px, never priority, and only after the pointer enters.
   const field = read("src/components/homepage/what-we-do/WwdField.tsx");
   assert.match(field, /sizes="300px"/);
