@@ -1,6 +1,7 @@
 # Deploys the Sanity schema (workspace hos-studios, dataset production) whenever a push to main changes the
-# schema or the Studio config, so Sanity's own copy of the content model stays current. Tools that validate
-# against the deployed schema (the Sanity MCP server, Agent Actions, Canvas) otherwise reject new fields.
+# schema, the Studio config or a file they import, so Sanity's own copy of the content model stays current.
+# Tools that validate against the deployed schema (the Sanity MCP server, Agent Actions, Canvas) otherwise
+# reject new fields.
 #
 # Schema deploy ONLY. Never `sanity deploy`: that builds and hosts a separate Studio that falls out of step
 # with the embedded one at /studio. The embedded Studio does not update the deployed schema on its own.
@@ -16,8 +17,20 @@ on:
     paths:
       - "sanity/**"
       - "sanity.config.ts"
-  # Run it by hand once the secret is added, or after a change the paths above do not catch (the schemas
-  # also read src/data/services.ts, src/lib/what-we-do.ts and src/lib/proof.ts).
+      # Every file under src/ that the Studio config and the schemas import, directly or through their
+      # imports. tests/sanity-schema-deploy.test.ts walks the imports and fails when one is missing here.
+      - "src/data/services.ts"
+      - "src/lib/constants/booking.ts"
+      - "src/lib/constants/homepage-data.ts"
+      - "src/lib/homepage-hero.ts"
+      - "src/lib/initiatives/types.ts"
+      - "src/lib/insights-listing.ts"
+      - "src/lib/proof.ts"
+      - "src/lib/sanity/project.ts"
+      - "src/lib/site-paths.ts"
+      - "src/lib/what-we-do.ts"
+      - "src/lib/work-index.ts"
+  # Run it by hand once the secret is added.
   workflow_dispatch:
 
 permissions:

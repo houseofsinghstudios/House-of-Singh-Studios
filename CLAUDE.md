@@ -524,9 +524,9 @@ Schema deploy is different, and automatic: `sanity schema deploy` uploads only t
 document `_.schemas.hos-studios` in the production dataset), which tools such as the Sanity MCP server, Agent
 Actions and Canvas validate against. It hosts nothing and changes no content. The embedded Studio never updates
 that copy itself, so .github/workflows/sanity-schema-deploy.yml runs `npx sanity schema deploy --workspace
-hos-studios` on every push to main that changes sanity/ or sanity.config.ts (and by hand from the Actions tab,
-for a change that only touches the files the schemas import, such as src/data/services.ts, src/lib/what-we-do.ts
-or src/lib/proof.ts). Its token is the GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a project robot token with the
+hos-studios` on every push to main that changes sanity/, sanity.config.ts or a file under src/ that they import,
+directly or through their imports (eleven today, listed in the workflow; tests/sanity-schema-deploy.test.ts walks
+the imports and fails when one is missing from the trigger), and by hand from the Actions tab. Its token is the GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a project robot token with the
 "Deploy Studio (Token only)" permission, the least that schema deploy accepts (the deployStudio grant, no content
 write). Never put it in Vercel, in .env files or in the code. In short: `sanity schema deploy`, yes, through the
 workflow; `sanity deploy`, never.
