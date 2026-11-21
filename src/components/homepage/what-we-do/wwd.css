@@ -360,6 +360,61 @@
   outline-offset: 4px;
 }
 
+/* ── The shared light (desktop, WWDLightShared): the row pointed at or focused takes a Cloudy White
+   ground and a looser name, and each of its disciplines in the field takes the marker band, 12ms apart in
+   reading order. The band sits on the word's inner span, so it never fights a linked word's underline or
+   its own hover band. With nothing pointed at, the open row lights the field by colour only. ── */
+@media (min-width: 1081px) {
+  .wwd-row {
+    position: relative;
+    isolation: isolate;
+  }
+  .wwd-row::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: -16px;
+    right: -16px;
+    background: var(--bg-shift);
+    opacity: 0;
+    transition: opacity 0.5s var(--wwd-ease);
+  }
+  .wwd-row[data-pointed]::before {
+    opacity: 1;
+  }
+  .wwd-name {
+    transition: color 0.3s var(--wwd-ease), letter-spacing 0.5s ease;
+  }
+  .wwd-row[data-pointed] .wwd-name {
+    letter-spacing: -0.01em;
+  }
+  .wwd-ink {
+    padding: 0 3px;
+    margin: 0 -3px;
+    background-image: linear-gradient(var(--bg-shift), var(--bg-shift));
+    background-repeat: no-repeat;
+    background-position: 0 0.14em;
+    background-size: 0% 0.9em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 0.45s var(--wwd-ease);
+    transition-delay: calc(var(--i, 0) * 12ms);
+  }
+  .wwd-term[data-band] .wwd-ink {
+    background-size: 100% 0.9em;
+  }
+}
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .wwd-row::before,
+  .wwd-ink,
+  .wwd-name {
+    transition: none;
+  }
+}
+/* ── End of the shared light ── */
+
 /* ── Phone and tablet: 1080px and below ── */
 @media (max-width: 1080px) {
   .wwd {

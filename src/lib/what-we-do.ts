@@ -81,6 +81,15 @@ export const detailLinkText = (serviceName: string) => `${serviceName} in detail
 export const seeItText = (client: string) => `See it in ${client}`;
 export const previewCaption = (discipline: string, client: string) => `${discipline} for ${client}`;
 
+// ── The light between the rows and the field (desktop) ──
+
+// Which service the field lights, and which one also carries the marker bands. The row pointed at or
+// focused lights its disciplines with bands; with nothing pointed at, the open row lights them by colour
+// only; with every row closed, nothing is lit and every word stays Obsidian.
+export function wwdLight(pointed: string | null, openService: string | null): { lit: string | null; band: string | null } {
+  return { lit: pointed ?? openService, band: pointed };
+}
+
 // ── The desktop preview's place ──
 
 // The preview never covers the word pointed at or its line. Its bottom left corner sits 24px right of

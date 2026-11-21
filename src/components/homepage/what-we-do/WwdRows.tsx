@@ -18,6 +18,8 @@ interface Props {
   onToggle: (index: number) => void;
   // A field word pointed at: the other services' names turn Accessible Ash.
   litWord: string | null;
+  // The row pointed at or focused (desktop): a Cloudy White background and a looser name.
+  pointed: string | null;
   onRowLight: (slug: string) => void;
   onRowsLeave: () => void;
 }
@@ -45,33 +47,38 @@ function DesktopPanel({ service, topic }: { service: WwdService; topic: string }
   );
 }
 
-export default function WwdRows({ services, work, topics, open, onToggle, litWord, onRowLight, onRowsLeave }: Props) {
+// The row's h3 and its button: number, name, count and the plus that turns into a minus.
+function RowHeading({ service, isOpen, panelId, onToggle, onFocus, onBlur }: { service: WwdService; isOpen: boolean; panelId: string; onToggle: () => void; onFocus: () => void; onBlur: () => void }) {
+  return (
+    <h3 className="wwd-row-h">
+      <button type="button" className="wwd-row-btn" aria-expanded={isOpen} aria-controls={panelId} onClick={onToggle} onFocus={onFocus} onBlur={onBlur}>
+        <span className="wwd-num">{service.number}</span>
+        <span className="wwd-name">{service.name}</span>
+        <span className="wwd-count">
+          {countLabel(service.disciplines.length)}
+          <span className="sr-only"> disciplines</span>
+          <span className="wwd-plus" aria-hidden="true" />
+        </span>
+      </button>
+    </h3>
+  );
+}
+
+export default function WwdRows({ services, work, topics, open, onToggle, litWord, pointed, onRowLight, onRowsLeave }: Props) {
   return (
     <div className="wwd-rows" onPointerLeave={(e) => isMouse(e) && onRowsLeave()}>
       {services.map((s, i) => {
         const isOpen = open === i;
         const panelId = `wwd-panel-${s.slug}`;
         return (
-          <div key={s.slug} className="wwd-row" data-dim={litWord !== null && litWord !== s.slug ? true : undefined} onPointerEnter={(e) => isMouse(e) && onRowLight(s.slug)}>
-            <h3 className="wwd-row-h">
-              <button
-                type="button"
-                className="wwd-row-btn"
-                aria-expanded={isOpen}
-                aria-controls={panelId}
-                onClick={() => onToggle(i)}
-                onFocus={() => onRowLight(s.slug)}
-                onBlur={onRowsLeave}
-              >
-                <span className="wwd-num">{s.number}</span>
-                <span className="wwd-name">{s.name}</span>
-                <span className="wwd-count">
-                  {countLabel(s.disciplines.length)}
-                  <span className="sr-only"> disciplines</span>
-                  <span className="wwd-plus" aria-hidden="true" />
-                </span>
-              </button>
-            </h3>
+          <div
+            key={s.slug}
+            className="wwd-row"
+            data-dim={litWord !== null && litWord !== s.slug ? true : undefined}
+            data-pointed={pointed === s.slug || undefined}
+            onPointerEnter={(e) => isMouse(e) && onRowLight(s.slug)}
+          >
+            <RowHeading service={s} isOpen={isOpen} panelId={panelId} onToggle={() => onToggle(i)} onFocus={() => onRowLight(s.slug)} onBlur={onRowsLeave} />
             <div id={panelId} className="wwd-panel" data-open={isOpen} inert={!isOpen}>
               <div className="wwd-panel-clip">
                 <div className="wwd-panel-body">

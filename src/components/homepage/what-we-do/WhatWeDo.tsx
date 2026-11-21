@@ -8,7 +8,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
-import type { WwdService, WwdTerm, WwdWork } from "@/lib/what-we-do";
+import { wwdLight, type WwdService, type WwdTerm, type WwdWork } from "@/lib/what-we-do";
 import WwdField from "./WwdField";
 import WwdRows from "./WwdRows";
 
@@ -45,12 +45,12 @@ export default function WhatWeDo({ services, terms, work, topics }: Props) {
     if (next !== null) track("home_wwd_service_open", { service: services[i].slug });
   };
 
-  // The row pointed at or focused, else the open row, else none (every word Obsidian).
-  const fieldLight = litService ?? (open !== null ? services[open].slug : null);
+  // The row pointed at or focused lights its words with bands; else the open row, by colour only.
+  const light = wwdLight(litService, open !== null ? services[open].slug : null);
 
   return (
     <div className="wwd-island">
-      <WwdField terms={terms} services={services} work={work} litService={fieldLight} onWord={setLitWord} />
+      <WwdField terms={terms} services={services} work={work} litService={light.lit} bandService={light.band} onWord={setLitWord} />
       <WwdRows
         services={services}
         work={work}
@@ -58,6 +58,7 @@ export default function WhatWeDo({ services, terms, work, topics }: Props) {
         open={open}
         onToggle={toggle}
         litWord={litWord}
+        pointed={litService}
         onRowLight={lightService}
         onRowsLeave={releaseService}
       />
