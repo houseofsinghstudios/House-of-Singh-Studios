@@ -1,6 +1,7 @@
-// The Sanity schema deploy workflow: schema deploy only, on pushes to main that change the schema or the
-// Studio config, with the token from a GitHub secret. Never `sanity deploy` (a separate hosted Studio).
-// Run with: npm run test
+// The Sanity schema deploy workflow: schema deploy, then registering our own self hosted Studio with
+// `sanity deploy --external --url https://studios.houseofsingh.com/studio`, on pushes to main that change the
+// schema, the Studio config or a file they import, with the token from a GitHub secret. Any other
+// `sanity deploy` (it builds and hosts a separate Studio) is forbidden everywhere. Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
@@ -77,10 +78,47 @@ test("it runs on pushes to main that change sanity/, sanity.config.ts or a file 
   assert.match(workflow, /permissions:\n {2}contents: read/);
 });
 
-test("schema deploy only, never sanity deploy", () => {
+// The one allowed `sanity deploy`: it registers the existing self hosted Studio and its schema, and never
+// builds or uploads a Studio. Anything else (plain, a hostname, extra or different flags) is refused.
+const ALLOWED_DEPLOY = "sanity deploy --external --url https://studios.houseofsingh.com/studio";
+const studioDeploys = (text: string) => [...text.matchAll(/sanity(?:@[\w.-]+)?\s+deploy\b[^\n"'`]*/g)].map((m) => m[0].trim().replace(/\s+/g, " "));
+const allowedDeploy = (command: string) => command === ALLOWED_DEPLOY;
+
+test("the allowed form, and nothing else", () => {
+  assert.ok(allowedDeploy("sanity deploy --external --url https://studios.houseofsingh.com/studio"));
+  for (const refused of [
+    "sanity deploy",
+    "sanity deploy --yes",
+    "sanity deploy --url my-studio",
+    "sanity deploy --external",
+    "sanity deploy --external --url https://studios.houseofsingh.com",
+    "sanity deploy --external --url https://example.com/studio",
+    "sanity deploy --external --url https://studios.houseofsingh.com/studio --build",
+    "sanity deploy --url https://studios.houseofsingh.com/studio",
+  ]) {
+    assert.equal(allowedDeploy(refused), false, refused);
+  }
+  assert.deepEqual(studioDeploys("npx sanity schema deploy --workspace hos-studios"), [], "schema deploy is not a Studio deploy");
+  assert.deepEqual(studioDeploys("npx sanity@latest deploy --yes"), ["sanity@latest deploy --yes"]);
+});
+
+test("schema deploy, then the self hosted Studio registration; no other sanity deploy anywhere", () => {
   assert.match(commands, /npx sanity schema deploy --workspace hos-studios --verbose/);
-  assert.doesNotMatch(commands, /sanity(@latest)? deploy\b/, "no Studio deploy");
-  assert.doesNotMatch(commands, /schemas? delete/);
+  // The registration runs after the schema deploy, with the same token (the job's env).
+  const schemaAt = commands.indexOf("npx sanity schema deploy");
+  const registerAt = commands.indexOf(`npx ${ALLOWED_DEPLOY}`);
+  assert.ok(schemaAt >= 0 && registerAt > schemaAt, "the registration follows the schema deploy");
+  assert.deepEqual(studioDeploys(commands), [ALLOWED_DEPLOY]);
+  assert.doesNotMatch(commands, /schemas? delete|undeploy/);
+  // Every workflow and every npm script: only the allowed form.
+  for (const file of readdirSync(".github/workflows")) {
+    const text = readFileSync(path.join(".github/workflows", file), "utf8").split("\n").filter((l) => !/^\s*#/.test(l)).join("\n");
+    for (const found of studioDeploys(text)) assert.ok(allowedDeploy(found), `${file}: ${found}`);
+  }
+  const scripts = JSON.parse(readFileSync("package.json", "utf8")).scripts ?? {};
+  for (const [name, script] of Object.entries<string>(scripts)) {
+    for (const found of studioDeploys(script)) assert.ok(allowedDeploy(found), `npm script ${name}: ${found}`);
+  }
 });
 
 test("the token comes from the SANITY_SCHEMA_DEPLOY_TOKEN secret and is never written into the file", () => {
@@ -93,6 +131,7 @@ test("CLAUDE.md explains the difference next to the never run sanity deploy line
   const claude = readFileSync("CLAUDE.md", "utf8");
   const at = claude.indexOf("Never run `sanity deploy`");
   assert.ok(at > 0);
-  assert.match(claude.slice(at, at + 1500), /sanity schema deploy/);
-  assert.match(claude.slice(at, at + 1500), /SANITY_SCHEMA_DEPLOY_TOKEN/);
+  assert.match(claude.slice(at, at + 2500), /sanity schema deploy/);
+  assert.match(claude.slice(at, at + 400), /The one exception: `sanity deploy --external --url https:\/\/studios\.houseofsingh\.com\/studio`/);
+  assert.match(claude.slice(at, at + 2500), /SANITY_SCHEMA_DEPLOY_TOKEN/);
 });

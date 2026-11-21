@@ -3,11 +3,16 @@
 # Tools that validate against the deployed schema (the Sanity MCP server, Agent Actions, Canvas) otherwise
 # reject new fields.
 #
-# Schema deploy ONLY. Never `sanity deploy`: that builds and hosts a separate Studio that falls out of step
-# with the embedded one at /studio. The embedded Studio does not update the deployed schema on its own.
+# Then it registers our own Studio with Sanity: `sanity deploy --external --url
+# https://studios.houseofsingh.com/studio` records the existing registration (user application
+# h8sx77qg2395sepru27oouhh, urlType external) and refreshes its schema descriptor, which Sanity's tools
+# validate against. With --external the CLI builds nothing and uploads no files (Sanity's deploy guide, and
+# @sanity/cli's deployStudio: no build and no tarball when external). Plain `sanity deploy`, which builds and
+# hosts a separate Studio that falls out of step with the embedded one at /studio, stays forbidden
+# (tests/sanity-schema-deploy.test.ts). The embedded Studio updates neither copy on its own.
 #
 # The token is the GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a Sanity project robot token with the
-# "Deploy Studio (Token only)" permission (it carries the deployStudio grant that schema deploy needs; no
+# "Deploy Studio (Token only)" permission (it carries the deployStudio grant that both steps need; no
 # write access to content). The CLI reads it from SANITY_AUTH_TOKEN; GitHub masks it in the logs.
 name: Sanity schema deploy
 
@@ -70,3 +75,8 @@ jobs:
       # The Sanity version pinned in package-lock.json, the same one the embedded Studio runs.
       - name: Deploy the schema
         run: npx sanity schema deploy --workspace hos-studios --verbose
+
+      # Registers the existing self hosted Studio and refreshes its schema descriptor. --external never
+      # builds or uploads a Studio; the URL matches the existing registration, so no new one is made.
+      - name: Register the self hosted Studio and its schema
+        run: npx sanity deploy --external --url https://studios.houseofsingh.com/studio
