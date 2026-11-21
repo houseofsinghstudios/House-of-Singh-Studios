@@ -1,7 +1,8 @@
-/* (02) What we do (WhatWeDoSection). Desktop from the WWDFinal artboard: major third type scale, line
-   heights on the 8px grid, tracking tightening with size. Phone (1080px and below) from WWDPhoneM1:
-   minor third scale, no keyword field, the disciplines inside each open service. Colour changes only,
-   never opacity, for anything that dims. */
+/* (02) What we do (WhatWeDoSection). Desktop from the WWDSideBySide artboard: the label over a full width
+   heading, then the keyword field (columns 1 to 7, sticky) beside the service rows (8 to 12), so a row
+   and the words it lights are always on one screen. Phone (1080px and below) from WWDPhoneM1: minor
+   third scale, no keyword field, the disciplines inside each open service. Colour changes only, never
+   opacity, for anything that dims. */
 
 .wwd {
   --wwd-ease: cubic-bezier(0.23, 1, 0.32, 1);
@@ -14,10 +15,13 @@
   column-gap: 24px;
 }
 .wwd-label {
-  grid-column: 1 / 3;
+  grid-column: 1 / -1;
+  margin: 0;
 }
+/* Full width, so the heading fits on one line from 1280px up (it needs about 955px at 48px). */
 .wwd-intro {
-  grid-column: 3 / 11;
+  grid-column: 1 / -1;
+  margin-top: 20px;
 }
 .wwd-heading {
   font-family: var(--sans);
@@ -33,17 +37,32 @@
   font-size: 16px;
   line-height: 24px;
   color: var(--text-secondary);
-  margin: 24px 0 0;
+  margin: 16px 0 0;
   max-width: 680px;
+}
+@media (min-width: 1280px) {
+  .wwd-heading {
+    white-space: nowrap;
+  }
 }
 .wwd-line--phone {
   display: none;
 }
 
-/* ── The keyword field ── */
+/* Side by side, 72px under the line; both start at the same top, the field's first line level with the
+   first row. */
+.wwd-island {
+  margin-top: 72px;
+  align-items: start;
+}
+
+/* ── The keyword field: sticky beside the rows, following the header ── */
 .wwd-field-wrap {
-  grid-column: 3 / -1;
-  margin-top: 96px;
+  grid-column: 1 / 8;
+  padding-right: 56px;
+  position: sticky;
+  top: calc(var(--header-edge) + 32px);
+  transition: top var(--header-slide);
 }
 /* The clipping frame. 4px of padding keeps focus outlines visible; the slash cell pulled into it is
    wider than that, and its slash sits in the cell's middle, so nothing of it shows. */
@@ -61,9 +80,9 @@
   flex-wrap: wrap;
   font-family: var(--sans);
   font-weight: 500;
-  font-size: 31px;
-  line-height: 40px;
-  letter-spacing: -0.025em;
+  font-size: 25px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
 }
 /* A term never splits: its slash and its words stay on one line together. */
@@ -195,8 +214,7 @@
 
 /* ── The service rows ── */
 .wwd-rows {
-  grid-column: 1 / -1;
-  margin-top: 96px;
+  grid-column: 8 / -1;
   border-bottom: 1px solid var(--border);
 }
 .wwd-row {
@@ -209,9 +227,9 @@
 .wwd-row-btn {
   display: flex;
   align-items: baseline;
-  gap: 40px;
+  gap: 16px;
   width: 100%;
-  padding: 32px 0;
+  padding: 24px 0;
   border: 0;
   background: none;
   text-align: left;
@@ -224,7 +242,7 @@
   outline-offset: 4px;
 }
 .wwd-num {
-  flex: 0 0 40px;
+  flex: 0 0 24px;
   font-size: 11px;
   letter-spacing: 0.12em;
   color: var(--text-label);
@@ -286,17 +304,9 @@
   min-height: 0;
   overflow: hidden;
 }
+/* Indented 40px (the number's 24px and the 16px gap), so it lines up with the name. */
 .wwd-panel-desktop {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 24px;
-  padding-bottom: 56px;
-}
-.wwd-panel-about {
-  grid-column: 2 / 6;
-}
-.wwd-panel-list {
-  grid-column: 7 / -1;
+  padding: 0 0 32px 40px;
 }
 .wwd-panel-phone {
   display: none;
@@ -313,34 +323,15 @@
   color: var(--text-secondary);
   margin: 8px 0 0;
 }
-.wwd-panel-about .wwd-desc {
-  margin-top: 16px;
-}
-.wwd-includes {
-  list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 24px;
-}
-.wwd-include {
-  border-top: 1px solid var(--border);
-  padding: 16px 0;
-}
-.wwd-include-name {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 500;
-  color: var(--text-primary);
-  margin: 0;
+.wwd-panel-desktop .wwd-desc {
+  margin-top: 12px;
 }
 
 /* "<Service name> in detail": the site's underline wipe. */
 .wwd-detail {
   position: relative;
   display: inline-block;
-  margin-top: 24px;
+  margin-top: 20px;
   font-size: 16px;
   line-height: 24px;
   font-weight: 500;
@@ -386,6 +377,9 @@
   .wwd-intro {
     margin-top: 24px;
   }
+  .wwd-island {
+    margin-top: 0;
+  }
   .wwd-heading {
     font-size: 32px;
     line-height: 40px;
@@ -421,6 +415,10 @@
   .wwd-panel-phone {
     display: block;
     padding-bottom: 32px;
+  }
+  /* The phone keeps its own spacing: 24px above the detail link, as before the desktop change. */
+  .wwd-panel-phone .wwd-detail {
+    margin-top: 24px;
   }
   .wwd-tagline {
     font-size: 16px;
@@ -511,6 +509,7 @@
 
 /* ── Reduced motion: no stagger, the band at once, no height animation, no preview motion ── */
 @media (prefers-reduced-motion: reduce) {
+  .wwd-field-wrap,
   .wwd-word,
   .wwd-name,
   .wwd-plus::before,

@@ -82,7 +82,9 @@ test("structure: a server section, the h2 sentence in the island, rows as h3 lin
   const island = code("src/components/work/index/HomeWorkIndex.tsx");
   assert.match(island, /<h2 className="hw-sentence">\s*See our work for\{" "\}\s*<Choice /);
   assert.doesNotMatch(island, /useRouter|router\.|useSearchParams|history\./, "the choice is page state only");
-  assert.match(island, /Client work first; studio explorations are marked/);
+  // The closing row holds the link to /work only (owner decision, Nov 2026); the type labels stay.
+  assert.doesNotMatch(island, /Client work first|explorations are marked/);
+  assert.match(island, /<div className="hw-close">\s*<Link href=\{all\.href\} className="hw-all"/);
   const rows = code("src/components/work/index/WorkRows.tsx");
   assert.match(rows, /const stripMax = home \? 3 : 6;/);
   assert.match(rows, /<p className="editorial-label wi-other">More from the studio<\/p>/);

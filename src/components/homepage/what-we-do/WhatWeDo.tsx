@@ -1,8 +1,10 @@
 "use client";
 // A client component: the keyword field and the service rows light each other up, so they share state
-// here. Pointing at (or focusing) a row keeps its disciplines Obsidian in the field and turns the
-// others Accessible Ash; pointing at a field word turns the other services' names Accessible Ash.
-// Colour only, never opacity. One row is open at a time, the first from the start.
+// here. On desktop they sit side by side. The open row keeps its disciplines Obsidian in the field and
+// turns the others Accessible Ash; pointing at (or focusing) another row lights that row instead, and
+// leaving the rows returns the light to the open one. With every row closed, every word is Obsidian.
+// Pointing at a field word turns the other services' names Accessible Ash. Colour only, never opacity.
+// One row is open at a time, the first from the start.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
@@ -43,9 +45,12 @@ export default function WhatWeDo({ services, terms, work, topics }: Props) {
     if (next !== null) track("home_wwd_service_open", { service: services[i].slug });
   };
 
+  // The row pointed at or focused, else the open row, else none (every word Obsidian).
+  const fieldLight = litService ?? (open !== null ? services[open].slug : null);
+
   return (
     <div className="wwd-island">
-      <WwdField terms={terms} services={services} work={work} litService={litService} onWord={setLitWord} />
+      <WwdField terms={terms} services={services} work={work} litService={fieldLight} onWord={setLitWord} />
       <WwdRows
         services={services}
         work={work}

@@ -1,5 +1,5 @@
 // (02) What we do: the four services and their thirty disciplines, approved on the canvas (desktop
-// WWDFinal, phone WWDPhoneM1). A server component: the label, the heading and the intro line are in
+// WWDSideBySide, phone WWDPhoneM1). A server component: the label, the heading and the intro line are in
 // the page source as they are; the keyword field and the service rows (WhatWeDo) are a client island,
 // server rendered too, so every word, row and panel is in the HTML.
 //
