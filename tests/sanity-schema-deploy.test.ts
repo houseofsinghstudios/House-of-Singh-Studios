@@ -80,12 +80,16 @@ test("it runs on pushes to main that change sanity/, sanity.config.ts or a file 
 
 // The one allowed `sanity deploy`: it registers the existing self hosted Studio and its schema, and never
 // builds or uploads a Studio. Anything else (plain, a hostname, extra or different flags) is refused.
-const ALLOWED_DEPLOY = "sanity deploy --external --url https://studios.houseofsingh.com/studio";
+// The base command, and that command with exactly one more flag, --schema-required (which the workflow uses,
+// so a schema that cannot be stored fails the job). Nothing else.
+const BASE_DEPLOY = "sanity deploy --external --url https://studios.houseofsingh.com/studio";
+const ALLOWED_DEPLOY = `${BASE_DEPLOY} --schema-required`;
 const studioDeploys = (text: string) => [...text.matchAll(/sanity(?:@[\w.-]+)?\s+deploy\b[^\n"'`]*/g)].map((m) => m[0].trim().replace(/\s+/g, " "));
-const allowedDeploy = (command: string) => command === ALLOWED_DEPLOY;
+const allowedDeploy = (command: string) => command === BASE_DEPLOY || command === ALLOWED_DEPLOY;
 
 test("the allowed form, and nothing else", () => {
   assert.ok(allowedDeploy("sanity deploy --external --url https://studios.houseofsingh.com/studio"));
+  assert.ok(allowedDeploy("sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required"));
   for (const refused of [
     "sanity deploy",
     "sanity deploy --yes",
@@ -94,6 +98,11 @@ test("the allowed form, and nothing else", () => {
     "sanity deploy --external --url https://studios.houseofsingh.com",
     "sanity deploy --external --url https://example.com/studio",
     "sanity deploy --external --url https://studios.houseofsingh.com/studio --build",
+    "sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required --yes",
+    "sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required --schema-required",
+    "sanity deploy --schema-required --external --url https://studios.houseofsingh.com/studio",
+    "sanity deploy --url https://studios.houseofsingh.com/studio --schema-required",
+    "sanity deploy --schema-required",
     "sanity deploy --url https://studios.houseofsingh.com/studio",
   ]) {
     assert.equal(allowedDeploy(refused), false, refused);
@@ -108,7 +117,7 @@ test("schema deploy, then the self hosted Studio registration; no other sanity d
   const schemaAt = commands.indexOf("npx sanity schema deploy");
   const registerAt = commands.indexOf(`npx ${ALLOWED_DEPLOY}`);
   assert.ok(schemaAt >= 0 && registerAt > schemaAt, "the registration follows the schema deploy");
-  assert.deepEqual(studioDeploys(commands), [ALLOWED_DEPLOY]);
+  assert.deepEqual(studioDeploys(commands), [ALLOWED_DEPLOY], "the workflow uses --schema-required");
   assert.doesNotMatch(commands, /schemas? delete|undeploy/);
   // Every workflow and every npm script: only the allowed form.
   for (const file of readdirSync(".github/workflows")) {

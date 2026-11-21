@@ -78,5 +78,6 @@ jobs:
 
       # Registers the existing self hosted Studio and refreshes its schema descriptor. --external never
       # builds or uploads a Studio; the URL matches the existing registration, so no new one is made.
+      # --schema-required fails the job when the schema cannot be stored, instead of a warning and exit 0.
       - name: Register the self hosted Studio and its schema
-        run: npx sanity deploy --external --url https://studios.houseofsingh.com/studio
+        run: npx sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required

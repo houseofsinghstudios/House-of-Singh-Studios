@@ -518,7 +518,7 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 
 ## SANITY
 
-Sanity Studio is embedded at /studio inside its own route group and deploys with Vercel. Never run `sanity deploy`; it creates a separate hosted Studio that falls out of sync with the code. The one exception: `sanity deploy --external --url https://studios.houseofsingh.com/studio`, run only by the workflow below; it registers our existing self hosted Studio and its schema with Sanity, and never builds, uploads or creates a hosted Studio.
+Sanity Studio is embedded at /studio inside its own route group and deploys with Vercel. Never run `sanity deploy`; it creates a separate hosted Studio that falls out of sync with the code. The one exception: `sanity deploy --external --url https://studios.houseofsingh.com/studio` (with `--schema-required`, so a schema that cannot be stored fails the run), run only by the workflow below; it registers our existing self hosted Studio and its schema with Sanity, and never builds, uploads or creates a hosted Studio.
 
 Schema deploy is different, and automatic: `sanity schema deploy` uploads only the content model (the schema
 document `_.schemas.hos-studios` in the production dataset), which tools such as the Sanity MCP server, Agent
@@ -527,13 +527,13 @@ that copy itself, so .github/workflows/sanity-schema-deploy.yml runs `npx sanity
 hos-studios` on every push to main that changes sanity/, sanity.config.ts or a file under src/ that they import,
 directly or through their imports (eleven today, listed in the workflow; tests/sanity-schema-deploy.test.ts walks
 the imports and fails when one is missing from the trigger), and by hand from the Actions tab. A second step then
-runs that one exception, `sanity deploy --external --url https://studios.houseofsingh.com/studio`: Sanity's tools
+runs that one exception, `sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required`: Sanity's tools
 validate against the registered Studio (user application h8sx77qg2395sepru27oouhh, urlType external), whose schema
 descriptor only this command refreshes; the URL matches that registration, so no new one is made. Its token is the
 GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a project robot token with the "Deploy Studio (Token only)" permission,
 the least both steps accept (the deployStudio grant, no content write). Never put it in Vercel, in .env files or in
 the code. In short: `sanity schema deploy` and the external registration, yes, through the workflow; any other
-`sanity deploy`, never (the guard test refuses every other form, in every workflow and npm script).
+`sanity deploy`, never (the guard test allows only that command, with or without --schema-required, in every workflow and npm script).
 
 Publishing refreshes the site at once: a webhook in sanity.io/manage posts to /api/revalidate, signed with
 SANITY_REVALIDATE_SECRET (set on Vercel and on the webhook). Without it, changes wait for each page's own refresh.
