@@ -24,6 +24,16 @@ export function stepCount(needs: ServiceId[]): number {
   return needs.includes("unsure") ? 4 : 5;
 }
 
+// Adds or removes one choice from a multi select, keeping "exclusive" alone and the limit: choosing the
+// exclusive option clears the others, choosing another clears it. Shared with the homepage (04) Start.
+export function toggleMulti<T extends string>(list: readonly T[], id: T, exclusive: T, max: number): { next: T[]; tooMany: boolean } {
+  if (list.includes(id)) return { next: list.filter((x) => x !== id), tooMany: false };
+  if (id === exclusive) return { next: [id], tooMany: false };
+  const base = list.filter((x) => x !== exclusive);
+  if (base.length >= max) return { next: [...list], tooMany: true };
+  return { next: [...base, id], tooMany: false };
+}
+
 // ── Draft answers while the visitor is still choosing ──
 
 export type Draft = Partial<Answers> & { needs: ServiceId[] };

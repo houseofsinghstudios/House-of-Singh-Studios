@@ -7,6 +7,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Link } from "next-view-transitions";
+import { setHomeSector } from "@/lib/home-choice";
 import {
   homeAllWorkLink,
   homeRows,
@@ -59,6 +60,9 @@ interface Props {
 
 export default function HomeWorkIndex({ items, orders, label }: Props) {
   const [sector, setSector] = useState<BusinessTypeId | undefined>();
+  // The choice is shared with (04) Start, which shows it on the call brief; cleared when this leaves.
+  useEffect(() => setHomeSector(sector), [sector]);
+  useEffect(() => () => setHomeSector(undefined), []);
   const choice: IndexChoice = useMemo(() => (sector ? { sector } : {}), [sector]);
   const lists = useLists();
   const panelId = `${useId()}business`;

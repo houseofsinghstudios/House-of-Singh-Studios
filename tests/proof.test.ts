@@ -126,14 +126,14 @@ test("the light in CSS: colour only, the band, and reduced motion", () => {
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
 });
 
-test("the homepage: (03) Proof replaces the testimonials carousel and the counters; (04) Two ways to start", () => {
+test("the homepage: (03) Proof replaces the testimonials carousel and the counters; (04) Start closes it", () => {
   const page = read("src/app/(site)/(home)/page.tsx");
-  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<ProofSection", "<ToolBand", "<CtaSection"].map((tag) => page.indexOf(tag));
+  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<ProofSection", "<StartSection"].map((tag) => page.indexOf(tag));
   assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), `order ${order}`);
   assert.doesNotMatch(page, /TestimonialsSection/);
   assert.equal(existsSync("src/components/homepage/TestimonialsSection.tsx"), false);
   assert.equal(existsSync("src/components/homepage/ProofSection.tsx"), false, "the counters are gone");
-  assert.match(read("src/components/homepage/ToolBand.tsx"), /label: "\(04\) Two ways to start"/);
+  // (04) Start: tests/home-start.test.ts.
 });
 
 test("no dashes, numbers, prices or exit lines in the Proof copy", () => {

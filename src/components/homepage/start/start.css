@@ -1,0 +1,298 @@
+/* The homepage (04) Start, from the HomeStart2 (desktop) and HomeStart2Phone artboards. An Obsidian
+   section: the label, heading, line and the two door links on the left; the call brief, a Silver Mist
+   sheet, on the right. Phones: one column, the sheet before the door links. */
+
+.hs {
+  --hs-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
+  column-gap: 24px;
+  padding: 160px var(--page-px) 140px;
+  background: var(--text-primary);
+  color: var(--bg);
+}
+.hs-head {
+  grid-column: 1 / 6;
+  grid-row: 1;
+}
+.hs-sheet-wrap {
+  grid-column: 7 / -1;
+  grid-row: 1 / span 2;
+  align-self: start;
+}
+.hs-doors {
+  grid-column: 1 / 6;
+  grid-row: 2;
+  align-self: start;
+  margin-top: 72px;
+  padding-top: 24px;
+  border-top: 1px solid var(--text-secondary);
+}
+
+/* The heading block, on Obsidian: labels in Marble Ash, which passes on dark. */
+.hs-label {
+  margin: 0;
+  color: var(--text-muted);
+}
+.hs-heading {
+  margin: 28px 0 0;
+  font-size: 52px;
+  line-height: 1.08;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  color: var(--bg);
+}
+.hs-sub {
+  margin: 24px 0 0;
+  max-width: 420px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* The door links: Marble Ash text, the links Silver Mist with a 1px Marble Ash underline. */
+.hs-door {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.hs-door + .hs-door {
+  margin-top: 12px;
+}
+.hs-door-link {
+  color: var(--bg);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.3s var(--hs-ease);
+}
+@media (hover: hover) {
+  .hs-door-link:hover {
+    text-decoration-color: var(--bg);
+  }
+}
+.hs-door-link:focus-visible {
+  outline: 2px solid var(--bg);
+  outline-offset: 2px;
+}
+
+/* The call brief: a Silver Mist sheet, Obsidian text, labels in Accessible Ash. */
+.hs-sheet {
+  padding: 36px;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+.hs-sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.hs-sheet-title,
+.hs-count {
+  margin: 0;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+}
+.hs-count {
+  font-variant-numeric: tabular-nums;
+}
+.hs-started,
+.hs-row-label,
+.hs-q-num,
+.hs-q-help {
+  font-size: 11px;
+  line-height: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-label);
+}
+.hs-started {
+  margin: 4px 0 24px;
+}
+
+/* Every block over a hairline that draws in from the left. */
+.hs-line {
+  position: relative;
+  margin: 0;
+  padding: 16px 0;
+}
+.hs-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--border);
+  transform-origin: left;
+  transition: transform 0.6s var(--hs-ease);
+  transition-delay: calc(1s + var(--i, 0) * 80ms);
+}
+.hs-row {
+  display: flex;
+  gap: 16px;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--text-label);
+  transition: color 0.3s var(--hs-ease);
+}
+.hs-row-label {
+  flex: 0 0 56px;
+  line-height: 24px;
+}
+.hs-row > span:last-child {
+  color: var(--text-primary);
+}
+.hs-later {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hs-later .hs-row > span:last-child {
+  color: var(--text-label);
+  transition: color 0.3s var(--hs-ease);
+}
+.hs-later .hs-row[data-next] > span {
+  color: var(--text-primary);
+}
+
+/* Question 01 and its chips. */
+.hs-q {
+  padding-bottom: 24px;
+}
+.hs-q-text {
+  margin: 8px 0 0;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.hs-q-help {
+  margin: 4px 0 0;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+  line-height: 20px;
+}
+.hs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.hs-chip {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--text-muted);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--hs-ease),
+    border-color 0.3s var(--hs-ease),
+    color 0.3s var(--hs-ease);
+}
+@media (hover: hover) {
+  .hs-chip:hover {
+    border-color: var(--text-primary);
+  }
+}
+.hs-chip[aria-pressed="true"] {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  color: var(--bg);
+}
+.hs-chip:focus-visible,
+.hs-plan:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+/* The main button: full width, the site's primary button and its light sweep. */
+.hs-plan {
+  display: flex;
+  width: 100%;
+  height: 56px;
+  margin-top: 24px;
+  padding: 0;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.hs-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-secondary);
+}
+
+/* The entrance, armed only in the browser and played once: the sheet wipes open from the top, then
+   the hairlines draw from the left, 80ms apart. */
+.hs-sheet[data-armed] {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1) 0.2s;
+}
+.hs-sheet[data-armed] .hs-line::before {
+  transform: scaleX(0);
+}
+.hs-sheet[data-in] {
+  clip-path: inset(0 0 0 0);
+}
+.hs-sheet[data-in] .hs-line::before {
+  transform: scaleX(1);
+}
+
+/* Phones and tablets: one column, the sheet before the door links. */
+@media (max-width: 1080px) {
+  .hs {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    padding: 72px var(--page-px) 80px;
+  }
+  .hs-head,
+  .hs-sheet-wrap,
+  .hs-doors {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .hs-heading {
+    font-size: 34px;
+  }
+  .hs-sub {
+    font-size: 15px;
+  }
+  /* 8px wider than the text on each side. */
+  .hs-sheet-wrap {
+    margin: 40px -8px 0;
+  }
+  .hs-sheet {
+    padding: 24px;
+  }
+  .hs-doors {
+    margin-top: 40px;
+  }
+}
+
+/* Reduced motion: no wipe, no draw; every hairline in place, colour changes at once. */
+@media (prefers-reduced-motion: reduce) {
+  .hs-sheet[data-armed] {
+    clip-path: none;
+    transition: none;
+  }
+  .hs-sheet[data-armed] .hs-line::before {
+    transform: none;
+    transition: none;
+  }
+  .hs-chip,
+  .hs-row,
+  .hs-later .hs-row > span:last-child,
+  .hs-door-link {
+    transition: none;
+  }
+}

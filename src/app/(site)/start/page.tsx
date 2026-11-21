@@ -18,10 +18,11 @@ export const metadata: Metadata = {
 type Props = { searchParams: Promise<{ service?: string | string[]; begin?: string | string[] }> };
 
 // Related work is read on the server and handed to the planner (it shows no prices). ?service= preselects
-// one known service and ?begin=1 opens the first question; anything else is ignored.
+// up to three known services (comma separated) and ?begin=1 skips the intro: to question 02 when
+// services came with it, else to question 01. Anything else is ignored.
 export default async function StartPage({ searchParams }: Props) {
   const { service, begin } = await searchParams;
-  const initialService = parseService(service);
+  const initialServices = parseService(service);
   const related = await getPlannerCaseStudies();
 
   return (
@@ -31,7 +32,7 @@ export default async function StartPage({ searchParams }: Props) {
         { name: PAGE.title, url: URL },
       ]} />
       <section style={{ padding: "var(--hero-pt) var(--page-px) clamp(80px, 10vw, 140px)" }}>
-        <ProjectPlanner related={related} initialService={initialService} begin={parseBegin(begin)} />
+        <ProjectPlanner related={related} initialServices={initialServices} begin={parseBegin(begin)} />
       </section>
     </>
   );
