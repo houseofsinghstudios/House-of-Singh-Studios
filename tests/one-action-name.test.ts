@@ -32,7 +32,7 @@ test("the main action and the second action keep their names and links", () => {
   const read = (f: string) => fs.readFileSync(path.join(process.cwd(), f), "utf8");
   assert.match(read("src/lib/home-start.ts"), /button: "Plan your project",/);
   assert.match(read("src/lib/home-start.ts"), /callLink: "Book a discovery call",/);
-  assert.match(read("src/lib/home-start.ts"), /return selected\.length \? `\/start\?service=\$\{selected\.join\(","\)\}&begin=1` : "\/start\?begin=1";/);
+  assert.match(read("src/lib/home-start.ts"), /return selected\.length \? `\/start\?service=\$\{selected\.join\(","\)\}&begin=1&\$\{from\}` : `\/start\?begin=1&\$\{from\}`;/);
   const section = read("src/components/homepage/start/StartSection.tsx");
   assert.match(section, /<a href=\{DISCOVERY_CALL_URL\} className="hs-door-link"[^>]*>\s*\{START_COPY\.callLink\}\s*<\/a>/);
 });

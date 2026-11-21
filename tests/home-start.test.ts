@@ -6,14 +6,16 @@ import { existsSync, readFileSync } from "node:fs";
 import { DISCOVERY_CALL_MINUTES } from "@/lib/constants/booking";
 import { CALL, NEEDS, SERVICE_LABELS, TOLD_QUESTIONS } from "@/lib/project-planner/content";
 import { stepCount } from "@/lib/project-planner/engine";
+import { SERVICE_IDS } from "@/lib/project-planner/types";
 import {
   CHIP_SERVICES,
   FIRST_QUESTION,
-  LATER_QUESTIONS,
+  PULSE_HREF,
   QUESTION_TOTAL,
   START_COPY,
   chipAnnouncement,
   countText,
+  laterQuestions,
   planHref,
   startedText,
   toggleChip,
@@ -35,21 +37,43 @@ test("the copy, exactly as approved; the count and the call length come from the
   assert.equal(START_COPY.line, "Your answers go to the studio before the call, so we start with your business.");
 });
 
-test("the brief takes its question, options and short titles from the planner", () => {
+test("the brief takes its question, every option and the short titles from the planner", () => {
   assert.deepEqual(FIRST_QUESTION, { text: NEEDS.question, help: NEEDS.helper });
-  assert.deepEqual([...CHIP_SERVICES], ["identity", "website", "photo", "video", "packaging"]);
-  for (const id of CHIP_SERVICES) assert.ok(SERVICE_LABELS[id]);
-  assert.deepEqual(LATER_QUESTIONS, [
+  // All of the planner's first question options, in its order and words.
+  assert.deepEqual([...CHIP_SERVICES], [...SERVICE_IDS]);
+  assert.deepEqual(CHIP_SERVICES.map((id) => SERVICE_LABELS[id]), [
+    "Brand identity or rebrand",
+    "Website",
+    "Photography",
+    "Video",
+    "Packaging design",
+    "Positioning or brand strategy",
+    "I need help defining the work",
+  ]);
+  assert.deepEqual(laterQuestions([]), [
     { number: "02", title: TOLD_QUESTIONS.start },
     { number: "03", title: TOLD_QUESTIONS.goal },
     { number: "04", title: TOLD_QUESTIONS.priorities },
     { number: "05", title: TOLD_QUESTIONS.timing },
   ]);
+  // Unsure: the planner skips Priorities, so the brief does too, and the numbers follow.
+  assert.deepEqual(laterQuestions(["unsure"]), [
+    { number: "02", title: TOLD_QUESTIONS.start },
+    { number: "03", title: TOLD_QUESTIONS.goal },
+    { number: "04", title: TOLD_QUESTIONS.timing },
+  ]);
   const sheet = read("src/components/homepage/start/StartSheet.tsx");
   assert.doesNotMatch(sheet, /"Brand identity"|"Website"|"Starting point"/, "nothing retyped in the component");
 });
 
-test("chips: up to three, a fourth tap does nothing, a tap on a chosen one removes it", () => {
+test("chips: the planner's own rule, up to three, and unsure stands alone", () => {
+  // "I need help defining the work" clears the others; another choice clears it.
+  assert.deepEqual(toggleChip(["identity", "website"], "unsure"), ["unsure"]);
+  assert.deepEqual(toggleChip(["unsure"], "website"), ["website"]);
+  assert.deepEqual(toggleChip(["unsure"], "unsure"), []);
+  assert.equal(countText(["unsure"]), "1 of 4", "four questions when unsure, as in the planner");
+  assert.equal(chipAnnouncement(["identity"], ["unsure"]), "I need help defining the work added. 1 of 4 answered.");
+
   let s = toggleChip([], "identity");
   s = toggleChip(s, "website");
   assert.deepEqual(s, ["identity", "website"]);
@@ -67,9 +91,12 @@ test("the live line says what changed and how many are answered", () => {
   assert.equal(chipAnnouncement(["video"], []), "Video removed. 0 of 5 answered.");
 });
 
-test("Plan your project carries the chosen services, in the planner's own ids", () => {
-  assert.equal(planHref(["identity", "website"]), "/start?service=identity,website&begin=1");
-  assert.equal(planHref([]), "/start?begin=1");
+test("Plan your project carries the chosen services, in the planner's own ids, and the placement", () => {
+  assert.equal(planHref(["identity", "website"]), "/start?service=identity,website&begin=1&from=home_start");
+  assert.equal(planHref(["strategy"]), "/start?service=strategy&begin=1&from=home_start");
+  assert.equal(planHref(["unsure"]), "/start?service=unsure&begin=1&from=home_start");
+  assert.equal(planHref([]), "/start?begin=1&from=home_start");
+  assert.equal(PULSE_HREF, "/brand-pulse?from=home_start");
 });
 
 test("the started date is the day in Toronto, whatever the visitor's zone", () => {
@@ -84,7 +111,7 @@ test("structure: a labelled section, pressed chips, a live line, the links and t
   assert.match(section, /<section className="hs" aria-labelledby="hs-heading">/);
   assert.match(section, /<EditorialLabel number=\{START_COPY\.number\} text=\{START_COPY\.label\}/);
   assert.equal(`(${START_COPY.number}) ${START_COPY.label}`, "(04) Start");
-  assert.match(section, /<Link href="\/brand-pulse" className="hs-door-link"/);
+  assert.match(section, /<Link href=\{PULSE_HREF\} className="hs-door-link"/);
   assert.match(section, /<a href=\{DISCOVERY_CALL_URL\} className="hs-door-link" data-cursor="link" target="_blank" rel="noopener noreferrer">/);
   const sheet = read("src/components/homepage/start/StartSheet.tsx");
   assert.match(sheet, /aria-pressed=\{selected\.includes\(id\)\}/);
@@ -103,8 +130,10 @@ test("the homepage ends with (04) Start; Two ways to start and the dark call to 
   assert.match(page, /<ProofSection chapters=\{proofChapters\} \/>\s*<StartSection \/>\s*<\/>/);
   assert.doesNotMatch(page, /ToolBand|CtaSection/);
   for (const gone of ["ToolBand.tsx", "ToolBandSwitch.tsx", "CtaSection.tsx"]) assert.equal(existsSync(`src/components/homepage/${gone}`), false, gone);
-  // Shared, so kept: the band styles the Initiatives nominate band uses.
-  assert.ok(existsSync("src/components/homepage/tool-band.css"));
+  // Shared, so kept: the band styles the Initiatives and Partners take part bands use, and only those.
+  const band = read("src/components/homepage/tool-band.css");
+  assert.doesNotMatch(band, /\.tb-(columns|col(?![-\w])|tag|visual|pulse|signs?|brief|question|chips?|tabs?|switch)|data-arrival|tb-chip-border/);
+  for (const kept of [".tb {", ".tb .tb-label", ".tb-heading", ".tb-col-heading", ".tb-body", ".tb-action", ".tb-button", ".tb-arrow"]) assert.ok(band.includes(kept), kept);
 });
 
 test("the look and the motion", () => {

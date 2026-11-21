@@ -4,12 +4,18 @@
 // homepage never says something the planner does not.
 import { DISCOVERY_CALL_MINUTES } from "@/lib/constants/booking";
 import { ACTIONS, CALL, NEEDS, SERVICE_LABELS, TOLD_QUESTIONS } from "@/lib/project-planner/content";
-import { stepCount } from "@/lib/project-planner/engine";
-import { MAX_NEEDS, type ServiceId } from "@/lib/project-planner/types";
+import { stepCount, toggleMulti } from "@/lib/project-planner/engine";
+import type { EntryPlacement } from "@/lib/project-planner/start-links";
+import { MAX_NEEDS, SERVICE_IDS, type ServiceId } from "@/lib/project-planner/types";
 import { countWord } from "@/lib/what-we-do";
 
-// The planner's questions for a named service: five (four only when the visitor is unsure).
+// The planner's questions for a named service: five (four when the visitor is unsure what they need).
 export const QUESTION_TOTAL = stepCount(["identity"]);
+
+// Where these links say the visitor came from (?from=), recorded by the planner and Brand Pulse as
+// attribution.entryPlacement, as every link into them from elsewhere on the site does.
+const HOME_START_PLACEMENT = "home_start" satisfies EntryPlacement;
+export const PULSE_HREF = `/brand-pulse?from=${HOME_START_PLACEMENT}`;
 
 export const START_COPY = {
   number: "04",
@@ -29,37 +35,42 @@ export const START_COPY = {
   line: CALL.line,
 };
 
-// Question 01, as the planner asks it, and the services offered as chips here (the board's five).
+// Question 01, as the planner asks it, with every one of its options, in its order and words.
 export const FIRST_QUESTION = { text: NEEDS.question, help: NEEDS.helper };
-export const CHIP_SERVICES = ["identity", "website", "photo", "video", "packaging"] as const satisfies readonly ServiceId[];
-export type ChipService = (typeof CHIP_SERVICES)[number];
-export const chipLabel = (id: ChipService) => SERVICE_LABELS[id];
+export const CHIP_SERVICES = SERVICE_IDS;
+export const chipLabel = (id: ServiceId) => SERVICE_LABELS[id];
 
-// Questions 02 to 05, by the planner's own short names.
-export const LATER_QUESTIONS = [TOLD_QUESTIONS.start, TOLD_QUESTIONS.goal, TOLD_QUESTIONS.priorities, TOLD_QUESTIONS.timing].map((title, i) => ({
-  number: String(i + 2).padStart(2, "0"),
-  title,
-}));
-
-// A tap: on adds (up to three, as in the planner), off removes. A fourth tap does nothing.
-export function toggleChip(selected: readonly ChipService[], id: ChipService): ChipService[] {
-  if (selected.includes(id)) return selected.filter((s) => s !== id);
-  return selected.length >= MAX_NEEDS ? [...selected] : [...selected, id];
+// The questions after 01, by the planner's own short names. Priorities is skipped when the visitor is
+// unsure what they need, as the planner skips it; the numbers follow.
+export function laterQuestions(selected: readonly ServiceId[]): { number: string; title: string }[] {
+  const titles = [TOLD_QUESTIONS.start, TOLD_QUESTIONS.goal, ...(selected.includes("unsure") ? [] : [TOLD_QUESTIONS.priorities]), TOLD_QUESTIONS.timing];
+  return titles.map((title, i) => ({ number: String(i + 2).padStart(2, "0"), title }));
 }
 
-const answeredCount = (selected: readonly ChipService[]) => (selected.length ? 1 : 0);
-export const countText = (selected: readonly ChipService[]) => `${answeredCount(selected)} of ${QUESTION_TOTAL}`;
+// A tap, by the planner's own rule (toggleMulti): up to three; "I need help defining the work" stands
+// alone, so choosing it clears the others and choosing another clears it. A fourth tap does nothing.
+export function toggleChip(selected: readonly ServiceId[], id: ServiceId): ServiceId[] {
+  const { next, tooMany } = toggleMulti(selected, id, "unsure", MAX_NEEDS);
+  return tooMany ? [...selected] : next;
+}
+
+const answeredCount = (selected: readonly ServiceId[]) => (selected.length ? 1 : 0);
+const totalFor = (selected: readonly ServiceId[]) => (selected.length ? stepCount([...selected]) : QUESTION_TOTAL);
+export const countText = (selected: readonly ServiceId[]) => `${answeredCount(selected)} of ${totalFor(selected)}`;
 
 // "Brand identity or rebrand, Website added. 1 of 5 answered."
-export function chipAnnouncement(before: readonly ChipService[], after: readonly ChipService[]): string {
+export function chipAnnouncement(before: readonly ServiceId[], after: readonly ServiceId[]): string {
   const removed = before.filter((s) => !after.includes(s));
-  const what = removed.length ? `${removed.map(chipLabel).join(", ")} removed` : `${after.map(chipLabel).join(", ")} added`;
-  return `${what}. ${answeredCount(after)} of ${QUESTION_TOTAL} answered.`;
+  const added = after.filter((s) => !before.includes(s));
+  const what = added.length ? `${after.map(chipLabel).join(", ")} added` : `${removed.map(chipLabel).join(", ")} removed`;
+  return `${what}. ${answeredCount(after)} of ${totalFor(after)} answered.`;
 }
 
 // Into the planner: the chosen services in order, answered, so it opens on question 02; else question 01.
-export function planHref(selected: readonly ChipService[]): string {
-  return selected.length ? `/start?service=${selected.join(",")}&begin=1` : "/start?begin=1";
+// Both carry the placement, so the brief records where it began.
+export function planHref(selected: readonly ServiceId[]): string {
+  const from = `from=${HOME_START_PLACEMENT}`;
+  return selected.length ? `/start?service=${selected.join(",")}&begin=1&${from}` : `/start?begin=1&${from}`;
 }
 
 // "Started 21 November 2026", in Toronto time whatever the visitor's zone.

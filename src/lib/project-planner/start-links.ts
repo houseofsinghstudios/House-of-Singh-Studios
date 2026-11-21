@@ -4,7 +4,7 @@ import type { Draft } from "./engine";
 import { MAX_NEEDS, SERVICE_IDS, type DeliveredId, type ServiceId } from "./types";
 
 // Where a visitor came from inside the site (?from=), recorded as attribution.entryPlacement.
-export const ENTRY_PLACEMENTS = ["services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button"] as const;
+export const ENTRY_PLACEMENTS = ["services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button", "home_start"] as const;
 export type EntryPlacement = (typeof ENTRY_PLACEMENTS)[number];
 
 const first = (v: unknown): unknown => (Array.isArray(v) ? v[0] : v);

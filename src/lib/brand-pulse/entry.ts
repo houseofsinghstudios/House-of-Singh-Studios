@@ -7,7 +7,8 @@
 import { QUESTIONS } from "./content";
 import type { Answers, QuestionId } from "./types";
 
-export const ENTRY_PLACEMENTS = ["home_band_chip", "home_band_button"] as const;
+// home_band_*: the retired homepage band (kept for earlier records); home_start: the homepage (04) Start.
+export const ENTRY_PLACEMENTS = ["home_band_chip", "home_band_button", "home_start"] as const;
 export type EntryPlacement = (typeof ENTRY_PLACEMENTS)[number] | "direct";
 
 const first = (v: unknown): unknown => (Array.isArray(v) ? v[0] : v);

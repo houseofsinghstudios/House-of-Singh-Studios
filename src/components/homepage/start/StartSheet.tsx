@@ -9,7 +9,8 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Link } from "next-view-transitions";
 import { track } from "@/lib/analytics";
 import { useHomeSector } from "@/lib/home-choice";
-import { CHIP_SERVICES, FIRST_QUESTION, LATER_QUESTIONS, START_COPY, chipAnnouncement, chipLabel, countText, planHref, startedText, toggleChip, type ChipService } from "@/lib/home-start";
+import { CHIP_SERVICES, FIRST_QUESTION, START_COPY, chipAnnouncement, chipLabel, countText, laterQuestions, planHref, startedText, toggleChip } from "@/lib/home-start";
+import type { ServiceId } from "@/lib/project-planner/types";
 import { BUSINESS_TYPES } from "@/lib/work-index";
 
 // Values that exist only in the browser: the server (and hydration) sees the second snapshot, the browser
@@ -42,7 +43,7 @@ function useEntrance() {
 // The hairline order for the draw: each line waits 80ms more than the one above it.
 const at = (i: number) => ({ "--i": i }) as React.CSSProperties;
 
-function QuestionOne({ selected, onChoose, line }: { selected: ChipService[]; onChoose: (id: ChipService) => void; line: number }) {
+function QuestionOne({ selected, onChoose, line }: { selected: ServiceId[]; onChoose: (id: ServiceId) => void; line: number }) {
   return (
     <div className="hs-q hs-line" style={at(line)}>
       <p className="hs-q-num">01</p>
@@ -59,19 +60,21 @@ function QuestionOne({ selected, onChoose, line }: { selected: ChipService[]; on
   );
 }
 
-// Questions 02 to 05 as labels, then the call. 02 turns Obsidian once question 01 has an answer.
-function LaterRows({ answered, line }: { answered: boolean; line: number }) {
+// The later questions as labels (four, or three when the visitor is unsure, as in the planner), then the
+// call. 02 turns Obsidian once question 01 has an answer.
+function LaterRows({ selected, line }: { selected: ServiceId[]; line: number }) {
+  const later = laterQuestions(selected);
   return (
     <>
       <ol className="hs-later">
-        {LATER_QUESTIONS.map((q, i) => (
-          <li key={q.number} className="hs-row hs-line" style={at(line + i)} data-next={(i === 0 && answered) || undefined}>
+        {later.map((q, i) => (
+          <li key={q.title} className="hs-row hs-line" style={at(line + i)} data-next={(i === 0 && selected.length > 0) || undefined}>
             <span className="hs-row-label">{q.number}</span>
             <span>{q.title}</span>
           </li>
         ))}
       </ol>
-      <p className="hs-row hs-line" style={at(line + LATER_QUESTIONS.length)}>
+      <p className="hs-row hs-line" style={at(line + later.length)}>
         <span className="hs-row-label">{START_COPY.then}</span>
         <span>{START_COPY.thenText}</span>
       </p>
@@ -80,7 +83,7 @@ function LaterRows({ answered, line }: { answered: boolean; line: number }) {
 }
 
 export default function StartSheet() {
-  const [selected, setSelected] = useState<ChipService[]>([]);
+  const [selected, setSelected] = useState<ServiceId[]>([]);
   const [live, setLive] = useState("");
   const started = useStarted();
   const sector = useHomeSector();
@@ -88,7 +91,7 @@ export default function StartSheet() {
   const { ref, armed, entered } = useEntrance();
   const first = business ? 1 : 0;
 
-  const choose = (id: ChipService) => {
+  const choose = (id: ServiceId) => {
     const next = toggleChip(selected, id);
     if (next.length === selected.length && next.every((s, i) => s === selected[i])) return;
     setSelected(next);
@@ -111,7 +114,7 @@ export default function StartSheet() {
           </p>
         )}
         <QuestionOne selected={selected} onChoose={choose} line={first} />
-        <LaterRows answered={selected.length > 0} line={first + 1} />
+        <LaterRows selected={selected} line={first + 1} />
         <Link href={planHref(selected)} className="btn-primary hs-plan" data-cursor="link" onClick={() => track("home_start_plan_click", { services_count: selected.length })}>
           {START_COPY.button}
         </Link>

@@ -5,7 +5,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { FLOW, GOAL, NEEDS, PRIORITIES, SERVICE_LABELS, START, TIMING } from "@/lib/project-planner/content";
-import { priorityOptions, type Draft } from "@/lib/project-planner/engine";
+import { priorityOptions, toggleMulti, type Draft } from "@/lib/project-planner/engine";
 import { GOAL_IDS, HELP, MAX_NEEDS, MAX_PRIORITIES, SERVICE_IDS, START_IDS, TIMING_IDS, type ServiceId } from "@/lib/project-planner/types";
 import OptionList, { type Option } from "./OptionList";
 
@@ -31,15 +31,6 @@ const QUESTIONS: Record<StepKey, { question: string; helper: string }> = {
   priorities: PRIORITIES,
   timing: TIMING,
 };
-
-// Adds or removes one choice from a multi select, keeping "exclusive" alone and the limit.
-function toggleMulti(list: string[], id: string, exclusive: string, max: number): { next: string[]; tooMany: boolean } {
-  if (list.includes(id)) return { next: list.filter((x) => x !== id), tooMany: false };
-  if (id === exclusive) return { next: [id], tooMany: false };
-  const base = list.filter((x) => x !== exclusive);
-  if (base.length >= max) return { next: list, tooMany: true };
-  return { next: [...base, id], tooMany: false };
-}
 
 function optionsFor(step: StepKey, draft: Draft): Option[] {
   const primary = draft.primary;

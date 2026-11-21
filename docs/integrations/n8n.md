@@ -157,7 +157,7 @@ The result is always recomputed on the server; whatever result the browser sends
 | contact | object | `lead`: `email` (254), `retakeReminder`, `marketingConsent` (booleans). `profile`: `email`, `name` (100), `company` (120), `website` (200, normalised to https), `teamSize` ("1-10", "11-50", "51-200", "over-200" or "") |
 | feedback | string | `feedback` only: "yes", "partly" or "not-really" |
 | leadSource | object | with `lead` and `profile` only; how the visit began, see above |
-| attribution | object | `source`, `medium`, `campaign` (200 each), `referralCode`, `landingPage` (the tool page's path, 500), `referrer` (origin and path, see above), `entryPlacement` ("home_band_chip", "home_band_button" or "direct") |
+| attribution | object | `source`, `medium`, `campaign` (200 each), `referralCode`, `landingPage` (the tool page's path, 500), `referrer` (origin and path, see above), `entryPlacement` ("home_band_chip", "home_band_button", "home_start" or "direct"; home_start is the homepage (04) Start, home_band_* the retired homepage band) |
 
 - **Duplicates:** every event upserts one row in **Brand Pulse Results**, matched on **Result ID**.
 - **What each event does:**
@@ -200,7 +200,7 @@ is null, `brief.priceLines` is an empty list and `brief.fitNote` is null. `brief
 | engineVersion | string | the brief rules' version |
 | priceSource | null | kept for the contract; always null (no prices since 20 Nov 2026) |
 | submittedAt | string | ISO date and time |
-| attribution | object | `source`, `medium`, `campaign` (100 each), `referralCode`, `landingPage` (path, no query, 200), `entryPlacement` ("services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button" or "direct"), `referrer` (origin and path, see above) |
+| attribution | object | `source`, `medium`, `campaign` (100 each), `referralCode`, `landingPage` (path, no query, 200), `entryPlacement` ("services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button", "home_start" or "direct"; home_start is the homepage (04) Start), `referrer` (origin and path, see above) |
 | answers, brief | object | `viewed` and `sent`: the validated answers and the recomputed brief (services, phases, actions, booking link; `priceLines` always `[]` and `fitNote` always null) |
 | answerLabels | object | `sent` only |
 | optional | object | `sent` only: `investment` (a known band or null), `website` (200), `importantDate` (60) |

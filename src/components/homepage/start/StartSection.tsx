@@ -8,7 +8,7 @@
 import { Link } from "next-view-transitions";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
-import { START_COPY } from "@/lib/home-start";
+import { PULSE_HREF, START_COPY } from "@/lib/home-start";
 import StartSheet from "./StartSheet";
 import "./start.css";
 
@@ -26,7 +26,7 @@ export default function StartSection() {
       <div className="hs-doors">
         <p className="hs-door">
           {START_COPY.pulseLead}{" "}
-          <Link href="/brand-pulse" className="hs-door-link" data-cursor="link">
+          <Link href={PULSE_HREF} className="hs-door-link" data-cursor="link">
             {START_COPY.pulseLink}
           </Link>
           . {START_COPY.pulseTail}
