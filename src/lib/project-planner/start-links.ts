@@ -1,6 +1,7 @@
 // Links into /start from elsewhere on the site, and the rules for reading them back. Tiny on
 // purpose: Brand Pulse, the case study page and the browser side of the planner import it.
-import { SERVICE_IDS, type DeliveredId, type ServiceId } from "./types";
+import type { Draft } from "./engine";
+import { MAX_NEEDS, SERVICE_IDS, type DeliveredId, type ServiceId } from "./types";
 
 // Where a visitor came from inside the site (?from=), recorded as attribution.entryPlacement.
 export const ENTRY_PLACEMENTS = ["services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button"] as const;
@@ -13,14 +14,28 @@ export function parsePlacement(value: unknown): EntryPlacement | "direct" {
   const raw = first(value);
   return (ENTRY_PLACEMENTS as readonly unknown[]).includes(raw) ? (raw as EntryPlacement) : "direct";
 }
-// ?service= preselects one known service; anything else is ignored.
-export function parseService(value: unknown): ServiceId | null {
+const isService = (v: string): v is ServiceId => (SERVICE_IDS as readonly string[]).includes(v);
+
+// ?service= preselects up to three known services, comma separated ("identity,website"), in the order
+// given; a single value works as before. Unknown ids and repeats are ignored. "unsure" stands alone,
+// as in the planner: with a named service beside it, it is dropped.
+export function parseService(value: unknown): ServiceId[] {
   const raw = first(value);
-  return (SERVICE_IDS as readonly unknown[]).includes(raw) ? (raw as ServiceId) : null;
+  if (typeof raw !== "string") return [];
+  const known = [...new Set(raw.split(",").filter(isService))];
+  const named = known.filter((s) => s !== "unsure");
+  return (named.length ? named : known).slice(0, MAX_NEEDS);
 }
 // ?begin=1 skips the intro and opens the first question.
 export function parseBegin(value: unknown): boolean {
   return first(value) === "1";
+}
+
+// How the planner opens for these links. Preselected services fill question 01 (the first is the main
+// focus); with ?begin=1 as well, that question is answered, so the planner opens on question 02.
+export function plannerOpening(services: ServiceId[], begin: boolean): { screen: "intro" | "step"; stepIndex: number; draft: Draft } {
+  const draft: Draft = services.length ? { needs: services, primary: services[0] } : { needs: [] };
+  return { screen: begin ? "step" : "intro", stepIndex: begin && services.length ? 1 : 0, draft };
 }
 
 const SERVICE_FOR_DELIVERED: Record<DeliveredId, ServiceId | null> = {

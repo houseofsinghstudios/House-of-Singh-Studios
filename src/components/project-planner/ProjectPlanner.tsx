@@ -7,6 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildBrief, validateAnswers, withNeeds, withPrimary, type Draft } from "@/lib/project-planner/engine";
 import { bookingUrl } from "@/lib/project-planner/links";
+import { plannerOpening } from "@/lib/project-planner/start-links";
 import { FLOW, INTRO } from "@/lib/project-planner/content";
 import type { ActionId, Optional, ServiceId } from "@/lib/project-planner/types";
 import PlannerIntro from "./PlannerIntro";
@@ -21,15 +22,15 @@ import "./planner.css";
 
 interface Props {
   related: CaseStudyLink[];
-  initialService: ServiceId | null;
-  // ?begin=1: skip the intro and open the first question, with any preselected service showing.
+  // ?service=: up to three services, preselected in order; the first is the main focus.
+  initialServices: ServiceId[];
+  // ?begin=1: skip the intro. With services already chosen, question 01 is answered, so it opens on 02.
   begin?: boolean;
 }
 
 type Screen = "intro" | "step" | "brief";
 
 const stepsFor = (d: Draft): StepKey[] => ["needs", "start", "goal", ...(d.needs.includes("unsure") ? [] : (["priorities"] as StepKey[])), "timing"];
-const emptyDraft = (service: ServiceId | null): Draft => (service ? { needs: [service], primary: service } : { needs: [] });
 
 function scrollToTop(el: HTMLElement | null) {
   if (!el || el.getBoundingClientRect().top >= 0) return;
@@ -38,10 +39,11 @@ function scrollToTop(el: HTMLElement | null) {
   else el.scrollIntoView({ block: "start" });
 }
 
-export default function ProjectPlanner({ related, initialService, begin = false }: Props) {
-  const [screen, setScreen] = useState<Screen>(begin ? "step" : "intro");
-  const [stepIndex, setStepIndex] = useState(0);
-  const [draft, setDraft] = useState<Draft>(() => emptyDraft(initialService));
+export default function ProjectPlanner({ related, initialServices, begin = false }: Props) {
+  const [opening] = useState(() => plannerOpening(initialServices, begin));
+  const [screen, setScreen] = useState<Screen>(opening.screen);
+  const [stepIndex, setStepIndex] = useState(opening.stepIndex);
+  const [draft, setDraft] = useState<Draft>(opening.draft);
   const [optional, setOptional] = useState<Optional>({});
   const [editing, setEditing] = useState(false);
   const [showSend, setShowSend] = useState(false);
@@ -132,7 +134,7 @@ export default function ProjectPlanner({ related, initialService, begin = false 
   }
 
   function startAgain() {
-    setDraft(emptyDraft(null));
+    setDraft({ needs: [] });
     setOptional({});
     setShowSend(false);
     setEditing(false);
