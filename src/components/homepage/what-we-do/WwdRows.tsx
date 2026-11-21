@@ -1,8 +1,9 @@
 "use client";
 // A client component: the four services as accordion rows. Each row is an h3 holding a button; one
 // row is open at a time. A closed panel stays in the page source but is inert. The panel holds a
-// desktop layout (tagline, description and detail link beside "What it includes") and a phone layout
-// (tagline, the service's own disciplines as tappable words, then the detail link); CSS shows one.
+// desktop layout (tagline, description and detail link; the lit words in the field beside it show the
+// disciplines) and a phone layout (tagline, the service's own disciplines as tappable words, then the
+// detail link); CSS shows one.
 
 import { Link } from "next-view-transitions";
 import { track } from "@/lib/analytics";
@@ -37,22 +38,9 @@ function DetailLink({ service, topic }: { service: WwdService; topic: string }) 
 function DesktopPanel({ service, topic }: { service: WwdService; topic: string }) {
   return (
     <div className="wwd-panel-desktop">
-      <div className="wwd-panel-about">
-        <p className="wwd-tagline">{service.tagline}</p>
-        <p className="wwd-desc">{service.description}</p>
-        <DetailLink service={service} topic={topic} />
-      </div>
-      <div className="wwd-panel-list">
-        <p className="editorial-label">What it includes</p>
-        <ul className="wwd-includes">
-          {service.disciplines.map((d) => (
-            <li key={d.name} className="wwd-include">
-              <p className="wwd-include-name">{d.name}</p>
-              <p className="wwd-desc">{d.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="wwd-tagline">{service.tagline}</p>
+      <p className="wwd-desc">{service.description}</p>
+      <DetailLink service={service} topic={topic} />
     </div>
   );
 }

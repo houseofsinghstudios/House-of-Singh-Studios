@@ -188,3 +188,38 @@ test("the homepage: What we do replaces The Argument and Capabilities; the secti
   assert.match(field, /\{armed &&/);
   assert.doesNotMatch(field, /\bpriority\b|fetchPriority|loading="eager"/);
 });
+
+test("desktop side by side (WWDSideBySide): the field sticky on 1 to 7, the rows on 8 to 12", () => {
+  const css = read("src/components/homepage/what-we-do/wwd.css");
+  const desktop = css.slice(0, css.indexOf("@media (max-width: 1080px)"));
+  assert.match(desktop, /\.wwd-label \{\n {2}grid-column: 1 \/ -1;/, "the label over a full width heading");
+  assert.match(desktop, /@media \(min-width: 1280px\) \{\n {2}\.wwd-heading \{\n {4}white-space: nowrap;/);
+  assert.match(desktop, /\.wwd-line \{[^}]*margin: 16px 0 0;/);
+  assert.match(desktop, /\.wwd-island \{\n {2}margin-top: 72px;\n {2}align-items: start;/);
+  assert.match(desktop, /\.wwd-field-wrap \{\n {2}grid-column: 1 \/ 8;\n {2}padding-right: 56px;\n {2}position: sticky;\n {2}top: calc\(var\(--header-edge\) \+ 32px\);\n {2}transition: top var\(--header-slide\);/);
+  assert.match(desktop, /\.wwd-field \{[^}]*font-size: 25px;\n {2}line-height: 32px;\n {2}letter-spacing: -0\.02em;/);
+  assert.match(desktop, /\.wwd-rows \{\n {2}grid-column: 8 \/ -1;/);
+  assert.match(desktop, /\.wwd-row-btn \{[^}]*gap: 16px;[^}]*padding: 24px 0;/);
+  assert.match(desktop, /\.wwd-num \{\n {2}flex: 0 0 24px;/);
+  assert.match(desktop, /\.wwd-panel-desktop \{\n {2}padding: 0 0 32px 40px;/);
+  assert.match(desktop, /\.wwd-panel-desktop \.wwd-desc \{\n {2}margin-top: 12px;/);
+  assert.match(desktop, /\.wwd-detail \{[^}]*margin-top: 20px;/);
+  assert.doesNotMatch(css, /wwd-include|wwd-panel-list|wwd-panel-about/, "no discipline list on desktop");
+});
+
+test("the desktop panel: tagline, description and the detail link only; the protected hidden text kept", () => {
+  const rows = read("src/components/homepage/what-we-do/WwdRows.tsx");
+  const panel = rows.slice(rows.indexOf("function DesktopPanel"), rows.indexOf("export default"));
+  assert.doesNotMatch(panel, /What it includes|disciplines\.map/);
+  assert.match(panel, /<p className="wwd-tagline">\{service\.tagline\}<\/p>\s*<p className="wwd-desc">\{service\.description\}<\/p>\s*<DetailLink service=\{service\} topic=\{topic\} \/>/);
+  assert.match(rows, /\{topic && <span className="sr-only">: \{topic\}<\/span>\}/);
+  // The phone panel keeps its own disciplines.
+  assert.match(rows, /<WwdPhoneWords key=\{`\$\{s\.slug\}-\$\{isOpen\}`\} service=\{s\} work=\{work\} \/>/);
+});
+
+test("the field's light: the row pointed at, else the open row, else every word Obsidian", () => {
+  const island = read("src/components/homepage/what-we-do/WhatWeDo.tsx");
+  assert.match(island, /const fieldLight = litService \?\? \(open !== null \? services\[open\]\.slug : null\);/);
+  assert.match(island, /<WwdField [^>]*litService=\{fieldLight\}/);
+  assert.match(island, /const RESET_MS = 150;/);
+});
