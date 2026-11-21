@@ -177,13 +177,11 @@ test("events: the three names, with their parameters, and no hover events", () =
 
 test("the homepage: What we do replaces The Argument and Capabilities; the sections renumbered", () => {
   const page = read("src/app/(site)/(home)/page.tsx");
-  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<TestimonialsSection", "<ProofSection", "<ToolBand", "<CtaSection"].map((tag) => page.indexOf(tag));
+  const order = ["<HeroSection", "<SelectedWorkSection", "<WhatWeDoSection", "<ProofSection", "<ToolBand", "<CtaSection"].map((tag) => page.indexOf(tag));
   assert.ok(order.every((at, i) => at > 0 && (i === 0 || at > order[i - 1])), `order ${order}`);
   assert.doesNotMatch(page, /ArgumentSection|ServicesSection|NextPageLink/);
   assert.match(read("src/components/homepage/what-we-do/WhatWeDoSection.tsx"), /<EditorialLabel number="02" text="What we do"/);
-  assert.match(read("src/components/homepage/TestimonialsSection.tsx"), /<EditorialLabel number="03" text="Testimonials"/);
-  assert.match(read("src/components/homepage/ProofSection.tsx"), /\(04\) Proof/);
-  assert.match(read("src/components/homepage/ToolBand.tsx"), /label: "\(05\) Two ways to start"/);
+  // (03) Proof and (04) Two ways to start: tests/proof.test.ts.
   // The preview images: next/image at 300px, never priority, and only after the pointer enters.
   const field = read("src/components/homepage/what-we-do/WwdField.tsx");
   assert.match(field, /sizes="300px"/);

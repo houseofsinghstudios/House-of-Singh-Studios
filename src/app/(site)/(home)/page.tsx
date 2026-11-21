@@ -3,11 +3,11 @@ import HeroSection from "@/components/homepage/HeroSection";
 import SelectedWorkSection from "@/components/homepage/SelectedWorkSection";
 import WhatWeDoSection from "@/components/homepage/what-we-do/WhatWeDoSection";
 import ToolBand from "@/components/homepage/ToolBand";
-import TestimonialsSection from "@/components/homepage/TestimonialsSection";
-import ProofSection from "@/components/homepage/ProofSection";
+import ProofSection from "@/components/homepage/proof/ProofSection";
 import CtaSection from "@/components/homepage/CtaSection";
 import { getHeroProjects, getIndexProjects, getWhatWeDoWork } from "@/lib/sanity/projects";
 import { WEBSITE_OG } from "@/lib/seo";
+import { getProofChapters } from "@/lib/sanity/testimonials";
 
 export const revalidate = 60;
 
@@ -28,16 +28,15 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [heroProjects, indexProjects, whatWeDoWork] = await Promise.all([getHeroProjects(), getIndexProjects(), getWhatWeDoWork()]);
+  const [heroProjects, indexProjects, whatWeDoWork, proofChapters] = await Promise.all([getHeroProjects(), getIndexProjects(), getWhatWeDoWork(), getProofChapters()]);
 
   return (
     <>
       <HeroSection projects={heroProjects} />
       <SelectedWorkSection projects={indexProjects} />
       <WhatWeDoSection work={whatWeDoWork} />
-      <TestimonialsSection />
-      <ProofSection />
-      {/* (05): the place the new Start section takes when it lands. */}
+      <ProofSection chapters={proofChapters} />
+      {/* (04): the place the new Start section takes when it lands. */}
       <ToolBand />
       <CtaSection />
     </>

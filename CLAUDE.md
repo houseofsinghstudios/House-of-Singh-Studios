@@ -227,7 +227,7 @@ EVOLVED APPROACH:
 ## PAGE-SPECIFIC INTERACTION MAPS
 
 ### Homepage
-Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work → (02) What we do → (03) Testimonials → (04) Proof → (05) Two ways to start → CTA. No Next page link on the homepage. (05) is the place the new Start section takes; final numbers come when (04) Proof is rebuilt.
+Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work → (02) What we do → (03) Proof → (04) Two ways to start → CTA. No Next page link on the homepage. (04) is the place the new Start section takes. The Testimonials carousel and the Proof counters (50+ projects, 12+ years, 8+ industries) are gone.
 
 - Hero (src/components/homepage/HeroSection.tsx, a server component, with the client parts HeroInteractive, HeroImages, HeroCaption, HeroLine and HeroPause; styles in hero.css; words, timings and helpers in src/lib/homepage-hero.ts). Projects from getHeroProjects, the Studio "Homepage hero" fieldset. The H1 stays visually hidden (protected), then the label "(Brand identity studio, Toronto)".
   - Layout: above 1080px the hero fills the first screen under the header; the image runs from 46% of the width to the right edge, full height, and the text column holds the label (64px under the header), the value line and, at its foot, the caption (44px above the hero's bottom). At 1080px and below: the image first (full width, clamp(380px, 110vw, 620px) tall), the caption 12px under it, then the label and the value line.
@@ -257,9 +257,15 @@ Flow, as built (src/app/(site)/(home)/page.tsx): Hero → (01) Selected work →
   - Phone (1080px and below, minor third): heading 32/40, "Everything we make is built to work as one system.", no keyword field, the same rows (72px minimum, first open). An open row shows the tagline, the service's own disciplines as the slash field (20/32), every word a button (aria-expanded, aria-controls; underlined when it has work), then the detail link. A tap marks the word with the band and opens a card under the field (0.45s, one at a time, tap again or Close, a 44px target): the name, the description and, with work, "See it in <Client>". No images on phones.
   - Reduced motion: no stagger, the band at once, no height animation, no preview motion.
   - Analytics: home_wwd_service_open { service }, home_wwd_word_click { discipline, has_work, layout }, home_service_click { service } on the detail links. No hover events.
-- (03) Testimonials: carousel with auto rotate and pause.
-- (04) Proof: animated counters (50+ projects, 12+ years, 8+ industries).
-- (05) Two ways to start (ToolBand): Brand Pulse Check and Project Planner, after Proof until the new Start section replaces it. Desktop: two columns. Phones: a two tab switch.
+- (03) Proof, "What every client can count on." (src/components/homepage/proof: ProofSection, a server component, with the client island ProofLight; proof.css; promises, copy and rules in src/lib/proof.ts; approved on the canvas, desktop ProofScrollLit, phone ProofScrollLitPhone). It replaced the Testimonials carousel and the Proof counters.
+  - Content: four chapters in order, each a label, a promise (h3) and one client quote: 01 Understanding "We learn your business before we design for it. The strategy is agreed with you first." (Siddhartha Sharma), 02 Time "First concepts within two weeks. A reply within one business day." (Lovejot), 03 Effort "Two revision rounds included. The thinking happens before the drawing." (Keval), 04 People "One senior contact, from the first call to the final file." (Yanina). The promises live in code and are true on every project: never add numbers, statistics, prices or an exit or refund line. Each quote is the testimonial's excerpt with its key phrase on the marker band, captioned "Name, Role"; the testimonials come from Sanity, with the coded TESTIMONIALS as the fallback per promise (see SANITY).
+  - Structure: section aria-labelledby the h2; an ol of chapters, each an h3 then a figure with blockquote and figcaption; the key phrase a span with the band. The server renders 01 lit and the rest at rest, the island's first state, so nothing flashes and all of it reads without JavaScript.
+  - The light (both widths): one chapter lit at a time, 01 first. Lit: promise, quote and name Obsidian, and the key phrase's Cloudy White band wiping in from the left (background-position 0 0.14em, size 0% to 100% by 0.9em, 0.7s with a 0.12s delay, 3px wider each side, box-decoration-break clone; the band is a one colour background image so it can wipe). At rest: Accessible Ash, colour only, never opacity, band at 0%. Colour 0.5s; the desktop promise loosens from -0.025em to -0.02em when lit. Scroll decides: the last chapter whose top has crossed 55% of the viewport (IntersectionObserver, root margin 0 0 -45% 0, no scroll listeners); the list gets measured bottom space only if the last chapter could not reach the line.
+  - Desktop (above 1080px): 12 columns, 160px vertical padding. Columns 1 to 4 sticky at --header-edge plus 48px, moving with --header-slide: the label, the h2 (48/56, -0.03em, balance), and 48px lower the index (ol "Our promises", max 240px): buttons with the number (11px, Accessible Ash) over the name (16/24, 500), padding 12px 0 12px 20px, a 2px Obsidian bar on the left (scaleY from the top, 0.5s) and aria-current="step" for the lit one. A click scrolls its chapter to 30% down the viewport (never under the header; Lenis when it runs, instant with reduced motion); keyboard focus on a button lights its chapter (2px Obsidian outline, 2px offset). Columns 6 to 12 the chapters: hairline above, 40px padding, at least 420px tall; promise 31/40; the figure 40px lower, max 520px, quote 20/28, caption 14px under it. Pointing at a chapter (a mouse, above 1080px) lights it until the pointer leaves the list. No per chapter label: the index carries the names.
+  - Phone (1080px and below): one column, 96px vertical padding, no index; h2 32/40 16px under the label; chapters with a hairline, 24px padding, at least 360px tall, the label "01  Understanding" (11px, following the light), promise 24/32, quote 16/24, caption 10px under it. Scroll only. A zero height sticky shell at the section's top (at --header-edge, moving with --header-slide, z-index 20, under the header and the drawer) holds the compact bar on Silver Mist: "(03) Proof" and the count "02 / 04", the title at 20/28, and four 2px segments (Obsidian up to the lit chapter). It fades in and drops 8px over 0.4s once the h2 has scrolled under the header (IntersectionObserver on the h2), hides when it comes back, and leaves with the section (the section clips it). Decorative: aria-hidden, nothing focusable.
+  - Reduced motion: every chapter Obsidian with its band, no transitions, letter-spacing -0.02em; the index bar, the segments and the compact bar update at once.
+  - Analytics: proof_index_click { promise } on desktop index clicks only. No images, no new dependencies.
+- (04) Two ways to start (ToolBand): Brand Pulse Check and Project Planner, after Proof until the new Start section replaces it. Desktop: two columns. Phones: a two tab switch.
 - CTA: dark inverted. The close.
 - About Preview and Brands sections no longer exist.
 
@@ -529,6 +535,21 @@ not shown on the site at the moment, kept filled for later use; "Hero images" ar
 the homepage shows the first; "Hero fit" fills the frame or fits inside it (website screens). Name, line, field, word
 and images are required once the project shows. Read by getHeroProjects (src/lib/sanity/projects.ts, order
 in src/lib/homepage-hero.ts); the homepage hero shows them.
+
+Site Settings (sanity/schemas/siteSettings.ts): only the About page fields are read (studio image, founder portrait,
+name, role, bio and second bio paragraph; src/lib/sanity/queries.ts). Founder role, bio and second paragraph say "When
+empty, the About page shows the text written in the code." Hidden since 20 Nov 2026, not deleted (their data stays):
+studioName, tagline, description, email, phone, location, instagramUrl, linkedinUrl, ogImage; nothing in src reads
+them (tests/site-settings.test.ts).
+
+Testimonials (listed in Studio as "Testimonials"; read by getProofChapters in src/lib/sanity/testimonials.ts, rules in
+src/lib/proof.ts): quote, author, role, company, photo, related case study and featured as before, plus "Excerpt" (required,
+the part shown in the homepage (03) Proof, copied exactly from the quote), "Key phrase" (required, the words on the
+marker band, copied exactly from the excerpt) and "Promise" (optional: Understanding, Time, Effort or People; no two
+published testimonials may share one). For each promise the homepage shows the published testimonial that supports it;
+without one, or when Sanity fails while building, the coded testimonial for that promise (TESTIMONIALS in
+src/lib/constants/homepage-data.ts, the fallback only), so a chapter is never empty. No Review or AggregateRating schema.
+Publishing one refreshes the homepage through /api/revalidate, which refreshes the whole site for any document type.
 
 What we do fieldset (Project documents, collapsed, after the Work index): "What we do" (whatWeDo) is up to twelve
 entries, each a discipline (a dropdown of the thirty deliverable names from src/data/services.ts) and an image

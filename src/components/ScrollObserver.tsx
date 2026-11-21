@@ -50,7 +50,6 @@ export default function ScrollObserver() {
         ".cta-section-mobile > h2:not(.in-view), " +
         ".cta-section-mobile > p:not(.in-view), " +
         ".cta-section-mobile > div:last-child:not(.in-view), " +
-        ".testimonials-section:not(.in-view), " +
         ".reveal-clip:not(.in-view), .reveal-stagger-parent:not(.in-view), .reveal-text:not(.in-view), " +
         ".ins-card:not(.in-view), .ins-featured:not(.in-view), " +
         ".about-team-card:not(.in-view)"
