@@ -94,7 +94,6 @@ export default function HomeWorkIndex({ items, orders, label }: Props) {
       </div>
       {/* The closing row, across the grid under the list: the choice carries forward to /work?for=. */}
       <div className="hw-close">
-        <p className="editorial-label">Client work first; studio explorations are marked</p>
         <Link href={all.href} className="hw-all" data-cursor="link">
           {all.text}
         </Link>

@@ -36,11 +36,10 @@
   font-size: 44px;
 }
 
-/* The closing row, across the grid under the list: a hairline above, the note on the left, the way
-   to /work on the right. */
+/* The closing row, across the grid under the list: a hairline above and the way to /work on the right. */
 .hw-close {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: baseline;
   gap: 24px;
   padding-top: 24px;
