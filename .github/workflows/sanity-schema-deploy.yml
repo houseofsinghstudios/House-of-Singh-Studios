@@ -1,0 +1,59 @@
+# Deploys the Sanity schema (workspace hos-studios, dataset production) whenever a push to main changes the
+# schema or the Studio config, so Sanity's own copy of the content model stays current. Tools that validate
+# against the deployed schema (the Sanity MCP server, Agent Actions, Canvas) otherwise reject new fields.
+#
+# Schema deploy ONLY. Never `sanity deploy`: that builds and hosts a separate Studio that falls out of step
+# with the embedded one at /studio. The embedded Studio does not update the deployed schema on its own.
+#
+# The token is the GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a Sanity project robot token with the
+# "Deploy Studio (Token only)" permission (it carries the deployStudio grant that schema deploy needs; no
+# write access to content). The CLI reads it from SANITY_AUTH_TOKEN; GitHub masks it in the logs.
+name: Sanity schema deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "sanity/**"
+      - "sanity.config.ts"
+  # Run it by hand once the secret is added, or after a change the paths above do not catch (the schemas
+  # also read src/data/services.ts, src/lib/what-we-do.ts and src/lib/proof.ts).
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deploy at a time, in push order; a newer run waits instead of cancelling one in flight.
+concurrency:
+  group: sanity-schema-deploy
+  cancel-in-progress: false
+
+jobs:
+  schema-deploy:
+    name: Deploy the Sanity schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SANITY_AUTH_TOKEN: ${{ secrets.SANITY_SCHEMA_DEPLOY_TOKEN }}
+    steps:
+      - name: Check the token is set
+        run: |
+          if [ -z "$SANITY_AUTH_TOKEN" ]; then
+            echo "::error::The secret SANITY_SCHEMA_DEPLOY_TOKEN is not set. See the SANITY section of CLAUDE.md."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v5
+
+      # Sanity needs Node 22.12 or newer; 22.x takes the latest Node 22.
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22.x
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # The Sanity version pinned in package-lock.json, the same one the embedded Studio runs.
+      - name: Deploy the schema
+        run: npx sanity schema deploy --workspace hos-studios --verbose

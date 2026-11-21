@@ -520,6 +520,17 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 
 Sanity Studio is embedded at /studio inside its own route group and deploys with Vercel. Never run `sanity deploy`; it creates a separate hosted Studio that falls out of sync with the code.
 
+Schema deploy is different, and automatic: `sanity schema deploy` uploads only the content model (the schema
+document `_.schemas.hos-studios` in the production dataset), which tools such as the Sanity MCP server, Agent
+Actions and Canvas validate against. It hosts nothing and changes no content. The embedded Studio never updates
+that copy itself, so .github/workflows/sanity-schema-deploy.yml runs `npx sanity schema deploy --workspace
+hos-studios` on every push to main that changes sanity/ or sanity.config.ts (and by hand from the Actions tab,
+for a change that only touches the files the schemas import, such as src/data/services.ts, src/lib/what-we-do.ts
+or src/lib/proof.ts). Its token is the GitHub secret SANITY_SCHEMA_DEPLOY_TOKEN: a project robot token with the
+"Deploy Studio (Token only)" permission, the least that schema deploy accepts (the deployStudio grant, no content
+write). Never put it in Vercel, in .env files or in the code. In short: `sanity schema deploy`, yes, through the
+workflow; `sanity deploy`, never.
+
 Publishing refreshes the site at once: a webhook in sanity.io/manage posts to /api/revalidate, signed with
 SANITY_REVALIDATE_SECRET (set on Vercel and on the webhook). Without it, changes wait for each page's own refresh.
 
