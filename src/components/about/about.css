@@ -5,13 +5,15 @@
   position: relative;
 }
 
+/* The step numbers: large text (24px and up at weight 500), so 3:1 is the bar. Accessible Ash is
+   4.64:1 on Silver Mist; on the hover ground --text-label turns Gunmetal (5.3:1, globals.css). They
+   are read with the step, so they are not hidden from assistive technology. */
 .about-process-ghost {
   font-family: var(--sans);
   font-weight: 500;
   font-size: clamp(28px, 3vw, 40px);
   letter-spacing: -0.03em;
-  color: var(--text-muted);
-  opacity: 0.3;
+  color: var(--text-label);
   line-height: 1;
   display: block;
   margin-bottom: 8px;

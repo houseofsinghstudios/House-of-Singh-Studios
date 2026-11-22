@@ -14,3 +14,13 @@ test("hover grounds: every Cloudy White hover sets --text-label to Gunmetal", ()
   }
   assert.match(css, /\.surface-cloudy,\s*\.svc-block-img-placeholder \{\s*--text-label: var\(--text-secondary\);/);
 });
+
+test("About process numbers: Accessible Ash at full strength, read with their step", () => {
+  const css = readFileSync("src/components/about/about.css", "utf8");
+  const rule = css.slice(css.indexOf(".about-process-ghost {"), css.indexOf("}", css.indexOf(".about-process-ghost {")));
+  assert.match(rule, /color: var\(--text-label\);/);
+  assert.doesNotMatch(rule, /opacity|--text-muted/);
+  assert.match(css, /font-size: clamp\(28px, 3vw, 40px\)/);
+  const about = readFileSync("src/components/about/AboutClient.tsx", "utf8");
+  assert.match(about, /<span className="about-process-ghost">\{String\(i \+ 1\)\.padStart\(2, "0"\)\}<\/span>/);
+});

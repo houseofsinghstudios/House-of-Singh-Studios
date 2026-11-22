@@ -319,6 +319,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - Compact hero
 - Numbered sections: (01) Capabilities, (02) Process, (03) Network, (04) Founder, (05) Stats
 - Founder section: two-column with photo and bio
+- Process step numbers (01 to 05): 28px to 40px (24px below 900px), weight 500, so large text; Accessible Ash at full strength (4.64:1), Gunmetal on the hover ground; read with their step, not hidden from assistive technology (since 22 Nov 2026)
 - Dark CTA
 
 ### Contact
