@@ -4,7 +4,7 @@
 // colour (never opacity). Nothing is ever hidden.
 
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import type { WorkItem } from "./types";
 
 interface RowHandlers {
@@ -48,9 +48,9 @@ function Row({ item, dim, stripMax, armed, onRowEnter, onRowFocus, onImageEnter,
       </span>
       {/* The one view transition name per project on this page, so the case study title morphs. */}
       <h3 className="wi-name" style={{ viewTransitionName: `project-${item.slug}` }}>
-        <Link href={`/work/${item.slug}`} className="wi-name-link">
+        <IntentLink href={`/work/${item.slug}`} className="wi-name-link">
           {item.title}
-        </Link>
+        </IntentLink>
       </h3>
       <Strip item={item} stripMax={stripMax} armed={armed} onImageEnter={onImageEnter} onImageLeave={onImageLeave} />
       <p className="wi-meta">
@@ -91,9 +91,9 @@ export default function WorkRows({ matches, rest, hasChoice, question, listRef, 
       {matches.length > 0 && question && (
         <div className="wi-invite">
           <p className="wi-invite-question">{question}</p>
-          <Link href="/start" className="wi-invite-link" data-cursor="link">
+          <IntentLink href="/start" className="wi-invite-link" data-cursor="link">
             Plan your project
-          </Link>
+          </IntentLink>
         </div>
       )}
       {hasChoice && rest.length > 0 && (home ? <p className="editorial-label wi-other">More from the studio</p> : <h2 className="editorial-label wi-other">Other work</h2>)}

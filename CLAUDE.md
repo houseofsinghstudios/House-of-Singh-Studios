@@ -398,6 +398,7 @@ Target: Lighthouse 80+ across all metrics. Experience takes priority over perfec
 - Fonts: Inter loaded via next/font with display swap
 - Cursor: requestAnimationFrame for 60fps tracking
 - Page transitions: View Transitions API (native, zero bundle cost)
+- Prefetch on intent (since 22 Nov 2026): links to other pages are IntentLink (src/components/IntentLink.tsx), the view transition Link with viewport prefetch off and router.prefetch on hover, keyboard focus or touch, so nothing is fetched before the visitor shows intent and Chrome logs no unused preloaded stylesheets (prefetching on sight fetched nine routes, about 130 KB, before any interaction, with 24 console warnings at 1440). The /work links (the header's Work and Selected work's All work) keep prefetching on sight: /work adds no stylesheet the homepage lacks. A hover to click measured 73ms. Guard: tests/intent-link.test.ts.
 - Scroll reveals: one IntersectionObserver path in every browser (Layer 3), each element revealed once with a CSS transition. No scroll linked animation-timeline: view() for reveals since 22 Nov 2026; the 1px scroll progress line still uses animation-timeline: scroll()
 - Exception: Lenis (smooth scroll) is the only approved third-party animation dependency. It provides the decelerated scroll feel that CSS cannot replicate. No other animation libraries are permitted.
 

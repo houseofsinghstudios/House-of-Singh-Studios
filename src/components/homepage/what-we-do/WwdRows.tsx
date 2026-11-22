@@ -6,7 +6,7 @@
 // disciplines) and a phone layout (tagline, the service's own disciplines as tappable words, then the
 // detail link); CSS shows one.
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
 import { useInBrowser } from "@/lib/use-in-browser";
 import { countLabel, detailLinkText, serviceHref, type WwdService, type WwdWork } from "@/lib/what-we-do";
@@ -32,10 +32,10 @@ const isMouse = (e: React.PointerEvent) => e.pointerType === "mouse";
 // link's name starts with what it shows (protected: moved here from the old Capabilities rows).
 function DetailLink({ service, topic }: { service: WwdService; topic: string }) {
   return (
-    <Link href={serviceHref(service.slug)} className="wwd-detail" data-cursor="link" onClick={() => track("home_service_click", { service: service.slug })}>
+    <IntentLink href={serviceHref(service.slug)} className="wwd-detail" data-cursor="link" onClick={() => track("home_service_click", { service: service.slug })}>
       {detailLinkText(service.name)}
       {topic && <span className="sr-only">: {topic}</span>}
-    </Link>
+    </IntentLink>
   );
 }
 

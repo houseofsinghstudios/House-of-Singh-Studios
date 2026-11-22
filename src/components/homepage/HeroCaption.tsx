@@ -6,7 +6,7 @@
 // name and "View project" on one row under the image; the line is hidden. No Client or Exploration
 // tag here, on purpose: the case study page carries it.
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { useEffect, useState } from "react";
 import { heroLinkTopic, VIEW_PROJECT, type HeroEntry } from "@/lib/homepage-hero";
 
@@ -45,10 +45,10 @@ export default function HeroCaption({ entry, reduceMotion, onOpen }: Props) {
       <div className="hero-caption-body" data-leaving={leaving}>
         <p className="hero-caption-name">{shown.heroName}</p>
         {shown.heroLine && <p className="hero-caption-line">{shown.heroLine}</p>}
-        <Link href={`/work/${shown.slug}`} className="hero-caption-link" onClick={() => onOpen(shown.slug)}>
+        <IntentLink href={`/work/${shown.slug}`} className="hero-caption-link" onClick={() => onOpen(shown.slug)}>
           {VIEW_PROJECT}
           <span className="sr-only">{heroLinkTopic(shown.heroName)}</span>
-        </Link>
+        </IntentLink>
       </div>
     </div>
   );

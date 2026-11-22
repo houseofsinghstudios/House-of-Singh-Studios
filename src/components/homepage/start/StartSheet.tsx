@@ -7,7 +7,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useInBrowser } from "@/lib/use-in-browser";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
 import { useHomeSector } from "@/lib/home-choice";
 import { CHIP_SERVICES, FIRST_QUESTION, START_COPY, chipAnnouncement, chipLabel, countText, laterQuestions, planHref, startedText, toggleChip } from "@/lib/home-start";
@@ -115,9 +115,9 @@ export default function StartSheet() {
         )}
         <QuestionOne selected={selected} onChoose={choose} line={first} />
         <LaterRows selected={selected} line={first + 1} />
-        <Link href={planHref(selected)} className="btn-primary hs-plan" data-cursor="link" onClick={() => track("home_start_plan_click", { services_count: selected.length })}>
+        <IntentLink href={planHref(selected)} className="btn-primary hs-plan" data-cursor="link" onClick={() => track("home_start_plan_click", { services_count: selected.length })}>
           {START_COPY.button}
-        </Link>
+        </IntentLink>
         <p className="hs-note">{START_COPY.line}</p>
         <p className="sr-only" aria-live="polite">{live}</p>
       </div>

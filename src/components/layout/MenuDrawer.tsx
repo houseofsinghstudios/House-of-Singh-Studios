@@ -12,7 +12,7 @@
 // to the menu button, and Tab wraps between it and the drawer's links. Always rendered, so the menu
 // button's aria-controls always points at it; inert while closed.
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { useEffect, useRef } from "react";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { SITE_LINKS } from "./site-links";
@@ -135,7 +135,7 @@ export default function MenuDrawer({ id, open, onClose, toggleRef }: Props) {
       >
         <nav className="menu-drawer-links" aria-label="Site pages">
           {DRAWER_LINKS.map((link, i) => (
-            <Link
+            <IntentLink
               key={link.href}
               href={link.href}
               className="mobile-nav-link"
@@ -143,7 +143,7 @@ export default function MenuDrawer({ id, open, onClose, toggleRef }: Props) {
               style={{ "--i": i } as React.CSSProperties}
             >
               {link.label}
-            </Link>
+            </IntentLink>
           ))}
         </nav>
         <DrawerFoot open={open} />

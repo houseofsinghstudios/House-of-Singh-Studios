@@ -9,6 +9,7 @@
 // keyboard focus moves into it, so focus never lands on a hidden element.
 
 import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
@@ -21,18 +22,22 @@ const DRAWER_ID = "site-menu-drawer";
 const DRAWER_WIDTHS = "(max-width: 1080px)";
 
 // Above 1080px: the five links, then "Plan your project" (hidden at 1080px and below, where the
-// drawer's Contact covers it).
+// drawer's Contact covers it). Work prefetches on sight (a main path whose stylesheet the homepage
+// already has); every other page on intent (IntentLink).
 function DesktopNav() {
   return (
     <nav className="header-desktop-nav" aria-label="Primary navigation">
-      {SITE_LINKS.map((link) => (
-        <Link key={link.href} href={link.href} className="header-nav-link">
-          {link.label}
-        </Link>
-      ))}
-      <Link href="/start" className="btn-primary header-cta" data-cursor="link" onClick={() => track("header_cta_click", { location: "header" })}>
+      {SITE_LINKS.map((link) => {
+        const NavLink = link.href === "/work" ? Link : IntentLink;
+        return (
+          <NavLink key={link.href} href={link.href} className="header-nav-link">
+            {link.label}
+          </NavLink>
+        );
+      })}
+      <IntentLink href="/start" className="btn-primary header-cta" data-cursor="link" onClick={() => track("header_cta_click", { location: "header" })}>
         Plan your project
-      </Link>
+      </IntentLink>
     </nav>
   );
 }
@@ -115,9 +120,9 @@ export default function Header() {
       <header className={className} onFocus={reveal}>
         {/* The home link is the studio's name as live text, in the nav's type; written in normal case
             (capitals come from CSS), so screen readers say the name naturally. */}
-        <Link href="/" className="header-wordmark">
+        <IntentLink href="/" className="header-wordmark">
           House of Singh Studios
-        </Link>
+        </IntentLink>
         <div className="header-spacer" />
         <DesktopNav />
         <MenuButton buttonRef={menuButtonRef} open={drawerOpen} onClick={drawerOpen ? closeDrawer : openDrawer} />

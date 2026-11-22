@@ -69,12 +69,12 @@ test("the drawer's time is Toronto time whatever the visitor's zone, as in 1:05 
 test("desktop header: the studio's name as the home link, five links and Plan your project; no Contact", () => {
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
   // The home link is live text, written in normal case (CSS makes the capitals).
-  assert.match(header, /<Link href="\/" className="header-wordmark">\s*House of Singh Studios\s*<\/Link>/);
+  assert.match(header, /<IntentLink href="\/" className="header-wordmark">\s*House of Singh Studios\s*<\/IntentLink>/);
   assert.doesNotMatch(header, /next\/image|<Image|hos-studios-wordmark/);
   assert.doesNotMatch(header, /hos-studios-logo\.svg|header-crest/);
   // One list of the main pages for the header and the drawer (site-links.ts).
   assert.deepEqual(SITE_LINKS.map((l) => l.label), ["Services", "Work", "AI Lab", "About", "Insights"]);
-  assert.match(header, /\{SITE_LINKS\.map\(\(link\) => \(/);
+  assert.match(header, /\{SITE_LINKS\.map\(\(link\) => \{/);
   assert.match(header, /href="\/start" className="btn-primary header-cta" data-cursor="link" onClick=\{\(\) => track\("header_cta_click", \{ location: "header" \}\)\}>\s*Plan your project/);
   assert.match(header, /track\("menu_open"\)/);
   assert.match(header, /aria-expanded=\{open\}/);

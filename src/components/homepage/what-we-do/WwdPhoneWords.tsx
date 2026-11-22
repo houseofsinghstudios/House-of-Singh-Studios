@@ -5,7 +5,7 @@
 // real work, a link to that case study. No images on phones.
 
 import { useState } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
 import { caseStudyHref, seeItText, type WwdService, type WwdWork } from "@/lib/what-we-do";
 
@@ -64,9 +64,9 @@ export default function WwdPhoneWords({ service, work }: Props) {
               <p className="wwd-card-name">{discipline.name}</p>
               <p className="wwd-desc">{discipline.description}</p>
               {w && (
-                <Link href={caseStudyHref(w.slug)} className="wwd-card-link" data-cursor="link">
+                <IntentLink href={caseStudyHref(w.slug)} className="wwd-card-link" data-cursor="link">
                   {seeItText(w.client)}
-                </Link>
+                </IntentLink>
               )}
               <button type="button" className="wwd-card-close" onClick={close}>
                 Close

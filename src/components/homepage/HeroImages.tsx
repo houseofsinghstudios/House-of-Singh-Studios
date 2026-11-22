@@ -10,7 +10,7 @@
 // so the line and the timer always agree.
 
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { heroLinkTopic, IMAGE_HOLD_MS, VIEW_PROJECT, type HeroEntry } from "@/lib/homepage-hero";
 
@@ -113,7 +113,7 @@ export default function HeroImages({ entries, index, step, rotating, halted, onD
 
   return (
     <>
-      <Link href={`/work/${entry.slug}`} className="hero-media-link" data-cursor="view" onClick={onOpen}>
+      <IntentLink href={`/work/${entry.slug}`} className="hero-media-link" data-cursor="view" onClick={onOpen}>
         <span className="sr-only">
           {VIEW_PROJECT}
           {heroLinkTopic(entry.heroName)}
@@ -121,7 +121,7 @@ export default function HeroImages({ entries, index, step, rotating, halted, onD
         {mounted.map((key) => (
           <Slide key={key} entry={entries[key]} visible={key === index} first={key === 0} onReady={() => markReady(key)} />
         ))}
-      </Link>
+      </IntentLink>
       {rotating && (
         <div className="hero-progress" aria-hidden="true">
           <span
