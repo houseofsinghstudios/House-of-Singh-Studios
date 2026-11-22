@@ -117,7 +117,7 @@ export default function Footer({ consentEnabled = false }: { consentEnabled?: bo
         <div className="ft-bottom">
           <span className="ft-copyright">&copy; 2026 House of Singh Studios Inc.</span>
           <div className="ft-legal">
-            <IntentLink href="/privacy" className="ft-legal-link">Privacy Policy</IntentLink>
+            <IntentLink href="/privacy" className="ft-legal-link">Privacy policy</IntentLink>
             {consentActive && (
               <button type="button" className="ft-legal-link ft-legal-button" onClick={() => window.dispatchEvent(new Event(PRIVACY_CHOICES_EVENT))}>
                 {CONSENT_COPY.footerLink}

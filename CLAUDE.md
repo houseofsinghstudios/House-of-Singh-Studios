@@ -98,7 +98,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - The drawer: from the right, 85vw up to 420px, translateX(100%) to 0 over 0.55s, over a var(--overlay-50) scrim fading over 0.45s, its top under the header bar. No close X of its own: the morphing menu button is the one control. Six links (Services, Work, AI Lab, About, Insights, Contact), about 55px each, entering from 24px with a stagger from 0.16s, 50ms apart. At the foot: "(Studio)" over "Toronto, Canada" and "(Local time)" over the live Toronto time (America/Toronto whatever the visitor's zone, shown after mount only, refreshed every 15s while open, the colon dimming every 2s).
 - The drawer is a disclosure, not a dialog: a region named "Menu" that the menu button controls (aria-expanded, aria-controls) from outside it; role dialog with aria-modal would hide that button from screen readers. While open, everything else is inert (the rest of the header included, the menu button excepted), so the page behind cannot be reached by keyboard or screen reader, and it does not scroll (Lenis paused). Focus moves to the menu button, Tab wraps between it and the drawer's links (a nav named "Site pages"), and focus returns to the button on close. It closes on the menu button, the scrim, Escape, a link, a swipe right of more than 60px, and when the window widens past 1080px. Reduced motion: a 0.3s fade, no slide or stagger. This closes health check F-10.
 - Design exception, decided for the drawer: its links have no dividers between them, unlike the rest of the site's rows.
-- Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. Commons is linked from the About page and the Initiatives page instead.
+- Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. The footer's legal links read "Privacy policy", "Privacy choices" and "Terms" (sentence case; the legal pages' own wording is unchanged). Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
 - Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts).
@@ -163,6 +163,7 @@ IMAGE CARDS (work grid, case studies, homepage featured):
 
 TEXT LINKS:
 - Underline wipe: scaleX(0) → scaleX(1) via ::after pseudo, transform-origin switches from right (rest) to left (hover)
+- Standalone action links, the second shared style (recorded 22 Nov 2026): a link that must read as a link at rest, on its own line inside a panel, shows its 1px Obsidian underline at rest and wipes it out to the right on hover (scaleX(1) → scaleX(0), origin left at rest, right on hover, 0.3s). Used by the homepage What we do "<Service name> in detail" (wwd.css) and the Living Index invitation link, "Plan your project" (work-index.css, on /work and in the homepage Selected work). Every other text link uses the wipe in above.
 
 BUTTONS:
 - Primary: light sweep overlay via ::before translateX(-100% → 0) over 0.4s
@@ -377,7 +378,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 
 - All hover interactions disabled (CSS @media(hover: hover) wrapper)
 - Accordion sections: all content visible by default, no hover-reveal
-- Custom cursor: hidden on touch devices
+- Custom cursor: hidden on touch devices; on a mouse, hidden until the pointer first moves, then starting at the pointer
 - Tap areas (since 22 Nov 2026): every link and button on the homepage, its header, drawer and footer is at least 44px to the finger at 1080px and below. Block links take padding with an equal negative margin, so nothing moves (a full page screenshot at 390 was pixel identical before and after), and their underlines and bands are moved back under the words; inline links (Selected work names, the Start door links) take vertical padding only, which never touches a line; Pause keeps its 32px square with an invisible 46px layer. The skip link, shown only to the keyboard, is the exception. Guard: tests/tap-targets.test.ts.
 - Navigation: wordmark + menu button at 1080px and below, in the 56px bar. The menu opens as a drawer from the right (Layer 1).
 - Image sizes reduced for performance
