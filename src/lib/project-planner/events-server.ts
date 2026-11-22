@@ -1,7 +1,7 @@
 // Server side of Project Planner events: validate each event's own shape, recompute the brief, and
 // build the payload for n8n. Whatever brief the browser sends is ignored. The planner shows no prices
-// (decided 20 Nov 2026); the price fields stay in the payload, always empty, so the n8n workflow keeps
-// working (docs/integrations/n8n.md).
+// (decided 20 Nov 2026), and since 22 Nov 2026 the payload carries no price fields at all
+// (docs/integrations/n8n.md).
 import "server-only";
 import { buildBrief, ENGINE_VERSION, answerLabels, validateAnswers, validBand } from "./engine";
 import { bookingUrl } from "./links";
@@ -121,9 +121,6 @@ function briefFields(e: { briefId: string; answers: Answers }) {
     dependencyNote: brief.dependencyNote,
     success: brief.success,
     toConfirm: brief.toConfirm,
-    // Kept for the n8n contract, always empty: the planner shows no prices.
-    priceLines: [] as { service: string; amount: number | null; text: string }[],
-    fitNote: null,
     action: brief.actions,
     bookingUrl: bookingUrl(e.briefId, brief, e.answers),
   };
@@ -136,8 +133,6 @@ export function buildPayload(e: ParsedEvent, submittedAt: string) {
     eventIdempotencyKey: `${e.briefId}:${e.event}`,
     statusRank: STATUS_RANK[e.event],
     engineVersion: ENGINE_VERSION,
-    // Kept for the n8n contract, always null: there are no prices.
-    priceSource: null,
     submittedAt,
     attribution: e.attribution,
   };
