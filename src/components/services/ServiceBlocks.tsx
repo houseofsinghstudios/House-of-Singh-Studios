@@ -167,14 +167,14 @@ export default function ServiceBlocks({ projectsByCategory }: Props) {
                   </li>
                 ))}
               </ul>
-              {/* "Learn More" on screen; the hidden rest makes the link text itself descriptive. */}
+              {/* "Learn more" on screen; the hidden rest makes the link text itself descriptive. */}
               <Link
                 href={`/services/${block.slug}`}
                 className="svc-block-btn"
                 style={{ marginTop: 32 }}
                 data-cursor="link"
               >
-                Learn More<span className="sr-only">{serviceLinkTopic(block.slug)}</span>
+                Learn more<span className="sr-only">{serviceLinkTopic(block.slug)}</span>
               </Link>
             </div>
 

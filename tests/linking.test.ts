@@ -86,9 +86,9 @@ test("related work: chosen first, then matching disciplines, then newest; at mos
 });
 
 test("descriptive link names keep the visible text first", () => {
-  assert.equal(serviceLinkLabel("brand-identity", "Learn More"), "Learn More: Brand identity design and rebranding in Toronto");
+  assert.equal(serviceLinkLabel("brand-identity", "Learn more"), "Learn more: Brand identity design and rebranding in Toronto");
   assert.equal(serviceLinkLabel("digital-design", "Digital Design and Experience"), "Digital Design and Experience: Website design for brands in Toronto");
-  assert.equal(serviceLinkLabel("unknown", "Learn More"), "Learn More");
+  assert.equal(serviceLinkLabel("unknown", "Learn more"), "Learn more");
 });
 
 test("every related article has a one line summary in house style; new articles fall back", () => {
@@ -102,7 +102,7 @@ test("every related article has a one line summary in house style; new articles 
   assert.equal(articleLine("a-new-article", "Its SEO description."), "Its SEO description.");
 });
 
-test("/services: each Learn More link carries its topic as hidden text, and no aria-label", async () => {
+test("/services: each Learn more link carries its topic as hidden text, and no aria-label", async () => {
   assert.equal(serviceLinkTopic("brand-identity"), " about brand identity design and rebranding in Toronto");
   assert.equal(serviceLinkTopic("visual-media"), " about brand photography and video production in Toronto");
   assert.equal(serviceLinkTopic("digital-design"), " about website design for brands in Toronto");
@@ -112,7 +112,7 @@ test("/services: each Learn More link carries its topic as hidden text, and no a
   const src = readFileSync("src/components/services/ServiceBlocks.tsx", "utf8");
   const link = src.slice(src.indexOf("<Link"), src.indexOf("</Link>"));
   assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
-  assert.match(link, /Learn More<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
+  assert.match(link, /Learn more<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
 });
 
 test("header logo and footer social links: their name is their text, not an aria-label", async () => {

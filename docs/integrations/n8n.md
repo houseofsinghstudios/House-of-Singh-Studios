@@ -19,10 +19,19 @@ Never put a secret value, a webhook URL or a webhook path in this file, in code 
 - **Request size:** 64 KB at most (src/lib/request-body.ts); a larger body is refused before parsing.
 - **Text cleaning:** text fields are cut to their limit, stripped of HTML tags and trimmed before checking
   (src/lib/form-input.ts, src/lib/lead.ts). A limit below is the maximum length in characters after cleaning.
+  A value that is not a string counts as empty, so it fails a required field with a 400, never a 500.
+  Since 22 Nov 2026 one line fields (names, emails, choices, campaign and lead source tags) also have
+  their line breaks and runs of spaces collapsed to one space, and a landing page must be a path on this
+  site (one leading "/", never "//host"); messages keep their line breaks.
+- **Escaping:** the website sends plain text, not HTML, and does not HTML encode it (that would change
+  what Airtable stores). Any n8n step that puts a value into an HTML email body or a link must escape it
+  there; React escapes everything the website itself shows.
 - **Honeypot:** each form has a hidden field only bots fill in. When it is filled, the route answers
   200 and sends nothing.
 - **Rate limit:** per IP address, per serverless instance (src/lib/rate-limit.ts): 5 a minute for lead,
   careers and subscribe; 20 a minute for brand-pulse and project-planner, whose visits send several events.
+  Each request counts under the first `x-forwarded-for` address and, when Vercel's own
+  `x-vercel-forwarded-for` (or `x-real-ip`) differs, under that one too.
 - **Logs** carry the route prefix ("[lead]") and the outcome only: never the request body, a visitor's
   details, the webhook address or n8n's response body.
 - **Waiting for n8n:** n8n answers only after its last node has run (no workflow uses a Respond to
@@ -77,6 +86,11 @@ Shared field formats:
 
 - **Duplicates:** the workflow keeps the last 500 `submissionId`s; a repeat is skipped (nothing saved,
   nothing emailed) and still answered 200.
+- **The answer (since 21 Nov 2026):** the webhook answers 200 with no body once the whole workflow has
+  finished (Webhook node, Respond "When last node finishes", Response data "No response body"). Before,
+  it answered with the first entry of the last node; a plain enquiry ends on an If node with no output,
+  so n8n answered 500 and the website showed "not sent" for leads that had been saved. The website
+  checks only for a 2xx status and never reads the body (tests/audit-pr1.test.ts covers an empty 200).
 - **With `partnership`:** creates a row in **Partners** (Status "Applied"). Emails the partners inbox
   ("Partner application: …") and sends the applicant a confirmation. No Leads row.
 - **Otherwise:** creates a row in **Leads**. The Pipeline Stage is:
@@ -209,8 +223,9 @@ is null, `brief.priceLines` is an empty list and `brief.fitNote` is null. `brief
 | leadSource | object | `sent` only, when known; how the visit began |
 
 - **Duplicates:**
-  - On the website, an instance does not resend an event it has already delivered (same
-    `briefId:event`).
+  - On the website, an instance does not resend an event it has already delivered from the same
+    address (same `briefId:event` and sender; since 22 Nov 2026 the sender is part of the key, so
+    someone who knows a brief id cannot send its event first and have the visitor's own skipped).
   - In n8n, every event upserts one row in **Project Briefs**, matched on **Brief ID**, filling that
     event's timestamp.
   - A repeated `sent` event sends no email again: the workflow skips it by `eventIdempotencyKey`

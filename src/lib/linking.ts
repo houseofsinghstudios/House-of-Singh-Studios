@@ -105,7 +105,7 @@ export function relatedWork<T extends { slug: string; disciplines: string[] }>(s
   return out;
 }
 
-// The accessible name for a link to a service page whose visible text is short ("Learn More" or
+// The accessible name for a link to a service page whose visible text is short ("Learn more" or
 // the service name): the visible text first, so speech input still matches it, then the page topic.
 // The rest of a short link's text, for crawlers and screen readers alike: "about" and the page topic
 // in running text ("about brand identity design and rebranding in Toronto"). It goes inside the link

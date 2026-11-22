@@ -28,13 +28,13 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 5 | /contact?service=partnership, send | `partner_application` | none |
 | 6 | /contact, Commons nomination, send | `commons_nomination` | none |
 | 7 | /contact, Parallel suggestion, send | `parallel_suggestion` | none |
-| 8 | /start, finish a brief, Send My Brief | `generate_lead` | `lead_type` project_planner, `service` the planner code (for example identity) |
+| 8 | /start, finish a brief, Send my brief | `generate_lead` | `lead_type` project_planner, `service` the planner code (for example identity) |
 | 9 | /brand-pulse, answer to the result | `brand_pulse_complete` | none |
 | 10 | /careers, apply | `job_application` | none |
 | 11 | An article, newsletter signup | `newsletter_signup` | none |
 | 12 | Any "Book a Discovery Call" link | `discovery_call_click` | `page_path` the page you clicked on |
 | 13 | Homepage, "Two ways to start", a chip | `tool_band_click` | `tool`, `kind` chip, `value` the answer or service |
-| 14 | /partners, a call to action; then Copy Text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
+| 14 | /partners, a call to action; then Copy text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
 | 15 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
 | 16 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
 | 17 | Homepage hero, the image or "View project" | `hero_project_click` | `project` the slug, `source` image or caption |

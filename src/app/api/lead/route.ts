@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { forbiddenOrigin, isJsonRequest, originAllowed } from "@/lib/request-guards";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
-import { checkLeadLengths, cleanField, LEAD_LIMITS } from "@/lib/lead";
+import { checkLeadLengths, cleanField, cleanLine, LEAD_LIMITS } from "@/lib/lead";
 import { cleanSubmissionId, isEmail } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 import { checkReferralFields, isIntroduction, isPartnership, REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { STUDIO_EMAIL } from "@/lib/constants/contact";
-import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 import { cleanCampaign } from "@/lib/campaign";
 import { cleanLeadSource } from "@/lib/lead-source";
 
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       return new NextResponse(NO_SCRIPT_PAGE, { status: 415, headers: { "content-type": "text/html; charset=utf-8" } });
     }
 
-    if (isRateLimited(clientIp(request))) {
+    if (isRateLimited(clientAddresses(request))) {
       log.info("rate limit exceeded");
       return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }
@@ -85,7 +85,8 @@ export async function POST(request: Request) {
     }
 
     // Validate email format: the length first, so the pattern never runs on a long value.
-    if (!email || !isEmail(String(email))) {
+    // A value that is not a string is never a valid email: a 400, never a 500 (audit finding 15).
+    if (typeof email !== "string" || !isEmail(email)) {
       log.info("validation failed: invalid email");
       return json({ success: false, error: "Invalid email" }, 400);
     }
@@ -93,10 +94,10 @@ export async function POST(request: Request) {
     // Sanitize text inputs, then check lengths on the cleaned values. Service and budget are optional:
     // a missing or empty value cleans to "", which is valid; only the 80 character cap applies.
     const fields = {
-      name: cleanField(name, LEAD_LIMITS.name),
-      email: cleanField(email, LEAD_LIMITS.email),
-      service: cleanField(service, LEAD_LIMITS.service),
-      budget: cleanField(budget, LEAD_LIMITS.budget),
+      name: cleanLine(name, LEAD_LIMITS.name),
+      email: cleanLine(email, LEAD_LIMITS.email),
+      service: cleanLine(service, LEAD_LIMITS.service),
+      budget: cleanLine(budget, LEAD_LIMITS.budget),
       message: cleanField(message, LEAD_LIMITS.message),
     };
     const invalid = checkLeadLengths(fields);
@@ -106,14 +107,14 @@ export async function POST(request: Request) {
     }
     // Introductions and partnerships carry their own fields; "How did you hear about us?" is optional on every lead.
     const referral = {
-      who: cleanField(body.who, REFERRAL_LIMITS.who),
-      contact: cleanField(body.contact, REFERRAL_LIMITS.contact),
+      who: cleanLine(body.who, REFERRAL_LIMITS.who),
+      contact: cleanLine(body.contact, REFERRAL_LIMITS.contact),
       permission: body.permission === true,
-      businessName: cleanField(body.businessName, REFERRAL_LIMITS.businessName),
-      partnerType: cleanField(body.partnerType, REFERRAL_LIMITS.partnerType),
-      website: cleanField(body.website, REFERRAL_LIMITS.website),
-      hearAbout: cleanField(body.hearAbout, REFERRAL_LIMITS.hearAbout),
-      recommendedBy: cleanField(body.recommendedBy, REFERRAL_LIMITS.recommendedBy),
+      businessName: cleanLine(body.businessName, REFERRAL_LIMITS.businessName),
+      partnerType: cleanLine(body.partnerType, REFERRAL_LIMITS.partnerType),
+      website: cleanLine(body.website, REFERRAL_LIMITS.website),
+      hearAbout: cleanLine(body.hearAbout, REFERRAL_LIMITS.hearAbout),
+      recommendedBy: cleanLine(body.recommendedBy, REFERRAL_LIMITS.recommendedBy),
     };
     const referralInvalid = checkReferralFields(fields.service, referral);
     if (referralInvalid) {

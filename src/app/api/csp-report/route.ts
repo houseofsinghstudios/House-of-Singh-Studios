@@ -1,4 +1,4 @@
-import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 
 // Content Security Policy violation reports (audit of 20 Nov 2026, finding 3). The browser posts a
 // report here whenever the policy blocks something; next.config.ts names this route in the
@@ -46,7 +46,7 @@ export function reportLine(text: string): string {
 }
 
 export async function POST(request: Request) {
-  if (isRateLimited(clientIp(request))) return new Response(null, { status: 429 });
+  if (isRateLimited(clientAddresses(request))) return new Response(null, { status: 429 });
   try {
     const text = await firstBytes(request);
     if (text) console.warn(`[csp-report] ${reportLine(text)}`);

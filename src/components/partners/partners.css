@@ -17,7 +17,7 @@
   align-items: center;
   min-height: 44px;
 }
-/* Phones: "Introduce a Client" is first and full width. */
+/* Phones: "Introduce a client" is first and full width. */
 @media (max-width: 767px) {
   .pt-hero-actions {
     flex-direction: column;

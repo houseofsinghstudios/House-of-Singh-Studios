@@ -23,6 +23,13 @@ export function cleanField(value: unknown, max: number): string {
   return stripTags(capRaw(value, max)).trim();
 }
 
+// The same for a one line field (a name, an email, a choice): line breaks and runs of spaces become one
+// space, so nothing downstream can be handed a value that spans lines (audit finding 16). Messages keep
+// their line breaks through cleanField.
+export function cleanLine(value: unknown, max: number): string {
+  return cleanField(value, max).replace(/\s+/g, " ");
+}
+
 // Lengths are checked after cleaning. The reason is short and never quotes the submitted value.
 // An introduction's or partnership's message is optional; every other lead needs one.
 export function checkLeadLengths(fields: LeadFields): string | null {

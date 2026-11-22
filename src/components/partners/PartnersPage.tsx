@@ -1,6 +1,6 @@
 // /partners: hero, at a glance, then (01) your client in safe hands, (02) how it works,
 // (03) what it is worth, (04) who it is for, (05) questions, the action band and the next page link.
-// Server rendered; only the count up, the Copy Text button and the analytics listener run in the
+// Server rendered; only the count up, the Copy text button and the analytics listener run in the
 // browser. Sections, rows, questions and the band reuse the Initiatives and service page patterns.
 import NextPageLink from "@/components/layout/NextPageLink";
 import InitiativeSection from "@/components/initiatives/InitiativeSection";

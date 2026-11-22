@@ -78,7 +78,7 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
       <section className="art-hero">
         <Link href="/insights" className="art-back back-link" data-cursor="link">
           <span className="back-arrow">&#8592;</span>
-          All Insights
+          All insights
         </Link>
 
         <div className="art-hero-content css-reveal">

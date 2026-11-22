@@ -10,7 +10,7 @@ import { REFERRAL_LIMITS } from "@/lib/partners/forms";
 import { referralCode } from "@/lib/campaign";
 import { cleanLeadSource, type LeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
-import { capRaw, isEmail, stripTags } from "@/lib/form-input";
+import { capRaw, isEmail, sitePath, stripTags } from "@/lib/form-input";
 import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "./config";
 import type { Answers, Optional } from "./types";
 
@@ -28,13 +28,13 @@ const clean = (v: unknown, max: number): string =>
 
 function attribution(v: unknown) {
   const a = (v && typeof v === "object" ? v : {}) as Record<string, unknown>;
-  const landing = clean(a.landingPage, 200);
+  const landing = sitePath(a.landingPage, 200);
   return {
     source: clean(a.source, 100),
     medium: clean(a.medium, 100),
     campaign: clean(a.campaign, 100),
     referralCode: referralCode(a.referralCode),
-    landingPage: landing.startsWith("/") ? landing.split(/[?#]/)[0] : "",
+    landingPage: landing,
     entryPlacement: parsePlacement(a.entryPlacement),
     referrer: originAndPath(a.referrer),
   };
@@ -155,3 +155,9 @@ export function buildPayload(e: ParsedEvent, submittedAt: string) {
     ...(e.leadSource && { leadSource: e.leadSource }),
   };
 }
+
+// The duplicate guard's key (audit finding 17, 22 Nov 2026). The brief id travels in booking notes, so
+// it is not secret; with the sender's address in the key, someone who knows a visitor's brief id cannot
+// send that event first and have the visitor's own delivery skipped. n8n stays the authority across
+// instances: it deduplicates on eventIdempotencyKey.
+export const deliveryKey = (briefId: string, event: string, address: string) => `${briefId}:${event}:${address}`;

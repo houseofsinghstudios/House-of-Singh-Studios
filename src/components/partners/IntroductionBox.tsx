@@ -1,5 +1,5 @@
 "use client";
-// The introduction, ready to send, with a Copy Text button. Client component: it writes to the
+// The introduction, ready to send, with a Copy text button. Client component: it writes to the
 // clipboard, shows "Copied" for two seconds and announces it to screen readers. Where the clipboard
 // is unavailable it selects the text instead, so Ctrl or Command and C copies it.
 

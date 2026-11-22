@@ -71,9 +71,15 @@ test("finding 2: a post from another website gets 403 on every form route; the s
     const res = await quiet(() => r.handler(post({ "content-type": "application/json", origin: "https://evil.example" }) as never));
     assert.equal(res.status, 403, r.name);
     assert.deepEqual(sent, [], `${r.name} sent nothing`);
-    for (const origin of [SITE_ORIGIN, "https://house-of-singh-studios-git-152664-houseofsinghstudios-projects.vercel.app"]) {
-      const allowed = await quiet(() => r.handler(post({ "content-type": "application/json", origin }, "not json") as never));
-      assert.equal(allowed.status, 400, `${r.name} from ${origin} reaches its own checks`);
+    // The running preview's own branch address comes from Vercel's VERCEL_BRANCH_URL.
+    process.env.VERCEL_BRANCH_URL = "house-of-singh-studios-git-152664-houseofsinghstudios-projects.vercel.app";
+    try {
+      for (const origin of [SITE_ORIGIN, "https://house-of-singh-studios-git-152664-houseofsinghstudios-projects.vercel.app"]) {
+        const allowed = await quiet(() => r.handler(post({ "content-type": "application/json", origin }, "not json") as never));
+        assert.equal(allowed.status, 400, `${r.name} from ${origin} reaches its own checks`);
+      }
+    } finally {
+      delete process.env.VERCEL_BRANCH_URL;
     }
   }
   // Lead keeps its own answer for a plain form post: the page for visitors without JavaScript.
@@ -87,7 +93,7 @@ test("finding 2: the origin rule itself", () => {
   assert.ok(originAllowed(req()), "no Origin: judged by the other checks");
   assert.ok(originAllowed(req("https://studios.houseofsingh.com"), "production"));
   assert.ok(originAllowed(req("https://house-of-singh-studios.vercel.app"), "production"));
-  assert.ok(originAllowed(req("https://house-of-singh-studios-abc123-houseofsinghstudios-projects.vercel.app"), "production"));
+  assert.ok(originAllowed(req("https://house-of-singh-studios-r60cepoqe-houseofsinghstudios-projects.vercel.app"), "production", {}));
   for (const bad of ["https://evil.example", "https://studios.houseofsingh.com.evil.example", "http://studios.houseofsingh.com", "https://houseofsingh.com", "https://other-project-houseofsinghstudios-projects.vercel.app", "https://house-of-singh-studios-x-otherteam.vercel.app", "null"]) {
     assert.ok(!originAllowed(req(bad), "production"), bad);
   }
@@ -141,6 +147,8 @@ test("findings 3 and 4: report-to and Reporting-Endpoints added, COOP set, every
   assert.equal(csp.at(-1), "report-to csp");
   assert.deepEqual(csp.slice(0, -1).map((d) => d.split(" ")[0]), [
     "default-src", "script-src", "style-src", "img-src", "font-src", "connect-src", "frame-src", "frame-ancestors", "object-src", "base-uri", "form-action",
+    // Added 22 Nov 2026 (audit finding 19); frame-src became 'none' (tests/audit-pr1.test.ts).
+    "upgrade-insecure-requests",
   ]);
   assert.ok(csp.includes("script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://www.googletagmanager.com https://www.clarity.ms https://scripts.clarity.ms"));
 });

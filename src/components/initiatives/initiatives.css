@@ -178,8 +178,8 @@
 .init-row .svc-block-desc {
   margin-bottom: 24px;
 }
-/* Explore: the /services Learn More button (.svc-block-btn, globals.css) inside the row's link.
-   32px above it, as above Learn More: here its margin collapses with the summary's 24px. Its hover
+/* Explore: the /services Learn more button (.svc-block-btn, globals.css) inside the row's link.
+   32px above it, as above Learn more: here its margin collapses with the summary's 24px. Its hover
    follows the whole row, the same opacity as the Services button. */
 .init-row .init-row-explore {
   display: block;

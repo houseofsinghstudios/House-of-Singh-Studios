@@ -9,7 +9,7 @@ export type ArticleBlock = { _type: string; children?: Array<{ text?: string }> 
 
 // A link mark and an inline image as the article page passes them (the image URL already built).
 type LinkMark = { _type: "link"; href?: string };
-type InlineImage = { _type: "image"; asset?: unknown; src?: string; alt?: string };
+type InlineImage = { _type: "image"; asset?: unknown; src?: string; alt?: string; caption?: string };
 
 const components: PortableTextComponents = {
   block: {
@@ -71,7 +71,9 @@ const components: PortableTextComponents = {
           <div className="art-figure-inner">
             <Image
               src={value.src}
-              alt={value.alt || "Article image"}
+              // The Studio alt text, else the caption, else empty: the old generic fallback told a
+              // screen reader nothing (audit finding 23).
+              alt={value.alt?.trim() || value.caption?.trim() || ""}
               fill
               // The real column: the page less its 24px margins on phones, at most 740px wide.
               sizes="(max-width: 787px) calc(100vw - 48px), 740px"

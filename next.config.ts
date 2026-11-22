@@ -5,7 +5,8 @@ import type { NextConfig } from "next";
 // request. No 'unsafe-eval': nothing on the site needs it in production. Hosts allowed are the ones
 // the browser really uses: Google Analytics 4, Microsoft Clarity, Vercel Speed Insights and Sanity
 // images. Forms post only to the site's own API routes (form-action and connect-src 'self'); nothing
-// is ever framed (Cal.com is linked, not embedded).
+// is ever framed (Cal.com is linked, not embedded), so frame-src is 'none', and any http address left
+// in content is fetched over https (upgrade-insecure-requests). Audit finding 19, 22 Nov 2026.
 const SITE_CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://www.googletagmanager.com https://www.clarity.ms https://scripts.clarity.ms",
@@ -13,11 +14,12 @@ const SITE_CSP = [
   "img-src 'self' data: blob: https://cdn.sanity.io https://*.vercel-scripts.com https://*.google-analytics.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com",
   "font-src 'self' data:",
   "connect-src 'self' https://va.vercel-scripts.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://*.clarity.ms https://c.bing.com",
-  "frame-src 'self'",
+  "frame-src 'none'",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
+  "upgrade-insecure-requests",
   // Violations are reported to /api/csp-report, named "csp" in the Reporting-Endpoints header below.
   "report-to csp",
 ].join("; ");
@@ -26,7 +28,8 @@ const SITE_CSP = [
 // site's analytics hosts (the Studio has no analytics): Sanity's API, images, its bridge script
 // from core.sanity-cdn.com, its version check against sanity-cdn.com (that one host, nothing under
 // it), and its live updates over the project's own socket (wss://00iree4d.api.sanity.io).
-// 'unsafe-eval' stays here only (see the verification notes in the commit).
+// 'unsafe-eval' stays here only (see the verification notes in the commit). frame-src 'self' stays
+// for the Studio's own panes; form-action 'self' since 22 Nov 2026 (audit finding 21).
 const STUDIO_CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://core.sanity-cdn.com",
@@ -38,7 +41,20 @@ const STUDIO_CSP = [
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
+  "form-action 'self'",
 ].join("; ");
+
+const PERMISSIONS_POLICY = [
+  "camera=()",
+  "microphone=()",
+  "geolocation=()",
+  "payment=()",
+  "usb=()",
+  "serial=()",
+  "hid=()",
+  "display-capture=()",
+  "browsing-topics=()",
+].join(", ");
 
 const nextConfig: NextConfig = {
   // No "X-Powered-By: Next.js" header: it only tells visitors and scanners which framework runs here.
@@ -94,12 +110,16 @@ const nextConfig: NextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
+          // Every powerful browser feature the site never uses is switched off (audit finding 20).
+          // interest-cohort and bluetooth are left out: Chrome does not know them and logs an error.
           {
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=()",
+            value: PERMISSIONS_POLICY,
           },
           { key: "Content-Security-Policy", value: SITE_CSP },
-          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
+          // No preload: the preload list takes only the parent domain, houseofsingh.com, so on this
+          // subdomain it did nothing (audit finding 18).
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
           // Keeps other sites' windows from reaching back into this page, while windows this page
           // opens (the Cal.com booking link) still work: same-origin would cut them off.
           { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
@@ -108,9 +128,14 @@ const nextConfig: NextConfig = {
         ],
       },
       // The Studio replaces the site policy with its own (a later match wins for the same header).
+      // robots.txt keeps crawlers out of /studio, so they never read its noindex meta tag; the header
+      // says it on every Studio response instead (audit finding 21). ":path*" matches /studio too.
       {
         source: "/studio/:path*",
-        headers: [{ key: "Content-Security-Policy", value: STUDIO_CSP }],
+        headers: [
+          { key: "Content-Security-Policy", value: STUDIO_CSP },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
       },
     ];
   },

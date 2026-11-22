@@ -10,7 +10,9 @@ test("clean: tags and surrounding whitespace removed, missing values empty", () 
   assert.equal(cleanField(undefined, LEAD_LIMITS.name), "");
   assert.equal(cleanField(null, LEAD_LIMITS.name), "");
   assert.equal(cleanField("", LEAD_LIMITS.name), "");
-  assert.equal(cleanField(42, LEAD_LIMITS.name), "42");
+  // Not a string: empty, so a required field fails with a 400 (audit finding 15).
+  assert.equal(cleanField(42, LEAD_LIMITS.name), "");
+  assert.equal(cleanField({}, LEAD_LIMITS.name), "");
 });
 
 test("lengths: a normal lead passes, service and budget may be empty", () => {

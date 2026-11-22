@@ -1,7 +1,7 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { refuseRequest } from "@/lib/request-guards";
-import { buildPayload, parseEvent } from "@/lib/project-planner/events-server";
-import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { buildPayload, deliveryKey, parseEvent } from "@/lib/project-planner/events-server";
+import { clientAddresses, clientIp, createRateLimiter, platformIp } from "@/lib/rate-limit";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 
@@ -15,8 +15,8 @@ const log = routeLog("project-planner");
 // Same limiter as Brand Pulse: 20 per minute per IP, per serverless instance (see rate-limit.ts).
 const isRateLimited = createRateLimiter(20);
 
-// Within one instance, an event already accepted by n8n is not sent twice. n8n remains the
-// authority across instances: it deduplicates on eventIdempotencyKey.
+// Within one instance, an event already accepted by n8n from the same address is not sent twice
+// (deliveryKey). n8n remains the authority across instances: it deduplicates on eventIdempotencyKey.
 const delivered = new Set<string>();
 const DELIVERED_MAX = 5000;
 
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const refused = refuseRequest(request);
     if (refused) return refused;
 
-    if (isRateLimited(clientIp(request))) {
+    if (isRateLimited(clientAddresses(request))) {
       log.info("rate limit exceeded");
       return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       return json({ success: true });
     }
 
-    const key = `${parsed.briefId}:${parsed.event}`;
+    const key = deliveryKey(parsed.briefId, parsed.event, platformIp(request) ?? clientIp(request));
     if (delivered.has(key)) {
       log.info(`${parsed.event}: duplicate, already delivered`);
       return json({ success: true });

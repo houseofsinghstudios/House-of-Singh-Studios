@@ -31,6 +31,6 @@ test("the link text in linking.ts is the same as when it read src/data/services.
     assert.equal(serviceTopic(slug), before(slug), slug);
     const topic = before(slug);
     assert.equal(serviceLinkTopic(slug), topic ? ` about ${topic.charAt(0).toLowerCase()}${topic.slice(1)}` : "", slug);
-    assert.equal(serviceLinkLabel(slug, "Learn More"), topic ? `Learn More: ${topic}` : "Learn More", slug);
+    assert.equal(serviceLinkLabel(slug, "Learn more"), topic ? `Learn more: ${topic}` : "Learn more", slug);
   }
 });

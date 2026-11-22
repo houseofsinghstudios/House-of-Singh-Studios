@@ -363,7 +363,7 @@ export default function AILabClient() {
               Book a discovery call
             </Button>
             <Button href="/work" variant="secondary-inverted" data-cursor="link">
-              View Our Work
+              View our work
             </Button>
           </div>
         </div>
