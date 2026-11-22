@@ -100,8 +100,13 @@ test("the caption carries no Client or Exploration tag", () => {
   assert.doesNotMatch(src, /projectType|PROJECT_TYPE_LABELS|Exploration"|Client"/);
 });
 
-test("Pause: pressed state and both labels; it holds the image, and the word with it", () => {
-  assert.match(read("src/components/homepage/HeroPause.tsx"), /aria-pressed=\{paused\}/);
+test("Pause: both labels, switching with the icon; it holds the image, and the word with it", () => {
+  // The name switches with the icon; no aria-pressed beside it (homepage audit H-13).
+  const pause = read("src/components/homepage/HeroPause.tsx");
+  assert.match(pause, /aria-label=\{paused \? "Play the animation" : "Pause the animation"\}/);
+  assert.match(pause, /className=\{paused \? "hero-pause-play" : "hero-pause-bars"\}/);
+  assert.doesNotMatch(pause, /aria-pressed=/);
+  assert.match(pause, /track\("hero_pause_toggle", \{ state: paused \? "playing" : "paused" \}\)/);
   assert.match(read("src/components/homepage/HeroPause.tsx"), /"Play the animation" : "Pause the animation"/);
   const interactive = read("src/components/homepage/HeroInteractive.tsx");
   assert.match(interactive, /halted=\{paused \|\| hold\.held\}/);
