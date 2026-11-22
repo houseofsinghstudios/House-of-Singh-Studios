@@ -1,5 +1,5 @@
 // The homepage's (02) What we do: the rules behind it, pure so they are tested without React or Sanity.
-// The words come from src/data/services.ts (src/lib/what-we-do-data.ts reads them on the server); the
+// The words come from src/data/services.ts (WhatWeDoSection reads them on the server); the
 // real work behind a discipline comes from the Studio "What we do" fieldset (getWhatWeDoWork).
 import { asText } from "./as-text";
 

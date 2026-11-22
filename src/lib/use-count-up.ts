@@ -1,5 +1,5 @@
 // Shared count up for statistics: numbers count from 0 to their value when a section scrolls into
-// view, once. Used by the homepage proof section and the AI Lab statistics row.
+// view, once. Used by the AI Lab statistics row and the Partners page figures.
 //
 // Markup inside the observed element:
 //   data-count-up="91"  the number's text. The server renders the final value; this hook rewrites it.
@@ -11,18 +11,13 @@ import { useEffect, type RefObject } from "react";
 // Fast start, gentle finish.
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
-// Keys of runs that already happened in this browser session.
-const finishedRuns = new Set<string>();
-
 interface CountUpOptions {
-  // One duration for every number, or one per number in order (ms).
-  duration: number | readonly number[];
+  // One duration for every number (ms).
+  duration: number;
   // Start of each number after the previous one (ms).
   stagger?: number;
   // Visible share of the element that starts the count.
   threshold: number;
-  // Run once per browser session for this key, even across page visits.
-  sessionKey?: string;
   // Keep the final values when the element is already on screen at load, or the visitor prefers
   // reduced motion. Numbers drop to 0 only while the element is off screen.
   settleIfVisible?: boolean;
@@ -32,11 +27,11 @@ interface CountUpOptions {
 }
 
 export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpOptions) {
-  const { duration, stagger = 0, threshold, sessionKey, settleIfVisible = false, finalIfReducedMotion = false } = options;
+  const { duration, stagger = 0, threshold, settleIfVisible = false, finalIfReducedMotion = false } = options;
 
   useEffect(() => {
     const root = ref.current;
-    if (!root || (sessionKey && finishedRuns.has(sessionKey))) return;
+    if (!root) return;
     if ((settleIfVisible || finalIfReducedMotion) && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const nums = Array.from(root.querySelectorAll<HTMLElement>("[data-count-up]"));
@@ -49,14 +44,12 @@ export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpO
     };
 
     const run = () => {
-      if (sessionKey) finishedRuns.add(sessionKey);
       const t0 = performance.now();
       nums.forEach((_, i) => {
-        const ms = typeof duration === "number" ? duration : duration[i];
         const start = t0 + i * stagger;
         draw(i, 0);
         const tick = (now: number) => {
-          const progress = Math.min(Math.max(now - start, 0) / ms, 1);
+          const progress = Math.min(Math.max(now - start, 0) / duration, 1);
           draw(i, easeOutCubic(progress));
           if (progress < 1) rafIds[i] = requestAnimationFrame(tick);
           else draw(i, 1);
@@ -81,7 +74,6 @@ export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpO
         } else if (!entry.isIntersecting) {
           return;
         }
-        if (sessionKey && finishedRuns.has(sessionKey)) return;
         observer.disconnect();
         run();
       },
@@ -93,5 +85,5 @@ export function useCountUp(ref: RefObject<HTMLElement | null>, options: CountUpO
       observer.disconnect();
       rafIds.forEach(cancelAnimationFrame);
     };
-  }, [ref, duration, stagger, threshold, sessionKey, settleIfVisible, finalIfReducedMotion]);
+  }, [ref, duration, stagger, threshold, settleIfVisible, finalIfReducedMotion]);
 }

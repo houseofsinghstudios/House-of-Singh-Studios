@@ -92,7 +92,6 @@ const heroProjectsQuery = `*[_type == "caseStudy" && heroShow == true && defined
   "slug": slug.current,
   heroName,
   heroLine,
-  heroField,
   heroWord,
   heroFit,
   heroOrder,
@@ -522,7 +521,6 @@ interface HeroProjectDoc {
   slug?: string;
   heroName?: string;
   heroLine?: string;
-  heroField?: string;
   heroWord?: string;
   heroFit?: string;
   heroOrder?: number;
@@ -566,7 +564,6 @@ export function mapHeroProject(doc: HeroProjectDoc): HeroProject | null {
     slug,
     heroName,
     heroLine: str(doc.heroLine),
-    heroField: str(doc.heroField),
     heroWord: str(doc.heroWord),
     heroFit,
     ...(typeof doc.heroOrder === "number" && Number.isFinite(doc.heroOrder) ? { heroOrder: doc.heroOrder } : {}),

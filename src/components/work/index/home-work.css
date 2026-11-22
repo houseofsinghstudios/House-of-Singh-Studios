@@ -118,7 +118,7 @@
   }
 }
 
-/* Phones: the homepage sections' shorter vertical padding (homepage.css, 600px and below). */
+/* Phones: the section's shorter vertical padding, 600px and below. */
 @media (max-width: 600px) {
   .hw-section {
     padding-top: 80px;

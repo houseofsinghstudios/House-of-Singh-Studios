@@ -124,8 +124,10 @@ export function isDiscoveryCallHref(href: string): boolean {
 // Debug (sessionStorage, this tab's session only): GA4 is configured with debug_mode, so the events
 // show in DebugView. Debug traffic is still counted in reports unless the browser is internal too.
 export const INTERNAL_KEY = "hos-internal";
+/** @public Protected (CLAUDE.md): the analytics helper keeps this exported, though only this file reads it. */
 export const INTERNAL_PARAM = "hos_internal";
 export const DEBUG_KEY = "hos-debug";
+/** @public Protected (CLAUDE.md): the analytics helper keeps this exported, though only this file reads it. */
 export const DEBUG_PARAM = "hos_debug";
 
 type FlagStore = Pick<Storage, "getItem" | "setItem" | "removeItem">;
@@ -139,6 +141,7 @@ export function flagFromSearch(search: string, param: string, stored: boolean): 
 }
 
 // Reads the stored flag, applies this address's parameter, stores the result and returns it.
+/** @public Protected (CLAUDE.md): the analytics helper keeps this exported, though only this file reads it. */
 export function syncFlag(search: string, param: string, key: string, store: FlagStore | null): boolean {
   let stored = false;
   try {
@@ -225,8 +228,10 @@ function currentPage(): EventParams {
 // Settings that belong to the config call only. As event parameters gtag would send them as ordinary
 // ep. values (ep.debug_mode, ep.traffic_type) instead of switching on debug mode or internal traffic,
 // so no event or page view ever carries them.
+/** @public Protected (CLAUDE.md): the analytics helper keeps this exported, though only this file reads it. */
 export const CONFIG_ONLY = ["debug_mode", "traffic_type"] as const;
 
+/** @public Protected (CLAUDE.md): the analytics helper keeps this exported, though only this file reads it. */
 export function eventParams(params: EventParams): EventParams {
   const out = { ...params };
   for (const key of CONFIG_ONLY) delete out[key];

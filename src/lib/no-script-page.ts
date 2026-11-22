@@ -14,7 +14,7 @@ interface NoScriptCopy {
   backLabel: string;
 }
 
-export function noScriptHtml({ heading, backHref, backLabel }: NoScriptCopy): string {
+function noScriptHtml({ heading, backHref, backLabel }: NoScriptCopy): string {
   return `<!doctype html>
 <html lang="en">
 <head>

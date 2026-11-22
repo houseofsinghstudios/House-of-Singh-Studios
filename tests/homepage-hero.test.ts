@@ -48,7 +48,6 @@ test("the query's answer becomes hero projects: images without a file are droppe
     slug: "marell-studio",
     heroName: "Marell",
     heroLine: "Ceramics identity and lookbook",
-    heroField: "Home and lifestyle",
     heroWord: "home brands",
     heroFit: "contain",
     heroOrder: 2,
@@ -127,4 +126,11 @@ test("Studio: the Homepage hero fieldset is collapsed, every field is in it, and
   const strings = [...fieldset.matchAll(/(?:title|description|error)\(?:? ?"([^"]*)"/g), ...fieldset.matchAll(/"((?:Add|Keep|Use|Describe)[^"]*)"/g)].map((m) => m[1]);
   assert.ok(strings.length > 10);
   for (const s of strings) assert.doesNotMatch(s, /[-‐‑‒–—―]/, s);
+});
+
+test("the hero query does not fetch the Studio Field, which nothing reads (homepage audit H-20)", () => {
+  const src = readFileSync("src/lib/sanity/projects.ts", "utf8");
+  const query = src.slice(src.indexOf("const heroProjectsQuery"), src.indexOf("}`", src.indexOf("const heroProjectsQuery")));
+  assert.match(query, /heroWord,/);
+  assert.doesNotMatch(query, /heroField/);
 });
