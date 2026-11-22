@@ -19,3 +19,10 @@ test("Copy link is named by its own words and announces the copy politely (site 
   assert.match(share, /className="share-btn needs-js"\s+onClick=\{handleCopy\}\s*>\s*\{copied \? 'Copied' : 'Copy link'\}/);
   assert.match(share, /<span className="sr-only" aria-live="polite">\s*\{copied \? 'Link copied\.' : ''\}\s*<\/span>/);
 });
+
+test("scroll padding under the fixed header, only where the browser scrolls itself (site audit S-13)", () => {
+  const css = readFileSync("src/app/globals.css", "utf8");
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{\s*html \{\s*scroll-padding-top: calc\(var\(--header-edge\) \+ 16px\);/);
+  // Never for everyone: Lenis subtracts scroll-padding from its element scrolls.
+  assert.doesNotMatch(css.replace(/@media \(prefers-reduced-motion: reduce\) \{\s*html \{\s*scroll-padding-top[^}]*\}\s*\}/, ""), /scroll-padding-top/);
+});

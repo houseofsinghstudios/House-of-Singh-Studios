@@ -83,6 +83,16 @@ html[data-header-hidden] {
 html {
   scroll-behavior: smooth;
 }
+/* Keyboard focus and anchor jumps land below the fixed header when the browser does the scrolling
+   itself, that is with reduced motion, when Lenis is off (site audit S-13). With Lenis on, SmoothScroll
+   already keeps keyboard focus clear of the header, and Lenis subtracts this padding from its own
+   element scrolls, which would move where Brand Pulse, the planner and focus land. --header-edge reads
+   0px while the header is slid away, so the padding follows it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-padding-top: calc(var(--header-edge) + 16px);
+  }
+}
 
 body {
   margin: 0;
