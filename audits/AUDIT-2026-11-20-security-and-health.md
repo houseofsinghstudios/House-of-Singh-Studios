@@ -156,6 +156,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 9. Dependency advisories
 
+- **Status:** Partly done 22 Nov 2026 (#271): `npm audit fix` (no --force) moved typescript-eslint and its five @typescript-eslint packages from 8.56.1 to 8.73.0, clearing their 6 advisories (20 moderate before, 14 after, none high or critical). The 14 left all come from `sanity` 5.31.2 and its CLI chain (minimatch GHSA-g3hv-75wg-m249 through @oclif/core; uuid GHSA-w5hq-g745-h8pq through typeid-js), plus `next-sanity`, flagged only because it depends on `sanity`. npm's own suggested fix would downgrade to sanity 5.14.1 and next-sanity 11, so it was not taken. They are build and Studio tooling, and go with the Sanity 6 upgrade (PR 4).
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `npm audit`. Production: 13 moderate, 0 high, 0 critical. All: 19 moderate.
@@ -165,6 +166,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 10. Outdated packages
 
+- **Status:** Partly done 22 Nov 2026 (#271): the minor and patch updates taken: next-sanity 13.4.0 to 13.5.1, tailwindcss and @tailwindcss/postcss 4.3.3 to 4.3.5, @vercel/speed-insights 2.0.0 to 2.1.0, @sanity/image-url 2.1.1 to 2.2.0. The majors stay open, one at a time: sanity and @sanity/vision 6 (PR 4), @sanity/client 8, @portabletext/react 8, eslint 10, typescript 7, @types/node 26.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `package.json`.
@@ -398,8 +400,8 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 | 6 | Article images have no sizes (Done 20 Nov 2026, #261) | Medium | High |
 | 7 | Large client components | Medium | High |
 | 8 | Studio prices in Insights articles (Done 20 Nov 2026 in Sanity, all 29 articles rescanned clean) | Medium | High |
-| 9 | Dependency advisories | Low | High |
-| 10 | Outdated packages | Low | High |
+| 9 | Dependency advisories (Partly done 22 Nov 2026, #271) | Low | High |
+| 10 | Outdated packages (Partly done 22 Nov 2026, #271) | Low | High |
 | 11 | Unmaintained page transition package | Low | High |
 | 12 | `.env.local` once tracked | Low | High |
 | 13 | Revalidate signature check is basic (Done 22 Nov 2026, #269) | Low | High |
