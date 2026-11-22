@@ -13,7 +13,7 @@ test("started needs no answers and sends none", () => {
   const e = parseEvent({ event: "started", briefId: ID, attribution });
   assert.ok(typeof e !== "string");
   const p = buildPayload(e, AT) as Record<string, unknown>;
-  assert.deepEqual(Object.keys(p).sort(), ["attribution", "briefId", "engineVersion", "event", "eventIdempotencyKey", "priceSource", "statusRank", "submittedAt"]);
+  assert.deepEqual(Object.keys(p).sort(), ["attribution", "briefId", "engineVersion", "event", "eventIdempotencyKey", "statusRank", "submittedAt"]);
   assert.equal(p.eventIdempotencyKey, `${ID}:started`);
   assert.equal(p.statusRank, 1);
   // Even with answers and contact in the body, started sends neither.
@@ -35,12 +35,11 @@ test("viewed needs valid complete answers and sends the recomputed brief, no fre
   assert.equal(parseEvent({ event: "viewed", briefId: ID, attribution, answers: { ...answers, timing: undefined } }), "Invalid answers");
   const e = parseEvent({ event: "viewed", briefId: ID, attribution, answers, optional: { website: "secret.example", importantDate: "my birthday" }, contact, brief: { headline: "Forged" } });
   assert.ok(typeof e !== "string");
-  const p = buildPayload(e, AT) as { brief: { headline: string; priceLines: unknown[]; fitNote: unknown }; [k: string]: unknown };
+  const p = buildPayload(e, AT) as { brief: { headline: string; [k: string]: unknown }; [k: string]: unknown };
   assert.equal(p.brief.headline, "Redesign your website around what visitors need.");
-  // The price fields stay for the n8n contract, always empty: the planner shows no prices.
-  assert.equal(p.priceSource, null);
-  assert.deepEqual(p.brief.priceLines, []);
-  assert.equal(p.brief.fitNote, null);
+  // No price fields at all (removed from the n8n contract on 22 Nov 2026): the planner shows no prices.
+  assert.ok(!("priceSource" in p));
+  assert.ok(!("priceLines" in p.brief) && !("fitNote" in p.brief));
   assert.equal(p.statusRank, 2);
   const text = JSON.stringify(p);
   assert.ok(!/secret\.example|birthday|Pat|example-test|Forged/.test(text), text);
@@ -52,16 +51,15 @@ test("sent needs a name and a valid email, recomputes the brief and ignores forg
   assert.equal(parseEvent({ event: "sent", briefId: ID, attribution, answers, contact, optional: { investment: "a lot" } }), "Invalid investment");
   const e = parseEvent({ event: "sent", briefId: ID, attribution, answers, contact, optional: { investment: "under_1k", website: "Client.Example/About", importantDate: "Spring launch" }, fitNote: "Your budget fits perfectly", brief: { action: "book" } });
   assert.ok(typeof e !== "string");
-  const p = buildPayload(e, AT) as { brief: { fitNote: string | null; priceLines: unknown[]; action: { primary: string; secondary: string } }; contact: { name: string }; optional: { website: string; investment: string }; answerLabels: Record<string, string>; statusRank: number; priceSource: unknown };
+  const p = buildPayload(e, AT) as { brief: { action: { primary: string; secondary: string }; [k: string]: unknown }; contact: { name: string }; optional: { website: string; investment: string }; answerLabels: Record<string, string>; statusRank: number; [k: string]: unknown };
   assert.equal(p.statusRank, 3);
   assert.equal(p.contact.name, "Pat Tester");
   assert.equal(p.optional.website, "https://client.example/About");
   // Every brief ends in the call, whatever range the visitor gave; the range itself still reaches n8n.
   assert.deepEqual(p.brief.action, { primary: "book", secondary: "send" });
   assert.equal(p.optional.investment, "under_1k");
-  assert.equal(p.brief.fitNote, null);
-  assert.deepEqual(p.brief.priceLines, []);
-  assert.equal(p.priceSource, null);
+  // A forged fit note or price is ignored, and no price field is sent.
+  assert.ok(!("fitNote" in p.brief) && !("priceLines" in p.brief) && !("priceSource" in p));
   assert.equal(p.answerLabels.primary, "Website");
 });
 

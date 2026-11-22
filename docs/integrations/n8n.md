@@ -203,8 +203,9 @@ The result is always recomputed on the server; whatever result the browser sends
 The brief is always recomputed on the server; whatever the browser sends is ignored.
 
 No prices since 20 Nov 2026: the site never shows the studio's own prices and the planner ends in a
-call. The price fields stay in the payload so the workflow keeps working, always empty: `priceSource`
-is null, `brief.priceLines` is an empty list and `brief.fitNote` is null. `brief.action` is always
+call. Since 22 Nov 2026 the payload carries no price fields at all: `priceSource`, `brief.priceLines`
+and `brief.fitNote`, always empty until then, were removed; the workflow must not read them.
+`brief.action` is always
 `{ "primary": "book", "secondary": "send" }`, and `engineVersion` moved to 2.0.0 with this change.
 
 | Field | Type | Limit and rule |
@@ -214,10 +215,9 @@ is null, `brief.priceLines` is an empty list and `brief.fitNote` is null. `brief
 | eventIdempotencyKey | string | `<briefId>:<event>` |
 | statusRank | number or null | 1, 2, 3, or null for `call_clicked` |
 | engineVersion | string | the brief rules' version |
-| priceSource | null | kept for the contract; always null (no prices since 20 Nov 2026) |
 | submittedAt | string | ISO date and time |
 | attribution | object | `source`, `medium`, `campaign` (100 each), `referralCode`, `landingPage` (path, no query, 200), `entryPlacement` ("services", "case_study", "brand_pulse", "contact", "home_band_chip", "home_band_button", "home_start" or "direct"; home_start is the homepage (04) Start), `referrer` (origin and path, see above) |
-| answers, brief | object | `viewed` and `sent`: the validated answers and the recomputed brief (services, phases, actions, booking link; `priceLines` always `[]` and `fitNote` always null) |
+| answers, brief | object | `viewed` and `sent`: the validated answers and the recomputed brief (services, phases, actions, booking link; no price fields) |
 | answerLabels | object | `sent` only |
 | optional | object | `sent` only: `investment` (a known band or null), `website` (200), `importantDate` (60) |
 | contact | object | `sent` only: `name` (100, required), `email` (254, required), `company` (120), `location` (120), `note` (500), `marketingConsent` (boolean) |

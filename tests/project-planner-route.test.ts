@@ -80,7 +80,7 @@ test("started: a 200, sent to n8n with the secret header, a 10 second signal and
   assert.equal(body.briefId, id.toLowerCase(), "the brief id is lowercased");
   assert.equal(body.eventIdempotencyKey, `${id.toLowerCase()}:started`);
   assert.equal(body.statusRank, 1);
-  assert.equal(body.priceSource, null);
+  assert.ok(!("priceSource" in body), "no price fields");
   assert.deepEqual(body.attribution, {
     source: "newsletter",
     medium: "email",
@@ -112,10 +112,8 @@ test("viewed: the brief is recomputed and sent without contact details or prices
   assert.deepEqual(body.answers, answers);
   assert.equal(typeof body.brief.headline, "string");
   assert.notEqual(body.brief.headline, "forged by the browser", "whatever brief the browser sends is ignored");
-  // The price fields stay for the n8n contract, always empty.
-  assert.deepEqual(body.brief.priceLines, []);
-  assert.equal(body.brief.fitNote, null);
-  assert.equal(body.priceSource, null);
+  // No price fields (removed from the n8n contract on 22 Nov 2026).
+  assert.ok(!("priceLines" in body.brief) && !("fitNote" in body.brief) && !("priceSource" in body));
   assert.deepEqual(body.brief.action, { primary: "book", secondary: "send" });
   assert.ok(!("contact" in body));
 });
