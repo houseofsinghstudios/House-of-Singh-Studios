@@ -250,7 +250,7 @@ test("the light in CSS (desktop only): the row's background, the looser name, th
   assert.match(block, /transition: color 0\.3s var\(--wwd-ease\), letter-spacing 0\.5s ease;/);
   assert.match(block, /\.wwd-ink \{[^}]*background-position: 0 0\.14em;[^}]*background-size: 0% 0\.9em;[^}]*box-decoration-break: clone;[^}]*transition: background-size 0\.45s var\(--wwd-ease\);\s*transition-delay: calc\(var\(--i, 0\) \* 12ms\);/);
   assert.match(block, /\.wwd-term\[data-band\] \.wwd-ink \{\s*background-size: 100% 0\.9em;/);
-  assert.match(block, /@media \(min-width: 1081px\) and \(prefers-reduced-motion: reduce\) \{\s*\.wwd-row::before,\s*\.wwd-ink,\s*\.wwd-name \{\s*transition: none;/);
+  assert.match(block, /@media \(min-width: 1081px\) and \(prefers-reduced-motion: reduce\) \{\s*\.wwd-row::before,\s*\.wwd-ink,\s*\.wwd-num,\s*\.wwd-name \{\s*transition: none;/);
   // Phones: the inner span carries no band at all.
   assert.doesNotMatch(css.slice(css.indexOf("@media (max-width: 1080px)")), /wwd-ink/);
 });
@@ -266,3 +266,11 @@ test("panels: open by default, collapsed only when JavaScript runs, inert only i
   assert.match(rows, /const inBrowser = useInBrowser\(\);/);
 });
 
+// Homepage audit H-02 (22 Nov 2026): small text on the lit row's Cloudy White ground is Gunmetal.
+test("the lit row's ground turns its small text Gunmetal, the .surface-cloudy rule", () => {
+  const css = readFileSync("src/components/homepage/what-we-do/wwd.css", "utf8");
+  const desktop = css.slice(css.indexOf("@media (min-width: 1081px) {"));
+  assert.match(desktop, /\.wwd-row\[data-pointed\]::before \{\s*opacity: 1;/);
+  assert.match(desktop, /\.wwd-row\[data-pointed\] \{\s*--text-label: var\(--text-secondary\);/);
+  assert.match(css, /\.wwd-num \{[^}]*color: var\(--text-label\);/, "the number reads the variable");
+});

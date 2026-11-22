@@ -246,6 +246,8 @@
   font-size: 11px;
   letter-spacing: 0.12em;
   color: var(--text-label);
+  /* With the ground, which fades in over 0.5s. */
+  transition: color 0.5s var(--wwd-ease);
 }
 .wwd-name {
   flex: 1;
@@ -392,6 +394,11 @@ html:not([data-js]) .wwd-plus {
   .wwd-row[data-pointed]::before {
     opacity: 1;
   }
+  /* Small text on the Cloudy White ground turns Gunmetal while the ground shows (the .surface-cloudy
+     rule): the 11px number at Accessible Ash would be 3.91:1 there. */
+  .wwd-row[data-pointed] {
+    --text-label: var(--text-secondary);
+  }
   .wwd-name {
     transition: color 0.3s var(--wwd-ease), letter-spacing 0.5s ease;
   }
@@ -417,6 +424,7 @@ html:not([data-js]) .wwd-plus {
 @media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
   .wwd-row::before,
   .wwd-ink,
+  .wwd-num,
   .wwd-name {
     transition: none;
   }
