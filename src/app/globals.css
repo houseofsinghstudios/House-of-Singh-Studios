@@ -1003,6 +1003,25 @@ body {
   font-family: inherit;
   text-align: left;
 }
+/* Without JavaScript every answer shows, so there is nothing to open: no plus, no pointer. With it, a
+   closed panel is collapsed from the first paint, before the buttons and their inline heights arrive.
+   Process steps on phones are always open, as the component keeps them. */
+html:not([data-js]) .svc-acc-trigger {
+  cursor: auto;
+}
+html:not([data-js]) .svc-acc-icon {
+  visibility: hidden;
+}
+html[data-js] .svc-acc-panel[data-open="false"] {
+  max-height: 0;
+  opacity: 0;
+}
+@media (max-width: 767px) {
+  html[data-js] .svc-acc-row:not(.svc-acc-row--questions) .svc-acc-panel[data-open="false"] {
+    max-height: none;
+    opacity: 1;
+  }
+}
 
 .svc-acc-num {
   font-size: 12px;

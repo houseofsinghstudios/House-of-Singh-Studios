@@ -73,3 +73,20 @@ test("noScriptPost: a written 415 page for a plain post from the site, nothing f
   assert.equal(noScriptPost(post({ "content-type": "application/json", origin: "https://studios.houseofsingh.com" }), copy), null);
   assert.equal(noScriptPost(post({ "content-type": "application/x-www-form-urlencoded", origin: "https://example.com" }), copy), null);
 });
+
+test("the services and questions accordion: every answer reads without JavaScript (owner approved)", () => {
+  const acc = read("src/components/services/ServiceDetailAccordion.tsx");
+  assert.match(acc, /inBrowser \? \(\s*<button\s+type="button"\s+className="svc-acc-trigger"/);
+  assert.match(acc, /<span className="svc-acc-trigger">\{label\(step\)\}<\/span>/);
+  assert.match(acc, /inert=\{inBrowser && !isOpen\}/);
+  assert.match(acc, /data-open=\{isOpen\}/);
+  assert.match(acc, /inBrowser\s*\?\s*\{ maxHeight:/);
+  const css = read("src/app/globals.css");
+  assert.match(css, /html\[data-js\] \.svc-acc-panel\[data-open="false"\] \{\s*max-height: 0;\s*opacity: 0;/);
+  assert.match(css, /html:not\(\[data-js\]\) \.svc-acc-icon \{\s*visibility: hidden;/);
+  // The questions, their order and their structured data are untouched: the FAQ pages still pass
+  // the questions accordion headingLevel h3.
+  for (const file of ["src/components/services/ServiceQuestions.tsx", "src/components/initiatives/InitiativeQuestions.tsx"]) {
+    assert.match(read(file), /<ServiceDetailAccordion steps=\{steps\} initialOpen=\{-1\} headingLevel="h3" variant="questions" \/>/, file);
+  }
+});
