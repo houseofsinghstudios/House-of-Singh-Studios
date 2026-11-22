@@ -12,3 +12,10 @@ test("article newsletter: the shared form focus, held back after a pointer press
   assert.match(form, /usePointerFocusFlag\(formRef, status\)/);
   assert.match(form, /<form ref=\{formRef\} onSubmit=\{handleSubmit\}/);
 });
+
+test("Copy link is named by its own words and announces the copy politely (site audit S-14)", () => {
+  const share = readFileSync("src/components/ShareButtons.tsx", "utf8");
+  assert.doesNotMatch(share, /aria-label="Copy link"/);
+  assert.match(share, /className="share-btn needs-js"\s+onClick=\{handleCopy\}\s*>\s*\{copied \? 'Copied' : 'Copy link'\}/);
+  assert.match(share, /<span className="sr-only" aria-live="polite">\s*\{copied \? 'Link copied\.' : ''\}\s*<\/span>/);
+});
