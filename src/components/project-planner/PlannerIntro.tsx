@@ -9,7 +9,7 @@ export default function PlannerIntro({ onStart }: { onStart: () => void }) {
       <h1 className="pp-heading">{INTRO.heading}</h1>
       <p className="pp-lead">{INTRO.text}</p>
       <p className="pp-text">{INTRO.trust}</p>
-      <button type="button" className="btn-primary pp-btn" onClick={onStart}>{INTRO.button}</button>
+      <button type="button" className="btn-primary pp-btn needs-js" onClick={onStart}>{INTRO.button}</button>
       <p className="pp-small">
         {INTRO.privacy} <Link href="/privacy" className="pp-link">{INTRO.privacyLink}</Link>.
       </p>

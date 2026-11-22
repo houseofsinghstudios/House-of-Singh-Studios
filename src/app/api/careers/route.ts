@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { refuseRequest } from "@/lib/request-guards";
+import { noScriptPost } from "@/lib/no-script-page";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 import { checkCareers, cleanCareers } from "@/lib/careers";
@@ -14,6 +15,9 @@ const isRateLimited = createRateLimiter(5);
 
 export async function POST(request: NextRequest) {
   try {
+    // The form posted by the browser itself, before JavaScript ran: a written answer, nothing read.
+    const noScript = noScriptPost(request, { heading: "Your application was not sent.", backHref: "/careers", backLabel: "the careers page" });
+    if (noScript) return noScript;
     // Only JSON from the site itself (src/lib/request-guards.ts), before the rate limiter or the body.
     const refused = refuseRequest(request);
     if (refused) return refused;

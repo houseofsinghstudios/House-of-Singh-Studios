@@ -55,12 +55,14 @@ export default function ArticleNewsletter() {
 
   return (
     <div style={{ marginTop: 32 }}>
-      <form onSubmit={handleSubmit} className="art-newsletter-form" data-clarity-mask="True">
+      <form onSubmit={handleSubmit} method="post" action="/api/subscribe" className="art-newsletter-form" data-clarity-mask="True">
+        {/* Without JavaScript the browser posts to the route, which answers with a written page. */}
         <span className="art-newsletter-label">
           Get studio insights in your inbox.
         </span>
         <input
           type="email"
+          name="email"
           placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

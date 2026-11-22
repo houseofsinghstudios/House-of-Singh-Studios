@@ -310,6 +310,9 @@ html[data-js] .wwd-panel[data-open="true"] {
 html:not([data-js]) .wwd-plus {
   display: none;
 }
+html:not([data-js]) .wwd-row-btn {
+  cursor: auto;
+}
 .wwd-panel-clip {
   min-height: 0;
   overflow: hidden;

@@ -69,7 +69,7 @@ export default function WorkChoicePanel({ id, open, label, options, withOther, o
   const [opened, setOpened] = useState(open);
   if (open && !opened) setOpened(true);
   return (
-    <div id={id} className="wi-panel" data-open={open} inert={!open}>
+    <div id={id} className="wi-panel needs-js" data-open={open} inert={!open}>
       <div className="wi-panel-clip">
         <div className="wi-panel-body">
           <div className="wi-panel-head">

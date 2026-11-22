@@ -12,7 +12,7 @@ export default function HeroPause({ paused, onToggle }: { paused: boolean; onTog
   return (
     <button
       type="button"
-      className="hero-pause"
+      className="hero-pause needs-js"
       aria-label={paused ? "Play the animation" : "Pause the animation"}
       onClick={() => {
         track("hero_pause_toggle", { state: paused ? "playing" : "paused" });

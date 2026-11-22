@@ -48,8 +48,8 @@ function QuestionOne({ selected, onChoose, line }: { selected: ServiceId[]; onCh
     <div className="hs-q hs-line" style={at(line)}>
       <p className="hs-q-num">01</p>
       <p id="hs-q1" className="hs-q-text">{FIRST_QUESTION.text}</p>
-      <p className="hs-q-help">{FIRST_QUESTION.help}</p>
-      <div className="hs-chips" role="group" aria-labelledby="hs-q1">
+      <p className="hs-q-help needs-js">{FIRST_QUESTION.help}</p>
+      <div className="hs-chips needs-js" role="group" aria-labelledby="hs-q1">
         {CHIP_SERVICES.map((id) => (
           <button key={id} type="button" className="hs-chip" aria-pressed={selected.includes(id)} onClick={() => onChoose(id)}>
             {chipLabel(id)}

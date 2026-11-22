@@ -2041,6 +2041,14 @@ td a {
   transform: scaleX(1);
 }
 
+/* Controls that only work with JavaScript (the menu button, Pause, the choice lists, the Proof index,
+   the Start chips, Top, filters, tool start buttons): hidden until the inline script in the site layout
+   sets html[data-js], before the page paints, so without JavaScript nothing visible does nothing and with
+   it nothing flashes (homepage audit H-14). */
+html:not([data-js]) .needs-js {
+  display: none !important;
+}
+
 /* ═══════════════════════════════════════════════════════
    The shared reveal: one time, every browser (since 22 Nov 2026)
    An inline script in the site layout sets html[data-reveal] before the page paints, and only when

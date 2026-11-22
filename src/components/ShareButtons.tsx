@@ -34,7 +34,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     <div className="share-buttons">
       <span className="share-label">Share</span>
       <button
-        className="share-btn"
+        className="share-btn needs-js"
         onClick={handleCopy}
         aria-label="Copy link"
       >

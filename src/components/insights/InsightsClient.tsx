@@ -112,7 +112,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
       </section>
 
       {/* ═══ FILTER BAR ═══ */}
-      <div className="content-filter-sticky">
+      <div className="content-filter-sticky needs-js">
         <div className="content-filter-row">
           {categories.map((f) => (
             <button

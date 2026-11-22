@@ -130,9 +130,9 @@ test("rows: the h3 link carries the project's one view transition name; no css-r
   assert.doesNotMatch(win, /<Link|href=/);
 });
 
-test("the choices: role button, expanded state, controls, Enter and Space", () => {
+test("the choices: role button, expanded state, controls, Enter and Space (once in the browser)", () => {
   const sentence = code("src/components/work/index/WorkSentence.tsx");
-  for (const attr of ['role="button"', "tabIndex={0}", "aria-expanded={open}", "aria-controls={controls}"]) assert.ok(sentence.includes(attr), attr);
+  for (const attr of ['role: "button"', "tabIndex: 0", '"aria-expanded": open', '"aria-controls": controls']) assert.ok(sentence.includes(attr), attr);
   assert.match(sentence, /e\.key !== "Enter" && e\.key !== " "/);
   assert.match(code("src/components/work/index/index-shared.ts"), /e\.key === "Escape"/);
   assert.match(code("src/components/work/index/WorkChoicePanel.tsx"), /aria-disabled=\{disabled \|\| undefined\}/);

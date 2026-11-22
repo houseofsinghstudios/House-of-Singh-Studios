@@ -4,7 +4,8 @@
 // only when JavaScript runs, so without it all four panels read in full. The panel holds a
 // desktop layout (tagline, description and detail link; the lit words in the field beside it show the
 // disciplines) and a phone layout (tagline, the service's own disciplines as tappable words, then the
-// detail link); CSS shows one.
+// detail link); CSS shows one. Until the page runs in the browser the row's heading is plain text, not
+// a button: without JavaScript every panel is open and a button would do nothing (homepage audit H-14).
 
 import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
@@ -49,19 +50,33 @@ function DesktopPanel({ service, topic }: { service: WwdService; topic: string }
   );
 }
 
+function RowLabel({ service }: { service: WwdService }) {
+  return (
+    <>
+      <span className="wwd-num">{service.number}</span>
+      <span className="wwd-name">{service.name}</span>
+      <span className="wwd-count">
+        {countLabel(service.disciplines.length)}
+        <span className="sr-only"> disciplines</span>
+        <span className="wwd-plus" aria-hidden="true" />
+      </span>
+    </>
+  );
+}
+
 // The row's h3 and its button: number, name, count and the plus that turns into a minus.
-function RowHeading({ service, isOpen, panelId, onToggle, onFocus, onBlur }: { service: WwdService; isOpen: boolean; panelId: string; onToggle: () => void; onFocus: () => void; onBlur: () => void }) {
+function RowHeading({ service, isOpen, panelId, inBrowser, onToggle, onFocus, onBlur }: { service: WwdService; isOpen: boolean; panelId: string; inBrowser: boolean; onToggle: () => void; onFocus: () => void; onBlur: () => void }) {
   return (
     <h3 className="wwd-row-h">
-      <button type="button" className="wwd-row-btn" aria-expanded={isOpen} aria-controls={panelId} onClick={onToggle} onFocus={onFocus} onBlur={onBlur}>
-        <span className="wwd-num">{service.number}</span>
-        <span className="wwd-name">{service.name}</span>
-        <span className="wwd-count">
-          {countLabel(service.disciplines.length)}
-          <span className="sr-only"> disciplines</span>
-          <span className="wwd-plus" aria-hidden="true" />
+      {inBrowser ? (
+        <button type="button" className="wwd-row-btn" aria-expanded={isOpen} aria-controls={panelId} onClick={onToggle} onFocus={onFocus} onBlur={onBlur}>
+          <RowLabel service={service} />
+        </button>
+      ) : (
+        <span className="wwd-row-btn">
+          <RowLabel service={service} />
         </span>
-      </button>
+      )}
     </h3>
   );
 }
@@ -81,7 +96,7 @@ export default function WwdRows({ services, work, topics, open, onToggle, litWor
             data-pointed={pointed === s.slug || undefined}
             onPointerEnter={(e) => isMouse(e) && onRowLight(s.slug)}
           >
-            <RowHeading service={s} isOpen={isOpen} panelId={panelId} onToggle={() => onToggle(i)} onFocus={() => onRowLight(s.slug)} onBlur={onRowsLeave} />
+            <RowHeading service={s} isOpen={isOpen} panelId={panelId} inBrowser={inBrowser} onToggle={() => onToggle(i)} onFocus={() => onRowLight(s.slug)} onBlur={onRowsLeave} />
             <div id={panelId} className="wwd-panel" data-open={isOpen} inert={inBrowser && !isOpen}>
               <div className="wwd-panel-clip">
                 <div className="wwd-panel-body">

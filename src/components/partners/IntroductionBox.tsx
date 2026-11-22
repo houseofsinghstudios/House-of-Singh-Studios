@@ -48,7 +48,7 @@ export default function IntroductionBox() {
       <p ref={textRef} className="pt-intro-text">
         {HOW.introduction}
       </p>
-      <div className="pt-intro-actions">
+      <div className="pt-intro-actions needs-js">
         <Button variant={state === "copied" ? "primary" : "secondary"} onClick={copy} magnetic={false}>
           {state === "copied" ? HOW.copied : HOW.copy}
         </Button>

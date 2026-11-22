@@ -7,6 +7,11 @@
 // at 76px "your kind of business" has to wrap with the sentence. Its words carry one continuous 2px
 // underline (a bottom border, cloned on every line), and the chevron is glued to the last word so it
 // never wraps alone. Enter and Space open it; Escape (WorkIndex) closes it and comes back here.
+// Until the page runs in the browser it is plain text in the sentence (no role, not focusable, and
+// without JavaScript no underline or chevron, work-index.css), so nothing that does nothing looks
+// like a control (homepage audit H-14).
+
+import { useInBrowser } from "@/lib/use-in-browser";
 
 export type ListId = "business" | "discipline";
 
@@ -22,14 +27,13 @@ export function Choice({ words, open, controls, onToggle, choiceRef }: ChoicePro
   const parts = words.split(" ");
   const last = parts.pop();
   const lead = parts.join(" ");
+  const inBrowser = useInBrowser();
+  const control = inBrowser ? { role: "button", tabIndex: 0, "aria-expanded": open, "aria-controls": controls } : {};
   return (
     <span
       ref={choiceRef}
-      role="button"
-      tabIndex={0}
+      {...control}
       className="wi-choice"
-      aria-expanded={open}
-      aria-controls={controls}
       onClick={onToggle}
       onKeyDown={(e) => {
         if (e.key !== "Enter" && e.key !== " ") return;
