@@ -34,10 +34,16 @@ function Letters({ word }: { word: string }) {
   );
 }
 
-// The word in its clipped box, on its band. On a change the old word leaves (band wiping away to the
-// right, letters rising out) and the new one arrives (letters rising in, band wiping in from the left).
-function CyclingWord({ word, reduceMotion }: { word: string; reduceMotion: boolean }) {
-  const [roll, setRoll] = useState({ now: word, before: null as string | null, n: 0 });
+interface Roll {
+  now: string;
+  before: string | null;
+  // Counts the changes: keys the word's box and its letters.
+  n: number;
+}
+
+// The word on show, the one leaving and the change count.
+function useRoll(word: string, reduceMotion: boolean): Roll {
+  const [roll, setRoll] = useState<Roll>({ now: word, before: null, n: 0 });
   // Adjusting state while rendering, so the change starts in the same frame as the new word.
   if (roll.now !== word) setRoll({ now: word, before: reduceMotion ? null : roll.now, n: roll.n + 1 });
 
@@ -48,7 +54,12 @@ function CyclingWord({ word, reduceMotion }: { word: string; reduceMotion: boole
     const done = window.setTimeout(() => setRoll((r) => ({ ...r, before: null })), OUT_MS + OUT_STAGGER_MS * leaving.length + 50);
     return () => window.clearTimeout(done);
   }, [leaving, roll.n]);
+  return roll;
+}
 
+// The word in its clipped box, on its band. On a change the old word leaves (band wiping away to the
+// right, letters rising out) and the new one arrives (letters rising in, band wiping in from the left).
+function CyclingWord({ roll }: { roll: Roll }) {
   return (
     <span className="hero-word-box">
       {roll.before && (
@@ -83,6 +94,7 @@ function useLineEntrance(ref: React.RefObject<HTMLParagraphElement | null>) {
 
 export default function HeroLine({ word, reduceMotion }: { word: string; reduceMotion: boolean }) {
   const ref = useRef<HTMLParagraphElement>(null);
+  const roll = useRoll(word, reduceMotion);
   useLineEntrance(ref);
   return (
     <>
@@ -91,13 +103,20 @@ export default function HeroLine({ word, reduceMotion }: { word: string; reduceM
           <span key={i}>
             <span className="hero-value-w">
               <span className="hero-value-i">{w}</span>
-            </span>{" "}
+            </span>
+            {/* The space before the word hangs at the line's end when the word wraps and shows when it
+                fits; it arrives with each word too, so that is never counted as a shift. */}
+            {i === LEAD.length - 1 ? <span key={roll.n}>{" "}</span> : " "}
           </span>
         ))}
-        {/* The word: on phones it starts its own line (hero.css), so its length never moves the lines. */}
-        <span className="hero-value-w hero-value-w--word">
+        {/* The word: on phones it starts its own line (hero.css), so its length never moves the lines.
+            Above 1080px a short word ends line two and a longer one starts line three: each word
+            arrives in a box of its own (keyed by the change), so nothing already on the page moves
+            and no layout shift is recorded, while every frame looks as it did when one box was
+            reused (homepage audit, 22 Nov 2026). */}
+        <span key={roll.n} className="hero-value-w hero-value-w--word">
           <span className="hero-value-i">
-            <CyclingWord word={word} reduceMotion={reduceMotion} />
+            <CyclingWord roll={roll} />
           </span>
         </span>
       </p>

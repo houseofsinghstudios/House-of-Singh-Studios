@@ -1,6 +1,12 @@
 "use client";
+// A client component: the service process steps and the questions (protected, with their FAQPage
+// JSON-LD elsewhere) open and close on a tap. Until the page runs in the browser each trigger is plain
+// text and no panel is inert or styled inline: without JavaScript every answer shows, and with it the
+// closed panels collapse from the first paint through html[data-js] (globals.css), so nothing flashes
+// or moves when the buttons take over (owner approved, 22 Nov 2026).
 
 import { useState, useCallback, useEffect, useId, useRef, type ReactNode } from "react";
+import { useInBrowser } from "@/lib/use-in-browser";
 import { useMediaQuery } from "@/lib/use-media-query";
 
 interface ProcessStep {
@@ -29,6 +35,7 @@ export default function ServiceDetailAccordion({
   variant?: "process" | "questions";
 }) {
   const questions = variant === "questions";
+  const inBrowser = useInBrowser();
   const baseId = useId();
   const [openIndex, setOpenIndex] = useState(initialOpen);
   const isMobile = useMediaQuery("(max-width: 767px)");
@@ -54,21 +61,29 @@ export default function ServiceDetailAccordion({
     [forceOpen]
   );
 
-  const trigger = (step: ProcessStep, i: number, isOpen: boolean) => (
-    <button
-      type="button"
-      className="svc-acc-trigger"
-      onClick={() => toggle(i)}
-      aria-expanded={isOpen}
-      aria-controls={`${baseId}-panel-${i}`}
-    >
+  const label = (step: ProcessStep) => (
+    <>
       <span className="svc-acc-num">{step.step}</span>
       <span className="svc-acc-title">{step.name}</span>
       <span className="svc-acc-icon" aria-hidden="true">
         +
       </span>
-    </button>
+    </>
   );
+  const trigger = (step: ProcessStep, i: number, isOpen: boolean) =>
+    inBrowser ? (
+      <button
+        type="button"
+        className="svc-acc-trigger"
+        onClick={() => toggle(i)}
+        aria-expanded={isOpen}
+        aria-controls={`${baseId}-panel-${i}`}
+      >
+        {label(step)}
+      </button>
+    ) : (
+      <span className="svc-acc-trigger">{label(step)}</span>
+    );
 
   return (
     <div className="svc-accordion-list">
@@ -84,16 +99,19 @@ export default function ServiceDetailAccordion({
             ) : (
               trigger(step, i, isOpen)
             )}
-            {/* A closed panel stays in the page (and the server HTML) but is inert, so nothing in a
-                hidden answer, such as a link, can take keyboard focus. */}
+            {/* A closed panel stays in the page (and the server HTML). Once the page runs it is inert, so
+                nothing in a hidden answer, such as a link, can take keyboard focus; before that the
+                CSS collapses it only under html[data-js], so without JavaScript every answer reads. */}
             <div
               id={`${baseId}-panel-${i}`}
               className="svc-acc-panel"
-              inert={!isOpen}
-              style={{
-                maxHeight: isOpen ? Math.max(OPEN_MIN, heights[i] ?? 0) : 0,
-                opacity: isOpen ? 1 : 0,
-              }}
+              data-open={isOpen}
+              inert={inBrowser && !isOpen}
+              style={
+                inBrowser
+                  ? { maxHeight: isOpen ? Math.max(OPEN_MIN, heights[i] ?? 0) : 0, opacity: isOpen ? 1 : 0 }
+                  : undefined
+              }
             >
               <p className="svc-acc-desc" ref={(el) => { descRefs.current[i] = el; }}>{step.description}</p>
             </div>

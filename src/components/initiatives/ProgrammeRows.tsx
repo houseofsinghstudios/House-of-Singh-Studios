@@ -3,8 +3,10 @@
 // Explore button in the /services Learn more style. Right: the newest project's cover once the program has published work,
 // otherwise a landscape panel (Cloudy ground, the row number small at the top left, the at a glance
 // values in one row along the bottom). On phones the panel gives way to a short list of the same
-// values between the summary and Explore. A row with its own page is one link, named
-// "Explore <name>"; its hover is the existing service block hover. An initiative with a logo in
+// values between the summary and Explore. In a row with its own page, Explore is the link, stretched
+// over the whole row so all of it still opens the page; its name starts with its visible words,
+// "Explore <name>", then the tagline as hidden text, with no aria-label (WCAG 2.5.3). Its hover is the
+// existing service block hover. An initiative with a logo in
 // Sanity shows the logo in place of the visible name; with no published project yet, the panel
 // shows that logo large instead (see logoInPanel).
 import Image from "next/image";
@@ -92,8 +94,13 @@ function RowBody({ row, number }: { row: ProgrammeRow; number: string }) {
             ))}
           </ul>
         )}
-        {/* The /services button look, as a visual element inside the row's one link. */}
-        {linked && <span className="svc-block-btn init-row-explore">{LANDING.explore(initiative.name)}</span>}
+        {/* The /services button look, and the row's one link (stretched over the row, initiatives.css). */}
+        {linked && (
+          <Link href={`/initiatives/${initiative.slug}`} className="svc-block-btn init-row-explore" data-cursor="link">
+            {LANDING.explore(initiative.name)}
+            <span className="sr-only">: {initiative.tagline}</span>
+          </Link>
+        )}
       </div>
       <div className={row.newest ? "init-row-visual" : "init-row-visual init-row-visual--panel"}>
         <Visual row={row} number={number} />
@@ -107,18 +114,8 @@ export default function ProgrammeRows({ rows }: { rows: ProgrammeRow[] }) {
     <div className="init-rows">
       {rows.map((row, i) => {
         const number = String(i + 1).padStart(2, "0");
-        return row.linked ? (
-          <Link
-            key={row.initiative.slug}
-            href={`/initiatives/${row.initiative.slug}`}
-            className="svc-block init-row css-reveal no-underline"
-            aria-label={LANDING.explore(row.initiative.name)}
-            data-cursor="link"
-          >
-            <RowBody row={row} number={number} />
-          </Link>
-        ) : (
-          <div key={row.initiative.slug} className="svc-block init-row css-reveal">
+        return (
+          <div key={row.initiative.slug} className="svc-block init-row css-reveal" data-linked={row.linked || undefined}>
             <RowBody row={row} number={number} />
           </div>
         );

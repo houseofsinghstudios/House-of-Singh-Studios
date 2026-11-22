@@ -207,8 +207,10 @@ test("panel, logo and no project: the logo large in the panel, decorative, betwe
 test("panel, logo and no project: the small logo is marked for hiding beside the panel; the h3 and link name stay", () => {
   const html = rows(withLogo);
   assert.match(textOf(html), /<div className="svc-block-name init-row-logo init-row-logo--panel"><Image [^>]*alt=""[^>]*><\/Image><h3 className="sr-only">Parallel<\/h3><\/div>/);
-  assert.match(html, /aria-label="Explore Parallel"/);
-  assert.match(html, /<span className="svc-block-btn init-row-explore">Explore Parallel<\/span>/);
+  // The link's name starts with its visible words, then the tagline as hidden text; no aria-label.
+  assert.doesNotMatch(html, /aria-label=/);
+  assert.match(html, /<Link href="\/initiatives\/parallel" className="svc-block-btn init-row-explore" data-cursor="link">Explore Parallel<span className="sr-only">: [^<]+<\/span><\/Link>/);
+  assert.match(html, /<div className="svc-block init-row css-reveal" data-linked=true>/);
   // Hidden only where the panel shows (from 769px); on phones (768px and below) the panel is hidden
   // and the small logo shows.
   const sheet = css();

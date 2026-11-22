@@ -170,7 +170,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
               className="about-process-step row-bleed scroll-reveal-up"
             >
               <div className="about-process-step-left">
-                <span className="about-process-ghost" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                <span className="about-process-ghost">{String(i + 1).padStart(2, "0")}</span>
                 <p className="font-[var(--sans)] text-[15px] font-medium text-[color:var(--text-primary)] about-process-name">
                   {step.name}
                 </p>
