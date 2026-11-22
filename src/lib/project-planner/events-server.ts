@@ -14,12 +14,12 @@ import { capRaw, isEmail, sitePath, stripTags } from "@/lib/form-input";
 import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "./config";
 import type { Answers, Optional } from "./types";
 
-export const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
-export type PlannerEvent = (typeof PLANNER_EVENTS)[number];
+const PLANNER_EVENTS = ["started", "viewed", "call_clicked", "sent"] as const;
+type PlannerEvent = (typeof PLANNER_EVENTS)[number];
 
 // For n8n: one brief per briefId whose status only ever moves forward (started < viewed < sent).
 // call_clicked is an intention signal recorded beside the status, never a booked or attended call.
-export const STATUS_RANK: Record<PlannerEvent, number | null> = { started: 1, viewed: 2, sent: 3, call_clicked: null };
+const STATUS_RANK: Record<PlannerEvent, number | null> = { started: 1, viewed: 2, sent: 3, call_clicked: null };
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 // Cut before cleaning (src/lib/form-input.ts), so nothing ever scans more than twice the limit.

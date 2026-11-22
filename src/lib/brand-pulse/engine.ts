@@ -123,13 +123,13 @@ export function profileFor(a: Answers, s: Severities): ProfileId {
   return "undersold";
 }
 
-export function serviceFromWeakest(weakest: Weakest): ServiceKey {
+function serviceFromWeakest(weakest: Weakest): ServiceKey {
   if (weakest === "website") return "DIGITAL";
   if (weakest === "print-sales" || weakest === "logo-look") return "BRAND";
   return "MEDIA";
 }
 
-export function primaryService(profile: ProfileId, weakest: Weakest): ServiceKey {
+function primaryService(profile: ProfileId, weakest: Weakest): ServiceKey {
   if (profile === "overdue") return "BRAND";
   if (profile === "undersold" || profile === "strong") return serviceFromWeakest(weakest);
   return "STRATEGY";

@@ -8,7 +8,7 @@ export interface RelatedCandidate {
   category?: string;
 }
 
-export const RELATED_CARDS = 2;
+const RELATED_CARDS = 2;
 
 // The latest other articles in fallback order: the same category first, then the rest, each newest
 // first.

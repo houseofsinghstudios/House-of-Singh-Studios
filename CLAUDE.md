@@ -334,14 +334,14 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 
 ### Packages (retired)
 - The Packages page no longer exists. /packages redirects (301) to /start, the Project Planner.
-- src/data/packages.ts stays, without prices: the planner takes the package timelines from it.
+- src/data/packages.ts stays, without prices: only the three package names and timelines, which the planner reads (the retired page's other fields were removed on 22 Nov 2026).
 
 ### Project Planner (/start)
 - Multi step brief builder. Rendered on every request (it reads ?service and ?begin). Described everywhere as "Plan your project in two minutes. We come to the call prepared."
 - ?service= preselects up to three known services, comma separated, in order (parseService in src/lib/project-planner/start-links.ts; a single value works as before; unknown ids and repeats are ignored; "unsure" only alone). With ?begin=1 as well, question 01 is answered and the planner opens on question 02 (plannerOpening); ?begin=1 alone opens question 01.
 - No prices (decided 20 Nov 2026): no price guide, starting price, fit note or budget comparison, in the planner, its brief, its result, its share image or anywhere it is described. Only the brand package timelines show, for brand identity as the main focus. The optional "investment range" question stays: it is the visitor's own range, sent to the studio.
 - It ends in the call: the brief's main action is "Choose a time for your call" (DISCOVERY_CALL_URL, with the brief's notes), under it "Your answers go to the studio before the call, so we start with your business."; "Send my brief" stays second, with every form protection. The viewed event has already sent the answers to n8n, keyed by the brief id that the booking notes carry.
-- The Sanity Service Pricing document and its schema (sanity/schemas/servicePricing.ts) are no longer read; both stay, unchanged in their fields, until they are removed. The n8n payload keeps its price fields, always empty (docs/integrations/n8n.md).
+- The Service Pricing schema, its desk entry and the Studio singleton code were removed on 22 Nov 2026 (nothing read them). The document itself (id "servicePricing") stays in the dataset until the owner deletes it; Studio no longer lists it. The n8n payload keeps its price fields, always empty, until the n8n workflow changes (docs/integrations/n8n.md).
 
 ### Brand Pulse Check (/brand-pulse)
 - Self contained multi step tool with a shareable result (?r=, never indexed). Rendered on every request.
@@ -540,7 +540,7 @@ document `_.schemas.hos-studios` in the production dataset), which tools such as
 Actions and Canvas validate against. It hosts nothing and changes no content. The embedded Studio never updates
 that copy itself, so .github/workflows/sanity-schema-deploy.yml runs `npx sanity schema deploy --workspace
 hos-studios` on every push to main that changes sanity/, sanity.config.ts or a file under src/ that they import,
-directly or through their imports (eleven today, listed in the workflow; tests/sanity-schema-deploy.test.ts walks
+directly or through their imports (twelve today, listed in the workflow; tests/sanity-schema-deploy.test.ts walks
 the imports and fails when one is missing from the trigger), and by hand from the Actions tab. A second step then
 runs that one exception, `sanity deploy --external --url https://studios.houseofsingh.com/studio --schema-required`: Sanity's tools
 validate against the registered Studio (user application h8sx77qg2395sepru27oouhh, urlType external), whose schema

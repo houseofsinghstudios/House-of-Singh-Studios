@@ -1,23 +1,10 @@
 // Browser side of Brand Pulse events: attribution capture and posting to /api/brand-pulse.
 // Answers are sent only once the result is shown. The server recomputes the result itself.
 
-import { resolveCampaign, sessionStore } from "@/lib/campaign";
 import { parsePlacement, type EntryPlacement } from "@/lib/brand-pulse/entry";
 import type { Answers, Feedback, Gate, TeamSize } from "@/lib/brand-pulse/types";
 import type { LeadSource } from "@/lib/lead-source";
-import { originAndPath } from "@/lib/referrer";
-
-export interface Attribution {
-  source: string;
-  medium: string;
-  campaign: string;
-  // A partner's code from ?ref=, on this page or stored for the visit.
-  referralCode: string;
-  landingPage: string;
-  referrer: string;
-  // Where the visitor came from inside the site, from ?from= on our own links, else "direct".
-  entryPlacement: EntryPlacement;
-}
+import { captureAttribution, uuid, type ToolAttribution } from "@/lib/tool-attribution";
 
 export interface LeadContact {
   email: string;
@@ -37,37 +24,12 @@ export type SendStatus = "idle" | "sending" | "success" | "error";
 
 export interface PulseSession {
   resultId: string;
-  attribution: Attribution;
-}
-
-// randomUUID needs a secure context; the fallback builds the same version 4 shape.
-function uuid(): string {
-  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
-  const b = crypto.getRandomValues(new Uint8Array(16));
-  b[6] = (b[6] & 0x0f) | 0x40;
-  b[8] = (b[8] & 0x3f) | 0x80;
-  const h = [...b].map((x) => x.toString(16).padStart(2, "0")).join("");
-  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  attribution: ToolAttribution<EntryPlacement>;
 }
 
 // Captured once when the flow starts and kept in memory for the session.
 export function startSession(): PulseSession {
-  const params = new URLSearchParams(window.location.search);
-  // This page's campaign tags if it has any, otherwise the visit's first touch tags.
-  const { source, medium, campaign, referralCode } = resolveCampaign(window.location.search, sessionStore());
-  return {
-    resultId: uuid(),
-    attribution: {
-      source,
-      medium,
-      campaign,
-      referralCode,
-      landingPage: window.location.pathname,
-      // Origin and path only: query strings can carry personal details.
-      referrer: originAndPath(document.referrer),
-      entryPlacement: parsePlacement(params.get("from")),
-    },
-  };
+  return { resultId: uuid(), attribution: captureAttribution(parsePlacement) };
 }
 
 type EventBody =

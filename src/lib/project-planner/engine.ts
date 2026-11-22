@@ -8,7 +8,7 @@ import {
 } from "./content";
 import {
   BAND_IDS, GOAL_IDS, HELP, MAX_NEEDS, MAX_PRIORITIES, NAMED_SERVICES, PRIORITY_IDS, SERVICE_IDS, START_IDS, TIMING_IDS,
-  type ActionId, type Answers, type BandId, type Brief, type NamedService, type ServiceId,
+  type Answers, type BandId, type Brief, type NamedService, type ServiceId,
 } from "./types";
 
 export const ENGINE_VERSION = "2.0.0";
@@ -158,5 +158,3 @@ export function buildBrief(a: Answers): Brief {
     serviceSlug: SERVICE_SLUGS[a.primary],
   };
 }
-
-export type { ActionId };

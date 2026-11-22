@@ -1,19 +1,19 @@
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 
-export interface ServiceDeliverable {
+interface ServiceDeliverable {
   name: string;
   description: string;
 }
 
 
-export interface ServiceProcessStep {
+interface ServiceProcessStep {
   step: string;
   name: string;
   description: string;
 }
 
 // One row in the service page's "Across the GTA" section: a situation, then one line about it.
-export interface ServiceLocalRow {
+interface ServiceLocalRow {
   name: string;
   description: string;
 }

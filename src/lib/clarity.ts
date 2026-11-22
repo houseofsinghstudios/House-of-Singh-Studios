@@ -5,7 +5,7 @@
 
 import type { ConsentState } from "@/lib/consent";
 
-export type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[][] };
+type ClarityFn = ((...args: unknown[]) => void) & { q?: unknown[][] };
 export type ClarityWindow = { clarity?: ClarityFn; __hosClarity?: "running" | "stopped" };
 
 export function followClarity(state: ConsentState, w: ClarityWindow, loadTag: () => void) {

@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 export const IMPORT_DIR = path.join(ROOT, "portfolio-import");
-export const ENV_FILE = path.join(ROOT, ".env.import");
+const ENV_FILE = path.join(ROOT, ".env.import");
 
 export const SITE_URL = "https://studios.houseofsingh.com";
 export const API_VERSION = "2024-01-01";

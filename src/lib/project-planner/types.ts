@@ -16,7 +16,7 @@ export const START_IDS = {
   strategy: ["new_positioning", "reposition", "inconsistent", "unsure_context"],
   unsure: ["launching", "growing", "changing", "no_label"],
 } as const satisfies Record<ServiceId, readonly string[]>;
-export type StartId = (typeof START_IDS)[ServiceId][number];
+type StartId = (typeof START_IDS)[ServiceId][number];
 
 export const GOAL_IDS = ["credibility", "clarity", "differentiation", "launch", "conversion", "consistency", "production", "other"] as const;
 export type GoalId = (typeof GOAL_IDS)[number];
@@ -31,7 +31,7 @@ export const PRIORITY_IDS = {
   strategy: ["positioning", "messaging", "workshop", "direction", "governance"],
 } as const satisfies Record<NamedService, readonly string[]>;
 export const HELP = "help";
-export type PriorityId = (typeof PRIORITY_IDS)[NamedService][number] | typeof HELP;
+type PriorityId = (typeof PRIORITY_IDS)[NamedService][number] | typeof HELP;
 
 export const TIMING_IDS = ["now", "one_three", "three_six", "flexible"] as const;
 export type TimingId = (typeof TIMING_IDS)[number];
@@ -68,8 +68,7 @@ export interface Optional {
 export type ActionId = "book" | "send";
 
 // What a case study says it delivered (caseStudy.workDelivered in Sanity).
-export const DELIVERED_IDS = ["identity", "strategy", "website_design", "website_build", "photography", "video", "packaging", "print"] as const;
-export type DeliveredId = (typeof DELIVERED_IDS)[number];
+export type DeliveredId = "identity" | "strategy" | "website_design" | "website_build" | "photography" | "video" | "packaging" | "print";
 
 export interface Brief {
   engineVersion: string;

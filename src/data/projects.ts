@@ -1,6 +1,6 @@
 import type { ProjectType } from "@/lib/initiatives/types";
 
-export interface ProjectSection {
+interface ProjectSection {
   label: string;
   paragraphs: string[];
 }

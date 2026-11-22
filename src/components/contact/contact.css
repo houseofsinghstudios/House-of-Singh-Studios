@@ -15,15 +15,6 @@
   padding-left: 80px;
 }
 
-/* Helper line under a field: the same size and tone as the Brand Pulse and Planner helpers. */
-.contact-helper {
-  font-family: var(--sans);
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 8px 0 0;
-}
-
 .contact-textarea {
   width: 100%;
   font-family: var(--sans);

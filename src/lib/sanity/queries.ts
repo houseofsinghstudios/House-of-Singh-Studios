@@ -66,14 +66,14 @@ const relatedCardFields = `_id,
         }`;
 
 // An article as getPostBySlug reads it (before the page builds the image URLs).
-export interface ArticleImage {
+interface ArticleImage {
   _type?: string;
   asset?: { _id: string; url: string; metadata?: { dimensions?: { width: number; height: number }; lqip?: string } };
   alt?: string;
   crop?: { top: number; bottom: number; left: number; right: number };
   hotspot?: { x: number; y: number };
 }
-export interface ArticleLink {
+interface ArticleLink {
   title: string;
   slug: { current: string };
   category?: string;
@@ -83,7 +83,7 @@ export interface ArticleCardDoc extends ArticleLink {
   publishedAt?: string;
   featuredImage?: ArticleImage;
 }
-export type ArticleBodyBlock = { _type: string; _key?: string; children?: Array<{ text?: string }> } & ArticleImage;
+type ArticleBodyBlock = { _type: string; _key?: string; children?: Array<{ text?: string }> } & ArticleImage;
 type Reference = { _id: string; title?: string; slug?: { current?: string } } | null;
 export interface ArticleDoc {
   _id: string;

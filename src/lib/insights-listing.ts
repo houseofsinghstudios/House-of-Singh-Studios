@@ -62,7 +62,7 @@ export function isPlainLeftClick(event: ClickLike): boolean {
 
 // Post slugs the site's own routes already use: /insights/page is the archive, so a post with the
 // slug "page" could never be reached. Checked in Studio (sanity/schemas/post.ts).
-export const RESERVED_POST_SLUGS = ["page"] as const;
+const RESERVED_POST_SLUGS = ["page"] as const;
 
 export function reservedPostSlugMessage(slug: string | undefined): string | undefined {
   return slug && (RESERVED_POST_SLUGS as readonly string[]).includes(slug.trim().toLowerCase())

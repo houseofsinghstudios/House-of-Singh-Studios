@@ -2,7 +2,7 @@
 // nodes reference instead of repeating them, and the area the studio serves. The full studio and
 // founder nodes are on every site page (src/lib/site-graph.ts), so every reference resolves.
 
-export const SITE_URL = "https://studios.houseofsingh.com";
+const SITE_URL = "https://studios.houseofsingh.com";
 export const ORG_ID = `${SITE_URL}/#organization`;
 // The founder's id belongs to houseofsingh.com, his own site, and is shared with it, so search
 // engines and AI assistants see one person on both sites.

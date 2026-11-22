@@ -323,6 +323,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 26. Unused files
 
+- **Status:** Done 22 Nov 2026 (#270): the archive/brand-diagnostic folder deleted, its README included (it stays in git history), with its eslint ignore line.
 - **Severity:** Code health
 - **Confidence:** High confidence. knip reports them.
 - **Where:** `archive/brand-diagnostic/diag-styles.css`, `DiagnosticTrigger.tsx` and `SliderDiagnostic.tsx`.
@@ -332,6 +333,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 27. Unused exports
 
+- **Status:** Done 22 Nov 2026 (#270): the `export` keyword dropped from every name knip reported (38 values and 21 types across src, sanity and scripts), each still used inside its own file; the other 2 types were the duplicate `Attribution`, merged under finding 29. The analytics helper (`src/lib/analytics.ts`: `INTERNAL_PARAM`, `DEBUG_PARAM`, `syncFlag`, `CONFIG_ONLY`, `eventParams`) is Protected and left as it is. `ToolBand.tsx` was already gone.
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where:** 50 exports and 23 types that nothing imports. Notable groups: `ToolBand.tsx` (`TOOL_BAND`, `pulseChipHref`, `plannerChipHref`, `PULSE_BUTTON_HREF`, `PLANNER_BUTTON_HREF`, `PulseColumn`, `PlannerColumn`), the id lists in `brand-pulse/types.ts`, the lists in `initiatives/types.ts`, project-planner (`stepCount`, `PLANNER_EVENTS`, `STATUS_RANK`, `DELIVERED_IDS`), `analytics.ts` (`INTERNAL_PARAM`, `DEBUG_PARAM`, `syncFlag`, `CONFIG_ONLY`, `eventParams`) and some script helpers.
@@ -341,6 +343,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 28. Unused CSS class
 
+- **Status:** Done 22 Nov 2026 (#270): `.contact-helper` deleted. A scan of every class in every stylesheet against the code found no other unused class (the rest are built at runtime, such as `cursor-${state}`).
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where:** `.contact-helper` in `src/components/contact/contact.css:19`.
@@ -350,6 +353,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 29. Duplicate definitions
 
+- **Status:** Done 22 Nov 2026 (#270): one `Attribution` type, one `uuid()` and one attribution capture for Brand Pulse and the Project Planner (src/lib/tool-attribution.ts); one `asText` for the six modules that had their own trimmed text helper (src/lib/as-text.ts, added to the schema deploy trigger). The client address logic was shared in #269. The two form `clean()` helpers in the Brand Pulse route and the planner events are left: they differ (only the planner collapses spaces) and both files change in #269.
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where:** An `Attribution` interface in both `src/components/brand-pulse/events.ts:10` and `src/components/project-planner/events.ts:10`. Client IP logic in `rate-limit.ts` and again in the brand-pulse route. Small `clean()` helpers in several modules.
@@ -359,6 +363,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 30. Price removal leftovers
 
+- **Status:** Done 22 Nov 2026 (#270), except item 2. Item 1: the schema, its registration, the desk entry and the singleton code removed; the document (id `servicePricing`) stays in the dataset for the owner to delete. Item 2: the n8n price fields stay, always empty, until the n8n workflow changes (owner decision). Item 3: src/data/packages.ts holds only the names and timelines. Also stale price comments in next.config.ts (a price guide) and src/lib/revalidate.ts (prices among the Sanity content).
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where and what:**
@@ -371,6 +376,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 31. Dead Sanity queries check
 
+- **Status:** Done 22 Nov 2026 (#270): `ArticleImage`, `ArticleLink` and `ArticleBodyBlock` no longer exported. Every query function is still used.
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where:** `src/lib/sanity` and `queries.ts`.
@@ -409,12 +415,12 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 | 23 | Weak alt text on article images (Done 22 Nov 2026, #269) | Low | High |
 | 24 | Deprecated `priority` prop (Done 20 Nov 2026, #261) | Low | High |
 | 25 | Client components that could be server components | Low | High |
-| 26 | Unused files | Code health | High |
-| 27 | Unused exports (analytics helper: Protected, owner decision) | Code health | High |
-| 28 | Unused CSS class | Code health | High |
-| 29 | Duplicate definitions | Code health | High |
-| 30 | Price removal leftovers (n8n contract: Protected, owner decision) | Code health | High |
-| 31 | Dead Sanity queries check | Code health | High |
+| 26 | Unused files (Done 22 Nov 2026, #270) | Code health | High |
+| 27 | Unused exports (analytics helper: Protected, owner decision; Done 22 Nov 2026, #270) | Code health | High |
+| 28 | Unused CSS class (Done 22 Nov 2026, #270) | Code health | High |
+| 29 | Duplicate definitions (Done 22 Nov 2026, #270) | Code health | High |
+| 30 | Price removal leftovers (n8n contract: Protected, owner decision; Done 22 Nov 2026, #270 except item 2) | Code health | High |
+| 31 | Dead Sanity queries check (Done 22 Nov 2026, #270) | Code health | High |
 
 ---
 

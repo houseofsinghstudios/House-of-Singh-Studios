@@ -49,7 +49,7 @@ const ACTIONS: Record<ProfileId, [string, string, string]> = {
   ],
 };
 
-export function actionsFor(profile: ProfileId): [string, string, string] {
+function actionsFor(profile: ProfileId): [string, string, string] {
   return ACTIONS[profile];
 }
 

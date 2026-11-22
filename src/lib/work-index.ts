@@ -7,6 +7,7 @@
 
 import { compareClientFirst, type HeroImage } from "@/lib/homepage-hero";
 import { projectType, projectTypeLabel, type ProjectType } from "@/lib/initiatives/types";
+import { asText } from "./as-text";
 
 // ── Business types (Studio: "Business type", the sector field) ──
 
@@ -153,11 +154,10 @@ export interface IndexProjectDoc {
   blockImages?: ({ image?: IndexImageDoc | null; detail?: IndexImageDoc | null; images?: (IndexImageDoc | null)[] | null } | null)[] | null;
 }
 
-const text = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
 // The first sentence of a text: up to the first full stop, question or exclamation mark.
 function firstSentence(value: unknown): string {
-  const all = text(value).replace(/\s+/g, " ");
+  const all = asText(value).replace(/\s+/g, " ");
   const match = all.match(/^.*?[.!?](?=\s|$)/);
   return (match ? match[0] : all).trim();
 }
@@ -174,13 +174,13 @@ function cropBox(raw: IndexImageDoc["crop"]): IndexImage["crop"] {
 }
 
 function toIndexImage(doc: IndexImageDoc | null | undefined, title: string): IndexImage | null {
-  const url = text(doc?.url);
+  const url = asText(doc?.url);
   const { width, height } = doc || {};
   if (!url || typeof width !== "number" || typeof height !== "number" || width <= 0 || height <= 0) return null;
-  const lqip = text(doc?.lqip);
+  const lqip = asText(doc?.lqip);
   const hotspot = focalPoint(doc?.hotspot);
   const crop = cropBox(doc?.crop);
-  return { url, width, height, alt: text(doc?.alt) || title, ...(lqip ? { lqip } : {}), ...(hotspot ? { hotspot } : {}), ...(crop ? { crop } : {}) };
+  return { url, width, height, alt: asText(doc?.alt) || title, ...(lqip ? { lqip } : {}), ...(hotspot ? { hotspot } : {}), ...(crop ? { crop } : {}) };
 }
 
 // The images for the strip and the image window: the Index images when there are any; otherwise
@@ -195,7 +195,7 @@ export function indexImages(doc: IndexProjectDoc, title: string): IndexImage[] {
     if (out.length === INDEX_IMAGE_MAX) break;
     const image = toIndexImage(candidate, title);
     if (!image) continue;
-    const key = text(candidate?.id) || image.url;
+    const key = asText(candidate?.id) || image.url;
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(image);
@@ -205,13 +205,13 @@ export function indexImages(doc: IndexProjectDoc, title: string): IndexImage[] {
 
 // One case study as the index shows it, or null without a title or slug.
 export function toIndexProject(doc: IndexProjectDoc): IndexProject | null {
-  const title = text(doc.title);
-  const slug = text(doc.slug);
+  const title = asText(doc.title);
+  const slug = asText(doc.slug);
   if (!title || !slug) return null;
   const sector: SectorId = isBusinessType(doc.sector) ? doc.sector : "other";
   const disciplines = buyerDisciplines(doc.disciplines);
   // publishedAt orders the list; it never stands in for the year.
-  const publishedAt = text(doc.publishedAt);
+  const publishedAt = asText(doc.publishedAt);
   const year = num(doc.year) ? doc.year : null;
   const type = projectType(doc.projectType);
   return {
@@ -222,7 +222,7 @@ export function toIndexProject(doc: IndexProjectDoc): IndexProject | null {
     disciplines,
     deliveredLine: deliveredPhrase(disciplines),
     year,
-    line: text(doc.heroLine) || firstSentence(doc.overview),
+    line: asText(doc.heroLine) || firstSentence(doc.overview),
     isExploration: type === "exploration",
     projectType: type,
     publishedAt,

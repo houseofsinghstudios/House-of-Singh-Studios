@@ -4,6 +4,7 @@
 
 // Relative, not "@/": the Studio schema (sanity/schemas/testimonial.ts) imports these rules too.
 import { TESTIMONIALS, type PromiseId, type Testimonial } from "./constants/homepage-data";
+import { asText } from "./as-text";
 
 export type { PromiseId };
 
@@ -55,17 +56,16 @@ export interface TestimonialDoc {
   promise?: unknown;
 }
 
-const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 
 // A Sanity testimonial the section can show: every part present and both substring rules kept.
 function sanityQuote(doc: TestimonialDoc): ProofQuote | null {
-  const quote = text(doc.quote);
-  const excerpt = text(doc.excerpt);
-  const keyPhrase = text(doc.keyPhrase);
-  const name = text(doc.author);
+  const quote = asText(doc.quote);
+  const excerpt = asText(doc.excerpt);
+  const keyPhrase = asText(doc.keyPhrase);
+  const name = asText(doc.author);
   if (!quote || !name || !excerpt || !keyPhrase) return null;
   if (excerptError(quote, excerpt) || keyPhraseError(excerpt, keyPhrase)) return null;
-  return { excerpt, keyPhrase, name, role: [text(doc.role), text(doc.company)].filter(Boolean).join(", ") };
+  return { excerpt, keyPhrase, name, role: [asText(doc.role), asText(doc.company)].filter(Boolean).join(", ") };
 }
 
 // The four chapters, in order. For each promise, the published Sanity testimonial that supports it,
