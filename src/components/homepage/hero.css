@@ -188,11 +188,11 @@
 
 /* The cycling word in its clipped box, on its marker band. The box clips the letters top and bottom
    as they rise; it leaves room for the band (3px each side) and for a longer word on its way out.
-   3px on the right so the full stop sits just outside the band. */
+   Its right margin keeps the place of the full stop, which sits 3px outside the band. */
 .hero-word-box {
   position: relative;
   display: inline-block;
-  margin-right: 3px;
+  margin-right: calc(3px + 0.3em);
   clip-path: inset(0 -50vw 0 -3px);
 }
 
@@ -219,6 +219,13 @@
 .hero-letter {
   display: inline-block;
   white-space: pre;
+}
+
+/* The full stop: part of the word, so it never moves on its own, but outside the band (which spans
+   the word's box): placed 3px past the box's end, on the letters' baseline. */
+.hero-stop {
+  position: absolute;
+  left: calc(100% + 3px);
 }
 
 /* Out: the band wipes away to the right while the letters rise out, 12ms apart. */
@@ -503,6 +510,14 @@
 
   .hero-value {
     font-size: 30px;
+  }
+
+  /* The word starts its own line, kept whole (the longest field word, "beauty labels", fits at
+     320px), so no word length moves anything: the lines above never rewrap (homepage audit H-10). */
+  .hero-value-w--word {
+    display: block;
+    width: max-content;
+    white-space: nowrap;
   }
 }
 

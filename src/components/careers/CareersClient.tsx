@@ -513,7 +513,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
                           e.stopPropagation();
                           handleApplyClick(role.title);
                         }}
-                        className="apply-role-btn"
+                        className="apply-role-btn needs-js"
                         style={{
                           fontFamily: "var(--sans)",
                           fontSize: 13,
@@ -659,7 +659,9 @@ export default function CareersClient({ roles }: CareersClientProps) {
               </p>
             </div>
           ) : (
-            <form ref={formRef} onSubmit={handleSubmit} data-clarity-mask="True">
+            <form ref={formRef} onSubmit={handleSubmit} method="post" action="/api/careers" data-clarity-mask="True">
+              {/* Without JavaScript the browser posts the form to the route, which answers with a written
+                  page (src/lib/no-script-page.ts), so the details never go into a page address. */}
               <div className="careers-form-field">
                 <label htmlFor="careers-name" className="careers-form-label">Name</label>
                 <input

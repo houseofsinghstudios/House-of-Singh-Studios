@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { forbiddenOrigin, isJsonRequest, originAllowed } from "@/lib/request-guards";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { checkLeadLengths, cleanField, cleanLine, LEAD_LIMITS } from "@/lib/lead";
@@ -6,7 +5,7 @@ import { cleanSubmissionId, isEmail } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 import { checkReferralFields, isIntroduction, isPartnership, REFERRAL_LIMITS } from "@/lib/partners/forms";
-import { STUDIO_EMAIL } from "@/lib/constants/contact";
+import { noScriptResponse } from "@/lib/no-script-page";
 import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 import { cleanCampaign } from "@/lib/campaign";
 import { cleanLeadSource } from "@/lib/lead-source";
@@ -16,31 +15,8 @@ const log = routeLog("lead");
 // Five leads per address per minute: the limiter the other form routes share.
 const isRateLimited = createRateLimiter(5);
 
-// Shown when the contact form is submitted before JavaScript has loaded, so the browser posts
-// the form itself instead of the page sending JSON. Nothing is read from that post or forwarded.
-const NO_SCRIPT_PAGE = `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>Message not sent | House of Singh Studios</title>
-<style>
-  body { margin: 0; background: #F7F6F5; color: #22211F; font-family: system-ui, sans-serif; }
-  main { max-width: 560px; padding: 120px max(24px, 8vw); }
-  h1 { font-size: 32px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 16px; }
-  p { color: #5C5B58; font-size: 16px; line-height: 1.6; margin: 0 0 16px; }
-  a { color: #22211F; }
-</style>
-</head>
-<body>
-<main>
-  <h1>Your message was not sent.</h1>
-  <p>The form needs the page to finish loading before it can send. Please go back to the <a href="/contact">contact page</a> and try again.</p>
-  <p>Or email us directly at <a href="mailto:${STUDIO_EMAIL}">${STUDIO_EMAIL}</a>.</p>
-</main>
-</body>
-</html>`;
+// Shown when the contact form is submitted before JavaScript has loaded (src/lib/no-script-page.ts).
+const noScript = () => noScriptResponse({ heading: "Your message was not sent.", backHref: "/contact", backLabel: "the contact page" });
 
 // Logs record only what helps debugging. Never a name, email, budget, message,
 // the webhook URL or the n8n response body: Vercel keeps logs.
@@ -57,7 +33,7 @@ export async function POST(request: Request) {
     // Only the JSON the contact page sends is accepted. A plain form post is never read or treated as a lead.
     if (!isJsonRequest(request)) {
       log.info("non JSON request rejected");
-      return new NextResponse(NO_SCRIPT_PAGE, { status: 415, headers: { "content-type": "text/html; charset=utf-8" } });
+      return noScript();
     }
 
     if (isRateLimited(clientAddresses(request))) {

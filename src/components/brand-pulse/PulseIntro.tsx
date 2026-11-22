@@ -15,7 +15,7 @@ export default function PulseIntro({ headingLevel: Heading, startLabel, onStart 
         <p className="editorial-label bp-label">{INTRO.label}</p>
         <Heading className="bp-heading">{INTRO.heading}</Heading>
         <p className="bp-text">{INTRO.text}</p>
-        <div className="bp-intro-actions">
+        <div className="bp-intro-actions needs-js">
           <button type="button" className="btn-primary bp-btn" onClick={onStart}>
             {startLabel}
           </button>

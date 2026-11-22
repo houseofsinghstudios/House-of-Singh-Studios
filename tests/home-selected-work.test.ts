@@ -80,7 +80,7 @@ test("structure: a server section, the h2 sentence in the island, rows as h3 lin
   assert.doesNotMatch(section, /^"use client"/);
   assert.match(section, /<EditorialLabel number="01" text="Selected work" \/>/);
   const island = code("src/components/work/index/HomeWorkIndex.tsx");
-  assert.match(island, /<h2 className="hw-sentence">\s*See our work for\{" "\}\s*<Choice /);
+  assert.match(island, /<h2 id=\{headingId\} className="hw-sentence">\s*See our work for\{" "\}\s*<Choice /);
   assert.doesNotMatch(island, /useRouter|router\.|useSearchParams|history\./, "the choice is page state only");
   // The closing row holds the link to /work only (owner decision, Nov 2026); the type labels stay.
   assert.doesNotMatch(island, /Client work first|explorations are marked/);
@@ -97,4 +97,11 @@ test("one view transition name per project on /: the hero names none", () => {
     if (!file.endsWith(".tsx")) continue;
     assert.doesNotMatch(code(`src/components/homepage/${file}`), /viewTransitionName: `project-/, file);
   }
+});
+
+test("the section is named by its heading (aria-labelledby, homepage audit H-19)", () => {
+  const section = readFileSync("src/components/homepage/SelectedWorkSection.tsx", "utf8");
+  assert.match(section, /const HEADING_ID = "selected-work-heading";/);
+  assert.match(section, /<section className="hw-section css-reveal" aria-labelledby=\{HEADING_ID\}>/);
+  assert.match(section, /headingId=\{HEADING_ID\}/);
 });

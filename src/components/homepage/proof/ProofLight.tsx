@@ -131,7 +131,7 @@ export default function ProofLight({ head, list, headingId, promises }: Props) {
       <div className="proof-grid">
         <div className="proof-side">
           {head}
-          <ol className="proof-index" aria-label="Our promises">
+          <ol className="proof-index needs-js" aria-label="Our promises">
             {promises.map((p, i) => (
               <li key={p.id}>
                 <button

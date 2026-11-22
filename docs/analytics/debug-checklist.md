@@ -32,13 +32,18 @@ For each row: do the action once, then find the event in DebugView, open it, and
 | 9 | /brand-pulse, answer to the result | `brand_pulse_complete` | none |
 | 10 | /careers, apply | `job_application` | none |
 | 11 | An article, newsletter signup | `newsletter_signup` | none |
-| 12 | Any "Book a Discovery Call" link | `discovery_call_click` | `page_path` the page you clicked on |
-| 13 | Homepage, "Two ways to start", a chip | `tool_band_click` | `tool`, `kind` chip, `value` the answer or service |
-| 14 | /partners, a call to action; then Copy text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
-| 15 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
-| 16 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
-| 17 | Homepage hero, the image or "View project" | `hero_project_click` | `project` the slug, `source` image or caption |
-| 18 | Homepage hero, the Pause button, twice | `hero_pause_toggle` | `state` paused, then playing |
+| 12 | Any "Book a discovery call" link | `discovery_call_click` | `page_path` the page you clicked on |
+| 13 | /partners, a call to action; then Copy text | `partner_cta_click`, `partner_copy_intro` | `action` and `location` on the first |
+| 14 | Any page above 1080px wide, the header's "Plan your project" | `header_cta_click` | `location` header |
+| 15 | Any page at 1080px wide or less, the menu button | `menu_open` | none |
+| 16 | Homepage hero, the image or "View project" | `hero_project_click` | `project` the slug, `source` image or caption |
+| 17 | Homepage hero, the Pause button, twice | `hero_pause_toggle` | `state` paused, then playing |
+| 18 | Homepage (02) What we do, open a service row | `home_wwd_service_open` | `service` the slug |
+| 19 | Homepage (02) What we do, a discipline word (at 1080px or less, a tap) | `home_wwd_word_click` | `discipline`, `has_work`, `layout` desktop or phone |
+| 20 | Homepage (02) What we do, "<Service name> in detail" | `home_service_click` | `service` the slug |
+| 21 | Homepage (03) Proof above 1080px wide, a promise in the index | `proof_index_click` | `promise` |
+| 22 | Homepage (04) Start, a chip, twice | `home_start_chip` | `service` the planner id, `selected` true, then false |
+| 23 | Homepage (04) Start, "Plan your project" | `home_start_plan_click` | `services_count` |
 
 ## Network panel: what each collect request contains
 
@@ -46,7 +51,7 @@ In the browser's developer tools, Network, filter by `collect`. Each hit is a re
 
 - [ ] The first page: one hit with `en=page_view`, `dl` the full address, `dt` the page title, `ep.content_group` (for example `careers`) and `ep.page_path` (for example `/careers`). There is no second page view for the same page.
 - [ ] Each click to another page: one more `en=page_view` with the new `dl`, `dt`, `ep.content_group` and `ep.page_path`.
-- [ ] Every other event (`tool_band_click`, `generate_lead` and the rest) carries the same `dl`, `ep.content_group` and `ep.page_path` of the page it happened on, plus its own `ep.` parameters (for example `ep.lead_type=contact`).
+- [ ] Every other event (`home_start_chip`, `generate_lead` and the rest) carries the same `dl`, `ep.content_group` and `ep.page_path` of the page it happened on, plus its own `ep.` parameters (for example `ep.lead_type=contact`).
 - [ ] A `page_view` hit **without** `ep.content_group` is not the site's: it is GA's own history page view. Turn off "Page changes based on browser history events" (see Before you start).
 
 ## Check it never fires twice

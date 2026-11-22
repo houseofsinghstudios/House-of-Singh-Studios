@@ -56,9 +56,11 @@ interface Props {
   orders: Record<HomeKey, string[]>;
   // "(01) Selected work", rendered by the server section.
   label: React.ReactNode;
+  // The h2's id: the section is named by its heading (aria-labelledby, SelectedWorkSection).
+  headingId: string;
 }
 
-export default function HomeWorkIndex({ items, orders, label }: Props) {
+export default function HomeWorkIndex({ items, orders, label, headingId }: Props) {
   const [sector, setSector] = useState<BusinessTypeId | undefined>();
   // The choice is shared with (04) Start, which shows it on the call brief; cleared when this leaves.
   useEffect(() => setHomeSector(sector), [sector]);
@@ -83,7 +85,7 @@ export default function HomeWorkIndex({ items, orders, label }: Props) {
     <div className="wi-island hw-island" onPointerEnter={arm} onFocus={arm}>
       <div className="hw-head">
         {label}
-        <h2 className="hw-sentence">
+        <h2 id={headingId} className="hw-sentence">
           See our work for{" "}
           <Choice words={sentenceWords(choice).business} open={lists.open === "business"} controls={panelId} onToggle={() => lists.toggle("business")} choiceRef={lists.refs.business} />.
         </h2>

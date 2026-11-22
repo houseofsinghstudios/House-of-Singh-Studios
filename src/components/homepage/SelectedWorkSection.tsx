@@ -15,12 +15,15 @@ function homeItem(project: IndexProject, index: number): WorkItem {
   return { ...item, images: item.images.map((image) => ({ ...image, lqip: undefined })) };
 }
 
+// The section is named by its h2, "See our work for your kind of business." (homepage audit H-19).
+const HEADING_ID = "selected-work-heading";
+
 export default function SelectedWorkSection({ projects }: { projects: IndexProject[] }) {
   const orders = homeOrders(projects);
   if (orders.all.length === 0) return null;
   return (
-    <section className="hw-section css-reveal">
-      <HomeWorkIndex items={projects.map(homeItem)} orders={orders} label={<EditorialLabel number="01" text="Selected work" />} />
+    <section className="hw-section css-reveal" aria-labelledby={HEADING_ID}>
+      <HomeWorkIndex items={projects.map(homeItem)} orders={orders} label={<EditorialLabel number="01" text="Selected work" />} headingId={HEADING_ID} />
     </section>
   );
 }

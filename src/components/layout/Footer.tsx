@@ -125,7 +125,7 @@ export default function Footer({ consentEnabled = false }: { consentEnabled?: bo
             )}
             <IntentLink href="/terms" className="ft-legal-link">Terms</IntentLink>
           </div>
-          <button className="ft-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} type="button">
+          <button className="ft-top-btn needs-js" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} type="button">
             Top &uarr;
           </button>
         </div>

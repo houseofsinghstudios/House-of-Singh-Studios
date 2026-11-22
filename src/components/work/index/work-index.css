@@ -31,6 +31,15 @@
   outline: none;
   -webkit-tap-highlight-color: transparent;
 }
+html:not([data-js]) .wi-choice {
+  cursor: auto;
+}
+html:not([data-js]) .wi-choice-words {
+  border-bottom: 0;
+}
+html:not([data-js]) .wi-chev {
+  display: none;
+}
 .wi-choice:focus-visible .wi-choice-words {
   outline: 2px solid var(--text-primary);
   outline-offset: 6px;

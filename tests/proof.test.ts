@@ -99,7 +99,7 @@ test("the structure: a labelled section, an ordered list of chapters, a figure p
   assert.doesNotMatch(section, /"use client"/, "a server component shell");
   const light = read("src/components/homepage/proof/ProofLight.tsx");
   assert.match(light, /^"use client";/);
-  assert.match(light, /<ol className="proof-index" aria-label="Our promises">/);
+  assert.match(light, /<ol className="proof-index needs-js" aria-label="Our promises">/);
   assert.match(light, /aria-current=\{i === lit \? "step" : undefined\}/);
   assert.match(light, /className="proof-bar-shell" aria-hidden="true"/);
   assert.match(light, /new IntersectionObserver/);

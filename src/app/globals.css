@@ -67,6 +67,18 @@ html[data-header-hidden] {
 .svc-block-img-placeholder {
   --text-label: var(--text-secondary);
 }
+/* The same while a hover ground shows: the next project row and the About process steps (.row-bleed),
+   the service deliverables and accordion rows, the About network cards and the AI Lab comparison rows.
+   Accessible Ash would fall under 4.5:1 there, Gunmetal stays over it. */
+@media (hover: hover) {
+  .row-bleed:hover,
+  .svc-del-row:hover,
+  .svc-acc-row:hover,
+  .about-team-card:hover,
+  .ai-compare-data:hover {
+    --text-label: var(--text-secondary);
+  }
+}
 
 html {
   scroll-behavior: smooth;
@@ -1070,8 +1082,8 @@ body {
   .svc-acc-desc {
     padding-left: 0;
   }
-  /* Questions stay interactive on phones: the plus shows, at the size and colour of the homepage
-     services toggle (.svc-mob-plus), and turns to a cross in the text colour when open. */
+  /* Questions stay interactive on phones: the plus shows, 15px, and turns to a cross in the text
+     colour when open. */
   .svc-acc-row--questions {
     --acc-icon: 15px;
   }
@@ -1489,8 +1501,7 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   }
 }
 
-/* ── Homepage CTA Dark Section ── */
-/* ── CTA section ── */
+/* ── CTA section (the dark calls to action on the inner pages) ── */
 .cta-centered {
   display: flex;
   flex-direction: column;
@@ -1660,7 +1671,7 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
    ═══════════════════════════════════════════════════════ */
 
 /* ── V2 Header System ──
-   One fixed bar at every scroll position: the wordmark artwork on the left (the home link), the
+   One fixed bar at every scroll position: the studio name in text on the left (the home link), the
    links and "Plan your project" on the right above 1080px, the menu button at 1080px and below.
    Solid Silver Mist; a 1px line fades in once the page has scrolled past 20px. It slides up out of
    view on the way down the page and back on the way up (src/lib/header-scroll.ts). */
@@ -2039,6 +2050,14 @@ td a {
 
 .contact-input:focus + .focus-line {
   transform: scaleX(1);
+}
+
+/* Controls that only work with JavaScript (the menu button, Pause, the choice lists, the Proof index,
+   the Start chips, Top, filters, tool start buttons): hidden until the inline script in the site layout
+   sets html[data-js], before the page paints, so without JavaScript nothing visible does nothing and with
+   it nothing flashes (homepage audit H-14). */
+html:not([data-js]) .needs-js {
+  display: none !important;
 }
 
 /* ═══════════════════════════════════════════════════════

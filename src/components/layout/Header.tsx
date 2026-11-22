@@ -49,7 +49,7 @@ function MenuButton({ buttonRef, open, onClick }: { buttonRef: React.RefObject<H
     <button
       ref={buttonRef}
       type="button"
-      className="header-mobile-hamburger"
+      className="header-mobile-hamburger needs-js"
       onClick={onClick}
       aria-label={open ? "Close menu" : "Open menu"}
       aria-expanded={open}

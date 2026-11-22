@@ -100,8 +100,13 @@ test("the caption carries no Client or Exploration tag", () => {
   assert.doesNotMatch(src, /projectType|PROJECT_TYPE_LABELS|Exploration"|Client"/);
 });
 
-test("Pause: pressed state and both labels; it holds the image, and the word with it", () => {
-  assert.match(read("src/components/homepage/HeroPause.tsx"), /aria-pressed=\{paused\}/);
+test("Pause: both labels, switching with the icon; it holds the image, and the word with it", () => {
+  // The name switches with the icon; no aria-pressed beside it (homepage audit H-13).
+  const pause = read("src/components/homepage/HeroPause.tsx");
+  assert.match(pause, /aria-label=\{paused \? "Play the animation" : "Pause the animation"\}/);
+  assert.match(pause, /className=\{paused \? "hero-pause-play" : "hero-pause-bars"\}/);
+  assert.doesNotMatch(pause, /aria-pressed=/);
+  assert.match(pause, /track\("hero_pause_toggle", \{ state: paused \? "playing" : "paused" \}\)/);
   assert.match(read("src/components/homepage/HeroPause.tsx"), /"Play the animation" : "Pause the animation"/);
   const interactive = read("src/components/homepage/HeroInteractive.tsx");
   assert.match(interactive, /halted=\{paused \|\| hold\.held\}/);
@@ -173,4 +178,17 @@ test("hero links: visible text plus sr-only text, starting with what shows, no d
   assert.match(images, /data-visible=\{visible\} aria-hidden="true"/, "the images do not add their alt to the link's name");
   assert.match(caption, /\{VIEW_PROJECT\}\s*<span className="sr-only">\{heroLinkTopic\(shown\.heroName\)\}<\/span>/);
   for (const src of [images, caption]) assert.doesNotMatch(src, /aria-label=/);
+});
+
+// Homepage audit H-10 (22 Nov 2026): on phones the word starts its own line, and the full stop belongs
+// to the word, so a change of word never moves anything already on the page (layout shift 0).
+test("value line: the word on its own line on phones, the full stop part of the word", () => {
+  const line = readFileSync("src/components/homepage/HeroLine.tsx", "utf8");
+  assert.match(line, /<span className="hero-value-w hero-value-w--word">/);
+  assert.match(line, /<span className="hero-letter hero-stop" style=\{\{ "--i": word\.length \} as React\.CSSProperties\}>\s*\.\s*<\/span>/);
+  assert.doesNotMatch(line, /<CyclingWord word=\{word\} reduceMotion=\{reduceMotion\} \/>\./, "no stop left outside the word");
+  const css = readFileSync("src/components/homepage/hero.css", "utf8");
+  const phone = css.slice(css.indexOf("@media (max-width: 1080px)"));
+  assert.match(phone, /\.hero-value-w--word \{\s*display: block;\s*width: max-content;\s*white-space: nowrap;/);
+  assert.match(css, /\.hero-stop \{\s*position: absolute;\s*left: calc\(100% \+ 3px\);/, "3px outside the band");
 });

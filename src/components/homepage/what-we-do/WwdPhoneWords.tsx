@@ -2,10 +2,12 @@
 // A client component: on phones, an open service shows its own disciplines as the slash field, every
 // word a button. Tapping a word marks it with the marker band and opens a text card under the field
 // (one at a time; tap again or Close shuts it): the discipline, its description and, for a word with
-// real work, a link to that case study. No images on phones.
+// real work, a link to that case study. No images on phones. Until the page runs in the browser the
+// words are plain text: without JavaScript a button would do nothing (homepage audit H-14).
 
 import { useState } from "react";
 import IntentLink from "@/components/IntentLink";
+import { useInBrowser } from "@/lib/use-in-browser";
 import { track } from "@/lib/analytics";
 import { caseStudyHref, seeItText, type WwdService, type WwdWork } from "@/lib/what-we-do";
 
@@ -15,6 +17,7 @@ interface Props {
 }
 
 export default function WwdPhoneWords({ service, work }: Props) {
+  const inBrowser = useInBrowser();
   const [active, setActive] = useState<string | null>(null);
   // The card keeps its last words while it closes, so the text never vanishes mid animation.
   const [shown, setShown] = useState<string | null>(null);
@@ -41,18 +44,22 @@ export default function WwdPhoneWords({ service, work }: Props) {
           {service.disciplines.map((d) => (
             <li key={d.name} className="wwd-term">
               <span className="wwd-sep" aria-hidden="true">/</span>
-              <button
-                type="button"
-                className="wwd-word wwd-word-btn"
-                data-word={d.name}
-                data-work={work[d.name] ? true : undefined}
-                data-active={active === d.name ? true : undefined}
-                aria-expanded={active === d.name}
-                aria-controls={cardId}
-                onClick={() => choose(d.name)}
-              >
-                {d.name}
-              </button>
+              {inBrowser ? (
+                <button
+                  type="button"
+                  className="wwd-word wwd-word-btn"
+                  data-word={d.name}
+                  data-work={work[d.name] ? true : undefined}
+                  data-active={active === d.name ? true : undefined}
+                  aria-expanded={active === d.name}
+                  aria-controls={cardId}
+                  onClick={() => choose(d.name)}
+                >
+                  {d.name}
+                </button>
+              ) : (
+                <span className="wwd-word">{d.name}</span>
+              )}
             </li>
           ))}
         </ul>

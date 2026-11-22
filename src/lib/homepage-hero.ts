@@ -31,8 +31,6 @@ export interface HeroProject {
   heroName: string;
   // One short line under the name on desktop.
   heroLine: string;
-  // The field's name in the homepage list, for example "Home and lifestyle".
-  heroField: string;
   // Replaces "businesses" in "digital for growing businesses.", for example "home brands".
   heroWord: string;
   heroFit: HeroFit;
@@ -93,7 +91,7 @@ export function heroImagesMessage(images: unknown, shown: boolean): string | und
 // ── What the hero shows (src/components/homepage/Hero*.tsx) ──
 // HeroSection (a server component) turns each HeroProject into a HeroEntry: plain data with a finished
 // image URL, safe to hand to the client components. One image per project: its first hero image.
-// heroField stays in Studio for later use; the homepage does not read it now.
+// The Studio "Field" (heroField) stays filled in Studio for later use; nothing queries it now.
 
 export interface HeroEntry {
   slug: string;
