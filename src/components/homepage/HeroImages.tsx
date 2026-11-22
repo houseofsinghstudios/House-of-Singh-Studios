@@ -12,7 +12,7 @@
 import Image from "next/image";
 import { Link } from "next-view-transitions";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IMAGE_HOLD_MS, type HeroEntry } from "@/lib/homepage-hero";
+import { heroLinkTopic, IMAGE_HOLD_MS, VIEW_PROJECT, type HeroEntry } from "@/lib/homepage-hero";
 
 const SIZES = "(max-width: 1080px) 100vw, 54vw";
 
@@ -79,7 +79,9 @@ const whenDecoded = (img: HTMLImageElement, done: () => void) => {
 function Slide({ entry, visible, first, onReady }: { entry: HeroEntry; visible: boolean; first: boolean; onReady: () => void }) {
   const { image } = entry;
   return (
-    <div className={`hero-slide hero-slide--${entry.heroFit}`} data-visible={visible}>
+    // Decorative inside the link, which names itself; otherwise every mounted image's alt would join
+    // the link's name.
+    <div className={`hero-slide hero-slide--${entry.heroFit}`} data-visible={visible} aria-hidden="true">
       <div className="hero-slide-frame">
         <Image
           src={image.src}
@@ -111,7 +113,11 @@ export default function HeroImages({ entries, index, step, rotating, halted, onD
 
   return (
     <>
-      <Link href={`/work/${entry.slug}`} className="hero-media-link" aria-label={`View the ${entry.heroName} project`} data-cursor="view" onClick={onOpen}>
+      <Link href={`/work/${entry.slug}`} className="hero-media-link" data-cursor="view" onClick={onOpen}>
+        <span className="sr-only">
+          {VIEW_PROJECT}
+          {heroLinkTopic(entry.heroName)}
+        </span>
         {mounted.map((key) => (
           <Slide key={key} entry={entries[key]} visible={key === index} first={key === 0} onReady={() => markReady(key)} />
         ))}

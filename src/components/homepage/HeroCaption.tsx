@@ -8,7 +8,7 @@
 
 import { Link } from "next-view-transitions";
 import { useEffect, useState } from "react";
-import type { HeroEntry } from "@/lib/homepage-hero";
+import { heroLinkTopic, VIEW_PROJECT, type HeroEntry } from "@/lib/homepage-hero";
 
 // The fade out, as in hero.css (.hero-caption-body); the new project then fades in over the same.
 const FADE_MS = 250;
@@ -46,7 +46,8 @@ export default function HeroCaption({ entry, reduceMotion, onOpen }: Props) {
         <p className="hero-caption-name">{shown.heroName}</p>
         {shown.heroLine && <p className="hero-caption-line">{shown.heroLine}</p>}
         <Link href={`/work/${shown.slug}`} className="hero-caption-link" onClick={() => onOpen(shown.slug)}>
-          View project
+          {VIEW_PROJECT}
+          <span className="sr-only">{heroLinkTopic(shown.heroName)}</span>
         </Link>
       </div>
     </div>

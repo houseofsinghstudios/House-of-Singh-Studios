@@ -113,6 +113,13 @@ export const DEFAULT_WORD = "businesses";
 // One clock: each image holds 5s, the first included, at every width; the word changes with it.
 export const IMAGE_HOLD_MS = 5000;
 
+// The hero's two links to the project on screen, the image and the caption's "View project", are both
+// named "View project: <name>": the visible words first, then the project as visually hidden text
+// (the site's pattern; no aria-label). The name is used as written, so a name that starts with "The"
+// never reads "the The".
+export const VIEW_PROJECT = "View project";
+export const heroLinkTopic = (heroName: string) => `: ${heroName.trim()}`;
+
 // The word for the image on screen. The first image on the first pass shows "businesses"; every later
 // image shows its project's field word; once the rotation has looped, the first project shows its own
 // too. A project without a field word shows "businesses" for its turn.
