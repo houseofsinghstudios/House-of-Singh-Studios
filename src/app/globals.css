@@ -620,6 +620,10 @@ body {
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.2s ease;
+  /* A tap area at least 44px tall and wide: padding taken back by the margins, so nothing moves
+     (Terms is 32px wide, so 6px each side). */
+  padding: 14px 6px;
+  margin: -14px -6px;
 }
 @media (hover: hover) {
   .ft-legal-link:hover {
@@ -1930,6 +1934,10 @@ body.nav-open {
   }
   .header-wordmark {
     margin-right: 16px;
+    /* 14px above and below (was 12px), taken back by the margins: a 44px tap area on phones. */
+    padding: 14px 0;
+    margin-top: -14px;
+    margin-bottom: -14px;
   }
 }
 

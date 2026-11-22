@@ -470,15 +470,27 @@
     display: none;
   }
 
+  /* A 44px tap area: 12px of padding above and below, taken back by the margins, so nothing moves;
+     the underline keeps its place under the words. */
   .hero-caption-link {
     flex: none;
-    margin-top: 0;
+    margin-top: -12px;
+    margin-bottom: -12px;
+    padding: 12px 0;
     font-size: 13px;
     white-space: nowrap;
   }
 
   .hero-caption-link::after {
+    bottom: 10px;
     transform: scaleX(1);
+  }
+
+  /* Pause keeps its 32px square; an invisible layer around it makes the tap area 46px. */
+  .hero-pause::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
   }
 
   .hero-eyebrow {

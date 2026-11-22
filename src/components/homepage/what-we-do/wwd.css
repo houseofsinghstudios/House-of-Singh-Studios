@@ -487,9 +487,16 @@ html:not([data-js]) .wwd-plus {
     display: block;
     padding-bottom: 32px;
   }
-  /* The phone keeps its own spacing: 24px above the detail link, as before the desktop change. */
+  /* The phone keeps its own spacing: 24px above the detail link, as before the desktop change. A 44px
+     tap area: 10px of padding above and below, taken back by the margins (14px above is the 24px gap
+     less the padding), the underline kept under the words. */
   .wwd-panel-phone .wwd-detail {
-    margin-top: 24px;
+    margin-top: 14px;
+    margin-bottom: -10px;
+    padding: 10px 0;
+  }
+  .wwd-panel-phone .wwd-detail::after {
+    bottom: 10px;
   }
   .wwd-tagline {
     font-size: 16px;
@@ -505,15 +512,21 @@ html:not([data-js]) .wwd-plus {
     letter-spacing: -0.02em;
   }
   /* Every word a button: at least 24px tall (the line is 32px), no button look. */
+  /* 32px tall, with 6px of tap area above and below taken back by the margins (44px to the finger);
+     the band moves down by the same 6px, so it stays on the word. */
   .wwd-word-btn {
     min-height: 32px;
-    padding: 0;
+    margin: -6px 0;
+    padding: 6px 0;
     border: 0;
     background: none;
     font: inherit;
     letter-spacing: inherit;
     color: var(--text-primary);
     cursor: pointer;
+  }
+  .wwd-word-btn::before {
+    top: calc(0.14em + 6px);
   }
   .wwd-word-btn[data-active]::before {
     transform: scaleX(1);

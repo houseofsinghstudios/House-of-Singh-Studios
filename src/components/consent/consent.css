@@ -143,6 +143,6 @@
 .ft-legal-button {
   background: none;
   border: 0;
-  padding: 0;
+  /* No padding of its own: .ft-legal-link's tap area padding (and its matching margins) applies. */
   cursor: pointer;
 }

@@ -277,6 +277,11 @@
   .hs-doors {
     margin-top: 40px;
   }
+  /* The door links are inline in their sentences: 2px of padding above and below adds tap area (44px
+     and more) without touching the lines. */
+  .hs-door-link {
+    padding: 2px 0;
+  }
 }
 
 /* Reduced motion: no wipe, no draw; every hairline in place, colour changes at once. */

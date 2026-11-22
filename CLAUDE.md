@@ -378,6 +378,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 - All hover interactions disabled (CSS @media(hover: hover) wrapper)
 - Accordion sections: all content visible by default, no hover-reveal
 - Custom cursor: hidden on touch devices
+- Tap areas (since 22 Nov 2026): every link and button on the homepage, its header, drawer and footer is at least 44px to the finger at 1080px and below. Block links take padding with an equal negative margin, so nothing moves (a full page screenshot at 390 was pixel identical before and after), and their underlines and bands are moved back under the words; inline links (Selected work names, the Start door links) take vertical padding only, which never touches a line; Pause keeps its 32px square with an invisible 46px layer. The skip link, shown only to the keyboard, is the exception. Guard: tests/tap-targets.test.ts.
 - Navigation: wordmark + menu button at 1080px and below, in the 56px bar. The menu opens as a drawer from the right (Layer 1).
 - Image sizes reduced for performance
 - Stagger delays reduced or removed
