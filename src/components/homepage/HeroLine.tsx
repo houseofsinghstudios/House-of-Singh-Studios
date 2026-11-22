@@ -17,6 +17,8 @@ const ENTRANCE_DONE_MS = 500 + 70 * 4 + 900 + 100;
 const OUT_MS = 240;
 const OUT_STAGGER_MS = 12;
 
+// The word's letters, then its full stop. The stop belongs to the word, so it leaves and arrives with
+// it: a new word brings a new stop, and nothing already on the page moves (no layout shift).
 function Letters({ word }: { word: string }) {
   return (
     <>
@@ -25,6 +27,9 @@ function Letters({ word }: { word: string }) {
           {letter}
         </span>
       ))}
+      <span className="hero-letter hero-stop" style={{ "--i": word.length } as React.CSSProperties}>
+        .
+      </span>
     </>
   );
 }
@@ -89,9 +94,10 @@ export default function HeroLine({ word, reduceMotion }: { word: string; reduceM
             </span>{" "}
           </span>
         ))}
-        <span className="hero-value-w">
+        {/* The word: on phones it starts its own line (hero.css), so its length never moves the lines. */}
+        <span className="hero-value-w hero-value-w--word">
           <span className="hero-value-i">
-            <CyclingWord word={word} reduceMotion={reduceMotion} />.
+            <CyclingWord word={word} reduceMotion={reduceMotion} />
           </span>
         </span>
       </p>
