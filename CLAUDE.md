@@ -50,7 +50,7 @@ never Marble Ash: editorial labels, metadata lines, numbers, tags, back links, s
 Marble Ash stays for non text uses (hairlines, borders, dividers, decorative shapes) and for text on dark
 backgrounds, where it passes (6.6:1 on Obsidian). On Cloudy White panels (#E5E3E0) Accessible Ash
 is only 3.91:1, so small text there uses Gunmetal (5.3:1): the panel carries .surface-cloudy, which
-sets --text-label to Gunmetal for everything inside it. Dark section labels in Silver Mist at reduced opacity
+sets --text-label to Gunmetal for everything inside it. The same holds while a hover ground shows (since 22 Nov 2026): the next project row and the About process steps (.row-bleed), the service deliverables and accordion rows, the About network cards and the AI Lab comparison rows set --text-label to Gunmetal on hover (globals.css), as the homepage What we do row does. Dark section labels in Silver Mist at reduced opacity
 stay at 65 percent or more. Hovers that darken a label go from Accessible Ash to Obsidian.
 
 ### Typography

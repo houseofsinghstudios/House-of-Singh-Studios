@@ -67,6 +67,18 @@ html[data-header-hidden] {
 .svc-block-img-placeholder {
   --text-label: var(--text-secondary);
 }
+/* The same while a hover ground shows: the next project row and the About process steps (.row-bleed),
+   the service deliverables and accordion rows, the About network cards and the AI Lab comparison rows.
+   Accessible Ash would fall under 4.5:1 there, Gunmetal stays over it. */
+@media (hover: hover) {
+  .row-bleed:hover,
+  .svc-del-row:hover,
+  .svc-acc-row:hover,
+  .about-team-card:hover,
+  .ai-compare-data:hover {
+    --text-label: var(--text-secondary);
+  }
+}
 
 html {
   scroll-behavior: smooth;
