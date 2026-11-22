@@ -111,7 +111,7 @@ test("structure: a labelled section, pressed chips, a live line, the links and t
   assert.match(section, /<section className="hs" aria-labelledby="hs-heading">/);
   assert.match(section, /<EditorialLabel number=\{START_COPY\.number\} text=\{START_COPY\.label\}/);
   assert.equal(`(${START_COPY.number}) ${START_COPY.label}`, "(04) Start");
-  assert.match(section, /<Link href=\{PULSE_HREF\} className="hs-door-link"/);
+  assert.match(section, /<IntentLink href=\{PULSE_HREF\} className="hs-door-link"/);
   assert.match(section, /<a href=\{DISCOVERY_CALL_URL\} className="hs-door-link" data-cursor="link" target="_blank" rel="noopener noreferrer">/);
   const sheet = read("src/components/homepage/start/StartSheet.tsx");
   assert.match(sheet, /aria-pressed=\{selected\.includes\(id\)\}/);

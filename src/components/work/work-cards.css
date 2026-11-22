@@ -161,13 +161,11 @@
   }
 }
 
-@supports not (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    /* ── Work page: dynamically toggled views bypass IntersectionObserver ── */
-    .wp-grid .reveal-clip,
-    .wp-mobile-grid .reveal-clip {
-      clip-path: none;
-    }
+@media (prefers-reduced-motion: no-preference) {
+  /* ── Work page: dynamically toggled views bypass the shared reveal ── */
+  html[data-reveal] .wp-grid .reveal-clip,
+  html[data-reveal] .wp-mobile-grid .reveal-clip {
+    clip-path: none;
   }
 }
 

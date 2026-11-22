@@ -1,6 +1,5 @@
 import { ViewTransitions } from "next-view-transitions";
 import "../globals.css";
-import "@/styles/scroll-animations.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FooterReveal from "@/components/layout/FooterReveal";
@@ -11,6 +10,7 @@ import MicrosoftClarity from "@/components/MicrosoftClarity";
 import ConsentManager from "@/components/consent/ConsentManager";
 import { jsonLd } from "@/lib/json-ld";
 import { siteGraph } from "@/lib/site-graph";
+import { REVEAL_ARM_SCRIPT } from "@/lib/reveal";
 import { getFounderImageUrl } from "@/lib/sanity/queries";
 
 // The website shell: site CSS, header, footer and client behaviour for every site page.
@@ -27,6 +27,8 @@ export default async function SiteLayout({
   const founderImage = await getFounderImageUrl();
   return (
     <ViewTransitions>
+      {/* Arms the shared reveal before the page paints, only when JavaScript runs (src/lib/reveal.ts). */}
+      <script dangerouslySetInnerHTML={{ __html: REVEAL_ARM_SCRIPT }} />
       {/* First focusable element on every site page. Hidden until focused. /studio never loads this layout. */}
       <a href="#main-content" className="skip-link">Skip to content</a>
       <div className="scroll-progress" />

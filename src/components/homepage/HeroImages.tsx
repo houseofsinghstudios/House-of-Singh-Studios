@@ -4,13 +4,15 @@
 // runs the progress line along the image's foot.
 //
 // The whole image is one link to the project on screen. The progress line's CSS animation is the
-// clock: when it ends the next image shows (and the value line's word with it). Pausing the animation
-// pauses the hold, so the line and the timer always agree.
+// clock: when it ends the rotation moves on, but only once the next image has loaded and decoded. If it
+// is late, the current image, its word and its caption hold (the line stays full) until it is ready,
+// then all of them change together and the line starts again. Pausing the animation pauses the hold,
+// so the line and the timer always agree.
 
 import Image from "next/image";
-import { Link } from "next-view-transitions";
-import { useState } from "react";
-import { IMAGE_HOLD_MS, type HeroEntry } from "@/lib/homepage-hero";
+import IntentLink from "@/components/IntentLink";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { heroLinkTopic, IMAGE_HOLD_MS, VIEW_PROJECT, type HeroEntry } from "@/lib/homepage-hero";
 
 const SIZES = "(max-width: 1080px) 100vw, 54vw";
 
@@ -25,24 +27,61 @@ interface Props {
   onOpen: () => void;
 }
 
-// Which images are mounted and which one shows. An image fades in only once it has loaded; until
-// then the one before stays.
-function useSlides(current: number, next: number) {
+// Which images are mounted: the one on show and the next, so the next loads during the hold.
+function useMounted(current: number, next: number) {
   const [mounted, setMounted] = useState<number[]>([current]);
-  const [loaded, setLoaded] = useState<number[]>([]);
-  const [shown, setShown] = useState(current);
   const missing = [current, next].filter((k) => !mounted.includes(k));
   // Adjusting state while rendering (React's pattern for state that follows props): no extra pass.
   if (missing.length) setMounted([...mounted, ...missing]);
-  if (shown !== current && loaded.includes(current)) setShown(current);
-  const onLoad = (key: number) => setLoaded((l) => (l.includes(key) ? l : [...l, key]));
-  return { mounted, shown, onLoad };
+  return mounted;
 }
 
-function Slide({ entry, visible, first, onLoad }: { entry: HeroEntry; visible: boolean; first: boolean; onLoad: () => void }) {
+// The gate between the clock and the rotation: the clock asks to move on (clockEnded), and the move
+// happens only once the next image is ready (loaded and decoded); a late image moves it on arrival,
+// unless the hero is held (Pause, a pointer, focus or a finger), in which case on release.
+function useAdvance(next: number, halted: boolean, onDue: () => void) {
+  const ready = useRef(new Set<number>());
+  const waiting = useRef(false);
+  const nextRef = useRef(next);
+  const haltedRef = useRef(halted);
+  const tryMove = useCallback(() => {
+    if (!waiting.current || haltedRef.current || !ready.current.has(nextRef.current)) return;
+    waiting.current = false;
+    onDue();
+  }, [onDue]);
+  useEffect(() => {
+    nextRef.current = next;
+  }, [next]);
+  useEffect(() => {
+    haltedRef.current = halted;
+    tryMove();
+  }, [halted, tryMove]);
+  const markReady = useCallback(
+    (key: number) => {
+      ready.current.add(key);
+      tryMove();
+    },
+    [tryMove],
+  );
+  const clockEnded = useCallback(() => {
+    waiting.current = true;
+    tryMove();
+  }, [tryMove]);
+  return { markReady, clockEnded };
+}
+
+// Loaded is not enough for a crossfade without a blank frame: wait for the decode too. A broken image
+// counts as ready, so the rotation never waits on it.
+const whenDecoded = (img: HTMLImageElement, done: () => void) => {
+  img.decode().then(done, done);
+};
+
+function Slide({ entry, visible, first, onReady }: { entry: HeroEntry; visible: boolean; first: boolean; onReady: () => void }) {
   const { image } = entry;
   return (
-    <div className={`hero-slide hero-slide--${entry.heroFit}`} data-visible={visible}>
+    // Decorative inside the link, which names itself; otherwise every mounted image's alt would join
+    // the link's name.
+    <div className={`hero-slide hero-slide--${entry.heroFit}`} data-visible={visible} aria-hidden="true">
       <div className="hero-slide-frame">
         <Image
           src={image.src}
@@ -58,9 +97,8 @@ function Slide({ entry, visible, first, onLoad }: { entry: HeroEntry; visible: b
           placeholder={image.lqip ? "blur" : "empty"}
           blurDataURL={image.lqip}
           style={{ objectFit: entry.heroFit === "contain" ? "contain" : "cover", objectPosition: image.position }}
-          onLoad={onLoad}
-          // A broken image counts as loaded, so the rotation never waits on it.
-          onError={onLoad}
+          onLoad={(e) => whenDecoded(e.currentTarget, onReady)}
+          onError={onReady}
         />
       </div>
     </div>
@@ -68,16 +106,22 @@ function Slide({ entry, visible, first, onLoad }: { entry: HeroEntry; visible: b
 }
 
 export default function HeroImages({ entries, index, step, rotating, halted, onDue, onOpen }: Props) {
-  const { mounted, shown, onLoad } = useSlides(index, (index + 1) % entries.length);
+  const next = (index + 1) % entries.length;
+  const mounted = useMounted(index, next);
+  const { markReady, clockEnded } = useAdvance(next, halted, onDue);
   const entry = entries[index];
 
   return (
     <>
-      <Link href={`/work/${entry.slug}`} className="hero-media-link" aria-label={`View the ${entry.heroName} project`} data-cursor="view" onClick={onOpen}>
+      <IntentLink href={`/work/${entry.slug}`} className="hero-media-link" data-cursor="view" onClick={onOpen}>
+        <span className="sr-only">
+          {VIEW_PROJECT}
+          {heroLinkTopic(entry.heroName)}
+        </span>
         {mounted.map((key) => (
-          <Slide key={key} entry={entries[key]} visible={key === shown} first={key === 0} onLoad={() => onLoad(key)} />
+          <Slide key={key} entry={entries[key]} visible={key === index} first={key === 0} onReady={() => markReady(key)} />
         ))}
-      </Link>
+      </IntentLink>
       {rotating && (
         <div className="hero-progress" aria-hidden="true">
           <span
@@ -85,7 +129,7 @@ export default function HeroImages({ entries, index, step, rotating, halted, onD
             className="hero-progress-fill"
             data-halted={halted}
             style={{ animationDuration: `${IMAGE_HOLD_MS}ms` }}
-            onAnimationEnd={(e) => e.target === e.currentTarget && onDue()}
+            onAnimationEnd={(e) => e.target === e.currentTarget && clockEnded()}
           />
         </div>
       )}

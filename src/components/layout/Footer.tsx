@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { CONSENT_COPY } from "@/lib/constants/consent";
 import { CLARITY_HOST } from "@/lib/constants/clarity";
 import { PRIVACY_CHOICES_EVENT } from "@/components/consent/ConsentManager";
@@ -106,7 +106,7 @@ export default function Footer({ consentEnabled = false }: { consentEnabled?: bo
                   "external" in l ? (
                     <a key={l.href} href={l.href} className="ft-col-link" target="_blank" rel="noopener noreferrer">{l.label}</a>
                   ) : (
-                    <Link key={l.href} href={l.href} className="ft-col-link">{l.label}</Link>
+                    <IntentLink key={l.href} href={l.href} className="ft-col-link">{l.label}</IntentLink>
                   )
                 )}
               </div>
@@ -117,13 +117,13 @@ export default function Footer({ consentEnabled = false }: { consentEnabled?: bo
         <div className="ft-bottom">
           <span className="ft-copyright">&copy; 2026 House of Singh Studios Inc.</span>
           <div className="ft-legal">
-            <Link href="/privacy" className="ft-legal-link">Privacy Policy</Link>
+            <IntentLink href="/privacy" className="ft-legal-link">Privacy policy</IntentLink>
             {consentActive && (
               <button type="button" className="ft-legal-link ft-legal-button" onClick={() => window.dispatchEvent(new Event(PRIVACY_CHOICES_EVENT))}>
                 {CONSENT_COPY.footerLink}
               </button>
             )}
-            <Link href="/terms" className="ft-legal-link">Terms</Link>
+            <IntentLink href="/terms" className="ft-legal-link">Terms</IntentLink>
           </div>
           <button className="ft-top-btn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} type="button">
             Top &uarr;

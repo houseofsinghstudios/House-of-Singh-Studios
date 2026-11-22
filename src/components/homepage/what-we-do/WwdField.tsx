@@ -8,7 +8,7 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
 import { caseStudyHref, placePreview, previewCaption, type WwdService, type WwdTerm, type WwdWork } from "@/lib/what-we-do";
 
@@ -56,7 +56,7 @@ function FieldTerm({ term: t, work: w, dim, band, onEnter, onLeave, onWord }: Te
     <li className="wwd-term" data-dim={dim || undefined} data-band={band || undefined} style={{ "--i": t.order } as React.CSSProperties}>
       <span className="wwd-sep" aria-hidden="true">/</span>
       {w ? (
-        <Link
+        <IntentLink
           href={caseStudyHref(w.slug)}
           className="wwd-word wwd-word--work"
           data-cursor="link"
@@ -67,7 +67,7 @@ function FieldTerm({ term: t, work: w, dim, band, onEnter, onLeave, onWord }: Te
           onClick={() => track("home_wwd_word_click", { discipline: t.name, has_work: true, layout: "desktop" })}
         >
           <span className="wwd-ink">{t.name}</span>
-        </Link>
+        </IntentLink>
       ) : (
         <span className="wwd-word" onPointerEnter={(e) => onEnter(e, t)} onPointerLeave={onLeave}>
           <span className="wwd-ink">{t.name}</span>

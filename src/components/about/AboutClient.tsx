@@ -246,9 +246,10 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
                 {WHAT_WE_ARE_NOT.map((s, i) => (
                   <li
                     key={i}
-                    className={`about-duel-item about-duel-item--not scroll-reveal-up${
-                      duelPairedIndex === i ? " is-paired" : ""
-                    }`}
+                    // The pairing is a data attribute, not a class: the class string never changes, so
+                    // React never removes the reveal's .in-view.
+                    className="about-duel-item about-duel-item--not scroll-reveal-up"
+                    data-paired={duelPairedIndex === i || undefined}
                   >
                     {s}
                   </li>

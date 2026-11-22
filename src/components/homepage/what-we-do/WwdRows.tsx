@@ -1,12 +1,14 @@
 "use client";
 // A client component: the four services as accordion rows. Each row is an h3 holding a button; one
-// row is open at a time. A closed panel stays in the page source but is inert. The panel holds a
+// row is open at a time. A closed panel stays in the page source; it collapses (wwd.css) and turns inert
+// only when JavaScript runs, so without it all four panels read in full. The panel holds a
 // desktop layout (tagline, description and detail link; the lit words in the field beside it show the
 // disciplines) and a phone layout (tagline, the service's own disciplines as tappable words, then the
 // detail link); CSS shows one.
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
+import { useInBrowser } from "@/lib/use-in-browser";
 import { countLabel, detailLinkText, serviceHref, type WwdService, type WwdWork } from "@/lib/what-we-do";
 import WwdPhoneWords from "./WwdPhoneWords";
 
@@ -30,10 +32,10 @@ const isMouse = (e: React.PointerEvent) => e.pointerType === "mouse";
 // link's name starts with what it shows (protected: moved here from the old Capabilities rows).
 function DetailLink({ service, topic }: { service: WwdService; topic: string }) {
   return (
-    <Link href={serviceHref(service.slug)} className="wwd-detail" data-cursor="link" onClick={() => track("home_service_click", { service: service.slug })}>
+    <IntentLink href={serviceHref(service.slug)} className="wwd-detail" data-cursor="link" onClick={() => track("home_service_click", { service: service.slug })}>
       {detailLinkText(service.name)}
       {topic && <span className="sr-only">: {topic}</span>}
-    </Link>
+    </IntentLink>
   );
 }
 
@@ -65,6 +67,7 @@ function RowHeading({ service, isOpen, panelId, onToggle, onFocus, onBlur }: { s
 }
 
 export default function WwdRows({ services, work, topics, open, onToggle, litWord, pointed, onRowLight, onRowsLeave }: Props) {
+  const inBrowser = useInBrowser();
   return (
     <div className="wwd-rows" onPointerLeave={(e) => isMouse(e) && onRowsLeave()}>
       {services.map((s, i) => {
@@ -79,7 +82,7 @@ export default function WwdRows({ services, work, topics, open, onToggle, litWor
             onPointerEnter={(e) => isMouse(e) && onRowLight(s.slug)}
           >
             <RowHeading service={s} isOpen={isOpen} panelId={panelId} onToggle={() => onToggle(i)} onFocus={() => onRowLight(s.slug)} onBlur={onRowsLeave} />
-            <div id={panelId} className="wwd-panel" data-open={isOpen} inert={!isOpen}>
+            <div id={panelId} className="wwd-panel" data-open={isOpen} inert={inBrowser && !isOpen}>
               <div className="wwd-panel-clip">
                 <div className="wwd-panel-body">
                   <DesktopPanel service={s} topic={topics[s.slug] ?? ""} />

@@ -246,6 +246,8 @@
   font-size: 11px;
   letter-spacing: 0.12em;
   color: var(--text-label);
+  /* With the ground, which fades in over 0.5s. */
+  transition: color 0.5s var(--wwd-ease);
 }
 .wwd-name {
   flex: 1;
@@ -291,14 +293,22 @@
   transform: rotate(0deg);
 }
 
-/* Panels open by height; a closed one stays in the page, inert. */
+/* Panels open by height; a closed one stays in the page, inert. They collapse only when JavaScript runs
+   (html[data-js], set by the inline script in the site layout before the page paints, so nothing flashes
+   or shifts): without it all four read in full, and the plus, which needs JavaScript, is hidden. */
 .wwd-panel {
   display: grid;
-  grid-template-rows: 0fr;
+  grid-template-rows: 1fr;
   transition: grid-template-rows 0.6s var(--wwd-ease);
 }
-.wwd-panel[data-open="true"] {
+html[data-js] .wwd-panel {
+  grid-template-rows: 0fr;
+}
+html[data-js] .wwd-panel[data-open="true"] {
   grid-template-rows: 1fr;
+}
+html:not([data-js]) .wwd-plus {
+  display: none;
 }
 .wwd-panel-clip {
   min-height: 0;
@@ -384,6 +394,11 @@
   .wwd-row[data-pointed]::before {
     opacity: 1;
   }
+  /* Small text on the Cloudy White ground turns Gunmetal while the ground shows (the .surface-cloudy
+     rule): the 11px number at Accessible Ash would be 3.91:1 there. */
+  .wwd-row[data-pointed] {
+    --text-label: var(--text-secondary);
+  }
   .wwd-name {
     transition: color 0.3s var(--wwd-ease), letter-spacing 0.5s ease;
   }
@@ -409,6 +424,7 @@
 @media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
   .wwd-row::before,
   .wwd-ink,
+  .wwd-num,
   .wwd-name {
     transition: none;
   }
@@ -471,9 +487,16 @@
     display: block;
     padding-bottom: 32px;
   }
-  /* The phone keeps its own spacing: 24px above the detail link, as before the desktop change. */
+  /* The phone keeps its own spacing: 24px above the detail link, as before the desktop change. A 44px
+     tap area: 10px of padding above and below, taken back by the margins (14px above is the 24px gap
+     less the padding), the underline kept under the words. */
   .wwd-panel-phone .wwd-detail {
-    margin-top: 24px;
+    margin-top: 14px;
+    margin-bottom: -10px;
+    padding: 10px 0;
+  }
+  .wwd-panel-phone .wwd-detail::after {
+    bottom: 10px;
   }
   .wwd-tagline {
     font-size: 16px;
@@ -489,15 +512,21 @@
     letter-spacing: -0.02em;
   }
   /* Every word a button: at least 24px tall (the line is 32px), no button look. */
+  /* 32px tall, with 6px of tap area above and below taken back by the margins (44px to the finger);
+     the band moves down by the same 6px, so it stays on the word. */
   .wwd-word-btn {
     min-height: 32px;
-    padding: 0;
+    margin: -6px 0;
+    padding: 6px 0;
     border: 0;
     background: none;
     font: inherit;
     letter-spacing: inherit;
     color: var(--text-primary);
     cursor: pointer;
+  }
+  .wwd-word-btn::before {
+    top: calc(0.14em + 6px);
   }
   .wwd-word-btn[data-active]::before {
     transform: scaleX(1);

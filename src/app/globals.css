@@ -400,19 +400,6 @@ body {
 
 }
 
-.cs-hero-image-reveal {
-  /* Longer duration for cinematic effect — override default reveal-clip */
-}
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .cs-hero-image-reveal {
-      animation: revealCurtainWipe 1.0s cubic-bezier(0.77, 0, 0.175, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
-    }
-  }
-}
-
 .cs-meta-label {
   font-size: 11px;
   text-transform: uppercase;
@@ -633,6 +620,10 @@ body {
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.2s ease;
+  /* A tap area at least 44px tall and wide: padding taken back by the margins, so nothing moves
+     (Terms is 32px wide, so 6px each side). */
+  padding: 14px 6px;
+  margin: -14px -6px;
 }
 @media (hover: hover) {
   .ft-legal-link:hover {
@@ -1586,6 +1577,13 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   transition: width 0.3s ease-out, height 0.3s ease-out, opacity 0.3s ease-out;
 }
 
+/* Hidden until the pointer first moves (CustomCursor removes data-idle), so it never sits in the
+   corner before then. */
+.custom-cursor-dot[data-idle],
+.custom-cursor-ring[data-idle] {
+  visibility: hidden;
+}
+
 /* Ring — trailing indicator */
 .custom-cursor-ring {
   position: fixed;
@@ -1647,81 +1645,6 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
 }
 .custom-cursor-ring.cursor-view .cursor-label {
   display: block;
-}
-
-/* ═══════════════════════════════════════════════════════
-   Layer 1: CSS Scroll-Driven Reveal Animations
-   Native CSS animation-timeline: view() — runs on GPU
-   compositor thread. Firefox fallback: elements are
-   simply visible (graceful degradation).
-   ═══════════════════════════════════════════════════════ */
-
-@keyframes revealFadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes revealClipIn {
-  from { clip-path: inset(8% 6%); }
-  to   { clip-path: inset(0%); }
-}
-
-@keyframes revealCurtainWipe {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
-}
-
-@keyframes revealTextSlideUp {
-  from { transform: translateY(110%); opacity: 0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .css-reveal {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-
-    .scroll-reveal-up {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .scroll-clip-reveal {
-      animation: revealClipIn linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 35%;
-    }
-
-    /* ── reveal-clip: image curtain wipe ── */
-    .reveal-clip {
-      animation: revealCurtainWipe 0.8s cubic-bezier(0.77, 0, 0.175, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
-    }
-
-    /* ── reveal-stagger-parent: staggered children ── */
-    .reveal-stagger-parent > :nth-child(1) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 0% entry 30%; }
-    .reveal-stagger-parent > :nth-child(2) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 2% entry 32%; }
-    .reveal-stagger-parent > :nth-child(3) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 4% entry 34%; }
-    .reveal-stagger-parent > :nth-child(4) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 6% entry 36%; }
-    .reveal-stagger-parent > :nth-child(5) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 8% entry 38%; }
-    .reveal-stagger-parent > :nth-child(6) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 10% entry 40%; }
-    .reveal-stagger-parent > :nth-child(7) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 12% entry 42%; }
-    .reveal-stagger-parent > :nth-child(8) { animation: revealFadeUp linear both; animation-timeline: view(); animation-range: entry 14% entry 44%; }
-
-    /* ── reveal-text: headline mask slide-up ── */
-    .reveal-text {
-      overflow: hidden;
-    }
-    .reveal-text > * {
-      animation: revealTextSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 35%;
-    }
-  }
 }
 
 /* ── Mobile: simplify all clip-path reveals to fade-up (all browsers) ── */
@@ -1962,12 +1885,13 @@ body.nav-open {
 .menu-drawer[data-open="true"] .mobile-nav-link {
   opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.23, 1, 0.32, 1), color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   transition-delay: calc(0.16s + var(--i, 0) * 50ms);
 }
+/* Hover dims by colour, never opacity: Obsidian to Accessible Ash (homepage audit, 22 Nov 2026). */
 @media (hover: hover) {
   .menu-drawer[data-open="true"] .mobile-nav-link:hover {
-    opacity: 0.6;
+    color: var(--text-label);
     transition-delay: 0s;
   }
 }
@@ -2018,6 +1942,10 @@ body.nav-open {
   }
   .header-wordmark {
     margin-right: 16px;
+    /* 14px above and below (was 12px), taken back by the margins: a 44px tap area on phones. */
+    padding: 14px 0;
+    margin-top: -14px;
+    margin-bottom: -14px;
   }
 }
 
@@ -2029,23 +1957,6 @@ body.nav-open {
   }
 }
 
-/* ── Interaction 3: Staggered Scroll Reveals ── */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    /* About page stagger */
-    .about-process-step:nth-child(odd) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .about-process-step:nth-child(even) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 5% entry 35%;
-    }
-
-  }
-}
 
 /* ── Interaction 4: Page Load Entrance ── */
 @keyframes pageEnter {
@@ -2101,55 +2012,10 @@ td a {
    UI/UX C: Inner Page Interactions
    ═══════════════════════════════════════════════════════ */
 
-/* ── Interaction 13: Process Stage Cascade (about page) ── */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .about-process-step:nth-child(1) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 30%;
-    }
-    .about-process-step:nth-child(2) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 4% entry 34%;
-    }
-    .about-process-step:nth-child(3) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 8% entry 38%;
-    }
-    .about-process-step:nth-child(4) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 12% entry 42%;
-    }
-    .about-process-step:nth-child(5) {
-      animation: revealFadeUp linear both;
-      animation-timeline: view();
-      animation-range: entry 16% entry 46%;
-    }
-  }
-}
 
-/* ── Interaction 16: Founder Photo Reveal (/about) ── */
-@keyframes clipRevealIris {
-  from { clip-path: inset(50% 50% 50% 50%); }
-  to { clip-path: inset(0% 0% 0% 0%); }
-}
-
+/* ── Interaction 16: Founder Photo Reveal (/about): the reveal itself is in the shared block below ── */
 .founder-photo-reveal {
   will-change: clip-path;
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .founder-photo-reveal {
-      animation: clipRevealIris linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
-    }
-  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -2176,153 +2042,157 @@ td a {
 }
 
 /* ═══════════════════════════════════════════════════════
-   Safari/Firefox Fallback: IntersectionObserver
-   Only active when animation-timeline is NOT supported.
-   The ScrollObserver component adds .in-view class to
-   elements as they enter the viewport.
+   The shared reveal: one time, every browser (since 22 Nov 2026)
+   An inline script in the site layout sets html[data-reveal] before the page paints, and only when
+   JavaScript runs, so a page without JavaScript shows everything at full strength. ScrollObserver then
+   adds .in-view once to each element: at once for anything already on screen, as it enters for the
+   rest. Nothing reverses on the way back up. With reduced motion nothing is hidden.
    ═══════════════════════════════════════════════════════ */
 
-@supports not (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
 
-    .css-reveal {
+    html[data-reveal] .css-reveal {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .scroll-reveal-up {
+    html[data-reveal] .scroll-reveal-up {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .scroll-clip-reveal {
+    html[data-reveal] .scroll-clip-reveal {
       clip-path: inset(8% 6%);
       transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .scroll-reveal-up.in-view {
+    html[data-reveal] .scroll-reveal-up.in-view {
       opacity: 1;
       transform: translateY(0);
     }
 
-    .scroll-clip-reveal.in-view {
+    html[data-reveal] .scroll-clip-reveal.in-view {
       clip-path: inset(0%);
     }
 
-    .scroll-clip-reveal.in-view img,
-    .scroll-clip-reveal.in-view canvas {
+    html[data-reveal] .scroll-clip-reveal.in-view img,
+    html[data-reveal] .scroll-clip-reveal.in-view canvas {
       transform: scale(1);
       transition: transform 1s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    .css-reveal.in-view {
+    html[data-reveal] .css-reveal.in-view {
       opacity: 1;
       transform: translateY(0);
     }
 
     /* ── Process stage cascade (about page) ── */
-    .about-process-step {
+    html[data-reveal] .about-process-step {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .about-process-step.in-view {
+    html[data-reveal] .about-process-step.in-view {
       opacity: 1;
       transform: translateY(0);
     }
-    .about-process-step:nth-child(2).in-view { transition-delay: 0.08s; }
-    .about-process-step:nth-child(3).in-view { transition-delay: 0.16s; }
-    .about-process-step:nth-child(4).in-view { transition-delay: 0.24s; }
-    .about-process-step:nth-child(5).in-view { transition-delay: 0.32s; }
+    html[data-reveal] .about-process-step:nth-child(2).in-view { transition-delay: 0.08s; }
+    html[data-reveal] .about-process-step:nth-child(3).in-view { transition-delay: 0.16s; }
+    html[data-reveal] .about-process-step:nth-child(4).in-view { transition-delay: 0.24s; }
+    html[data-reveal] .about-process-step:nth-child(5).in-view { transition-delay: 0.32s; }
 
     /* ── Collaborator cards stagger (about page) ── */
-    .about-team-card {
+    html[data-reveal] .about-team-card {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.5s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .about-team-card.in-view {
+    html[data-reveal] .about-team-card.in-view {
       opacity: 1;
       transform: translateY(0);
     }
-    .about-team-card:nth-child(2).in-view { transition-delay: 0.06s; }
-    .about-team-card:nth-child(3).in-view { transition-delay: 0.12s; }
-    .about-team-card:nth-child(4).in-view { transition-delay: 0.18s; }
-    .about-team-card:nth-child(5).in-view { transition-delay: 0.24s; }
-    .about-team-card:nth-child(6).in-view { transition-delay: 0.3s; }
+    html[data-reveal] .about-team-card:nth-child(2).in-view { transition-delay: 0.06s; }
+    html[data-reveal] .about-team-card:nth-child(3).in-view { transition-delay: 0.12s; }
+    html[data-reveal] .about-team-card:nth-child(4).in-view { transition-delay: 0.18s; }
+    html[data-reveal] .about-team-card:nth-child(5).in-view { transition-delay: 0.24s; }
+    html[data-reveal] .about-team-card:nth-child(6).in-view { transition-delay: 0.3s; }
 
     /* ── Founder photo reveal ── */
-    .founder-photo-reveal {
+    html[data-reveal] .founder-photo-reveal {
       clip-path: inset(50% 50% 50% 50%);
       transition: clip-path 0.8s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .founder-photo-reveal.in-view {
+    html[data-reveal] .founder-photo-reveal.in-view {
       clip-path: inset(0% 0% 0% 0%);
     }
 
-    /* ── reveal-clip: image curtain wipe (fallback) ── */
-    .reveal-clip {
+    /* ── reveal-clip: image curtain wipe ── */
+    html[data-reveal] .reveal-clip {
       clip-path: inset(0 100% 0 0);
       transition: clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1);
     }
-    .reveal-clip.in-view {
+    html[data-reveal] .reveal-clip.in-view {
       clip-path: inset(0 0 0 0);
     }
 
-    /* ── Mobile: simplified reveal — fade-up instead of clip-path ── */
+    /* ── Phones: a fade up instead of the clip ── */
     @media (max-width: 767px) {
-      .reveal-clip {
+      html[data-reveal] .reveal-clip {
         clip-path: none;
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                     transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
       }
-      .reveal-clip.in-view {
+      html[data-reveal] .reveal-clip.in-view {
         clip-path: none;
         opacity: 1;
         transform: translateY(0);
       }
     }
 
-    /* ── reveal-stagger-parent: staggered children (fallback) ── */
-    .reveal-stagger-parent > * {
+    /* ── reveal-stagger-parent: staggered children ── */
+    html[data-reveal] .reveal-stagger-parent > * {
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1),
                   transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     }
-    .reveal-stagger-parent.in-view > * { opacity: 1; transform: translateY(0); }
-    .reveal-stagger-parent.in-view > :nth-child(2) { transition-delay: 0.08s; }
-    .reveal-stagger-parent.in-view > :nth-child(3) { transition-delay: 0.16s; }
-    .reveal-stagger-parent.in-view > :nth-child(4) { transition-delay: 0.24s; }
-    .reveal-stagger-parent.in-view > :nth-child(5) { transition-delay: 0.32s; }
-    .reveal-stagger-parent.in-view > :nth-child(6) { transition-delay: 0.40s; }
-    .reveal-stagger-parent.in-view > :nth-child(7) { transition-delay: 0.48s; }
-    .reveal-stagger-parent.in-view > :nth-child(8) { transition-delay: 0.56s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > * { opacity: 1; transform: translateY(0); }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(2) { transition-delay: 0.08s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(3) { transition-delay: 0.16s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(4) { transition-delay: 0.24s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(5) { transition-delay: 0.32s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(6) { transition-delay: 0.40s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(7) { transition-delay: 0.48s; }
+    html[data-reveal] .reveal-stagger-parent.in-view > :nth-child(8) { transition-delay: 0.56s; }
 
-    /* ── reveal-text: headline mask slide-up (fallback) ── */
-    .reveal-text {
+    /* ── reveal-text: headline mask slide up ── */
+    html[data-reveal] .reveal-text {
       overflow: hidden;
     }
-    .reveal-text > * {
+    html[data-reveal] .reveal-text > * {
       transform: translateY(110%);
       opacity: 0;
       transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
                   opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1);
     }
-    .reveal-text.in-view > * {
+    html[data-reveal] .reveal-text.in-view > * {
       transform: translateY(0);
       opacity: 1;
     }
 
+  /* The case study hero image wipes a little slower (1s). */
+  html[data-reveal] .cs-hero-image-reveal {
+    transition-duration: 1s;
   }
 }
+
 
 /* ── Button text variant ── */
 .btn-text {

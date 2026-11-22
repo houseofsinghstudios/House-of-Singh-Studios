@@ -6,7 +6,8 @@
 // "Plan your project" carries the choices into the planner, which opens on question 02.
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { Link } from "next-view-transitions";
+import { useInBrowser } from "@/lib/use-in-browser";
+import IntentLink from "@/components/IntentLink";
 import { track } from "@/lib/analytics";
 import { useHomeSector } from "@/lib/home-choice";
 import { CHIP_SERVICES, FIRST_QUESTION, START_COPY, chipAnnouncement, chipLabel, countText, laterQuestions, planHref, startedText, toggleChip } from "@/lib/home-start";
@@ -16,7 +17,6 @@ import { BUSINESS_TYPES } from "@/lib/work-index";
 // Values that exist only in the browser: the server (and hydration) sees the second snapshot, the browser
 // the first, so nothing mismatches.
 const noSubscribe = () => () => {};
-const useInBrowser = () => useSyncExternalStore(noSubscribe, () => true, () => false);
 const useStarted = () => useSyncExternalStore(noSubscribe, () => startedText(new Date()), () => "");
 
 // The entrance is armed only in the browser (without JavaScript the sheet simply shows) and plays once,
@@ -115,9 +115,9 @@ export default function StartSheet() {
         )}
         <QuestionOne selected={selected} onChoose={choose} line={first} />
         <LaterRows selected={selected} line={first + 1} />
-        <Link href={planHref(selected)} className="btn-primary hs-plan" data-cursor="link" onClick={() => track("home_start_plan_click", { services_count: selected.length })}>
+        <IntentLink href={planHref(selected)} className="btn-primary hs-plan" data-cursor="link" onClick={() => track("home_start_plan_click", { services_count: selected.length })}>
           {START_COPY.button}
-        </Link>
+        </IntentLink>
         <p className="hs-note">{START_COPY.line}</p>
         <p className="sr-only" aria-live="polite">{live}</p>
       </div>

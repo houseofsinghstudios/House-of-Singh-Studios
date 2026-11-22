@@ -97,6 +97,19 @@
     flex-direction: column;
     gap: 12px;
   }
+  /* 44px tap areas on phones, nothing moved: All work takes 12px of padding above and below back with
+     its margins (the underline keeps its place); a name is inline in its heading, where padding adds
+     tap area without touching the line. */
+  .hw-all {
+    margin: -12px 0;
+    padding: 12px 0;
+  }
+  .hw-all::after {
+    bottom: 9px;
+  }
+  .wi-index--home .wi-name-link {
+    padding: 5px 0;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

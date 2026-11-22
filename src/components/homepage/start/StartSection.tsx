@@ -5,7 +5,7 @@
 //
 // The discovery call link is tracked by the site wide discovery_call_click listener
 // (src/components/GoogleAnalytics.tsx); nothing else is added here.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import EditorialLabel from "@/components/ui/EditorialLabel";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
 import { PULSE_HREF, START_COPY } from "@/lib/home-start";
@@ -26,9 +26,9 @@ export default function StartSection() {
       <div className="hs-doors">
         <p className="hs-door">
           {START_COPY.pulseLead}{" "}
-          <Link href={PULSE_HREF} className="hs-door-link" data-cursor="link">
+          <IntentLink href={PULSE_HREF} className="hs-door-link" data-cursor="link">
             {START_COPY.pulseLink}
-          </Link>
+          </IntentLink>
           . {START_COPY.pulseTail}
         </p>
         <p className="hs-door">

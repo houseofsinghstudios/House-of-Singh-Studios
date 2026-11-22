@@ -1,4 +1,6 @@
 "use client";
+// A client component: the site cursor follows the mouse in the browser. It stays hidden until the
+// pointer first moves (data-idle), then starts where the pointer is, so it never waits in a corner.
 
 import { useEffect, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
@@ -43,6 +45,13 @@ export default function CustomCursor() {
     const handleMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
+      // The first move: start the ring at the pointer, not in the corner, then show both.
+      if (ringRef.current?.hasAttribute("data-idle")) {
+        ring.current.x = e.clientX;
+        ring.current.y = e.clientY;
+        dotRef.current?.removeAttribute("data-idle");
+        ringRef.current.removeAttribute("data-idle");
+      }
     };
 
     const handleMouseOver = (e: MouseEvent) => {
@@ -89,8 +98,8 @@ export default function CustomCursor() {
 
   return (
     <>
-      <div ref={dotRef} className="custom-cursor-dot" />
-      <div ref={ringRef} className="custom-cursor-ring">
+      <div ref={dotRef} className="custom-cursor-dot" data-idle="" />
+      <div ref={ringRef} className="custom-cursor-ring" data-idle="">
         <span className="cursor-label">View</span>
       </div>
     </>

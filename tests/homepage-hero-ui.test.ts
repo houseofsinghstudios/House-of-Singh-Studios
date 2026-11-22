@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
-import { DEFAULT_WORD, IMAGE_HOLD_MS, heroObjectPosition, heroWordFor } from "@/lib/homepage-hero";
+import { DEFAULT_WORD, IMAGE_HOLD_MS, heroLinkTopic, heroObjectPosition, heroWordFor, VIEW_PROJECT } from "@/lib/homepage-hero";
 
 const read = (file: string) => readFileSync(file, "utf8");
 
@@ -81,7 +81,7 @@ test("images: next/image with the agreed sizes and quality, the first preloaded,
   assert.match(src, /loading=\{first \? "eager" : "lazy"\}/);
   assert.match(src, /alt=\{image\.alt\}/);
   assert.match(src, /href=\{`\/work\/\$\{entry\.slug\}`\}/);
-  assert.match(src, /aria-label=\{`View the \$\{entry\.heroName\} project`\}/);
+  assert.doesNotMatch(src, /aria-label=/, "named by its text, not an aria-label");
   assert.match(src, /data-cursor="view"/);
   assert.match(read("src/lib/sanity/image.ts"), /width\(2400\)\.fit\("max"\)\.auto\("format"\)\.quality\(90\)/);
 });
@@ -143,4 +143,34 @@ test("Selected work never competes with the hero image: nothing priority, the wi
   // The window's image (loading eager on /work) only renders once armed; the homepage arms it on intent.
   assert.match(read("src/components/work/index/WorkWindow.tsx"), /\{shown && armed && \(/);
   assert.match(read("src/components/work/index/HomeWorkIndex.tsx"), /armed=\{armed\}/);
+});
+
+// Homepage audit H-06 (22 Nov 2026): the word, its band and the caption change only once the next image
+// has loaded and decoded; a late image holds everything, and the clock waits with it.
+test("rotation: the clock asks, the next image's readiness decides, and the hold is respected", () => {
+  const src = readFileSync("src/components/homepage/HeroImages.tsx", "utf8");
+  assert.match(src, /onAnimationEnd=\{\(e\) => e\.target === e\.currentTarget && clockEnded\(\)\}/, "the progress line's end only asks");
+  assert.match(src, /img\.decode\(\)\.then\(done, done\)/, "decoded, and a failed decode never stalls");
+  assert.match(src, /onLoad=\{\(e\) => whenDecoded\(e\.currentTarget, onReady\)\}/);
+  assert.match(src, /onError=\{onReady\}/, "a broken image never stalls the rotation");
+  assert.match(src, /if \(!waiting\.current \|\| haltedRef\.current \|\| !ready\.current\.has\(nextRef\.current\)\) return;/);
+  assert.match(src, /visible=\{key === index\}/, "the image on show is always the rotation's, so word and caption match it");
+  assert.doesNotMatch(src, /setShown|loaded\.includes/, "no second notion of the image on show");
+});
+
+// WCAG 2.5.3 (homepage audit, 22 Nov 2026): both hero links are named "View project: <name>", the visible
+// words first, the project as visually hidden text, no aria-label, never "the The".
+test("hero links: visible text plus sr-only text, starting with what shows, no doubled article", () => {
+  for (const name of ["The Floreans", "THREE", "Christmas Carnival", "  The Two Rivers  "]) {
+    const full = VIEW_PROJECT + heroLinkTopic(name);
+    assert.ok(full.startsWith("View project"), full);
+    assert.doesNotMatch(full, /\bthe the\b/i, full);
+    assert.equal(full, `View project: ${name.trim()}`);
+  }
+  const images = readFileSync("src/components/homepage/HeroImages.tsx", "utf8");
+  const caption = readFileSync("src/components/homepage/HeroCaption.tsx", "utf8");
+  assert.match(images, /<span className="sr-only">\s*\{VIEW_PROJECT\}\s*\{heroLinkTopic\(entry\.heroName\)\}\s*<\/span>/);
+  assert.match(images, /data-visible=\{visible\} aria-hidden="true"/, "the images do not add their alt to the link's name");
+  assert.match(caption, /\{VIEW_PROJECT\}\s*<span className="sr-only">\{heroLinkTopic\(shown\.heroName\)\}<\/span>/);
+  for (const src of [images, caption]) assert.doesNotMatch(src, /aria-label=/);
 });

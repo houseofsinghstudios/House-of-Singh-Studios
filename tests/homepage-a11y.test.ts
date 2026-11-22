@@ -12,7 +12,7 @@ test("What we do: each detail link's name starts with its visible text, then the
   const src = read("src/components/homepage/what-we-do/WwdRows.tsx");
   assert.doesNotMatch(src, /aria-label=/, "no aria-label replacing the link's text");
   // Right after the visible words, inside the link, unchanged from the old Capabilities rows.
-  assert.match(src, /\{detailLinkText\(service\.name\)\}\s*\{topic && <span className="sr-only">: \{topic\}<\/span>\}\s*<\/Link>/);
+  assert.match(src, /\{detailLinkText\(service\.name\)\}\s*\{topic && <span className="sr-only">: \{topic\}<\/span>\}\s*<\/IntentLink>/);
   assert.match(read("src/components/homepage/what-we-do/WhatWeDoSection.tsx"), /serviceTopic\(s\.slug\)/);
   assert.equal(serviceTopic("brand-identity"), "Brand identity design and rebranding in Toronto");
 });

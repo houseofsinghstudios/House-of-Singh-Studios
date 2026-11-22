@@ -119,9 +119,9 @@ test("header logo and footer social links: their name is their text, not an aria
   const { readFileSync } = await import("node:fs");
   const header = readFileSync("src/components/layout/Header.tsx", "utf8");
   // The header's home link is the studio's name as live text: its own text is its accessible name.
-  const start = header.indexOf('<Link href="/" className="header-wordmark">');
+  const start = header.indexOf('<IntentLink href="/" className="header-wordmark">');
   assert.ok(start > 0, "the name is the home link");
-  const logo = header.slice(start, header.indexOf("</Link>", start));
+  const logo = header.slice(start, header.indexOf("</IntentLink>", start));
   assert.doesNotMatch(logo, /aria-label=/);
   assert.match(logo, />\s*House of Singh Studios\s*$/, "the link text is the name, in normal case");
   const footer = readFileSync("src/components/layout/Footer.tsx", "utf8");

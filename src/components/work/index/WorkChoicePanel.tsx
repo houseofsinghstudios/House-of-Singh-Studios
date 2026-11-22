@@ -7,7 +7,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import type { WorkImage } from "./types";
 
 export interface ChoiceOption {
@@ -84,10 +84,10 @@ export default function WorkChoicePanel({ id, open, label, options, withOther, o
             ))}
             {withOther && (
               <li>
-                <Link href="/start" className="wi-option wi-option--other">
+                <IntentLink href="/start" className="wi-option wi-option--other">
                   <span className="wi-option-label">Something else? Tell us about yours</span>
                   <span className="editorial-label">Plan your project</span>
-                </Link>
+                </IntentLink>
               </li>
             )}
           </ul>
