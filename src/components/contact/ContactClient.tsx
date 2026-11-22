@@ -296,7 +296,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
             </p>
             <a
               href={`mailto:${STUDIO_EMAIL}`}
-              className="font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)] hover:underline"
+              className="contact-email-link font-[var(--sans)] font-normal text-[14px] text-[color:var(--text-secondary)] hover:underline"
               data-cursor="link"
             >
               {STUDIO_EMAIL}

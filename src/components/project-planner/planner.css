@@ -389,3 +389,13 @@
     max-width: none;
   }
 }
+
+/* Tap area (site audit S-10): an inline link, so vertical padding only, which never moves a line. */
+.pp-link {
+  padding: 5px 0;
+}
+@media (max-width: 1080px) {
+  .pp-link {
+    padding: 15px 0;
+  }
+}

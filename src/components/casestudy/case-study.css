@@ -507,3 +507,13 @@
     grid-column: 10 / 13; align-self: end;
   }
 }
+
+/* Tap area (site audit S-10): an inline link, so vertical padding only, which never moves a line. */
+.cs-plan-similar-link {
+  padding: 3px 0;
+}
+@media (max-width: 1080px) {
+  .cs-plan-similar-link {
+    padding: 13px 0;
+  }
+}

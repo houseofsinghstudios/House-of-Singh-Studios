@@ -262,3 +262,30 @@
   gap: 16px;
   margin-top: clamp(48px, 6vw, 72px);
 }
+
+/* Tap areas (site audit S-10): 24px at every width, 44px tall at 1080px and below, by padding with an
+   equal negative margin, so nothing moves. The underline keeps its place under the words: pinned to
+   the padding on the left and right, and raised by the bottom padding. On phones the row scrolls
+   sideways and clips at its 12px top padding, so the extra height sits mostly below the words.
+   Sideways, 10px each side keeps neighbours apart (the gap is 20px): "AI" reaches 33px wide. */
+.content-filter {
+  padding: 5px 6px;
+  margin: -5px -6px;
+}
+.content-filter::after {
+  bottom: 1px;
+  left: 6px;
+  right: 6px;
+  width: auto;
+}
+@media (max-width: 1080px) {
+  .content-filter {
+    padding: 12px 10px 18px;
+    margin: -12px -10px -18px;
+  }
+  .content-filter::after {
+    bottom: 14px;
+    left: 10px;
+    right: 10px;
+  }
+}
