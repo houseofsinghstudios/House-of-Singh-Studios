@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { refuseRequest } from "@/lib/request-guards";
 import { n8nTarget, postToN8n } from "@/lib/n8n";
-import { clientIp, createRateLimiter } from "@/lib/rate-limit";
+import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 import { checkCareers, cleanCareers } from "@/lib/careers";
 import { cleanSubmissionId } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     const refused = refuseRequest(request);
     if (refused) return refused;
 
-    if (isRateLimited(clientIp(request))) {
+    if (isRateLimited(clientAddresses(request))) {
       return json({ error: "Too many requests. Please try again later." }, 429);
     }
 

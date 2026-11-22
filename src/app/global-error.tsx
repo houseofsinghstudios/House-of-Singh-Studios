@@ -36,7 +36,7 @@ export default function GlobalError({ retry }: { error: unknown; retry: () => vo
           <p style={{ margin: "16px 0 0", fontSize: 15, lineHeight: 1.6, color: GUNMETAL }}>Please try again in a moment.</p>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12, marginTop: 48 }}>
             <button type="button" onClick={retry} style={{ ...button, background: OBSIDIAN, color: SILVER_MIST }}>
-              Try Again
+              Try again
             </button>
             {/* Plain next/link: the site's own Button lives inside the layout that failed. */}
             <Link href="/" style={{ ...button, background: "transparent", color: OBSIDIAN }}>

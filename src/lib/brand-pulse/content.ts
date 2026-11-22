@@ -91,7 +91,7 @@ export const INTRO = {
   text: "7 quick questions, about a minute. A plain read on five vital signs of your brand, and one clear next step.",
   youGet: "You will get",
   youGetItems: ["Your brand profile", "Five vital signs, each Good, Needs attention or At risk", "One clear next step"],
-  button: "Start the Check",
+  button: "Start the check",
   // Used on the AI Lab page and on every link into the check from elsewhere.
   buttonElsewhere: "Take the 60 Second Brand Pulse",
   instant: "Instant results. No sign up. No personal details needed.",
@@ -228,7 +228,7 @@ export const NEXT_STEP = {
   label: "(Next Step)",
   heading: "Talk it through with our Creative Director.",
   text: "A 30 minute conversation about your result, not a sales presentation. No preparation needed: your answers come with you. Choose any time that suits you.",
-  button: "Discuss My Results",
+  button: "Discuss my results",
 };
 
 export const KEEP_IT = {
@@ -236,7 +236,7 @@ export const KEEP_IT = {
   heading: "Take this with you.",
   text: "We will send your result, plus three practical actions for your brand this quarter.",
   emailLabel: "Email",
-  button: "Send My Result",
+  button: "Send my result",
   sending: "Sending...",
   retake: "Remind me to retake the check in six months.",
   insights: "Send me occasional studio insights.",
@@ -261,7 +261,7 @@ export const STUDIO_VIEW = {
   website: "Website",
   teamSize: "Team size",
   teamSizePlaceholder: "Choose one",
-  button: "Add Details",
+  button: "Add details",
   sending: "Sending...",
   success: "Thank you. We will look before we speak.",
   failure: "We could not add your details just now. Your result is still here.",
@@ -270,18 +270,18 @@ export const STUDIO_VIEW = {
 
 export const GATE_COPY = {
   heading: "Get your full result.",
-  button: "Show My Result",
+  button: "Show my result",
 };
 
 export const QUIET_LINKS = {
-  conversation: "Start a Conversation",
+  conversation: "Start a conversation",
   copyLink: "Copy a link to this result",
   copied: "Link copied.",
   startAgain: "Start again",
 };
 
 export const SHARED = {
-  button: "Take the Check Yourself",
+  button: "Take the check yourself",
   // The page's main heading for a shared result, visually hidden: the result's own title is an h2.
   hiddenHeading: "Brand Pulse result",
 };

@@ -30,14 +30,12 @@ test("Canadian spelling: program, organization, colour", () => {
   for (const [path, text] of COPY) assert.doesNotMatch(text, /programme|organis|\bcolor\b/i, path);
 });
 
-test("buttons are in Title Case", () => {
-  const minor = new Set(["a", "an", "the", "and", "or", "of", "to", "for", "in", "on"]);
+// Sentence case since 22 Nov 2026: a capital first letter, then lower case except names.
+test("buttons are in sentence case", () => {
   const buttons = [PARTNERS.introduce, PARTNERS.partner, HOW.copy, ...BAND.map((b) => b.button)];
   for (const button of buttons) {
-    button.split(" ").forEach((word, i) => {
-      if (i > 0 && minor.has(word)) return;
-      assert.match(word, /^[A-Z0-9]/, `${button}: ${word}`);
-    });
+    assert.match(button, /^[A-Z0-9]/, button);
+    button.split(" ").slice(1).forEach((word) => assert.match(word, /^[a-z0-9]/, `${button}: ${word}`));
   }
 });
 

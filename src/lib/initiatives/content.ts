@@ -72,14 +72,14 @@ export const LANDING = {
       slug: "parallel",
       heading: "Parallel",
       text: "Know a brand we should reimagine? Suggest it.",
-      button: "Suggest a Brand",
+      button: "Suggest a brand",
       href: "/contact?service=parallel",
     },
     {
       slug: "commons",
       heading: "Commons",
       text: "Know a charity that deserves great design? Nominate it.",
-      button: "Nominate an Organization",
+      button: "Nominate an organization",
       href: "/contact?service=commons",
     },
   ],
@@ -134,7 +134,7 @@ export const PARALLEL = {
   nominate: {
     heading: "Suggest a brand",
     text: "Most Parallel brands are chosen by the studio. If you know one we should look at, tell us.",
-    button: "Suggest a Brand",
+    button: "Suggest a brand",
     href: "/contact?service=parallel",
   },
 };
@@ -193,7 +193,7 @@ export const COMMONS = {
   nominate: {
     heading: "Nominate an organization",
     text: "Know a charity or community group that deserves great design? Organizations can nominate themselves.",
-    button: "Nominate an Organization",
+    button: "Nominate an organization",
     href: "/contact?service=commons",
   },
   next: {

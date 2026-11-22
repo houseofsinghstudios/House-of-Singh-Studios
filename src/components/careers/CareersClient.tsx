@@ -777,7 +777,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
               >
                 {formState === "submitting"
                   ? "Sending..."
-                  : "Submit Application"}
+                  : "Submit application"}
               </button>
               {formState === "error" && (
                 <p

@@ -200,11 +200,17 @@ test("a body over 64 KB is refused with 413 before anything is read or sent", as
 test("duplicates: an event already delivered is answered 200 without a second send; other events still go", async () => {
   const { n8n } = stub();
   const id = briefId();
-  assert.equal((await send({ event: "started", briefId: id, attribution: {} })).status, 200);
-  assert.equal((await send({ event: "started", briefId: id.toLowerCase(), attribution: {} })).status, 200);
-  assert.equal(n8n.length, 1, "the same brief and event is sent once");
-  assert.equal((await send({ event: "call_clicked", briefId: id, attribution: {} })).status, 200);
+  const visitor = { "x-forwarded-for": "10.45.0.1" };
+  assert.equal((await send({ event: "started", briefId: id, attribution: {} }, visitor)).status, 200);
+  assert.equal((await send({ event: "started", briefId: id.toLowerCase(), attribution: {} }, visitor)).status, 200);
+  assert.equal(n8n.length, 1, "the same brief and event from the same sender is sent once");
+  assert.equal((await send({ event: "call_clicked", briefId: id, attribution: {} }, visitor)).status, 200);
   assert.equal(n8n.length, 2, "another event of the same brief goes through");
+  // Audit finding 17: someone else who knows the brief id cannot have the visitor's own event skipped.
+  const other = briefId();
+  assert.equal((await send({ event: "started", briefId: other, attribution: {} }, { "x-forwarded-for": "10.45.0.2" })).status, 200);
+  assert.equal((await send({ event: "started", briefId: other, attribution: {} }, visitor)).status, 200);
+  assert.equal(n8n.length, 4, "the same brief and event from another sender still goes");
 });
 
 test("n8n refusing gives 502 and timing out 504; neither is remembered, so a retry goes out", async () => {

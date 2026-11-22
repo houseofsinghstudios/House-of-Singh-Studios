@@ -30,7 +30,7 @@ export default function NotFound() {
 
       <div className="flex flex-wrap gap-3 mt-12 css-reveal" style={{ transitionDelay: "300ms" }}>
         <Button href="/work" variant="primary" data-cursor="link">
-          View Our Work
+          View our work
         </Button>
         <Button href="/start" variant="secondary" data-cursor="link">
           Plan your project

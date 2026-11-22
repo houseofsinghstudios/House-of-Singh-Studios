@@ -10,9 +10,19 @@ export const EMAIL_MAX = 254;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// The raw value as a string, cut to twice the field's limit before anything else looks at it.
+// The raw value, cut to twice the field's limit before anything else looks at it. Anything that is not
+// a string (an object, a number, a value with a crafted toString) counts as empty, so an odd form value
+// is a clean 400 at the length checks, never a 500 (audit of 20 Nov 2026, finding 15).
 export function capRaw(value: unknown, max: number): string {
-  return String(value).slice(0, max * 2);
+  return typeof value === "string" ? value.slice(0, max * 2) : "";
+}
+
+// A path on this site, for a landing page: it must start with a single "/" ("//host" and "/\host"
+// are other sites to a browser), without its query or fragment, tags removed, spaces collapsed, at most
+// max characters. Anything else is "" (audit finding 16).
+export function sitePath(value: unknown, max: number): string {
+  if (typeof value !== "string" || !/^\/(?![/\\])/.test(value)) return "";
+  return stripTags(capRaw(value.split(/[?#]/)[0], max)).replace(/\s+/g, " ").trim().slice(0, max);
 }
 
 // Removes "<...>" runs exactly as value.replace(/<[^>]*>/g, "") does, in one pass: each "<" is

@@ -5,6 +5,8 @@
 // Pulse). Fields are named as n8n receives them: landing_page, referrer, utm_source, utm_medium,
 // utm_campaign. A field with nothing to say is left out, so a direct visit sends landing_page only.
 
+import { stripTags } from "./form-input";
+
 export const LEAD_SOURCE_KEY = "hos-lead-source";
 
 export interface LeadSource {
@@ -24,13 +26,15 @@ const HOST = /^[a-z0-9.-]{1,253}$/;
 // A campaign tag is a short label; anything that looks like an email address is dropped.
 function tag(value: unknown): string {
   if (typeof value !== "string") return "";
-  const v = value.trim().slice(0, TAG_MAX);
+  // Added 22 Nov 2026 (audit finding 16, owner approved): tags removed and spaces collapsed too.
+  const v = stripTags(value.slice(0, TAG_MAX * 2)).replace(/\s+/g, " ").trim().slice(0, TAG_MAX);
   return v.includes("@") ? "" : v;
 }
 
 // A path on this site, without its query string or fragment, which could carry personal details.
+// Added 22 Nov 2026 (audit finding 16, owner approved): "//host" and "/\\host" are other sites, refused.
 function path(value: unknown): string {
-  if (typeof value !== "string" || !value.startsWith("/")) return "";
+  if (typeof value !== "string" || !value.startsWith("/") || /^\/[/\\]/.test(value)) return "";
   return value.split(/[?#]/)[0].slice(0, PATH_MAX);
 }
 

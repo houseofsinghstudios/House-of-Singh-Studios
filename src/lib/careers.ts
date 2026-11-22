@@ -1,5 +1,5 @@
 // Careers application: field cleaning and length rules for /api/careers. Pure, so it can be tested.
-import { cleanField } from "./lead";
+import { cleanField, cleanLine } from "./lead";
 import { EMAIL_MAX, isEmail } from "./form-input";
 
 export const CAREERS_LIMITS = { name: 120, email: 254, role: 120, portfolioUrl: 500, message: 5000 } as const;
@@ -17,10 +17,10 @@ export interface CareersFields {
 // The cleaned fields, tags and surrounding whitespace removed, missing values empty.
 export function cleanCareers(body: Record<string, unknown>): CareersFields {
   return {
-    name: cleanField(body.name, CAREERS_LIMITS.name),
-    email: cleanField(body.email, CAREERS_LIMITS.email),
-    role: cleanField(body.role, CAREERS_LIMITS.role),
-    portfolioUrl: cleanField(body.portfolioUrl, CAREERS_LIMITS.portfolioUrl),
+    name: cleanLine(body.name, CAREERS_LIMITS.name),
+    email: cleanLine(body.email, CAREERS_LIMITS.email),
+    role: cleanLine(body.role, CAREERS_LIMITS.role),
+    portfolioUrl: cleanLine(body.portfolioUrl, CAREERS_LIMITS.portfolioUrl),
     message: cleanField(body.message, CAREERS_LIMITS.message),
   };
 }

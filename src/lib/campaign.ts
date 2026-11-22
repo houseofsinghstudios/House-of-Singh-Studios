@@ -6,6 +6,8 @@
 // storage only: no cookie, nothing kept after the tab closes. Every storage access is wrapped,
 // since storage can be blocked.
 
+import { stripTags } from "./form-input";
+
 export const CAMPAIGN_KEY = "hos-campaign";
 
 export interface Campaign {
@@ -25,7 +27,8 @@ const MAX = 100;
 // link can never carry personal data into a tool's events.
 function tag(value: unknown): string {
   if (typeof value !== "string") return "";
-  const v = value.trim().slice(0, MAX);
+  // Tags removed and spaces collapsed as well (audit finding 16): a tag is a plain one line label.
+  const v = stripTags(value.slice(0, MAX * 2)).replace(/\s+/g, " ").trim().slice(0, MAX);
   return v.includes("@") ? "" : v;
 }
 

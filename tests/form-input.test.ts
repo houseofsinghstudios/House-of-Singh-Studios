@@ -78,9 +78,11 @@ test("stripTags removes exactly what the old pattern removed", () => {
 
 test("normal values clean byte for byte as before, up to twice the limit", () => {
   for (const s of samples(3000, LEAD_LIMITS.name * 2)) assert.equal(cleanField(s, LEAD_LIMITS.name), oldCleanField(s), JSON.stringify(s));
-  for (const v of ["  <b>Ada</b>  ", "Ada Lovelace", "ada@example.com", 42, true, "", null, undefined]) {
+  for (const v of ["  <b>Ada</b>  ", "Ada Lovelace", "ada@example.com", "", null, undefined]) {
     assert.equal(cleanField(v, LEAD_LIMITS.name), oldCleanField(v), String(v));
   }
+  // Since 22 Nov 2026 (audit finding 15) a value that is not a string is empty, never String(value).
+  for (const v of [42, true, {}, ["Ada"]]) assert.equal(cleanField(v, LEAD_LIMITS.name), "", String(v));
   for (const r of ["https://example.com/page?name=Pat#top", "  https://a.example/b  ", "<b>https://x.example</b>/p", "mailto:a@b.co", "not a url", ""]) {
     assert.equal(originAndPath(r), oldOriginAndPath(r), r);
   }

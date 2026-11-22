@@ -14,8 +14,8 @@ export const PARTNERS = {
   heading: "Good work travels by recommendation.",
   intro:
     "Many of our best clients arrive through someone they trust. Our partner program thanks the agencies, developers, printers and advisors who introduce us.",
-  introduce: "Introduce a Client",
-  partner: "Become a Partner",
+  introduce: "Introduce a client",
+  partner: "Become a partner",
 };
 
 // At a glance: each figure counts up from 0; the suffix stays fixed.
@@ -46,7 +46,7 @@ export const HOW = {
   boxLabel: "The introduction, ready to send",
   introduction:
     "I'd like to introduce you to Maninder Singh at House of Singh Studios, a brand identity and design studio in Toronto. I think they'd be a great fit for what you're planning. Maninder, meet [name]. I'll let you both take it from here.",
-  copy: "Copy Text",
+  copy: "Copy text",
   copied: "Copied",
   hint: "Paste it into an email to both of you.",
   fallback: "Press Ctrl or Command and C to copy.",
@@ -100,6 +100,6 @@ export const QUESTIONS: Question[] = [
 
 // The closing band: two ways to act, introduce now or partner long term.
 export const BAND = [
-  { slug: "introduce", heading: "I have someone in mind", text: "We reply to them within one business day.", button: "Introduce a Client", href: INTRODUCE_HREF },
-  { slug: "partner", heading: "I want to partner long term", text: "Your partner link arrives within two business days.", button: "Become a Partner", href: PARTNER_HREF },
+  { slug: "introduce", heading: "I have someone in mind", text: "We reply to them within one business day.", button: "Introduce a client", href: INTRODUCE_HREF },
+  { slug: "partner", heading: "I want to partner long term", text: "Your partner link arrives within two business days.", button: "Become a partner", href: PARTNER_HREF },
 ];

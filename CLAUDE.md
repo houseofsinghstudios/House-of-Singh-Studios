@@ -101,7 +101,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
-- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts.
+- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts).
 
 NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped, and the full screen panel it replaced is gone. Do not rebuild either without the owner's approval.
 
@@ -220,7 +220,7 @@ EVOLVED APPROACH:
 - Form submissions: button text changes to "Sending..." with reduced opacity
 - Empty content states: a quiet centered message in --text-muted, no decorative elements
 - Skeleton loading: not built (pages are static or ISR, so content arrives with the HTML). If ever needed: thin horizontal bars (8px height, --bg-shift fill, subtle pulse animation) in place of text blocks
-- Errors: src/app/(site)/error.tsx shows "This page could not load right now." inside the site layout, with Try Again, the homepage and /contact; src/app/global-error.tsx shows the same outside it. Both are noindex.
+- Errors: src/app/(site)/error.tsx shows "This page could not load right now." inside the site layout, with Try again, the homepage and /contact; src/app/global-error.tsx shows the same outside it. Both are noindex.
 
 ---
 
@@ -340,7 +340,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - Multi step brief builder. Rendered on every request (it reads ?service and ?begin). Described everywhere as "Plan your project in two minutes. We come to the call prepared."
 - ?service= preselects up to three known services, comma separated, in order (parseService in src/lib/project-planner/start-links.ts; a single value works as before; unknown ids and repeats are ignored; "unsure" only alone). With ?begin=1 as well, question 01 is answered and the planner opens on question 02 (plannerOpening); ?begin=1 alone opens question 01.
 - No prices (decided 20 Nov 2026): no price guide, starting price, fit note or budget comparison, in the planner, its brief, its result, its share image or anywhere it is described. Only the brand package timelines show, for brand identity as the main focus. The optional "investment range" question stays: it is the visitor's own range, sent to the studio.
-- It ends in the call: the brief's main action is "Choose a time for your call" (DISCOVERY_CALL_URL, with the brief's notes), under it "Your answers go to the studio before the call, so we start with your business."; "Send My Brief" stays second, with every form protection. The viewed event has already sent the answers to n8n, keyed by the brief id that the booking notes carry.
+- It ends in the call: the brief's main action is "Choose a time for your call" (DISCOVERY_CALL_URL, with the brief's notes), under it "Your answers go to the studio before the call, so we start with your business."; "Send my brief" stays second, with every form protection. The viewed event has already sent the answers to n8n, keyed by the brief id that the booking notes carry.
 - The Sanity Service Pricing document and its schema (sanity/schemas/servicePricing.ts) are no longer read; both stay, unchanged in their fields, until they are removed. The n8n payload keeps its price fields, always empty (docs/integrations/n8n.md).
 
 ### Brand Pulse Check (/brand-pulse)
@@ -450,11 +450,18 @@ Live domain: https://studios.houseofsingh.com (canonical everywhere). Hosting: V
 | /studio | Sanity Studio, own route group, no site chrome |
 | /api/lead, /api/careers, /api/subscribe, /api/brand-pulse, /api/project-planner | POST, forward to n8n (contracts: docs/integrations/n8n.md) |
 | /api/consent-region | GET, decides strict consent regions |
-| /api/revalidate | POST from the Sanity webhook, signed with SANITY_REVALIDATE_SECRET; refreshes the whole site, the sitemap and llms.txt at once |
+| /api/revalidate | POST from the Sanity webhook, signed with SANITY_REVALIDATE_SECRET (constant time check, at most 5 minutes old); refreshes the whole site, the sitemap and llms.txt at once |
 
 Redirects (next.config.ts, 301): /packages → /start; /plan → /start; /pulse → /brand-pulse; /journal and /journal/* → /insights; /work/meridian, /work/soulbound, /work/test → /work; /insights/page and /insights/page/1 → /insights. Unknown URLs give the site 404 (noindex).
 
 When Sanity fails at runtime, pages keep their last good version (src/lib/sanity/resilience.ts); fallback content is used only while building.
+
+Security, as built (audit of 20 Nov 2026, follow up 22 Nov 2026):
+- Form routes take JSON only and check the Origin (src/lib/request-guards.ts): the live domain, the production alias house-of-singh-studios.vercel.app, this project's own deployment addresses (house-of-singh-studios-<9 letters or digits>-houseofsinghstudios-projects.vercel.app) and this deployment's own branch address (VERCEL_URL, VERCEL_BRANCH_URL). Never any other *.vercel.app; localhost outside production only.
+- Headers (next.config.ts): CSP with frame-src 'none' and upgrade-insecure-requests (violations to /api/csp-report); HSTS two years with includeSubDomains, no preload (the preload list takes only houseofsingh.com); Permissions-Policy turns off camera, microphone, geolocation, payment, usb, serial, hid, display-capture and browsing-topics; COOP same-origin-allow-popups. /studio has its own CSP (frame-src 'self', form-action 'self') and X-Robots-Tag noindex, nofollow.
+- Rate limiter (src/lib/rate-limit.ts): each request counts under the first x-forwarded-for address and, when it differs, Vercel's own client address too (clientAddresses).
+- Form text: a value that is not a string is empty (a 400, never a 500); one line fields collapse line breaks; landing pages are paths on this site only. Text is sent to n8n as plain text, not HTML encoded: n8n escapes it wherever it builds HTML (docs/integrations/n8n.md); React escapes what the site shows.
+- /api/revalidate: the Sanity signature compared in constant time, refused when its timestamp is over 5 minutes from now, the body read up to 64 KB before checking.
 
 ---
 
@@ -503,7 +510,7 @@ is tests/no-studio-prices.test.ts. Insights articles live in Sanity: edit them t
 These look unusual or redundant but are deliberate. Any change touching them needs the owner's approval. Report a genuine defect in one of them as a defect; never remove or weaken it as cleanup.
 
 - SEO structure: the semantic H1 swap on service pages (the label is the H1, the hero line an H2), and visually hidden H1s (homepage, Brand Pulse and Project Planner states, the hidden "Brand Pulse result" H1).
-- Hidden descriptive link text: the sr-only text in "Learn More" links on /services, after the visible text of each "<Service name> in detail" link in the homepage (02) What we do (moved there from the old Capabilities rows, owner approved; no aria-label, so the name starts with the visible text), and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
+- Hidden descriptive link text: the sr-only text in "Learn more" links on /services, after the visible text of each "<Service name> in detail" link in the homepage (02) What we do (moved there from the old Capabilities rows, owner approved; no aria-label, so the name starts with the visible text), and in footer social links; the header home link named by its own text, "House of Singh Studios" (no aria-label).
 - Service FAQs and the questions accordion, with FAQPage JSON-LD.
 - The structured data graph: ProfessionalService and Organization with @id, founder Person, Service, CreativeWork, Article, BreadcrumbList.
 - RGD links (RgdLink and the auto linker in article bodies).
@@ -511,7 +518,7 @@ These look unusual or redundant but are deliberate. Any change touching them nee
 - Related thinking, related work and related services modules, and src/lib/linking.ts.
 - Sitemap lastmod (the static page date map) and llms.txt with its tests.
 - Redirects in next.config.ts, and the intentional /initiatives/foundry 404.
-- Consent gated GA4, Clarity and Speed Insights: in strict regions nothing loads before consent; elsewhere they load by default with notice and opt out (src/lib/consent.ts)
+- Consent gated GA4, Clarity and Speed Insights: in strict regions nothing loads before consent; elsewhere they load by default with notice and opt out (src/lib/consent.ts). Owner decision, 21 Nov 2026: keep this default; analytics outside strict regions load with notice and opt out, which suits PIPEDA (audit finding 22).
 - The analytics helper (src/lib/analytics.ts): page view parameters, trackOnce, the "set" call.
 - Lead events and the ?hos_internal and ?hos_debug flags.
 - Lead source capture (src/lib/lead-source.ts, src/lib/referrer.ts).

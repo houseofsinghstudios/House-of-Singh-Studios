@@ -18,7 +18,7 @@ export default function SiteError({ retry }: { error: unknown; retry: () => void
       <div className="flex flex-wrap gap-3 mt-12">
         {/* retry() fetches the page again; reset() would only redraw the failed render. */}
         <Button onClick={retry} variant="primary" data-cursor="link">
-          Try Again
+          Try again
         </Button>
         <Button href="/" variant="secondary" data-cursor="link">
           Go to the Homepage

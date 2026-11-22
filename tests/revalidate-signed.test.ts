@@ -33,8 +33,7 @@ const { REVALIDATE_TARGETS }: typeof import("@/lib/revalidate") = require("@/lib
 const SECRET = "test-secret";
 const BODY = JSON.stringify({ _type: "post", slug: "brand-audit-checklist" });
 
-function signed(body = BODY, secret = SECRET) {
-  const timestamp = Date.now();
+function signed(body = BODY, secret = SECRET, timestamp = Date.now()) {
   const signature = createHmac("sha256", secret).update(`${timestamp}.${body}`).digest("base64url");
   return new Request("http://localhost/api/revalidate", {
     method: "POST",
@@ -73,5 +72,11 @@ test("when the refresh fails, the answer is 500, so Sanity retries the delivery"
 test("a correctly signed body that is not JSON is a bad request, not a server error", async () => {
   const res = await POST(signed("not json"));
   assert.equal(res.status, 400);
+  assert.deepEqual(calls, []);
+});
+
+test("a correctly signed delivery replayed after five minutes is refused and refreshes nothing", async () => {
+  const res = await POST(signed(BODY, SECRET, Date.now() - 6 * 60 * 1000));
+  assert.equal(res.status, 401);
   assert.deepEqual(calls, []);
 });

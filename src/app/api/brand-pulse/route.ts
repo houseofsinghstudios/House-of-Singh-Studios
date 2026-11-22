@@ -1,6 +1,6 @@
 import { n8nTarget, postToN8n } from "@/lib/n8n";
 import { refuseRequest } from "@/lib/request-guards";
-import { createRateLimiter } from "@/lib/rate-limit";
+import { clientAddresses, createRateLimiter } from "@/lib/rate-limit";
 import { referralCode } from "@/lib/campaign";
 import { isValidAnswers } from "@/lib/brand-pulse/codec";
 import { parsePlacement } from "@/lib/brand-pulse/entry";
@@ -10,7 +10,7 @@ import { answerLabels, bookingUrl, shareUrl } from "@/lib/brand-pulse/links";
 import { FEEDBACK_IDS, GATES, QUESTION_ORDER, TEAM_SIZE_IDS, type Answers, type Feedback, type Gate, type TeamSize } from "@/lib/brand-pulse/types";
 import { cleanLeadSource } from "@/lib/lead-source";
 import { originAndPath } from "@/lib/referrer";
-import { capRaw, isEmail, stripTags } from "@/lib/form-input";
+import { capRaw, isEmail, sitePath, stripTags } from "@/lib/form-input";
 import { bodyTooLarge, parseJson, readBodyText } from "@/lib/request-body";
 import { errorName, json, N8N_FAILED, routeLog } from "@/lib/api-response";
 
@@ -116,7 +116,8 @@ function buildPayload(event: PulseEvent, body: Record<string, unknown>, answers:
       medium: clean(a.medium, 200),
       campaign: clean(a.campaign, 200),
       referralCode: referralCode(a.referralCode),
-      landingPage: clean(a.landingPage, 500),
+      // A path on this site only (audit finding 16): "//host" and anything else is dropped.
+      landingPage: sitePath(a.landingPage, 500),
       // Origin and path only, whatever the browser sent.
       referrer: originAndPath(a.referrer),
       entryPlacement: parsePlacement(a.entryPlacement),
@@ -130,9 +131,7 @@ export async function POST(request: Request) {
     const refused = refuseRequest(request);
     if (refused) return refused;
 
-    const forwarded = request.headers.get("x-forwarded-for");
-    const ip = forwarded?.split(",")[0]?.trim() || "unknown";
-    if (isRateLimited(ip)) {
+    if (isRateLimited(clientAddresses(request))) {
       log.info("rate limit exceeded");
       return json({ success: false, error: "Too many requests. Please try again later." }, 429);
     }

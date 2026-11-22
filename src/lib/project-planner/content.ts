@@ -1,5 +1,5 @@
 // Every visitor facing word in the Project Planner lives here, so copy can change without touching logic.
-// Plain everyday words, no design jargon, no dashes of any kind. Buttons in Title Case.
+// Plain everyday words, no design jargon, no dashes of any kind. Buttons and links in sentence case.
 
 import type { BandId, GoalId, NamedService, ServiceId, TimingId } from "./types";
 
@@ -19,7 +19,7 @@ export const INTRO = {
   // Small print under the button. Never claim nothing is sent: completed selections are kept without contact details.
   privacy: "Project selections may be recorded without contact details when a brief is completed, to improve this service.",
   privacyLink: "Privacy Policy",
-  button: "Build My Project Brief",
+  button: "Build my project brief",
   writeLead: "Prefer to write to us?",
   writeLink: "Send a message.",
   pulseLead: "Not sure what needs improving?",
@@ -30,7 +30,7 @@ export const FLOW = {
   progress: (step: number, total: number) => `Step ${step} of ${total}`,
   continue: "Continue",
   back: "Back",
-  seeBrief: "See My Brief",
+  seeBrief: "See my brief",
   mainFocus: "Main focus:",
   change: "Change",
   chooseMainFocus: "Which one is the main focus?",
@@ -210,10 +210,10 @@ export const OPTIONAL = {
 
 export const ACTIONS = {
   book: "Choose a time for your call",
-  send: "Send My Brief",
-  edit: "Edit Brief",
+  send: "Send my brief",
+  edit: "Edit brief",
   print: "Print",
-  startAgain: "Start Again",
+  startAgain: "Start again",
 };
 
 // Under the main action: what happens to the answers before the call.
@@ -233,7 +233,7 @@ export const SEND = {
   insights: "Send me occasional studio insights.",
   smallPrint: "We use these details to reply to your request.",
   privacyLink: "Privacy Policy",
-  button: "Send My Brief",
+  button: "Send my brief",
   sending: "Sending...",
   success: "Your brief has been received. We'll review it and get back to you.",
   failure: "We couldn't send your brief. Your answers are still here, please try again.",

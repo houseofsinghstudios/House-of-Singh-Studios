@@ -75,6 +75,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 1. Webhook URL in public git history
 
+- **Status:** Done 21 Nov 2026, outside the code. The lead webhook in n8n has a new random path, `N8N_WEBHOOK_URL` was updated on Vercel (the variable is `N8N_WEBHOOK_URL`, not `N8N_LEAD_WEBHOOK_URL` as written below), production was redeployed, and Header Auth (`x-hos-webhook-secret`) is confirmed on all five webhooks. The new path is not written anywhere in the repository.
 - **Severity:** Medium
 - **Confidence:** Medium confidence. Whether the old path is still live, and whether Header Auth is on, are n8n settings we cannot see.
 - **Where:** Commits 102066c, d1641eb and f815b8a (`src/app/contact/page.tsx`, a client page at the time) and commit 92635b7 (`src/app/api/lead/route.ts`), all made on 1 Mar 2026. It is not in the current tree. The mitigation is documented at `docs/integrations/n8n.md:14-18`.
@@ -84,6 +85,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 2. Four form routes accept any content type
 
+- **Status:** Done 20 Nov 2026 (#260): JSON only on every form route, plus the Origin check. The Vercel part of that check was narrowed to this project's own addresses on 22 Nov 2026 (#269).
 - **Severity:** Medium
 - **Confidence:** High confidence.
 - **Where:** The careers, subscribe, brand-pulse and project-planner routes. Only `src/app/api/lead/route.ts:51` requires `application/json`.
@@ -93,6 +95,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 3. CSP allows inline scripts
 
+- **Status:** Done 20 Nov 2026 (#260): violations reported to /api/csp-report.
 - **Severity:** Medium
 - **Confidence:** High confidence.
 - **Where:** `next.config.ts:11`.
@@ -102,6 +105,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 4. `Cross-Origin-Opener-Policy` missing
 
+- **Status:** Done 20 Nov 2026 (#260): `same-origin-allow-popups`, so the Cal.com window still opens.
 - **Severity:** Medium
 - **Confidence:** High confidence.
 - **Where:** `next.config.ts:84-102`.
@@ -111,6 +115,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 5. Speed Insights loads before consent
 
+- **Status:** Done 20 Nov 2026 (#260), owner decision: Speed Insights renders inside the consent gate.
 - **Severity:** Medium
 - **Confidence:** High confidence.
 - **Where:** `(site)/layout.tsx:41`, outside the `analyticsEnabled` gate.
@@ -120,6 +125,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 6. Article images have no sizes
 
+- **Status:** Done 20 Nov 2026 (#261): `sizes` set to the real column.
 - **Severity:** Medium
 - **Confidence:** High confidence.
 - **Where:** `src/components/insights/ArticleBody.tsx:72-77`.
@@ -186,6 +192,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 13. Revalidate signature check is basic
 
+- **Status:** Done 22 Nov 2026 (#269): body read up to 64 KB, the signature checked with `timingSafeEqual`, timestamps more than 5 minutes from now refused. `parseBody` is no longer used.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `/api/revalidate`, using `@sanity/webhook` and `next-sanity` `parseBody`.
@@ -195,6 +202,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 14. Rate limiter trusts the first forwarded address
 
+- **Status:** Done 22 Nov 2026 (#269), owner decision: additions only. Each request also counts under Vercel's own client address (`x-vercel-forwarded-for`, else `x-real-ip`) when it differs; brand-pulse uses the shared helper.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `src/lib/rate-limit.ts:28-30`, repeated in `src/app/api/brand-pulse/route.ts:128-129`.
@@ -204,6 +212,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 15. Odd form values cause a 500
 
+- **Status:** Done 22 Nov 2026 (#269): any value that is not a string is empty, so lead and careers answer 400.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `src/lib/lead.ts:21-24`.
@@ -213,6 +222,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 16. Cleaned text is not escaped
 
+- **Status:** Done 22 Nov 2026 (#269), owner decision: additions only. One line fields collapse whitespace, campaign and lead source tags are stripped, landing pages must start with a single `/` (brand-pulse, planner and lead source). Escaping where sent is decided differently: the website sends plain text, because HTML encoding the payload would change what Airtable stores; n8n must escape values where it builds HTML emails or links (docs/integrations/n8n.md). React escapes everything the site shows.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `src/lib/form-input.ts:20` (`stripTags`), `src/lib/campaign.ts:26-30`, `src/lib/lead-source.ts:25-29`, the brand-pulse `landingPage` field (`route.ts:118`) and the lead source path check at `lead-source.ts:33`.
@@ -222,6 +232,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 17. Planner duplicate guard trusts the browser
 
+- **Status:** Done 22 Nov 2026 (#269): the duplicate key includes the sender's address, so someone who knows a brief id cannot pre empt the visitor's own event. n8n's `eventIdempotencyKey` stays the authority.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `src/app/api/project-planner/route.ts:19, 43-47`.
@@ -231,6 +242,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 18. HSTS preload does nothing here
 
+- **Status:** Done 22 Nov 2026 (#269): `preload` dropped.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `next.config.ts:100`.
@@ -240,6 +252,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 19. CSP could be tighter
 
+- **Status:** Done 22 Nov 2026 (#269): `frame-src 'none'` and `upgrade-insecure-requests`.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `next.config.ts:9-21`.
@@ -249,6 +262,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 20. `Permissions-Policy` is short
 
+- **Status:** Done 22 Nov 2026 (#269): also `payment`, `usb`, `serial`, `hid`, `display-capture` and `browsing-topics`. `interest-cohort` and `bluetooth` left out: Chrome does not know them and logs an error for each.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `next.config.ts:96`.
@@ -258,6 +272,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 21. Studio hardening gaps
 
+- **Status:** Done 22 Nov 2026 (#269): `form-action 'self'` in the Studio policy and `X-Robots-Tag: noindex, nofollow` on /studio and everything under it.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `STUDIO_CSP` in `next.config.ts`, and `src/app/robots.ts:12-13`.
@@ -267,6 +282,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 22. Consent defaults to granted outside strict regions
 
+- **Status:** Done 21 Nov 2026, owner decision: keep the default. Analytics outside strict regions load with notice and opt out, which suits PIPEDA. CLAUDE.md was reworded in #260 and records the decision since #269.
 - **Severity:** Low
 - **Confidence:** Medium confidence. It depends on how the regional rules are meant to work, which is a policy choice.
 - **Where:** `src/lib/consent.ts:34-37`.
@@ -276,6 +292,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 23. Weak alt text on article images
 
+- **Status:** Done 22 Nov 2026 (#269): alt is the Studio alt text, else the caption, else empty.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `ArticleBody.tsx:74`.
@@ -285,6 +302,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 24. Deprecated `priority` prop
 
+- **Status:** Done 20 Nov 2026 (#261): no `priority` prop remains. Images that load first use `fetchPriority="high"` with eager loading, and the homepage hero uses `preload`. Nothing more to change.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `CaseStudyTemplate.tsx:119`, `InsightArticle.tsx:129`, `InsightsClient.tsx:163`, `ServiceProjectCard.tsx:59` and `InitiativeLogo.tsx:24`.
@@ -366,30 +384,30 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 | # | Finding | Severity | Confidence |
 |---|---------|----------|------------|
-| 1 | Webhook URL in public git history | Medium | Medium |
-| 2 | Four form routes accept any content type | Medium | High |
-| 3 | CSP allows inline scripts | Medium | High |
-| 4 | Cross-Origin-Opener-Policy missing | Medium | High |
-| 5 | Speed Insights loads before consent (Protected, owner decision) | Medium | High |
-| 6 | Article images have no sizes | Medium | High |
+| 1 | Webhook URL in public git history (Done 21 Nov 2026, outside the code) | Medium | Medium |
+| 2 | Four form routes accept any content type (Done 20 Nov 2026, #260) | Medium | High |
+| 3 | CSP allows inline scripts (Done 20 Nov 2026, #260) | Medium | High |
+| 4 | Cross-Origin-Opener-Policy missing (Done 20 Nov 2026, #260) | Medium | High |
+| 5 | Speed Insights loads before consent (Protected, owner decision; Done 20 Nov 2026, #260) | Medium | High |
+| 6 | Article images have no sizes (Done 20 Nov 2026, #261) | Medium | High |
 | 7 | Large client components | Medium | High |
 | 8 | Studio prices in Insights articles (Done 20 Nov 2026 in Sanity, all 29 articles rescanned clean) | Medium | High |
 | 9 | Dependency advisories | Low | High |
 | 10 | Outdated packages | Low | High |
 | 11 | Unmaintained page transition package | Low | High |
 | 12 | `.env.local` once tracked | Low | High |
-| 13 | Revalidate signature check is basic | Low | High |
-| 14 | Rate limiter trusts first forwarded address (Protected, owner decision) | Low | High |
-| 15 | Odd form values cause a 500 | Low | High |
-| 16 | Cleaned text not escaped (Protected, owner decision) | Low | High |
-| 17 | Planner duplicate guard trusts the browser | Low | High |
-| 18 | HSTS preload does nothing here | Low | High |
-| 19 | CSP could be tighter | Low | High |
-| 20 | Permissions-Policy is short | Low | High |
-| 21 | Studio hardening gaps | Low | High |
-| 22 | Consent default outside strict regions (Protected, owner decision) | Low | Medium |
-| 23 | Weak alt text on article images | Low | High |
-| 24 | Deprecated `priority` prop | Low | High |
+| 13 | Revalidate signature check is basic (Done 22 Nov 2026, #269) | Low | High |
+| 14 | Rate limiter trusts first forwarded address (Protected, owner decision; Done 22 Nov 2026, #269) | Low | High |
+| 15 | Odd form values cause a 500 (Done 22 Nov 2026, #269) | Low | High |
+| 16 | Cleaned text not escaped (Protected, owner decision; Done 22 Nov 2026, #269) | Low | High |
+| 17 | Planner duplicate guard trusts the browser (Done 22 Nov 2026, #269) | Low | High |
+| 18 | HSTS preload does nothing here (Done 22 Nov 2026, #269) | Low | High |
+| 19 | CSP could be tighter (Done 22 Nov 2026, #269) | Low | High |
+| 20 | Permissions-Policy is short (Done 22 Nov 2026, #269) | Low | High |
+| 21 | Studio hardening gaps (Done 22 Nov 2026, #269) | Low | High |
+| 22 | Consent default outside strict regions (Protected, owner decision; Done 21 Nov 2026, owner decision) | Low | Medium |
+| 23 | Weak alt text on article images (Done 22 Nov 2026, #269) | Low | High |
+| 24 | Deprecated `priority` prop (Done 20 Nov 2026, #261) | Low | High |
 | 25 | Client components that could be server components | Low | High |
 | 26 | Unused files | Code health | High |
 | 27 | Unused exports (analytics helper: Protected, owner decision) | Code health | High |

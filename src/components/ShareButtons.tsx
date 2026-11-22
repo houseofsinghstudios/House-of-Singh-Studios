@@ -38,7 +38,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
         onClick={handleCopy}
         aria-label="Copy link"
       >
-        {copied ? 'Copied' : 'Copy Link'}
+        {copied ? 'Copied' : 'Copy link'}
       </button>
       <a
         className="share-btn"
