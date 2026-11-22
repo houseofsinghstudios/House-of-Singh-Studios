@@ -254,3 +254,15 @@ test("the light in CSS (desktop only): the row's background, the looser name, th
   // Phones: the inner span carries no band at all.
   assert.doesNotMatch(css.slice(css.indexOf("@media (max-width: 1080px)")), /wwd-ink/);
 });
+
+// Homepage audit H-05 (22 Nov 2026): without JavaScript all four panels read in full.
+test("panels: open by default, collapsed only when JavaScript runs, inert only in the browser", () => {
+  const css = readFileSync("src/components/homepage/what-we-do/wwd.css", "utf8");
+  assert.match(css, /\.wwd-panel \{\n  display: grid;\n  grid-template-rows: 1fr;/, "open without JavaScript");
+  assert.match(css, /html\[data-js\] \.wwd-panel \{\n  grid-template-rows: 0fr;\n\}\nhtml\[data-js\] \.wwd-panel\[data-open="true"\] \{\n  grid-template-rows: 1fr;/);
+  assert.match(css, /html:not\(\[data-js\]\) \.wwd-plus \{\n  display: none;/, "no plus where the button cannot work");
+  const rows = readFileSync("src/components/homepage/what-we-do/WwdRows.tsx", "utf8");
+  assert.match(rows, /inert=\{inBrowser && !isOpen\}/);
+  assert.match(rows, /const inBrowser = useInBrowser\(\);/);
+});
+

@@ -291,14 +291,22 @@
   transform: rotate(0deg);
 }
 
-/* Panels open by height; a closed one stays in the page, inert. */
+/* Panels open by height; a closed one stays in the page, inert. They collapse only when JavaScript runs
+   (html[data-js], set by the inline script in the site layout before the page paints, so nothing flashes
+   or shifts): without it all four read in full, and the plus, which needs JavaScript, is hidden. */
 .wwd-panel {
   display: grid;
-  grid-template-rows: 0fr;
+  grid-template-rows: 1fr;
   transition: grid-template-rows 0.6s var(--wwd-ease);
 }
-.wwd-panel[data-open="true"] {
+html[data-js] .wwd-panel {
+  grid-template-rows: 0fr;
+}
+html[data-js] .wwd-panel[data-open="true"] {
   grid-template-rows: 1fr;
+}
+html:not([data-js]) .wwd-plus {
+  display: none;
 }
 .wwd-panel-clip {
   min-height: 0;

@@ -6,6 +6,7 @@
 // "Plan your project" carries the choices into the planner, which opens on question 02.
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useInBrowser } from "@/lib/use-in-browser";
 import { Link } from "next-view-transitions";
 import { track } from "@/lib/analytics";
 import { useHomeSector } from "@/lib/home-choice";
@@ -16,7 +17,6 @@ import { BUSINESS_TYPES } from "@/lib/work-index";
 // Values that exist only in the browser: the server (and hydration) sees the second snapshot, the browser
 // the first, so nothing mismatches.
 const noSubscribe = () => () => {};
-const useInBrowser = () => useSyncExternalStore(noSubscribe, () => true, () => false);
 const useStarted = () => useSyncExternalStore(noSubscribe, () => startedText(new Date()), () => "");
 
 // The entrance is armed only in the browser (without JavaScript the sheet simply shows) and plays once,

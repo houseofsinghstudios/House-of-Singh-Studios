@@ -24,11 +24,15 @@ export const REVEAL_SELECTOR = [
 export const REVEAL_SAFETY_MS = 4000;
 
 // Runs in the page before it paints (src/app/(site)/layout.tsx), so it only ever runs with JavaScript:
-// without it nothing is armed and every element shows at full strength. If ScrollObserver has not
-// started within REVEAL_SAFETY_MS (a script failed to load), the page is disarmed and everything shows.
+// without it nothing is armed and every element shows at full strength. It sets two flags on <html>:
+// data-js, always (what needs JavaScript to work, such as the What we do accordion, collapses only under
+// it), and data-reveal, the shared reveal's hidden starting states. If ScrollObserver has not started
+// within REVEAL_SAFETY_MS (a script failed to load), data-reveal is removed and everything shows;
+// data-js stays, so nothing that already collapsed jumps open.
 // Inline scripts are allowed by the site's Content Security Policy (script-src 'unsafe-inline').
 export const REVEAL_ARM_SCRIPT =
-  "(function(){try{if(!('IntersectionObserver' in window))return;var d=document.documentElement;" +
+  "(function(){try{var d=document.documentElement;d.setAttribute('data-js','');" +
+  "if(!('IntersectionObserver' in window))return;" +
   "d.setAttribute('data-reveal','');setTimeout(function(){if(!window.__hosReveal)d.removeAttribute('data-reveal')}," +
   REVEAL_SAFETY_MS +
   ")}catch(e){}})();";

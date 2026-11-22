@@ -40,6 +40,9 @@ test("the arming script: sets data-reveal, disarms after the safety time, render
   assert.match(REVEAL_ARM_SCRIPT, /setAttribute\('data-reveal',''\)/);
   assert.match(REVEAL_ARM_SCRIPT, new RegExp(`window\\.__hosReveal\\)d\\.removeAttribute\\('data-reveal'\\)\\},${REVEAL_SAFETY_MS}\\)`));
   assert.match(REVEAL_ARM_SCRIPT, /IntersectionObserver' in window/);
+  // data-js is set first and never removed: the What we do accordion collapses under it.
+  assert.match(REVEAL_ARM_SCRIPT, /^\(function\(\)\{try\{var d=document\.documentElement;d\.setAttribute\('data-js',''\);/);
+  assert.doesNotMatch(REVEAL_ARM_SCRIPT, /removeAttribute\('data-js'\)/);
   assert.match(readFileSync("src/app/(site)/layout.tsx", "utf8"), /<script dangerouslySetInnerHTML=\{\{ __html: REVEAL_ARM_SCRIPT \}\} \/>/);
   const headers = (await nextConfig.headers!()).find((r) => r.source === "/(.*)")!.headers;
   assert.match(headers.find((h) => h.key === "Content-Security-Policy")!.value, /script-src 'self' 'unsafe-inline'/);
