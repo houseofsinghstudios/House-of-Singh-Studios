@@ -141,7 +141,7 @@ REVEAL TIMING:
 
 WHY: Variety in entrance animations prevents the page from feeling monotonous. One single fade-up for everything gets boring after 3 sections. Different elements deserve different entrances.
 
-IMPLEMENTATION: Add new CSS classes: .reveal-clip (clip-path wipe), .reveal-stagger-parent (applies stagger delays to children). Extend ScrollObserver to handle these. All pure CSS with IntersectionObserver fallback.
+AS BUILT (since 22 Nov 2026): one path in every browser, no scroll linked animation-timeline: view() (it reversed on the way back up and left content half faded on the first screen). An inline script in src/app/(site)/layout.tsx (REVEAL_ARM_SCRIPT, src/lib/reveal.ts) sets html[data-reveal] before the page paints, only when JavaScript runs; the hidden starting states in globals.css ("The shared reveal") apply only under it, so a page without JavaScript shows everything at full strength. ScrollObserver adds .in-view once to every element in REVEAL_SELECTOR: at once for anything already on screen (any part of it), as it enters for the rest (its top a tenth of the screen in), and for elements added later (a MutationObserver); it never removes the class. If ScrollObserver has not started within 4s, the script disarms the page and everything shows. Reduced motion: nothing is hidden. Classes: .css-reveal, .scroll-reveal-up, .scroll-clip-reveal, .reveal-clip (curtain wipe; a fade up below 768px), .reveal-stagger-parent (children 80ms apart), .reveal-text, and the About and Insights cascades. Elements whose class string changes after render (React rewrites className) must carry their changing state in a data attribute instead, or the reveal is lost.
 
 ### Layer 4: Hover Interactions
 
@@ -398,7 +398,7 @@ Target: Lighthouse 80+ across all metrics. Experience takes priority over perfec
 - Fonts: Inter loaded via next/font with display swap
 - Cursor: requestAnimationFrame for 60fps tracking
 - Page transitions: View Transitions API (native, zero bundle cost)
-- Scroll animations: animation-timeline: view() in Chrome (GPU compositor, zero main thread), IntersectionObserver fallback in Safari
+- Scroll reveals: one IntersectionObserver path in every browser (Layer 3), each element revealed once with a CSS transition. No scroll linked animation-timeline: view() for reveals since 22 Nov 2026; the 1px scroll progress line still uses animation-timeline: scroll()
 - Exception: Lenis (smooth scroll) is the only approved third-party animation dependency. It provides the decelerated scroll feel that CSS cannot replicate. No other animation libraries are permitted.
 
 ---

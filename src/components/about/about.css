@@ -135,7 +135,7 @@
 }
 
 @media (hover: hover) {
-  .about-duel-item--not.is-paired {
+  .about-duel-item--not[data-paired] {
     color: var(--text-secondary);
     text-decoration-thickness: 2px;
     text-decoration-color: var(--text-secondary);

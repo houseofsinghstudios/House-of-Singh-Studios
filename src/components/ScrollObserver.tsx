@@ -1,67 +1,54 @@
 "use client";
 
+// Client component: it watches the page in the browser. The shared reveal (globals.css): each reveal
+// element gets .in-view once, at once when it is already on screen, as it enters for the rest, and for
+// elements added later (a new page, a filter). The class is never removed, so nothing reverses on the
+// way back up. The inline script in (site)/layout.tsx arms the hidden starting state; window.__hosReveal
+// tells that script's safety timer this observer is running.
 import { useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { onScreen, REVEAL_SELECTOR } from "@/lib/reveal";
 
-/**
- * Safari/Firefox fallback for CSS scroll-driven animations.
- * Uses IntersectionObserver to add "in-view" class to elements
- * when they enter the viewport. Does nothing in browsers that
- * support animation-timeline: view() (Chrome 115+).
- *
- * Re-runs on every route change so newly rendered pages get observed.
- */
+declare global {
+  interface Window {
+    __hosReveal?: boolean;
+  }
+}
+
+const reveal = (el: Element) => el.classList.add("in-view");
+
 export default function ScrollObserver() {
-  const pathname = usePathname();
-
   useEffect(() => {
-    // Skip if browser supports CSS scroll-driven animations
-    if (
-      typeof CSS !== "undefined" &&
-      CSS.supports &&
-      CSS.supports("animation-timeline", "view()")
-    ) {
-      return;
-    }
-
-    // Skip if user prefers reduced motion
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    // Small delay to ensure new page DOM is ready after navigation
-    const timeout = setTimeout(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("in-view");
-              observer.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.15 }
-      );
-
-      const targets = document.querySelectorAll(
-        ".css-reveal:not(.in-view), " +
-        ".scroll-reveal-up:not(.in-view), .scroll-clip-reveal:not(.in-view), " +
-        ".about-process-step:not(.in-view), " +
-        ".founder-photo-reveal:not(.in-view), " +
-        ".cta-section-mobile > div:first-child:not(.in-view), " +
-        ".cta-section-mobile > h2:not(.in-view), " +
-        ".cta-section-mobile > p:not(.in-view), " +
-        ".cta-section-mobile > div:last-child:not(.in-view), " +
-        ".reveal-clip:not(.in-view), .reveal-stagger-parent:not(.in-view), .reveal-text:not(.in-view), " +
-        ".ins-card:not(.in-view), .ins-featured:not(.in-view), " +
-        ".about-team-card:not(.in-view)"
-      );
-
-      targets.forEach((el) => observer.observe(el));
-
-      return () => observer.disconnect();
-    }, 100);
-
-    return () => clearTimeout(timeout);
-  }, [pathname]);
+    window.__hosReveal = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          reveal(entry.target);
+          io.unobserve(entry.target);
+        }
+      },
+      // An element entering from below reveals once its top is a tenth of the screen in.
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    const take = (el: Element) => {
+      if (el.classList.contains("in-view")) return;
+      if (onScreen(el.getBoundingClientRect(), window.innerHeight)) reveal(el);
+      else io.observe(el);
+    };
+    const scan = (root: Element | Document) => {
+      if (root instanceof Element && root.matches(REVEAL_SELECTOR)) take(root);
+      root.querySelectorAll(REVEAL_SELECTOR).forEach(take);
+    };
+    scan(document);
+    const mo = new MutationObserver((records) => {
+      for (const r of records) r.addedNodes.forEach((n) => n instanceof Element && scan(n));
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
+  }, []);
 
   return null;
 }
