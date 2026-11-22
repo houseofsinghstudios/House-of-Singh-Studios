@@ -5,6 +5,7 @@
 import { useRef, useState, FormEvent } from "react";
 import { trackOnce } from "@/lib/analytics";
 import { createSubmissionKeeper } from "@/lib/submission-id";
+import { usePointerFocusFlag } from "@/lib/use-pointer-focus";
 
 export default function ArticleNewsletter() {
   const [email, setEmail] = useState("");
@@ -16,6 +17,9 @@ export default function ArticleNewsletter() {
   const inFlight = useRef(false);
   // The submission id: the same for retries of the same signup, so n8n can drop a duplicate.
   const [submission] = useState(() => createSubmissionKeeper());
+  // Keyboard focus shows the shared 2px rule on the field; a mouse or touch press holds it back (article.css).
+  const formRef = useRef<HTMLFormElement>(null);
+  usePointerFocusFlag(formRef, status);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -55,7 +59,7 @@ export default function ArticleNewsletter() {
 
   return (
     <div style={{ marginTop: 32 }}>
-      <form onSubmit={handleSubmit} method="post" action="/api/subscribe" className="art-newsletter-form" data-clarity-mask="True">
+      <form ref={formRef} onSubmit={handleSubmit} method="post" action="/api/subscribe" className="art-newsletter-form" data-clarity-mask="True">
         {/* Without JavaScript the browser posts to the route, which answers with a written page. */}
         <span className="art-newsletter-label">
           Get studio insights in your inbox.

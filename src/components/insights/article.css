@@ -304,6 +304,13 @@
   transition: border-color 0.3s ease;
 }
 
+/* Keyboard focus: the shared form focus, a 2px Obsidian rule (the border plus a 1px inset shadow,
+   so the field keeps its size), as on the contact, careers and planner fields (site audit S-04). */
+form:not([data-pointer-focus]) .art-newsletter-input:focus-visible {
+  border-bottom-color: var(--text-primary);
+  box-shadow: inset 0 -1px 0 var(--text-primary);
+}
+
 .art-newsletter-input::placeholder {
   color: var(--text-label);
   opacity: 1;
