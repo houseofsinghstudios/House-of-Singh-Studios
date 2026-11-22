@@ -8,7 +8,6 @@
 /* ── Role cards ── */
 .role-card {
   border-top: 1px solid var(--border);
-  cursor: pointer;
 }
 
 .role-card:last-child {
@@ -16,11 +15,38 @@
 }
 
 .role-card-header {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   padding: 32px 0;
   gap: 24px;
+}
+
+/* The role's title is the header's button (RoleCard.tsx): it looks like the title, and its ::after
+   covers the whole header, so a click anywhere on it opens the role. Keyboard focus outlines the
+   header, as the Initiatives rows do. */
+.role-card-btn {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.role-card-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.role-card-btn:focus-visible {
+  outline: none;
+}
+.role-card-header:has(.role-card-btn:focus-visible) {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 8px;
 }
 
 .role-card-header:hover .role-card-title {
@@ -46,18 +72,24 @@
   line-height: 1;
 }
 
-.role-card-toggle.expanded {
+.role-card-toggle[data-open="true"] {
   transform: rotate(45deg);
 }
 
+/* Without JavaScript every role reads in full, with no plus. With it, a closed body collapses from
+   the first paint (html[data-js] is set before it) and is inert once the page runs. */
 .role-card-body {
   overflow: hidden;
-  max-height: 0;
   transition: max-height 0.5s ease;
 }
-
-.role-card-body.expanded {
+html[data-js] .role-card-body[data-open="false"] {
+  max-height: 0;
+}
+html[data-js] .role-card-body[data-open="true"] {
   max-height: 2000px;
+}
+html:not([data-js]) .role-card-toggle {
+  visibility: hidden;
 }
 
 .role-card-body-inner {

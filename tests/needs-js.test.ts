@@ -27,7 +27,7 @@ test("needs-js: every control that only works with JavaScript carries it", () =>
     ["src/components/brand-pulse/PulseIntro.tsx", /className="bp-intro-actions needs-js"/],
     ["src/components/project-planner/PlannerIntro.tsx", /pp-btn needs-js/],
     ["src/components/partners/IntroductionBox.tsx", /className="pt-intro-actions needs-js"/],
-    ["src/components/careers/CareersClient.tsx", /className="apply-role-btn needs-js"/],
+    ["src/components/careers/RoleCard.tsx", /className="apply-role-btn needs-js"/],
     ["src/components/ShareButtons.tsx", /className="share-btn needs-js"\s+onClick=\{handleCopy\}/],
   ];
   for (const [file, pattern] of marked) assert.match(read(file), pattern, file);
