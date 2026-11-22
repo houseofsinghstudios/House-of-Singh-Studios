@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DEFAULT_SHARE_IMAGE, PINTEREST_VERIFICATION, WEBSITE_OG } from "@/lib/seo";
+import { REVEAL_ARM_SCRIPT } from "@/lib/reveal";
 import { inter } from "./fonts";
 
 // Root layout shared by the website and the Studio: the document, the font and the default
@@ -41,8 +42,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-CA" className={inter.variable}>
+    // suppressHydrationWarning: the arming script below sets data-js and data-reveal on <html> before
+    // React hydrates; this silences that one element's attribute warning, nothing deeper.
+    <html lang="en-CA" className={inter.variable} suppressHydrationWarning>
       <head>
+        {/* Sets html[data-js] and arms the shared reveal before the page paints, on every site page,
+            the 404 included; it skips /studio (src/lib/reveal.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: REVEAL_ARM_SCRIPT }} />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32" />
         <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16" />

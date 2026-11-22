@@ -19,7 +19,10 @@ export const REVEAL_SELECTOR = [
 // How long the page waits for ScrollObserver before it gives up and shows everything at once.
 export const REVEAL_SAFETY_MS = 4000;
 
-// Runs in the page before it paints (src/app/(site)/layout.tsx), so it only ever runs with JavaScript:
+// Runs in the page before it paints, from the root layout's <head> (src/app/layout.tsx), so every
+// document gets it as real HTML, the 404 page included (site audit S-05: from the site layout it reached
+// the 404 only inside the React payload, where an inline script never runs). The Studio shares the root
+// layout and is skipped. It only ever runs with JavaScript:
 // without it nothing is armed and every element shows at full strength. It sets two flags on <html>:
 // data-js, always (what needs JavaScript to work, such as the What we do accordion, collapses only under
 // it), and data-reveal, the shared reveal's hidden starting states. If ScrollObserver has not started
@@ -27,7 +30,8 @@ export const REVEAL_SAFETY_MS = 4000;
 // data-js stays, so nothing that already collapsed jumps open.
 // Inline scripts are allowed by the site's Content Security Policy (script-src 'unsafe-inline').
 export const REVEAL_ARM_SCRIPT =
-  "(function(){try{var d=document.documentElement;d.setAttribute('data-js','');" +
+  "(function(){try{if(/^\\/studio(\\/|$)/.test(location.pathname))return;" +
+  "var d=document.documentElement;d.setAttribute('data-js','');" +
   "if(!('IntersectionObserver' in window))return;" +
   "d.setAttribute('data-reveal','');setTimeout(function(){if(!window.__hosReveal)d.removeAttribute('data-reveal')}," +
   REVEAL_SAFETY_MS +
