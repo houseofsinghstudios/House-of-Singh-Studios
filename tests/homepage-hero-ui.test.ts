@@ -144,3 +144,16 @@ test("Selected work never competes with the hero image: nothing priority, the wi
   assert.match(read("src/components/work/index/WorkWindow.tsx"), /\{shown && armed && \(/);
   assert.match(read("src/components/work/index/HomeWorkIndex.tsx"), /armed=\{armed\}/);
 });
+
+// Homepage audit H-06 (22 Nov 2026): the word, its band and the caption change only once the next image
+// has loaded and decoded; a late image holds everything, and the clock waits with it.
+test("rotation: the clock asks, the next image's readiness decides, and the hold is respected", () => {
+  const src = readFileSync("src/components/homepage/HeroImages.tsx", "utf8");
+  assert.match(src, /onAnimationEnd=\{\(e\) => e\.target === e\.currentTarget && clockEnded\(\)\}/, "the progress line's end only asks");
+  assert.match(src, /img\.decode\(\)\.then\(done, done\)/, "decoded, and a failed decode never stalls");
+  assert.match(src, /onLoad=\{\(e\) => whenDecoded\(e\.currentTarget, onReady\)\}/);
+  assert.match(src, /onError=\{onReady\}/, "a broken image never stalls the rotation");
+  assert.match(src, /if \(!waiting\.current \|\| haltedRef\.current \|\| !ready\.current\.has\(nextRef\.current\)\) return;/);
+  assert.match(src, /visible=\{key === index\}/, "the image on show is always the rotation's, so word and caption match it");
+  assert.doesNotMatch(src, /setShown|loaded\.includes/, "no second notion of the image on show");
+});
