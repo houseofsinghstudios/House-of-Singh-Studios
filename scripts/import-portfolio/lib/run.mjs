@@ -134,7 +134,7 @@ export function explain(err) {
   return err && err.message ? err.message : String(err);
 }
 
-export const dims = ({ width, height }) => `${width} x ${height}`;
+const dims = ({ width, height }) => `${width} x ${height}`;
 
 export function size(bytes) {
   if (bytes >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(2)} MB`;

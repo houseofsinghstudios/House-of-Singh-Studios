@@ -3,6 +3,7 @@
 // src/lib/sanity/projects.ts. Pure, so the order and the Studio checks are tested without Sanity.
 
 import { projectType, type ProjectType } from "@/lib/initiatives/types";
+import { asText } from "./as-text";
 
 // At most this many projects rotate in the hero.
 export const HERO_MAX = 6;
@@ -64,21 +65,20 @@ export function sortHeroProjects<T extends Pick<HeroProject, "title" | "heroOrde
 // Each returns a message when the check fails, or undefined. The schema turns them into errors or
 // warnings.
 
-const text = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
 // Required once the project shows in the hero.
 export function heroRequiredMessage(value: unknown, shown: boolean, message: string): string | undefined {
-  return shown && !text(value) ? message : undefined;
+  return shown && !asText(value) ? message : undefined;
 }
 
 // A warning when the text runs past the length that fits.
 export function heroLengthMessage(value: unknown, max: number, message: string): string | undefined {
-  return text(value).length > max ? message : undefined;
+  return asText(value).length > max ? message : undefined;
 }
 
 // The field word reads inside a sentence, so it is lower case only.
 export function heroWordCaseMessage(value: unknown): string | undefined {
-  const word = text(value);
+  const word = asText(value);
   return word && word !== word.toLowerCase() ? "Use lower case only, for example home brands." : undefined;
 }
 

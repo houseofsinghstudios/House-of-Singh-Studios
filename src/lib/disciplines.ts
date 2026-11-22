@@ -1,6 +1,6 @@
 // Display names for discipline ids stored on projects. Shared by the filter bar and every tag list.
 
-export const DISCIPLINE_LABELS: Record<string, string> = {
+const DISCIPLINE_LABELS: Record<string, string> = {
   "brand-identity": "Brand Identity",
   packaging: "Packaging",
   publication: "Publication",

@@ -3,7 +3,7 @@
 // the note stores nothing. Plain elements with Studio's own colour variables, so it reads in light
 // and dark mode without a UI dependency.
 
-export const REFERENCE_NOTE =
+const REFERENCE_NOTE =
   "Reference copy. The website currently reads services from the code (src/data/services.ts). Changes made here will not appear on the site until services are switched to Sanity.";
 
 export function ReferenceNote() {

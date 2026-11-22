@@ -8,7 +8,7 @@ export function shareUrl(answers: Answers, origin: string = SITE_URL): string {
   return `${origin}/brand-pulse?r=${encode(answers)}`;
 }
 
-export function answerLabel<Q extends QuestionId>(q: Q, answers: Answers): string {
+function answerLabel<Q extends QuestionId>(q: Q, answers: Answers): string {
   const options: Record<string, { label: string }> = QUESTIONS[q].options;
   return options[answers[q]].label;
 }

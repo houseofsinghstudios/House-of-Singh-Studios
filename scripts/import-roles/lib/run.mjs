@@ -69,12 +69,12 @@ function printRole({ slug, meta, paragraphs, lists }) {
   }
 }
 
-export async function findExisting(client, slug) {
+async function findExisting(client, slug) {
   return client.fetch(`*[_type == "role" && slug.current == $slug]{ _id, title, publishedAt }`, { slug });
 }
 
 // Create, skip or overwrite for one slug. Overwrite keeps the original publishedAt.
-export function decideTarget(existing, overwrite) {
+function decideTarget(existing, overwrite) {
   if (existing.length === 0) return { action: "create" };
 
   const published = existing.filter((d) => !d._id.startsWith("drafts.") && !d._id.startsWith("versions."));
@@ -91,7 +91,7 @@ export function decideTarget(existing, overwrite) {
   return { action: "overwrite", id: source._id.replace(/^drafts\./, ""), publishedAt: source.publishedAt || null, draftNote };
 }
 
-export function buildRoleDocument({ slug, meta, paragraphs, lists }, publishedAt) {
+function buildRoleDocument({ slug, meta, paragraphs, lists }, publishedAt) {
   const keys = new Set();
   const doc = {
     _type: "role",

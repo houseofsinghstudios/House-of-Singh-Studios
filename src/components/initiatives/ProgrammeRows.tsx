@@ -24,11 +24,11 @@ export interface ProgrammeRow {
 
 // The panel logo's drawn width is about 55% of the panel, which is 45% of the row; 22vw is a
 // little more at every width the panel shows, and the browser doubles it on a 2x screen.
-export const PANEL_LOGO_SIZES = "22vw";
+const PANEL_LOGO_SIZES = "22vw";
 
 // Whether the panel shows the programme's logo: a logo is set and there is no published project.
 // Decided on every render, so publishing a project brings the cover back and the small logo too.
-export const logoInPanel = (row: ProgrammeRow) => !row.newest && !!initiativeLogo(row.initiative, "light");
+const logoInPanel = (row: ProgrammeRow) => !row.newest && !!initiativeLogo(row.initiative, "light");
 
 function Visual({ row, number }: { row: ProgrammeRow; number: string }) {
   const { initiative, newest } = row;

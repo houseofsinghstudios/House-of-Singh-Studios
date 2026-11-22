@@ -9,7 +9,7 @@
 import { useEffect, type RefObject } from "react";
 
 // Fast start, gentle finish.
-export const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
 // Keys of runs that already happened in this browser session.
 const finishedRuns = new Set<string>();

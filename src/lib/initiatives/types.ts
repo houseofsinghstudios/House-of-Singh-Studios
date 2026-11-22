@@ -1,12 +1,13 @@
 // Initiatives and project types. Pure, so pages, queries and tests share one set of rules.
 // The lists must match sanity/schemas/initiative.ts, sanity/schemas/caseStudy.ts and
 // scripts/import-portfolio/lib/config.mjs.
+import { asText } from "../as-text";
 
-export const PROJECT_TYPES = ["client", "exploration", "parallel", "commons"] as const;
+const PROJECT_TYPES = ["client", "exploration", "parallel", "commons"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
 // The visible label for each project type. Client work shows nothing new.
-export const PROJECT_TYPE_LABELS: Record<ProjectType, string | null> = {
+const PROJECT_TYPE_LABELS: Record<ProjectType, string | null> = {
   client: null,
   exploration: "Exploration",
   parallel: "Parallel",
@@ -22,12 +23,12 @@ export function projectTypeLabel(value: unknown): string | null {
   return PROJECT_TYPE_LABELS[projectType(value)];
 }
 
-export const INITIATIVE_STATUSES = ["live", "nominations-open", "opening-soon", "by-invitation", "hidden"] as const;
+const INITIATIVE_STATUSES = ["live", "nominations-open", "opening-soon", "by-invitation", "hidden"] as const;
 export type InitiativeStatus = (typeof INITIATIVE_STATUSES)[number];
 
 // The words shown in brackets on the status line when no statusLabel override is set.
 // A live program with no override shows no status line at all.
-export const STATUS_LABELS: Record<Exclude<InitiativeStatus, "hidden">, string> = {
+const STATUS_LABELS: Record<Exclude<InitiativeStatus, "hidden">, string> = {
   live: "",
   "nominations-open": "Nominations open",
   "opening-soon": "Opening soon",
@@ -40,7 +41,7 @@ export interface GlanceItem {
   value: string;
 }
 
-export const MAX_GLANCE = 3;
+const MAX_GLANCE = 3;
 
 // An organization Commons has done pro bono work for, shown as its logo. Order as entered in Studio.
 export interface Recognition {
@@ -83,7 +84,7 @@ export function initiativeStatus(value: unknown): InitiativeStatus {
   return (INITIATIVE_STATUSES as readonly unknown[]).includes(value) ? (value as InitiativeStatus) : "hidden";
 }
 
-export const isVisible = (i: Pick<Initiative, "status">) => i.status !== "hidden";
+const isVisible = (i: Pick<Initiative, "status">) => i.status !== "hidden";
 
 // Visible initiatives in their display order. Hidden ones never leave this function.
 export function visibleInitiatives<T extends Pick<Initiative, "status" | "order" | "name">>(list: T[]): T[] {
@@ -117,14 +118,13 @@ export function withFallbackCopy(list: Initiative[], fallback: Initiative[]): In
   });
 }
 
-const text = (v: unknown): string => (typeof v === "string" ? v.trim() : "");
 const records = (v: unknown): Record<string, unknown>[] =>
   Array.isArray(v) ? v.filter((x): x is Record<string, unknown> => !!x && typeof x === "object") : [];
 
 // At a glance items with a value, at most three.
 export function toGlance(v: unknown): GlanceItem[] {
   return records(v)
-    .map((item) => ({ label: text(item.label) || undefined, value: text(item.value) }))
+    .map((item) => ({ label: asText(item.label) || undefined, value: asText(item.value) }))
     .filter((item) => item.value)
     .slice(0, MAX_GLANCE);
 }
@@ -133,9 +133,9 @@ export function toGlance(v: unknown): GlanceItem[] {
 export function toRecognitions(v: unknown): Recognition[] {
   return records(v).flatMap((item) => {
     const logo = item.logo && typeof item.logo === "object" ? (item.logo as Record<string, unknown>) : {};
-    const name = text(item.name);
-    const url = text(logo.url);
-    const alt = text(logo.alt);
+    const name = asText(item.name);
+    const url = asText(logo.url);
+    const alt = asText(logo.alt);
     const width = typeof logo.width === "number" ? logo.width : 0;
     const height = typeof logo.height === "number" ? logo.height : 0;
     if (!name || !url || !alt || !width || !height) return [];
@@ -147,12 +147,12 @@ export function toRecognitions(v: unknown): Recognition[] {
 // A logo with a URL, alt text and its dimensions, or undefined: anything incomplete shows no logo.
 export function toInitiativeLogo(v: unknown): InitiativeLogo | undefined {
   const logo = v && typeof v === "object" ? (v as Record<string, unknown>) : {};
-  const url = text(logo.url);
-  const alt = text(logo.alt);
+  const url = asText(logo.url);
+  const alt = asText(logo.alt);
   const width = typeof logo.width === "number" ? logo.width : 0;
   const height = typeof logo.height === "number" ? logo.height : 0;
   if (!url || !alt || !width || !height) return undefined;
-  const svg = text(logo.extension).toLowerCase() === "svg" || /\.svg(\?|$)/i.test(url);
+  const svg = asText(logo.extension).toLowerCase() === "svg" || /\.svg(\?|$)/i.test(url);
   return { url, alt, width, height, svg };
 }
 
@@ -182,21 +182,21 @@ function logos(doc: Record<string, unknown>): Pick<Initiative, "logo" | "logoOnD
 // One Sanity initiative document as an Initiative, or null without a name and slug.
 // An unknown status reads as hidden.
 export function toInitiative(doc: Record<string, unknown>): Initiative | null {
-  const name = text(doc.name);
-  const slug = text(doc.slug);
+  const name = asText(doc.name);
+  const slug = asText(doc.slug);
   if (!name || !slug) return null;
   return {
     name,
     slug,
-    category: text(doc.category),
-    tagline: text(doc.tagline),
-    summary: text(doc.summary),
+    category: asText(doc.category),
+    tagline: asText(doc.tagline),
+    summary: asText(doc.summary),
     status: initiativeStatus(doc.status),
-    statusLabel: text(doc.statusLabel) || undefined,
+    statusLabel: asText(doc.statusLabel) || undefined,
     order: typeof doc.order === "number" ? doc.order : 999,
     hasPage: doc.hasPage === true,
-    seoTitle: text(doc.seoTitle) || undefined,
-    seoDescription: text(doc.seoDescription) || undefined,
+    seoTitle: asText(doc.seoTitle) || undefined,
+    seoDescription: asText(doc.seoDescription) || undefined,
     atAGlance: toGlance(doc.atAGlance),
     recognitions: toRecognitions(doc.recognitions),
     ...logos(doc),

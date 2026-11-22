@@ -23,7 +23,7 @@ export type CaseStudyBlock =
   | { key: string; type: "statement"; quote: string; body?: PortableTextBlock[] }
   | { key: string; type: "feature"; image: BlockImage; detail: BlockImage; caption?: string };
 
-export interface ProjectDetailStat {
+interface ProjectDetailStat {
   value: string;
   label: string;
 }
@@ -68,7 +68,7 @@ export interface ProjectDetail {
   workDelivered?: string[];
 }
 
-export const projectDetails: ProjectDetail[] = [
+const projectDetails: ProjectDetail[] = [
   {
     slug: "tedxtoronto",
     name: "TEDxToronto Visual Identity",

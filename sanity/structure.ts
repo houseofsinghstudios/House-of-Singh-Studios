@@ -1,10 +1,9 @@
 import type { StructureResolver } from "sanity/structure";
 
-// Service Pricing is a singleton: one document with the fixed id "servicePricing", opened directly
-// instead of listed. Services (a reference copy of the code) and network members are listed under
-// their own titles, by their order. Everything else is listed as before.
-export const SINGLETONS = ["servicePricing"];
-
+// Services (a reference copy of the code) and network members are listed under their own titles, by
+// their order. Everything else is listed as before. The Service Pricing singleton and its schema were
+// removed on 22 Nov 2026 (nothing read them since 20 Nov 2026).
+//
 // Types the site never reads: hidden from the desk and from every "create new" menu. Their schemas
 // and any existing documents stay (nothing is deleted). Package timelines live in the code
 // (src/data/packages.ts). Testimonials are listed again since the homepage Proof reads them.
@@ -24,13 +23,8 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
     .items([
-      S.listItem()
-        .title("Service Pricing")
-        .id("servicePricing")
-        .child(S.document().schemaType("servicePricing").documentId("servicePricing").title("Service Pricing")),
-      S.divider(),
       ...S.documentTypeListItems()
-        .filter((item) => ![...SINGLETONS, ...HIDDEN_TYPES].includes(item.getId() ?? ""))
+        .filter((item) => !HIDDEN_TYPES.includes(item.getId() ?? ""))
         .map((item) => {
           const id = item.getId() ?? "";
           const ordered = ORDERED_LISTS[id];

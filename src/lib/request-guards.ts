@@ -40,7 +40,7 @@ export function originAllowed(request: Request, env: string | undefined = proces
 }
 
 // The JSON answers for the two refusals, the same shape every form route uses.
-export const unsupportedType = () => Response.json({ success: false, error: "Send the request as JSON." }, { status: 415 });
+const unsupportedType = () => Response.json({ success: false, error: "Send the request as JSON." }, { status: 415 });
 export const forbiddenOrigin = () => Response.json({ success: false, error: "Request refused." }, { status: 403 });
 
 // Both checks in route order: the origin first, then the content type. null when the request may go on.

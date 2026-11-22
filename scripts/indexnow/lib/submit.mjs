@@ -12,7 +12,7 @@ const MESSAGES = {
   429: "Too many submissions, try again later.",
 };
 
-export function describeStatus(status) {
+function describeStatus(status) {
   return MESSAGES[status] ?? `Unexpected response (HTTP ${status}).`;
 }
 

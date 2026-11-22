@@ -1,20 +1,20 @@
 // Brand Pulse types. Answer ids are stable: they travel in share codes and n8n payloads.
 
-export const INDUSTRY_IDS = ["professional-services", "real-estate", "hospitality", "retail", "health", "technology", "other"] as const;
-export const UPDATED_IDS = ["under-1", "1-3", "3-5", "over-5", "never"] as const;
-export const WEAKEST_IDS = ["website", "photo-video", "social", "print-sales", "logo-look", "none"] as const;
-export const CONSISTENT_IDS = ["yes", "mostly", "no", "never-compared"] as const;
-export const HANDOVER_IDS = ["written-followed", "rules-unused", "lots-of-help", "in-our-heads"] as const;
-export const CLARITY_IDS = ["straight-away", "some-explanation", "after-talking", "struggle"] as const;
-export const AHEAD_IDS = ["launch", "growing", "investment", "steady"] as const;
+const INDUSTRY_IDS = ["professional-services", "real-estate", "hospitality", "retail", "health", "technology", "other"] as const;
+const UPDATED_IDS = ["under-1", "1-3", "3-5", "over-5", "never"] as const;
+const WEAKEST_IDS = ["website", "photo-video", "social", "print-sales", "logo-look", "none"] as const;
+const CONSISTENT_IDS = ["yes", "mostly", "no", "never-compared"] as const;
+const HANDOVER_IDS = ["written-followed", "rules-unused", "lots-of-help", "in-our-heads"] as const;
+const CLARITY_IDS = ["straight-away", "some-explanation", "after-talking", "struggle"] as const;
+const AHEAD_IDS = ["launch", "growing", "investment", "steady"] as const;
 
-export type Industry = (typeof INDUSTRY_IDS)[number];
-export type Updated = (typeof UPDATED_IDS)[number];
+type Industry = (typeof INDUSTRY_IDS)[number];
+type Updated = (typeof UPDATED_IDS)[number];
 export type Weakest = (typeof WEAKEST_IDS)[number];
-export type Consistent = (typeof CONSISTENT_IDS)[number];
-export type Handover = (typeof HANDOVER_IDS)[number];
-export type Clarity = (typeof CLARITY_IDS)[number];
-export type Ahead = (typeof AHEAD_IDS)[number];
+type Consistent = (typeof CONSISTENT_IDS)[number];
+type Handover = (typeof HANDOVER_IDS)[number];
+type Clarity = (typeof CLARITY_IDS)[number];
+type Ahead = (typeof AHEAD_IDS)[number];
 
 export interface Answers {
   industry: Industry;
@@ -66,7 +66,7 @@ export const FEEDBACK_IDS: readonly Feedback[] = ["yes", "partly", "not-really"]
 export type TeamSize = "1-10" | "11-50" | "51-200" | "over-200";
 export const TEAM_SIZE_IDS: readonly TeamSize[] = ["1-10", "11-50", "51-200", "over-200"];
 
-export interface Vital {
+interface Vital {
   id: VitalId;
   label: string;
   level: Level;

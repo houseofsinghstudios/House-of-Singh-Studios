@@ -25,6 +25,7 @@ on:
       # Every file under src/ that the Studio config and the schemas import, directly or through their
       # imports. tests/sanity-schema-deploy.test.ts walks the imports and fails when one is missing here.
       - "src/data/services.ts"
+      - "src/lib/as-text.ts"
       - "src/lib/constants/booking.ts"
       - "src/lib/constants/homepage-data.ts"
       - "src/lib/homepage-hero.ts"

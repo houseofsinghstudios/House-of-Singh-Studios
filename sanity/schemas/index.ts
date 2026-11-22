@@ -6,7 +6,6 @@ import testimonial from "./testimonial";
 import teamMember from "./teamMember";
 import siteSettings from "./siteSettings";
 import role from "./role";
-import servicePricing from "./servicePricing";
 import initiative from "./initiative";
 import networkMember from "./networkMember";
 import redirect from "./redirect";
@@ -27,7 +26,6 @@ export const schemaTypes = [
   teamMember,
   siteSettings,
   role,
-  servicePricing,
   initiative,
   networkMember,
   redirect,

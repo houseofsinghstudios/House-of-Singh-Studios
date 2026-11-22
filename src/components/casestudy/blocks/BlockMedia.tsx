@@ -3,7 +3,7 @@ import type { BlockImage } from "@/data/projectDetails";
 
 // `sizes` for an image spanning `span` of the 12 columns. Mirrors --page-px:
 // 8vw each side from 900px (content is 84vw), 24px each side below.
-export function columnSizes(span: number) {
+function columnSizes(span: number) {
   const wide = Math.round((84 * span) / 12);
   return `(min-width: 900px) ${wide}vw, (min-width: 768px) calc((100vw - 48px) * ${span} / 12), calc(100vw - 48px)`;
 }

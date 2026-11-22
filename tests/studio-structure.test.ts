@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { HIDDEN_TYPES, SINGLETONS, structure } from "../sanity/structure";
+import { existsSync, readFileSync } from "node:fs";
+import { HIDDEN_TYPES, structure } from "../sanity/structure";
 
 test("teamMember and package are hidden in Studio, with their schemas kept; testimonials are listed again", () => {
   assert.deepEqual([...HIDDEN_TYPES].sort(), ["package", "teamMember"]);
@@ -15,10 +15,16 @@ test("teamMember and package are hidden in Studio, with their schemas kept; test
 
 test("hidden types are left out of the desk and of every create new menu", () => {
   const structure = readFileSync("sanity/structure.ts", "utf8");
-  assert.match(structure, /\[\.\.\.SINGLETONS, \.\.\.HIDDEN_TYPES\]\.includes\(item\.getId\(\)/);
+  assert.match(structure, /!HIDDEN_TYPES\.includes\(item\.getId\(\)/);
   const config = readFileSync("sanity.config.ts", "utf8");
-  assert.match(config, /templates\.filter\(\(t\) => !\[\.\.\.SINGLETONS, \.\.\.HIDDEN_TYPES\]\.includes\(t\.schemaType\)\)/);
-  assert.deepEqual(SINGLETONS, ["servicePricing"]);
+  assert.match(config, /templates\.filter\(\(t\) => !HIDDEN_TYPES\.includes\(t\.schemaType\)\)/);
+});
+
+test("Service Pricing is gone from the code (22 Nov 2026): no schema, no registration, no desk entry", () => {
+  assert.ok(!existsSync("sanity/schemas/servicePricing.ts"));
+  for (const file of ["sanity/schemas/index.ts", "sanity/structure.ts", "sanity.config.ts"]) {
+    assert.doesNotMatch(readFileSync(file, "utf8"), /servicePricing|SINGLETONS/, file);
+  }
 });
 
 // Behaviour, beside the text checks above: the desk resolver run against a stand in for Sanity's
@@ -31,7 +37,7 @@ function chain(kind: string, extra: Record<string, unknown> = {}): Node {
   }
   return node;
 }
-const REGISTERED = ["service", "caseStudy", "post", "package", "testimonial", "teamMember", "siteSettings", "role", "servicePricing", "initiative", "networkMember", "redirect"];
+const REGISTERED = ["service", "caseStudy", "post", "package", "testimonial", "teamMember", "siteSettings", "role", "initiative", "networkMember", "redirect"];
 const S = {
   list: () => chain("list"),
   listItem: () => chain("listItem"),
@@ -41,13 +47,10 @@ const S = {
   documentTypeList: (type: string) => chain("typeList", { type }),
 };
 
-test("the desk: Service Pricing opens directly, then every type except the hidden ones and the singleton", () => {
+test("the desk: every type except the hidden ones", () => {
   const desk = (structure as unknown as (s: typeof S, context: unknown) => Node)(S, {});
   assert.equal(desk.titleValue, "Content");
-  const [pricing, divider, ...types] = desk.itemsValue as Node[];
-  assert.equal(pricing.idValue, "servicePricing");
-  assert.equal((pricing.childValue as Node).documentIdValue, "servicePricing", "the singleton opens its one document");
-  assert.equal(divider.kind, "divider");
+  const types = desk.itemsValue as Node[];
   assert.deepEqual(types.map((t) => t.type), ["service", "caseStudy", "post", "testimonial", "siteSettings", "role", "initiative", "networkMember", "redirect"]);
   for (const hidden of HIDDEN_TYPES) assert.ok(!types.some((t) => t.type === hidden), `${hidden} is not on the desk`);
   // Services and network members are listed under their own titles, by their order field.

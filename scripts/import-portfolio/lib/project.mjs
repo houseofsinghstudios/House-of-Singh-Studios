@@ -41,8 +41,6 @@ const BLOCK_FIELDS = {
 const TEXT_BLOCKS = new Set(["split", "offset", "statement"]);
 const LONG_QUOTE = 280;
 
-export { COVER_FILE };
-
 export async function validateProject(slug, dir) {
   const errors = [];
   const warnings = [];

@@ -1,6 +1,7 @@
 // The homepage's (02) What we do: the rules behind it, pure so they are tested without React or Sanity.
 // The words come from src/data/services.ts (src/lib/what-we-do-data.ts reads them on the server); the
 // real work behind a discipline comes from the Studio "What we do" fieldset (getWhatWeDoWork).
+import { asText } from "./as-text";
 
 interface WwdDiscipline {
   name: string;
@@ -140,7 +141,6 @@ export interface WwdImageDoc {
   crop?: { top: number; bottom: number; left: number; right: number };
 }
 
-const text = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 const order = (p: WwdProjectDoc) => (typeof p.homeOrder === "number" && Number.isFinite(p.homeOrder) ? p.homeOrder : Infinity);
 
 // Only commissioned work is used: projects marked client or Commons. Explorations, Parallel projects and
@@ -150,8 +150,8 @@ const COMMISSIONED = new Set(["client", "commons"]);
 
 export function rankWorkProjects(docs: readonly WwdProjectDoc[]): WwdProjectDoc[] {
   return docs
-    .filter((p) => text(p.slug) && COMMISSIONED.has(text(p.projectType)))
-    .sort((a, b) => order(a) - order(b) || text(b.publishedAt).localeCompare(text(a.publishedAt)) || text(a.title).localeCompare(text(b.title)));
+    .filter((p) => asText(p.slug) && COMMISSIONED.has(asText(p.projectType)))
+    .sort((a, b) => order(a) - order(b) || asText(b.publishedAt).localeCompare(asText(a.publishedAt)) || asText(a.title).localeCompare(asText(b.title)));
 }
 
 // For each discipline, the first project (in rankWorkProjects order) that lists it with an image.
@@ -166,12 +166,12 @@ export function pickWork(
   const picked: Record<string, WwdWork> = {};
   for (const p of rankWorkProjects(docs)) {
     for (const entry of p.whatWeDo ?? []) {
-      const discipline = text(entry?.discipline);
+      const discipline = asText(entry?.discipline);
       const image = entry?.image;
       if (!known.has(discipline) || picked[discipline] || !image?.url) continue;
-      const client = text(p.heroName) || text(p.title);
+      const client = asText(p.heroName) || asText(p.title);
       const { src, position } = buildImage(image);
-      picked[discipline] = { discipline, slug: text(p.slug), client, image: { src, alt: text(image.alt), position } };
+      picked[discipline] = { discipline, slug: asText(p.slug), client, image: { src, alt: asText(image.alt), position } };
     }
   }
   return picked;
@@ -185,7 +185,7 @@ export const WWD_MAX_ENTRIES = 12;
 export function repeatedDiscipline(entries: ReadonlyArray<{ discipline?: unknown } | null | undefined> | null | undefined): string | null {
   const seen = new Set<string>();
   for (const entry of entries ?? []) {
-    const d = text(entry?.discipline);
+    const d = asText(entry?.discipline);
     if (!d) continue;
     if (seen.has(d)) return d;
     seen.add(d);
