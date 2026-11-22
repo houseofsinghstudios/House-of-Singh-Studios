@@ -25,7 +25,9 @@ Never put a secret value, a webhook URL or a webhook path in this file, in code 
   site (one leading "/", never "//host"); messages keep their line breaks.
 - **Escaping:** the website sends plain text, not HTML, and does not HTML encode it (that would change
   what Airtable stores). Any n8n step that puts a value into an HTML email body or a link must escape it
-  there; React escapes everything the website itself shows.
+  there; React escapes everything the website itself shows. In the lead workflow, the "Alert Studio"
+  email to the studio inbox has been plain text since 22 Nov 2026 (it was HTML), so visitor input can no
+  longer carry markup or links into the studio alert; its other emails were already plain text.
 - **Honeypot:** each form has a hidden field only bots fill in. When it is filled, the route answers
   200 and sends nothing.
 - **Rate limit:** per IP address, per serverless instance (src/lib/rate-limit.ts): 5 a minute for lead,

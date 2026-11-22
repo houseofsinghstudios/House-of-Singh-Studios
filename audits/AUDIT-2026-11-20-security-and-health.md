@@ -156,7 +156,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 9. Dependency advisories
 
-- **Status:** Partly done 22 Nov 2026 (#271): `npm audit fix` (no --force) moved typescript-eslint and its five @typescript-eslint packages from 8.56.1 to 8.73.0, clearing their 6 advisories (20 moderate before, 14 after, none high or critical). The 14 left all come from `sanity` 5.31.2 and its CLI chain (minimatch GHSA-g3hv-75wg-m249 through @oclif/core; uuid GHSA-w5hq-g745-h8pq through typeid-js), plus `next-sanity`, flagged only because it depends on `sanity`. npm's own suggested fix would downgrade to sanity 5.14.1 and next-sanity 11, so it was not taken. They are build and Studio tooling, and go with the Sanity 6 upgrade (PR 4).
+- **Status:** Partly done 22 Nov 2026 (#271): `npm audit fix` (no --force) moved typescript-eslint and its five @typescript-eslint packages from 8.56.1 to 8.73.0, clearing their 6 advisories (20 moderate before, 14 after, none high or critical). The 14 left all come from `sanity` 5.31.2 and its CLI chain (minimatch GHSA-g3hv-75wg-m249 through @oclif/core; uuid GHSA-w5hq-g745-h8pq through typeid-js), plus `next-sanity`, flagged only because it depends on `sanity`. npm's own suggested fix would downgrade to sanity 5.14.1 and next-sanity 11, so it was not taken. They are build and Studio tooling. **Sanity 6 waits (owner decision, 22 Nov 2026).** Checked 22 Nov 2026: sanity 6.24.0 does not clear them. Its CLI (@sanity/cli 8.33.0) still brings minimatch GHSA-g3hv-75wg-m249 through @oclif/core, and adds smol-toml 1.5.2 through @vercel/frameworks, with GHSA-7w5x-hrqm-74c2 (high) and GHSA-v3rj-xjv7-4jmq and GHSA-r4xh-jqrq-34v2 (moderate): 22 moderate and 1 high on that branch, against 20 moderate and none high on main. The upgrade waits for a Sanity release that clears the minimatch and smol-toml advisories; it is kept, without a pull request, on the branch chore/sanity-6 (sanity and @sanity/vision 6.24.0; typecheck, lint, tests, build, schema validate and typegen pass there, and the deploy workflow's external registration still matches by URL).
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `npm audit`. Production: 13 moderate, 0 high, 0 critical. All: 19 moderate.
@@ -166,7 +166,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 10. Outdated packages
 
-- **Status:** Partly done 22 Nov 2026 (#271): the minor and patch updates taken: next-sanity 13.4.0 to 13.5.1, tailwindcss and @tailwindcss/postcss 4.3.3 to 4.3.5, @vercel/speed-insights 2.0.0 to 2.1.0, @sanity/image-url 2.1.1 to 2.2.0. The majors stay open, one at a time: sanity and @sanity/vision 6 (PR 4), @sanity/client 8, @portabletext/react 8, eslint 10, typescript 7, @types/node 26.
+- **Status:** Partly done 22 Nov 2026 (#271): the minor and patch updates taken: next-sanity 13.4.0 to 13.5.1, tailwindcss and @tailwindcss/postcss 4.3.3 to 4.3.5, @vercel/speed-insights 2.0.0 to 2.1.0, @sanity/image-url 2.1.1 to 2.2.0. The majors stay open, one at a time: sanity and @sanity/vision 6 (waiting, see finding 9), @sanity/client 8, @portabletext/react 8, eslint 10, typescript 7, @types/node 26.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `package.json`.
@@ -224,7 +224,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 16. Cleaned text is not escaped
 
-- **Status:** Done 22 Nov 2026 (#269), owner decision: additions only. One line fields collapse whitespace, campaign and lead source tags are stripped, landing pages must start with a single `/` (brand-pulse, planner and lead source). Escaping where sent is decided differently: the website sends plain text, because HTML encoding the payload would change what Airtable stores; n8n must escape values where it builds HTML emails or links (docs/integrations/n8n.md). React escapes everything the site shows.
+- **Status:** Done 22 Nov 2026 (#269), owner decision: additions only. One line fields collapse whitespace, campaign and lead source tags are stripped, landing pages must start with a single `/` (brand-pulse, planner and lead source). Escaping where sent is decided differently: the website sends plain text, because HTML encoding the payload would change what Airtable stores; n8n must escape values where it builds HTML emails or links (docs/integrations/n8n.md). React escapes everything the site shows. On 22 Nov 2026 the lead workflow's "Alert Studio" email was switched from HTML to plain text, so visitor input can no longer carry markup or links into the studio alert; the other emails in that workflow were already plain text.
 - **Severity:** Low
 - **Confidence:** High confidence.
 - **Where:** `src/lib/form-input.ts:20` (`stripTags`), `src/lib/campaign.ts:26-30`, `src/lib/lead-source.ts:25-29`, the brand-pulse `landingPage` field (`route.ts:118`) and the lead source path check at `lead-source.ts:33`.
@@ -365,7 +365,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 
 #### Finding 30. Price removal leftovers
 
-- **Status:** Done 22 Nov 2026 (#270), except item 2. Item 1: the schema, its registration, the desk entry and the singleton code removed; the document (id `servicePricing`) stays in the dataset for the owner to delete. Item 2: the n8n price fields stay, always empty, until the n8n workflow changes (owner decision). Item 3: src/data/packages.ts holds only the names and timelines. Also stale price comments in next.config.ts (a price guide) and src/lib/revalidate.ts (prices among the Sanity content).
+- **Status:** Done 22 Nov 2026 (#270), except item 2. Item 1: the schema, its registration, the desk entry and the singleton code removed; the document (id `servicePricing`) was then deleted from Sanity on 22 Nov 2026, with the owner's approval; nothing referenced it. Item 2: the n8n price fields stay, always empty, until the n8n workflow changes (owner decision). Item 3: src/data/packages.ts holds only the names and timelines. Also stale price comments in next.config.ts (a price guide) and src/lib/revalidate.ts (prices among the Sanity content).
 - **Severity:** Code health
 - **Confidence:** High confidence.
 - **Where and what:**
@@ -448,7 +448,7 @@ Confidence labels: **High confidence** means verified in code. **Medium confiden
 ### Later
 
 1. Split the large client components, and remove `"use client"` where it is not needed (findings 7 and 25).
-2. Plan the Sanity 6 upgrade as its own task (findings 9 and 10).
+2. Plan the Sanity 6 upgrade as its own task (findings 9 and 10). Waiting since 22 Nov 2026 for a Sanity release that clears the minimatch and smol-toml advisories (branch chore/sanity-6).
 3. Watch `next-view-transitions` and plan a move to the built in support (finding 11).
 4. Rename `priority` to `preload` (finding 24).
 5. Clean up unused files, exports, CSS and duplicates, and remove the price leftovers together with the n8n change (findings 26 to 31).
