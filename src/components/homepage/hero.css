@@ -182,6 +182,11 @@
   clip-path: none;
 }
 
+/* A word's new box, after the entrance, does not replay it: only its letters and band move. */
+.hero-value[data-entered="true"] .hero-value-i {
+  animation: none;
+}
+
 .hero-value-i {
   display: inline-block;
 }

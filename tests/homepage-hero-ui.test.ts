@@ -184,11 +184,23 @@ test("hero links: visible text plus sr-only text, starting with what shows, no d
 // to the word, so a change of word never moves anything already on the page (layout shift 0).
 test("value line: the word on its own line on phones, the full stop part of the word", () => {
   const line = readFileSync("src/components/homepage/HeroLine.tsx", "utf8");
-  assert.match(line, /<span className="hero-value-w hero-value-w--word">/);
+  assert.match(line, /<span key=\{roll\.n\} className="hero-value-w hero-value-w--word">/);
   assert.match(line, /<span className="hero-letter hero-stop" style=\{\{ "--i": word\.length \} as React\.CSSProperties\}>\s*\.\s*<\/span>/);
-  assert.doesNotMatch(line, /<CyclingWord word=\{word\} reduceMotion=\{reduceMotion\} \/>\./, "no stop left outside the word");
+  assert.doesNotMatch(line, /<CyclingWord roll=\{roll\} \/>\./, "no stop left outside the word");
   const css = readFileSync("src/components/homepage/hero.css", "utf8");
   const phone = css.slice(css.indexOf("@media (max-width: 1080px)"));
   assert.match(phone, /\.hero-value-w--word \{\s*display: block;\s*width: max-content;\s*white-space: nowrap;/);
   assert.match(css, /\.hero-stop \{\s*position: absolute;\s*left: calc\(100% \+ 3px\);/, "3px outside the band");
+});
+
+test("value line above 1080px: each word arrives in a box of its own, so no layout shift is recorded", () => {
+  const line = readFileSync("src/components/homepage/HeroLine.tsx", "utf8");
+  // The word's box and the space before it are keyed by the change count: a new word is new content,
+  // never the old box moving between line two and line three.
+  assert.match(line, /const roll = useRoll\(word, reduceMotion\);/);
+  assert.match(line, /<span key=\{roll\.n\} className="hero-value-w hero-value-w--word">\s*<span className="hero-value-i">\s*<CyclingWord roll=\{roll\} \/>/);
+  assert.match(line, /\{i === LEAD\.length - 1 \? <span key=\{roll\.n\}>\{" "\}<\/span> : " "\}/);
+  // A new box after the entrance does not replay it.
+  const css = readFileSync("src/components/homepage/hero.css", "utf8");
+  assert.match(css, /\.hero-value\[data-entered="true"\] \.hero-value-i \{\s*animation: none;/);
 });
