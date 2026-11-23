@@ -160,7 +160,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             marginBottom: 12,
           }}
         >
-          (Network Roles)
+          (Network roles)
         </p>
         {roles.length > 0 && (
           <p

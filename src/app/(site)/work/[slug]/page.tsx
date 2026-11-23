@@ -24,7 +24,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  if (!project) return { title: "Project Not Found" };
+  if (!project) return { title: "Project not found" };
   const title = bareTitle(project.seoTitle, project.name);
   return {
     title,

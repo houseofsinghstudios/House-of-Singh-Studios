@@ -50,19 +50,19 @@ export const projects: Project[] = [
       "Brand identity and visual system for TEDxToronto. Event branding, creative direction, and design by House of Singh Studios.",
     sections: {
       business: {
-        label: "(The Business)",
+        label: "(The business)",
         paragraphs: [
           "TEDxToronto is one of Canada\u2019s largest independently organized TEDx events, bringing together thinkers, creators, and leaders to share ideas across disciplines. The organization operates across digital, print, and live event environments.",
         ],
       },
       challenge: {
-        label: "(The Challenge)",
+        label: "(The challenge)",
         paragraphs: [
           "The event needed a visual identity system that could hold up across a wide range of applications: stage design, digital content, print materials, and social media. The brand had to feel contemporary and bold while respecting the TEDx framework. Consistency across a large volunteer-driven creative team was a core requirement.",
         ],
       },
       approach: {
-        label: "(The Approach)",
+        label: "(The approach)",
         paragraphs: [
           "We began with a discovery phase to understand the event\u2019s audience, themes, and operational constraints. Strategy work defined the visual direction and established parameters for the creative team. We developed the identity system with guidelines that ensured consistency whether applied by a designer or a volunteer. Production included all event collateral, digital assets, and brand documentation.",
         ],
@@ -72,7 +72,7 @@ export const projects: Project[] = [
         paragraphs: [],
       },
       result: {
-        label: "(The Result)",
+        label: "(The result)",
         paragraphs: [
           "The identity system gave TEDxToronto a consistent and professional visual presence across every touchpoint. The guidelines enabled a large team to produce on brand materials independently, reducing revision cycles and maintaining quality throughout the event lifecycle.",
         ],

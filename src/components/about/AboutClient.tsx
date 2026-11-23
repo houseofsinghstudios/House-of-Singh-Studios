@@ -213,7 +213,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
         }}
       >
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <EditorialLabel number="03" text="How We Are Different" className="scroll-reveal-up mb-6" />
+          <EditorialLabel number="03" text="How we are different" className="scroll-reveal-up mb-6" />
 
           <h2 className="about-duel-heading">A studio, not an agency.</h2>
 
@@ -431,7 +431,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
           <div className="about-careers-cta scroll-reveal-up">
             <span className="about-careers-text">Think you belong here? Send your portfolio.</span>
             <IntentLink href="/careers" className="about-careers-link" data-cursor="link">
-              View Careers <span className="about-careers-arrow">&rarr;</span>
+              View careers <span className="about-careers-arrow">&rarr;</span>
             </IntentLink>
           </div>
 
@@ -456,7 +456,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
         }}
       >
         <div className="cta-centered">
-          <p className="cta-label">(Next Step)</p>
+          <p className="cta-label">(Next step)</p>
           <h2 className="cta-heading">Plan your project.</h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">

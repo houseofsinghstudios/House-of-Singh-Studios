@@ -1,7 +1,7 @@
 // Every visitor facing word in Brand Pulse lives here (the result's sentences in sentences.ts), so copy
 // can change without touching logic.
 // The one exception is the three actions per profile: they are server only, in actions.ts.
-// Plain everyday words, no design jargon, no dashes of any kind. Buttons in Title Case.
+// Plain everyday words, no design jargon, no dashes of any kind. Labels and buttons in sentence case.
 
 import { QUESTION_ORDER, type Answers, type Feedback, type Level, type ProfileId, type Pulse, type QuestionId, type TeamSize, type VitalId } from "./types";
 import { countWord } from "@/lib/what-we-do";
@@ -162,14 +162,14 @@ export const FEEDBACK: { question: string; options: { id: Feedback; label: strin
 };
 
 export const NEXT_STEP = {
-  label: "(Next Step)",
+  label: "(Next step)",
   heading: "Talk it through with our Creative Director.",
   text: "A 30 minute conversation about your result, not a sales presentation. No preparation needed: your answers come with you. Choose any time that suits you.",
   button: "Discuss my results",
 };
 
 export const KEEP_IT = {
-  label: "(Keep It)",
+  label: "(Keep it)",
   heading: "Take this with you.",
   text: "We will send your result, plus three practical actions for your brand this quarter.",
   emailLabel: "Email",

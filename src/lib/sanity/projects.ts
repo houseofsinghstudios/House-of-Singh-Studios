@@ -346,15 +346,15 @@ export function mapSanityToProject(doc: CaseStudyDoc, index: number): Project {
     shareImage: sanityShareImageUrl(doc.featuredImage) || undefined,
     sections: {
       business: {
-        label: "(The Business)",
+        label: "(The business)",
         paragraphs: overviewText ? [overviewText] : [],
       },
       challenge: {
-        label: "(The Challenge)",
+        label: "(The challenge)",
         paragraphs: portableTextToPlain(doc.challenge),
       },
       approach: {
-        label: "(The Approach)",
+        label: "(The approach)",
         paragraphs: portableTextToPlain(doc.approach),
       },
       deliverables: {
@@ -362,7 +362,7 @@ export function mapSanityToProject(doc: CaseStudyDoc, index: number): Project {
         paragraphs: [],
       },
       result: {
-        label: "(The Result)",
+        label: "(The result)",
         paragraphs: portableTextToPlain(doc.results),
       },
     },
@@ -418,15 +418,15 @@ export function mapSanityToProjectDetail(doc: CaseStudyDoc, order: Array<Pick<Ca
       alt: cover,
     },
     overview: {
-      heading: "The Business",
+      heading: "The business",
       paragraphs: overviewText ? [overviewText] : [],
     },
     challenge: {
-      heading: "The Challenge",
+      heading: "The challenge",
       paragraphs: portableTextToPlain(doc.challenge),
     },
     approach: {
-      heading: "The Approach",
+      heading: "The approach",
       paragraphs: portableTextToPlain(doc.approach),
     },
     deliverables,
@@ -438,7 +438,7 @@ export function mapSanityToProjectDetail(doc: CaseStudyDoc, order: Array<Pick<Ca
           : [],
     },
     result: {
-      heading: "The Result",
+      heading: "The result",
       paragraphs: portableTextToPlain(doc.results),
     },
     nextProject: {

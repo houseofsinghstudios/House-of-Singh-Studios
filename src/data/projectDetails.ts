@@ -83,7 +83,7 @@ const projectDetails: ProjectDetail[] = [
       alt: "TEDxToronto visual identity system applied across event materials",
     },
     overview: {
-      heading: "The Business",
+      heading: "The business",
       paragraphs: [
         "TEDxToronto is one of Canada\u2019s largest independently organized TEDx events, bringing together thinkers, creators, and leaders to share ideas across disciplines. The organization operates across digital, print, and live event environments with a volunteer-driven creative team of over 40 people.",
         "The event attracts thousands of attendees annually and produces content that reaches millions online. Every visual touchpoint, from stage design to social media, represents the TEDxToronto brand to a discerning, design-literate audience.",

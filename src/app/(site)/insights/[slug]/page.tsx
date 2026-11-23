@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPostBySlug(slug);
 
   if (!post) {
-    return { title: "Post Not Found" };
+    return { title: "Post not found" };
   }
 
   // The SEO title, when set, is the whole search and social title; otherwise the article title

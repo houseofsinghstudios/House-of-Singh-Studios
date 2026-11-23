@@ -19,7 +19,7 @@ export const INTRO = {
   trust: "Free to use. No account required. Your contact details are only collected if you choose to send your brief.",
   // Small print under the button. Never claim nothing is sent: completed selections are kept without contact details.
   privacy: "Project selections may be recorded without contact details when a brief is completed, to improve this service.",
-  privacyLink: "Privacy Policy",
+  privacyLink: "Privacy policy",
   button: "Build my project brief",
   writeLead: "Prefer to write to us?",
   writeLink: "Send a message.",
@@ -227,7 +227,7 @@ export const SEND = {
   noteLimit: (left: number) => `${left} characters left`,
   insights: "Send me occasional studio insights.",
   smallPrint: "We use these details to reply to your request.",
-  privacyLink: "Privacy Policy",
+  privacyLink: "Privacy policy",
   button: "Send my brief",
   sending: "Sending...",
   success: "Your brief has been received. We'll review it and get back to you.",

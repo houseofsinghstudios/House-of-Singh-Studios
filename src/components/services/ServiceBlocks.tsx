@@ -10,7 +10,7 @@ import type { ServiceProject } from "@/lib/sanity/projects";
 const BLOCKS = [
   {
     number: "01",
-    label: "Brand Identity",
+    label: "Brand identity",
     name: "Brand Identity and Visual Design",
     description:
       "Your business has grown. Your brand has not kept up. Prospects compare you to competitors with sharper visuals and walk away. We build complete visual systems that make your business look as established as it actually is.",
@@ -36,7 +36,7 @@ const BLOCKS = [
   },
   {
     number: "02",
-    label: "Visual Media",
+    label: "Visual media",
     name: "Visual Media and Content Production",
     description:
       "Your content looks different on every platform. Nothing connects. We direct and produce brand photography, video, and content systems that hold together across every channel.",
@@ -52,11 +52,11 @@ const BLOCKS = [
     ],
     fallbackImage: null,
     fallbackTags: "Visual Media",
-    fallbackName: "Coming Soon",
+    fallbackName: "Coming soon",
   },
   {
     number: "03",
-    label: "Digital Design",
+    label: "Digital design",
     name: "Digital Design and Experience",
     description:
       "Your website exists. But it does not work for your business. People browse for 30 seconds and leave. We design digital experiences where every page has a job.",
@@ -74,11 +74,11 @@ const BLOCKS = [
     ],
     fallbackImage: null,
     fallbackTags: "Digital Design",
-    fallbackName: "Coming Soon",
+    fallbackName: "Coming soon",
   },
   {
     number: "04",
-    label: "Creative Strategy",
+    label: "Creative strategy",
     name: "Creative Strategy and Systems",
     description:
       "Your team makes brand decisions without a playbook. Marketing, agencies, freelancers: they all interpret your brand differently. We build the framework that lets your team operate without you.",
@@ -95,7 +95,7 @@ const BLOCKS = [
     ],
     fallbackImage: null,
     fallbackTags: "Creative Strategy",
-    fallbackName: "Coming Soon",
+    fallbackName: "Coming soon",
   },
 ];
 

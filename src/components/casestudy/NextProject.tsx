@@ -14,7 +14,7 @@ export default function NextProject({ slug, name }: NextProjectProps) {
       className="cs-next-row row-bleed"
       data-cursor="expand"
     >
-      <span className="cs-next-label editorial-label">(Next Project)</span>
+      <span className="cs-next-label editorial-label">(Next project)</span>
       <span className="cs-next-name">
         {name} <span className="cs-next-arrow">→</span>
       </span>
