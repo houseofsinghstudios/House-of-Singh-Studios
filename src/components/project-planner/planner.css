@@ -196,7 +196,18 @@
 }
 .pp-option-hint {
   font-size: 13px;
-  opacity: 0.75;
+  /* A palette colour, not dimmed text: Accessible Ash at rest, Gunmetal on the Cloudy White hover
+     ground, Marble Ash on a chosen (Obsidian) option, each over 4.5:1. */
+  color: var(--text-label);
+}
+@media (hover: hover) {
+  .pp-option:hover .pp-option-hint {
+    color: var(--text-secondary);
+  }
+}
+.pp-option.is-selected .pp-option-hint,
+.pp-option.is-selected:hover .pp-option-hint {
+  color: var(--text-muted);
 }
 .pp-check {
   width: 16px;

@@ -117,8 +117,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
 
         <p
           data-hero-body
-          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px] mt-6"
-          style={{ opacity: 0.7 }}
+          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-secondary)] max-w-[640px] mt-6"
         >
           House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for businesses that have outgrown their brand. The studio was founded on a direct premise: design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human. Beyond client work:{" "}
           <IntentLink href="/initiatives/parallel" className="art-link">Parallel</IntentLink>, where we reimagine real brands with their permission, and{" "}
@@ -163,8 +162,8 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
         </h2>
 
         <p
-          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px] scroll-reveal-up"
-          style={{ opacity: 0.7, marginBottom: 64 }}
+          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-secondary)] max-w-[640px] scroll-reveal-up"
+          style={{ marginBottom: 64 }}
         >
           Every project moves through the same structured process regardless of scope. This is not a rigid formula. It is a framework that protects your investment and ensures nothing gets lost between strategy and execution.
         </p>
@@ -183,8 +182,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
               </div>
               <div>
                 <p
-                  className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-primary)]"
-                  style={{ opacity: 0.7 }}
+                  className="font-[var(--sans)] font-normal text-[15px] leading-[1.65] text-[color:var(--text-secondary)]"
                 >
                   {step.desc}
                 </p>
@@ -278,8 +276,7 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
         </h2>
 
         <p
-          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-primary)] max-w-[640px] scroll-reveal-up"
-          style={{ opacity: 0.7 }}
+          className="font-[var(--sans)] font-normal text-[16px] leading-[1.75] text-[color:var(--text-secondary)] max-w-[640px] scroll-reveal-up"
         >
           The studio works with a trusted network of specialists and partners across brand strategy, visual design, video production, photography, development, and content. Each project is staffed deliberately. The right people for the right scope. Every collaborator operates under the same creative standards, documentation practices, and quality systems that define the studio&#39;s output.
         </p>
@@ -359,22 +356,22 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
             </h2>
 
             <p
-              className="font-[var(--sans)] font-normal text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.7, marginTop: 4, marginBottom: 24 }}
+              className="font-[var(--sans)] font-normal text-[13px] uppercase tracking-[0.1em] text-[color:var(--text-label)] scroll-reveal-up"
+              style={{ marginTop: 4, marginBottom: 24 }}
             >
               {aboutData?.aboutFounderRole || "Founder and Creative Director"}
             </p>
 
             <p
-              className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.7, fontSize: "clamp(15px, 1.1vw, 16px)" }}
+              className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-secondary)] scroll-reveal-up"
+              style={{ fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
               <RgdText text={aboutData?.aboutFounderBio || "Maninder Singh built House of Singh Studios, its creative standards, and the systems that power its operations. His practice spans brand identity, photography, creative strategy, and AI integrated design across 14+ years. He is a member of RGD (Registered Graphic Designers) of Canada and served as Creative Director for TEDxToronto."} />
             </p>
 
             <p
-              className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-primary)] scroll-reveal-up"
-              style={{ opacity: 0.7, marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
+              className="font-[var(--sans)] font-normal leading-[1.75] text-[color:var(--text-secondary)] scroll-reveal-up"
+              style={{ marginTop: 16, fontSize: "clamp(15px, 1.1vw, 16px)" }}
             >
               <RgdText text={aboutData?.aboutFounderBioSecondary || "Beyond the studio, Maninder pursues independent creative work spanning conceptual projects, photography, and cultural storytelling."} />
             </p>

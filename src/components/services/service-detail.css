@@ -205,6 +205,7 @@
 .cta-sub {
   font-size: 15px;
   line-height: 1.6;
-  opacity: 0.7;
+  /* Marble Ash, the palette's text on dark (6.6:1 on Obsidian), not Silver Mist dimmed by opacity. */
+  color: var(--text-muted);
   margin: 20px 0 0;
 }

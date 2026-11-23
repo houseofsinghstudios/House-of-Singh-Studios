@@ -223,7 +223,7 @@ export default function AILabClient() {
             <p
               style={{
                 fontSize: 14,
-                color: "rgba(247, 246, 245, 0.65)",
+                color: "var(--text-muted)",
                 lineHeight: 1.7,
                 margin: 0,
               }}
