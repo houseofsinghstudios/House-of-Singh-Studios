@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulse from "@/components/brand-pulse/BrandPulse";
 import PulseResultView from "@/components/brand-pulse/PulseResultView";
+import PulseGuide from "@/components/brand-pulse/PulseGuide";
 import Button from "@/components/ui/Button";
 import { decode } from "@/lib/brand-pulse/codec";
 import { parsePrefill } from "@/lib/brand-pulse/entry";
@@ -54,6 +55,9 @@ export default async function BrandPulsePage({ searchParams }: Props) {
           <BrandPulse headingLevel="h1" prefill={prefill} />
         )}
       </section>
+      {/* What the check reads, how it works, the profiles and the questions, with their FAQPage data:
+          below the tool only, never under a shared result. */}
+      {!shared && <PulseGuide />}
     </>
   );
 }
