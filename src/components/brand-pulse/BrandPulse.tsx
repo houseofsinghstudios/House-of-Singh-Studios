@@ -2,6 +2,10 @@
 // The Brand Pulse flow: intro, seven questions, the reading screen and the result.
 // Client component: it holds the answers, times the screens and sends events.
 // The result comes from the same rule based engine the server uses. No AI is involved.
+// The page only changes height on a click (site audit S-02): the moment the last answer is chosen,
+// the whole result, follow up included, goes in place, hidden and inert, in the same grid cell as the
+// question and then the reading screen, which sit over it. When the reading ends, the parts show in
+// stages by opacity and transform only (data-shown, brand-pulse.css), so nothing below them moves.
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { assess } from "@/lib/brand-pulse/engine";
@@ -13,7 +17,7 @@ import { QUESTION_ORDER, type Answers, type Feedback, type Gate } from "@/lib/br
 import PulseIntro from "./PulseIntro";
 import PulseQuestion from "./PulseQuestion";
 import PulseEvaluating from "./PulseEvaluating";
-import PulseResultView from "./PulseResultView";
+import PulseResultView, { staged } from "./PulseResultView";
 import PulseFollowUp from "./PulseFollowUp";
 import PulseEmailForm from "./PulseEmailForm";
 import { sendEvent, startSession, type LeadContact, type ProfileContact, type PulseSession, type SendStatus } from "./events";
@@ -47,7 +51,9 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<Answers>>(() => prefill ?? {});
   const [pending, setPending] = useState<string | null>(null);
-  const [stage, setStage] = useState(0);
+  // The completed answers, from the last click until the flow restarts. The result renders from them.
+  const [final, setFinal] = useState<Answers | null>(null);
+  const [stage, setStage] = useState(-1);
   const [lead, setLead] = useState<SendStatus>("idle");
   const [contact, setContact] = useState<LeadContact | null>(null);
   const [unlocked, setUnlocked] = useState(gate !== "before-full-result");
@@ -55,8 +61,9 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   const rootRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
 
-  const complete = screen === "result" ? (answers as Answers) : null;
-  const result = useMemo(() => (complete ? assess(complete) : null), [complete]);
+  const result = useMemo(() => (final ? assess(final) : null), [final]);
+  // The result is complete, for events, only once it is on screen.
+  const complete = screen === "result" ? final : null;
 
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), []);
 
@@ -77,6 +84,9 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   function goTo(next: Screen, nextStep = step) {
     setLeaving(true);
     later(() => {
+      // Only the reading screen keeps the result underneath. Anywhere else (a restart) it leaves with
+      // the flow, in the same render as the next screen, after a click, so the change is expected.
+      if (next !== "evaluating") setFinal(null);
       setScreen(next);
       setStep(nextStep);
       setPending(null);
@@ -113,6 +123,11 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
     if (choosing.current) return;
     choosing.current = true;
     setPending(id);
+    if (step === QUESTION_ORDER.length - 1) {
+      // The last answer: the result goes in place now, hidden, in the same frame as the click.
+      setFinal({ ...answers, [QUESTION_ORDER[step]]: id } as Answers);
+      setStage(-1);
+    }
     later(() => {
       const q = QUESTION_ORDER[step];
       setAnswers((a) => ({ ...a, [q]: id }));
@@ -151,8 +166,8 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   }, [complete]);
 
   // The copy link uses this site's address; the booking notes always carry the public one.
-  const share = complete ? shareUrl(complete, window.location.origin) : "";
-  const booking = complete && result ? bookingUrl(complete, result, shareUrl(complete)) : "";
+  const share = final ? shareUrl(final, window.location.origin) : "";
+  const booking = final && result ? bookingUrl(final, result, shareUrl(final)) : "";
 
   async function submitProfile(c: ProfileContact, honeypot: string) {
     if (!session.current || !complete) return false;
@@ -169,53 +184,59 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
           not on screen (a link that starts at a question, or a flow already under way), the same
           words stay as a visually hidden h1, so the page always has exactly one. */}
       {headingLevel === "h1" && screen !== "intro" && <h1 className="sr-only">{INTRO.heading}</h1>}
-      <div key={screen === "question" ? `q${step}` : screen} className="bp-screen">
-        {screen === "intro" && <PulseIntro headingLevel={headingLevel} startLabel={startLabel} onStart={start} />}
+      <div className="bp-stack" data-ending={final ? "true" : "false"}>
+        {screen !== "result" && (
+          <div key={screen === "question" ? `q${step}` : screen} className="bp-screen">
+            {screen === "intro" && <PulseIntro headingLevel={headingLevel} startLabel={startLabel} onStart={start} />}
 
-        {screen === "gate" && (
-          <div className="bp-gate">
-            <h2 className="bp-heading">{GATE_COPY.heading}</h2>
-            <p className="bp-text">{KEEP_IT.text}</p>
-            <PulseEmailForm
-              id="bp-gate-start"
-              buttonLabel={GATE_COPY.button}
-              status="idle"
-              onSubmit={(c) => {
-                setContact(c);
-                goTo("question", 0);
-              }}
-            />
+            {screen === "gate" && (
+              <div className="bp-gate">
+                <h2 className="bp-heading">{GATE_COPY.heading}</h2>
+                <p className="bp-text">{KEEP_IT.text}</p>
+                <PulseEmailForm
+                  id="bp-gate-start"
+                  buttonLabel={GATE_COPY.button}
+                  status="idle"
+                  onSubmit={(c) => {
+                    setContact(c);
+                    goTo("question", 0);
+                  }}
+                />
+              </div>
+            )}
+
+            {screen === "question" && <PulseQuestion step={step} answers={answers} pending={pending} onChoose={choose} onBack={back} />}
+
+            {screen === "evaluating" && <PulseEvaluating />}
           </div>
         )}
 
-        {screen === "question" && <PulseQuestion step={step} answers={answers} pending={pending} onChoose={choose} onBack={back} />}
-
-        {screen === "evaluating" && <PulseEvaluating />}
-
-        {screen === "result" && result && complete && (
-          <>
+        {result && final && (
+          <div className="bp-end" aria-hidden={screen === "result" ? undefined : true}>
             <PulseResultView result={result} stage={stage} locked={!unlocked} />
-            {!unlocked && stage >= 1 && (
-              <div className="bp-gate bp-reveal">
+            {!unlocked && (
+              <div className="bp-gate bp-stage" {...staged(stage >= 1)}>
                 <h3 className="bp-block-heading">{GATE_COPY.heading}</h3>
                 <p className="bp-text">{KEEP_IT.text}</p>
-                <PulseEmailForm id="bp-gate-result" buttonLabel={GATE_COPY.button} status={lead} onSubmit={(c, h) => submitLead(c, h, complete)} />
+                <PulseEmailForm id="bp-gate-result" buttonLabel={GATE_COPY.button} status={lead} onSubmit={(c, h) => submitLead(c, h, final)} />
               </div>
             )}
-            {unlocked && stage >= 3 && (
-              <PulseFollowUp
-                bookingHref={booking}
-                shareHref={share}
-                planHref={startHref("brand_pulse", serviceForSiteSlug(result.service.slug))}
-                lead={lead}
-                leadEmail={contact?.email ?? null}
-                onFeedback={sendFeedback}
-                onLead={(c, h) => submitLead(c, h, complete)}
-                onProfile={submitProfile}
-                onRestart={() => goTo("intro", 0)}
-              />
+            {unlocked && (
+              <div className="bp-stage" {...staged(stage >= 3)}>
+                <PulseFollowUp
+                  bookingHref={booking}
+                  shareHref={share}
+                  planHref={startHref("brand_pulse", serviceForSiteSlug(result.service.slug))}
+                  lead={lead}
+                  leadEmail={contact?.email ?? null}
+                  onFeedback={sendFeedback}
+                  onLead={(c, h) => submitLead(c, h, final)}
+                  onProfile={submitProfile}
+                  onRestart={() => goTo("intro", 0)}
+                />
+              </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -13,16 +13,36 @@
 .bp-root.is-leaving .bp-screen {
   opacity: 0;
 }
-.bp-reveal {
-  animation: bp-fade-up 0.4s cubic-bezier(0.23, 1, 0.32, 1) backwards;
-}
 @keyframes bp-fade {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes bp-fade-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: none; }
+
+/* The screen and, from the last answer on, the result share one grid cell (BrandPulse.tsx): the
+   question and then the reading screen sit over the hidden result, so the page reaches the result's
+   height on the click itself and never moves after it (site audit S-02). */
+.bp-stack {
+  display: grid;
+}
+.bp-stack > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.bp-end {
+  transition: opacity 0.2s ease;
+}
+.bp-root.is-leaving .bp-end {
+  opacity: 0;
+}
+/* Each part of the result is always in the page; data-shown stages it with opacity and transform
+   only. Hidden parts are invisible and inert, so Tab and screen readers skip them until they show. */
+.bp-stage {
+  transition: opacity 0.4s cubic-bezier(0.23, 1, 0.32, 1), transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), visibility 0s;
+}
+.bp-stage[data-shown="false"] {
+  opacity: 0;
+  transform: translateY(8px);
+  visibility: hidden;
 }
 
 /* ── Type ── */
@@ -538,11 +558,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bp-screen,
-  .bp-reveal,
   .bp-eval-row {
     animation: none;
   }
-  .bp-screen {
+  .bp-screen,
+  .bp-end,
+  .bp-stage {
     transition: none;
   }
   .bp-eval-line path {
