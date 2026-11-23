@@ -70,57 +70,54 @@ export default function CaseStudyTemplate({
   return (
     <>
       {/* ═══ SECTION 1: HERO ═══ */}
-      <section
-        className="cs-hero"
-        style={{
-          padding:
-            "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 64px)",
-        }}
-      >
-        <IntentLink href="/work" className="cs-back back-link css-reveal">
-          <span className="back-arrow">←</span> All projects
-        </IntentLink>
-        <p
-          className="cs-hero-meta css-reveal"
-          style={{ transitionDelay: "80ms" }}
-        >
-          <ProjectTypeLabel type={project.projectType} />
-          {projectTypeLabel(project.projectType) && metaLine ? " · " : ""}
-          {metaLine}
-        </p>
-        <h1
-          className="cs-hero-heading css-reveal"
-          style={{
-            transitionDelay: "160ms",
-            viewTransitionName: `project-${project.slug}`,
-          }}
-        >
-          {project.name}
-        </h1>
+      {/* One grid: the head (back link, type, name) and the summary side by side above 1080px, the
+          image full width under both; at 1080px and below the image comes straight after the name and
+          the summary follows it, so the image is in the first screen (case-study.css). */}
+      <section className="cs-hero">
+        <div className="cs-hero-head">
+          <IntentLink href="/work" className="cs-back back-link css-reveal">
+            <span className="back-arrow">←</span> All projects
+          </IntentLink>
+          <p
+            className="cs-hero-meta css-reveal"
+            style={{ transitionDelay: "80ms" }}
+          >
+            <ProjectTypeLabel type={project.projectType} />
+            {projectTypeLabel(project.projectType) && metaLine ? " · " : ""}
+            {metaLine}
+          </p>
+          <h1
+            className="cs-hero-heading css-reveal"
+            style={{
+              transitionDelay: "160ms",
+              viewTransitionName: `project-${project.slug}`,
+            }}
+          >
+            {project.name}
+          </h1>
+        </div>
         <p
           className="cs-hero-summary css-reveal"
           style={{ transitionDelay: "240ms" }}
         >
           {project.summary}
         </p>
+        <div
+          className="cs-hero-image reveal-clip cs-hero-image-reveal"
+          style={{ viewTransitionName: `project-image-${project.slug}` }}
+        >
+          <Image
+            src={project.heroImage.src}
+            alt={project.heroImage.alt}
+            fill
+            sizes="100vw"
+            style={{ objectFit: "cover" }}
+            // The largest thing on the first screen (the LCP): fetched first, never lazily.
+            fetchPriority="high"
+            loading="eager"
+          />
+        </div>
       </section>
-
-      {/* ═══ SECTION 2: HERO IMAGE ═══ */}
-      <div
-        className="cs-hero-image reveal-clip cs-hero-image-reveal"
-        style={{ viewTransitionName: `project-image-${project.slug}` }}
-      >
-        <Image
-          src={project.heroImage.src}
-          alt={project.heroImage.alt}
-          fill
-          sizes="100vw"
-          style={{ objectFit: "cover" }}
-          // The largest thing on the first screen (the LCP): fetched first, never lazily.
-          fetchPriority="high"
-          loading="eager"
-        />
-      </div>
 
       {/* ═══ SECTION 3: OVERVIEW ═══ */}
       <section

@@ -31,9 +31,11 @@
 }
 
 /* ── Founder ── */
+/* 45/55 (site audit Step 9, a design proposal): the photo takes the narrower column and the bio, the
+   primary content, the wider one, as the asymmetric split asks. */
 .about-founder-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
   gap: 80px;
 }
 
