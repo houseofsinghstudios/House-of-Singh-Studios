@@ -212,6 +212,7 @@ EVOLVED APPROACH:
 - Images enter viewport with clip-path reveal: inset(0 100% 0 0) → inset(0 0 0 0) over 0.8s
 - On hover (when image is a link): scale(1.03) zoom
 - All images use Next.js Image component with proper sizes, alt, and priority attributes
+- Sanity sources (since 23 Nov 2026, site audit S-03 and S-08; guard tests/image-sources.test.ts): every on-page Sanity image is built by imageSource in src/lib/sanity/image.ts, at least twice the width it is shown at and capped at 2400, fit max (never enlarged past the original), automatic format, quality 90, so next/image does the one real compression and serves each screen its width from sizes. Caps: the case study hero, project cards, related rows and block images 2400 (CASE_IMAGE_WIDTH); Insights featured and article hero 2400, cards 1200, images in an article's text 1600; the homepage hero 2400, the What we do preview 900. Only the crops keep their own chain: share images (1200 by 630) and the square network photos (800, quality 90). Insights frames crop with object-fit at the Studio hotspot (insightImagePosition, the homepage hero's rule; the centre without one). The sources themselves are the limit: every case study featured and homepage hero image is under 2880px wide today, so they stay soft on 2x screens until larger exports go into Studio.
 - Placeholder state (before real images): --bg-shift background, no text, no labels
 
 ### Layer 7: Loading and Empty States
