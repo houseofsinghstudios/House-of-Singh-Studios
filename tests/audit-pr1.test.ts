@@ -234,15 +234,32 @@ function titleCaseWords(label: string): string[] {
   for (const name of NAMES) rest = rest.split(name).join("name");
   return rest.split(/\s+/).slice(1).filter((w) => /^[A-Z]/.test(w) && w !== "I");
 }
+// A label stands alone: its parenthesis opens a string or a text node. One with words before it is
+// part of a sentence or a headline, such as an Insights article title, and never a label (article
+// titles use Title Case as the editorial headline style; see CLAUDE.md).
+const LABEL_START = String.raw`(?<=(?:^|["'\`>}])\s*)`;
+function labelsIn(src: string): string[] {
+  return [
+    ...[...src.matchAll(new RegExp(LABEL_START + String.raw`\((?:\d{2}\) ?)?[A-Z][A-Za-z]*(?: [A-Za-z][A-Za-z.]*)+\)`, "gm"))].map((m) => m[0]),
+    ...[...src.matchAll(new RegExp(LABEL_START + String.raw`\(\d{2}\) ([A-Z][^<"\`{}\n]*)`, "gm"))].map((m) => `(00) ${m[1].trim()}`),
+    ...[...src.matchAll(/<EditorialLabel[^>]*\btext="([^"]+)"/g)].map((m) => m[1]),
+  ];
+}
+
+test("labels: an article title is never read as a label; a label is", () => {
+  const title = `<h3 className="ins-card-title">What a Brand Identity System Actually Includes (And Why a Logo Is Not Enough)</h3>`;
+  assert.deepEqual(labelsIn(title), []);
+  assert.deepEqual(labelsIn(`title: "Branding Toolkit (The Complete Guide)",`), []);
+  assert.deepEqual(labelsIn(`<p className="cta-label">(Next Step)</p>`), ["(Next Step)"]);
+  assert.deepEqual(labelsIn(`label: "(The Result)",`), ["(The Result)"]);
+  assert.deepEqual(labelsIn(`<p>\n  (02) The Challenge\n</p>`), ["(00) The Challenge"]);
+});
+
 test("labels: every editorial label in src is in sentence case, names excepted", () => {
   const found: string[] = [];
   for (const file of sourceFiles("src").filter((f) => /\.tsx?$/.test(f))) {
     const src = withoutComments(readFileSync(file, "utf8"));
-    const labels = [
-      ...[...src.matchAll(/\((?:\d{2}\) ?)?[A-Z][A-Za-z]*(?: [A-Za-z][A-Za-z.]*)+\)/g)].map((m) => m[0]),
-      ...[...src.matchAll(/\(\d{2}\) ([A-Z][^<"`{}\n]*)/g)].map((m) => `(00) ${m[1].trim()}`),
-      ...[...src.matchAll(/<EditorialLabel[^>]*\btext="([^"]+)"/g)].map((m) => m[1]),
-    ];
+    const labels = labelsIn(src);
     for (const label of labels) {
       if (label === label.toUpperCase()) continue;
       const caps = titleCaseWords(label);
