@@ -1,4 +1,8 @@
 "use client";
+// A client component: it rotates the service's projects every 5s. Every project's image and every
+// project's tags and name are always in the card, stacked in the same box; only the current one
+// shows, so a change never alters the card's height (site audit S-12: tags that wrapped to one more
+// or one fewer line moved the page by 21px, with no input).
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -35,10 +39,8 @@ export default function ServiceProjectCard({ projects }: Props) {
   if (projects.length === 0) return null;
 
   const current = projects[activeIndex];
-
-  const tags = current.disciplines.length > 0
-    ? current.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) }))
-    : [{ value: "project", label: "Project" }];
+  const tagsFor = (p: ServiceProject) =>
+    p.disciplines.length > 0 ? p.disciplines.map((d) => ({ value: d, label: disciplineLabel(d) })) : [{ value: "project", label: "Project" }];
 
   // One link for the whole card: image, tags and name all open the project.
   return (
@@ -59,9 +61,14 @@ export default function ServiceProjectCard({ projects }: Props) {
           />
         ))}
       </div>
+      {/* All in one grid cell, as tall as the tallest; the others hidden, so the link reads the current one. */}
       <div className="svc-block-proj-meta">
-        <DisciplineTags tags={tags} className="svc-block-proj-tags" projectType={current.projectType} />
-        <p className="svc-block-proj-name">{current.name}</p>
+        {projects.map((p, i) => (
+          <div key={p.slug} className="svc-block-proj-item" data-active={i === activeIndex ? "true" : "false"} aria-hidden={i === activeIndex ? undefined : true}>
+            <DisciplineTags tags={tagsFor(p)} className="svc-block-proj-tags" projectType={p.projectType} />
+            <p className="svc-block-proj-name">{p.name}</p>
+          </div>
+        ))}
       </div>
     </IntentLink>
   );

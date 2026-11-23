@@ -2454,6 +2454,16 @@ html:not([data-js]) .needs-js {
 .svc-block-proj-meta {
   margin-top: 12px;
   padding: 0 24px 24px;
+  /* Every project's tags and name in one cell, as tall as the tallest: the 5s rotation changes which
+     one shows, never the card's height (ServiceProjectCard.tsx, site audit S-12). */
+  display: grid;
+}
+.svc-block-proj-item {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.svc-block-proj-item[data-active="false"] {
+  visibility: hidden;
 }
 
 .svc-block-proj-tags {
