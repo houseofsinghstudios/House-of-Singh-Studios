@@ -329,6 +329,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - Two-column: form left, booking CTA right
 - Contact details grid below form
 - No bottom CTA (the form IS the CTA)
+- Budget range (CAD), optional (since 23 Nov 2026, site audit S-09; guard tests/budget-bands.test.ts): the Project Planner's own investment ranges, from one shared list for both forms (src/lib/budget-bands.ts): Under $1,000, $1,000 to $4,000, $4,000 to $10,000, $10,000 to $20,000, $20,000 or more, then Not sure yet last. They are the visitor's own range, never the studio's price, so no band reads as a floor. The form sends the label text (the /api/lead budget field, at most 80 characters).
 
 ### AI Lab
 - Compact hero
