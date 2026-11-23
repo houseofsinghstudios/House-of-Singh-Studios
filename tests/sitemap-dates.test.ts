@@ -20,7 +20,7 @@ test("every code page in the sitemap has a lastmod date", () => {
 test("every code page route on disk is in the list", () => {
   const routes = fs.readdirSync("src/app/(site)", { withFileTypes: true })
     // Route groups such as (home) add no path segment ((home) is the homepage, checked below), and
-    // the catch all [...not-found] is the 404, never listed.
+    // dynamic segments are listed by their own pages. The 404 is the root not-found, never listed.
     .filter((e) => e.isDirectory() && !/^[([]/.test(e.name) && fs.existsSync(`src/app/(site)/${e.name}/page.tsx`))
     .map((e) => `/${e.name}`);
   for (const route of routes) assert.ok(STATIC_PAGES.includes(route), `${route} is a page but not in STATIC_PAGES`);

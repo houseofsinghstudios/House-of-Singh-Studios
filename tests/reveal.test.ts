@@ -47,7 +47,9 @@ test("the arming script: sets data-reveal, disarms after the safety time, render
   // From the root layout's head, so every document has it as real HTML, the 404 included (site audit S-05).
   const root = readFileSync("src/app/layout.tsx", "utf8");
   assert.match(root, /<head>[\s\S]*<script dangerouslySetInnerHTML=\{\{ __html: REVEAL_ARM_SCRIPT \}\} \/>[\s\S]*<\/head>/);
-  assert.doesNotMatch(readFileSync("src/app/(site)/layout.tsx", "utf8"), /REVEAL_ARM_SCRIPT/, "rendered once");
+  for (const f of ["src/app/(site)/layout.tsx", "src/components/layout/SiteShell.tsx"]) {
+    assert.doesNotMatch(readFileSync(f, "utf8"), /REVEAL_ARM_SCRIPT/, `rendered once, never again in ${f}`);
+  }
   // The safety net: ClientShell sets data-js on mount when it is missing, never data-reveal.
   const shell = readFileSync("src/components/ClientShell.tsx", "utf8");
   assert.match(shell, /if \(!root\.hasAttribute\("data-js"\)\) root\.setAttribute\("data-js", ""\);/);

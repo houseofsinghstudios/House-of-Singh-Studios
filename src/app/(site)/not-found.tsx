@@ -1,41 +1,12 @@
-import type { Metadata } from "next";
-import Button from "@/components/ui/Button";
+import NotFoundContent from "@/components/layout/NotFoundContent";
+import { NOT_FOUND_METADATA } from "@/lib/not-found";
 
-// The site 404. Renders inside the (site) layout, so visitors keep the header and footer.
-// Reached by notFound() in any site page, and by (site)/[...not-found] for unmatched URLs.
-export const metadata: Metadata = {
-  title: "Page Not Found",
-  robots: { index: false, follow: true },
-  // Do not inherit the root layout's homepage canonical.
-  alternates: { canonical: null },
-};
+// The in-app 404: notFound() from a site page (a missing case study, article, initiative, service or
+// archive page; /initiatives/foundry on purpose). It answers 404 with noindex, but Next.js 16 draws it
+// in the browser only (vercel/next.js #99287); an address no route matches gets the root
+// src/app/not-found.tsx instead, drawn on the server. Same copy and metadata in both.
+export const metadata = NOT_FOUND_METADATA;
 
 export default function NotFound() {
-  return (
-    <section className="wp-hero">
-      <p
-        className="editorial-label css-reveal"
-        style={{ margin: "0 0 16px", transitionDelay: "0ms" }}
-      >
-        (404)
-      </p>
-
-      <h1 className="wp-heading css-reveal" style={{ transitionDelay: "100ms" }}>
-        This page didn&apos;t make the final&nbsp;cut.
-      </h1>
-
-      <p className="wp-sub css-reveal" style={{ transitionDelay: "200ms" }}>
-        It may have moved or been retired. The work that did is one click away.
-      </p>
-
-      <div className="flex flex-wrap gap-3 mt-12 css-reveal" style={{ transitionDelay: "300ms" }}>
-        <Button href="/work" variant="primary" data-cursor="link">
-          View our work
-        </Button>
-        <Button href="/start" variant="secondary" data-cursor="link">
-          Plan your project
-        </Button>
-      </div>
-    </section>
-  );
+  return <NotFoundContent />;
 }
