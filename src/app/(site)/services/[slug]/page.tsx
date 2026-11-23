@@ -51,7 +51,7 @@ export function generateMetadata({
 }): Promise<Metadata> {
   return params.then(({ slug }) => {
     const service = getServiceBySlug(slug);
-    if (!service) return { title: "Service Not Found" };
+    if (!service) return { title: "Service not found" };
     // seoTitle is complete, studio name included, so the title template adds nothing.
     return {
       title: { absolute: service.seoTitle },

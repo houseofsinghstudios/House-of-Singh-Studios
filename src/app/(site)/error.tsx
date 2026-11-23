@@ -21,10 +21,10 @@ export default function SiteError({ retry }: { error: unknown; retry: () => void
           Try again
         </Button>
         <Button href="/" variant="secondary" data-cursor="link">
-          Go to the Homepage
+          Go to the homepage
         </Button>
         <Button href="/contact" variant="secondary" data-cursor="link">
-          Contact the Studio
+          Contact the studio
         </Button>
       </div>
     </section>

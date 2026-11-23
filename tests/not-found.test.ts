@@ -35,6 +35,7 @@ test("the in-app 404 keeps the same copy and metadata inside the site layout", (
 
 test("404 metadata: sentence case title, noindex, follow, no canonical", () => {
   assert.equal(NOT_FOUND_METADATA.title, "Page not found");
+  assert.equal(NOT_FOUND_METADATA.description, "This page may have moved or been retired. The work that did is one click away.");
   assert.deepEqual(NOT_FOUND_METADATA.robots, { index: false, follow: true });
   assert.deepEqual(NOT_FOUND_METADATA.alternates, { canonical: null });
 });

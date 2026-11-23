@@ -49,12 +49,14 @@
   outline-offset: 8px;
 }
 
+/* Hovers change colour, never opacity on text (site audit S-18): the title turns Gunmetal. */
 .role-card-header:hover .role-card-title {
-  opacity: 0.7;
+  color: var(--text-secondary);
 }
 
 .role-card-title {
-  transition: opacity 0.3s ease;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .role-card-meta {
@@ -175,11 +177,17 @@ form:not([data-pointer-focus]) .careers-form-textarea:focus-visible {
   padding: 16px 40px;
   border: none;
   cursor: pointer;
-  transition: opacity 0.3s ease;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.careers-submit-btn:hover {
-  opacity: 0.85;
+/* The primary button's light sweep, as a one colour background that grows from the left (S-18). */
+@media (hover: hover) {
+  .careers-submit-btn:hover {
+    background-size: 100% 100%;
+  }
 }
 
 .careers-submit-btn:disabled {

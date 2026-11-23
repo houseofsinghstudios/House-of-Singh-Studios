@@ -59,7 +59,7 @@ test("site wide: back links, tags, sources, the contact email, Next and the boxe
 test("articles, case studies, /about, the planner link and the Insights filters", () => {
   const article = css("src/components/insights/article.css");
   assert.match(article, /\.art-back,\s*\.art-newsletter-submit \{\s*padding-top: 3px;\s*padding-bottom: 3px;\s*margin-top: -3px;\s*margin-bottom: -3px;/);
-  assert.match(below1080(article), /\.share-btn::after \{\s*content: "";\s*position: absolute;\s*inset: calc\(50% - 22px\) 0;/, "the bordered share buttons keep their size");
+  assert.match(below1080(article), /\.share-btn::after \{\s*content: "";\s*position: absolute;\s*inset: calc\(50% - 22px\) min\(0px, calc\(50% - 22px\)\);/, "the bordered share buttons keep their size; the band is 44px wide on the X button too");
   assert.match(below1080(article), /\.art-back,\s*\.art-newsletter-submit \{\s*padding-top: 12px;/);
   const cs = css("src/components/casestudy/case-study.css");
   assert.match(cs, /\.cs-plan-similar-link \{\s*padding: 3px 0;\s*\}/);

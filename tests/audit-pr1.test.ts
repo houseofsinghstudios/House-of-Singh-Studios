@@ -203,6 +203,7 @@ const OLD_LABELS = [
   "Start the Check", "Discuss My Results", "Send My Result", "Add Details", "Show My Result", "Start a Conversation",
   "Take the Check Yourself", "Suggest a Brand", "Nominate an Organization", "Introduce a Client", "Become a Partner",
   "Copy Text", "Copy Link", "Submit Application", "Send Message", "View Our Work", "All Insights",
+  "All Projects", "View Careers", "Go to the Homepage", "Contact the Studio", "Privacy Policy\"", "Coming Soon",
 ];
 function sourceFiles(dir: string): string[] {
   return readdirSync(dir).flatMap((name) => {
@@ -216,6 +217,50 @@ test("labels: buttons and links read in sentence case, the old Title Case labels
     const src = readFileSync(file, "utf8");
     for (const label of OLD_LABELS) assert.ok(!src.includes(label), `${file}: "${label}"`);
   }
+});
+
+// Since the site audit (S-15, 23 Nov 2026) the rule, not just the list: every editorial label in
+// parentheses ("(02) The challenge", "(Next step)") and every EditorialLabel text, anywhere in src, is
+// in sentence case. A capital after the first word is allowed only for a name. Comments are skipped;
+// labels written all in capitals (the share images) are their own style.
+const NAMES = [
+  "House of Singh Studios", "House of Singh", "Registered Graphic Designers of Canada", "Registered Graphic Designers",
+  "Brand Pulse", "Brand Pulse Check", "AI Lab", "Studio Guide", "Speed Insights", "Open Graph", "Project Planner",
+  "Toronto", "Canada", "GTA", "RGD", "CAD", "Parallel", "Commons", "Twitter", "Instagram", "LinkedIn", "Pinterest", "TEDxToronto",
+];
+const withoutComments = (src: string) => src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1").replace(/\{\/\*[\s\S]*?\*\/\}/g, "");
+function titleCaseWords(label: string): string[] {
+  let rest = label.replace(/^\(?(\d{2}\)\s*)?/, "").replace(/\)$/, "");
+  for (const name of NAMES) rest = rest.split(name).join("name");
+  return rest.split(/\s+/).slice(1).filter((w) => /^[A-Z]/.test(w) && w !== "I");
+}
+test("labels: every editorial label in src is in sentence case, names excepted", () => {
+  const found: string[] = [];
+  for (const file of sourceFiles("src").filter((f) => /\.tsx?$/.test(f))) {
+    const src = withoutComments(readFileSync(file, "utf8"));
+    const labels = [
+      ...[...src.matchAll(/\((?:\d{2}\) ?)?[A-Z][A-Za-z]*(?: [A-Za-z][A-Za-z.]*)+\)/g)].map((m) => m[0]),
+      ...[...src.matchAll(/\(\d{2}\) ([A-Z][^<"`{}\n]*)/g)].map((m) => `(00) ${m[1].trim()}`),
+      ...[...src.matchAll(/<EditorialLabel[^>]*\btext="([^"]+)"/g)].map((m) => m[1]),
+    ];
+    for (const label of labels) {
+      if (label === label.toUpperCase()) continue;
+      const caps = titleCaseWords(label);
+      if (caps.length) found.push(`${file}: ${label}`);
+    }
+  }
+  assert.deepEqual(found, []);
+});
+
+test("labels: missing page titles and the error buttons in sentence case", () => {
+  for (const file of sourceFiles("src")) assert.doesNotMatch(readFileSync(file, "utf8"), /[A-Za-z] Not Found"/, file);
+  assert.match(readFileSync("src/app/(site)/work/[slug]/page.tsx", "utf8"), /\{ title: "Project not found" \}/);
+  for (const f of ["src/app/(site)/error.tsx", "src/app/global-error.tsx"]) {
+    const src = readFileSync(f, "utf8");
+    assert.match(src, /Go to the homepage/, f);
+    assert.match(src, /Contact the studio/, f);
+  }
+  assert.match(readFileSync("src/components/services/ServiceDetail.tsx", "utf8"), /\n\s*Plan your project\n/, "the service CTA is the main action name");
 });
 
 test("labels: the /services Learn more links keep their hidden service names", () => {

@@ -206,7 +206,7 @@ export default function ServiceDetail({
               Book a discovery call
             </Button>
             <Button href={startHref("services", planService)} variant="secondary-inverted" data-cursor="link">
-              Plan a {service.name} Project
+              Plan your project
             </Button>
           </div>
         </div>

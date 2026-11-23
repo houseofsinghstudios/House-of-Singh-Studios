@@ -14,7 +14,7 @@ export default function InsightsCta() {
       }}
     >
       <div className="cta-centered">
-        <p className="cta-label">(Next Step)</p>
+        <p className="cta-label">(Next step)</p>
         <h2 className="cta-heading">Have a project in mind?</h2>
         <div className="cta-buttons">
           <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">

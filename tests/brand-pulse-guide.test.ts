@@ -89,3 +89,11 @@ test("the services titles: exact and 59 characters", () => {
   assert.equal(identity, "Branding & Brand Identity, Toronto | House of Singh Studios");
   assert.equal(identity.length, 59);
 });
+
+test("every service title ends with the studio's full name and fits in 60 characters (S-17)", () => {
+  assert.equal(services.find((s) => s.slug === "visual-media")!.seoTitle, "Photo & Video Production Toronto | House of Singh Studios");
+  for (const s of services) {
+    assert.ok(s.seoTitle.endsWith(" | House of Singh Studios"), s.slug);
+    assert.ok(s.seoTitle.length <= 60, `${s.slug}: ${s.seoTitle.length}`);
+  }
+});

@@ -78,7 +78,7 @@ export default function CaseStudyTemplate({
         }}
       >
         <IntentLink href="/work" className="cs-back back-link css-reveal">
-          <span className="back-arrow">←</span> All Projects
+          <span className="back-arrow">←</span> All projects
         </IntentLink>
         <p
           className="cs-hero-meta css-reveal"
@@ -185,7 +185,7 @@ export default function CaseStudyTemplate({
         <div className="cs-challenge-grid">
           <div className="cs-challenge-col">
             <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
-              (02) The Challenge
+              (02) The challenge
             </p>
             <h2 className="cs-section-heading css-reveal">
               {project.challenge.heading}
@@ -199,7 +199,7 @@ export default function CaseStudyTemplate({
           <div className="cs-challenge-divider" />
           <div className="cs-approach-col">
             <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
-              (03) Our Approach
+              (03) Our approach
             </p>
             <h2 className="cs-section-heading css-reveal">
               {project.approach.heading}
@@ -233,7 +233,7 @@ export default function CaseStudyTemplate({
         }}
       >
         <p className="editorial-label css-reveal" style={{ margin: "0 0 16px" }}>
-          (05) The Result
+          (05) The result
         </p>
         <div className="cs-result-grid">
           <div className="cs-result-left">

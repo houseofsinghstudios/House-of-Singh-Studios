@@ -1420,11 +1420,11 @@ form:not([data-pointer-focus]) .contact-input:focus-visible + .focus-line {
   letter-spacing: -0.015em;
   color: var(--text-primary);
   margin: 6px 0 0;
-  transition: opacity 0.3s ease;
+  transition: color 0.3s ease;
 }
 @media (hover: hover) {
   .ins-card:hover .ins-card-title {
-    opacity: 0.65;
+    color: var(--text-secondary);
   }
   .ins-card:hover .ins-card-img-inner {
     transform: scale(1.03);
@@ -2353,12 +2353,18 @@ html:not([data-js]) .needs-js {
   border-radius: 0;
   cursor: pointer;
   margin: 0;
-  transition: opacity 0.3s;
+  /* The primary button's light sweep (site audit S-18; it dimmed to 0.8), as a one colour background
+     that grows from the left: no positioning, so the Explore link's stretched ::after on /initiatives
+     still covers its whole row. */
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.4s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @media (hover: hover) {
   .svc-block-btn:hover {
-    opacity: 0.8;
+    background-size: 100% 100%;
   }
 }
 
@@ -2454,6 +2460,16 @@ html:not([data-js]) .needs-js {
 .svc-block-proj-meta {
   margin-top: 12px;
   padding: 0 24px 24px;
+  /* Every project's tags and name in one cell, as tall as the tallest: the 5s rotation changes which
+     one shows, never the card's height (ServiceProjectCard.tsx, site audit S-12). */
+  display: grid;
+}
+.svc-block-proj-item {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.svc-block-proj-item[data-active="false"] {
+  visibility: hidden;
 }
 
 .svc-block-proj-tags {

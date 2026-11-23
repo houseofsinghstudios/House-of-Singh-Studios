@@ -149,7 +149,7 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
           <div className="art-body">
             <div className="art-takeaways">
               <p className="editorial-label art-takeaways-label">
-                (Key Takeaways)
+                (Key takeaways)
               </p>
               <ul className="art-takeaways-list">
                 {post.keyTakeaways.map((takeaway, i) => (
@@ -216,7 +216,7 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
         }}
       >
         <div className="cta-centered">
-          <p className="cta-label">(Next Step)</p>
+          <p className="cta-label">(Next step)</p>
           <h2 className="cta-heading">Ready to build a brand that works?</h2>
           <div className="cta-buttons">
             <Button href={DISCOVERY_CALL_URL} variant="primary-inverted" data-cursor="link" target="_blank" rel="noopener noreferrer">
