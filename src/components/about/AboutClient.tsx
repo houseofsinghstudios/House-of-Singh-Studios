@@ -1,5 +1,6 @@
 "use client";
 
+import { torontoTime } from "@/lib/toronto-time";
 import { useState, useSyncExternalStore } from "react";
 import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
@@ -63,13 +64,17 @@ const subscribeClock = (onChange: () => void) => {
 };
 const noTimeOnServer = () => null;
 
+// "14:05 EST": the 24 hour time and the zone's own abbreviation, EST or EDT as daylight time has it
+// (torontoTime, Intl's short zone name; site audit S-16: the label was always "EST").
 function getTorontoTime(): string {
-  return new Intl.DateTimeFormat("en-CA", {
+  const now = new Date();
+  const time = new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Toronto",
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  }).format(new Date());
+  }).format(now);
+  return `${time} ${torontoTime(now).zone}`;
 }
 
 export default function AboutClient({ aboutData, networkMembers = [] }: { aboutData?: AboutData; networkMembers?: NetworkCard[] }) {
@@ -79,8 +84,9 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
   /* ── Duel pairing state ── */
   const [duelPairedIndex, setDuelPairedIndex] = useState<number | null>(null);
 
-  // Until the time is known, hidden placeholder digits hold exactly the same width.
-  const [hours, minutes] = (clockTime ?? "00:00").split(":");
+  // Until the time is known, a hidden placeholder ("EST 00:00") holds exactly the same width.
+  const [time, zone] = (clockTime ?? "00:00 EST").split(" ");
+  const [hours, minutes] = time.split(":");
 
   return (
     <>
@@ -133,8 +139,8 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
         >
           <span className="about-clock-location">Toronto, Canada</span>
           <span className="about-clock-time">
-            EST{" "}
             <span className={clockTime ? undefined : "about-clock-pending"} aria-hidden={clockTime ? undefined : true}>
+              {zone}{" "}
               {hours}<span className="about-clock-colon">:</span>{minutes}
             </span>
           </span>
