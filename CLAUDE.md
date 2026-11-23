@@ -320,7 +320,7 @@ As built (src/components/services/ServiceDetail.tsx; copy from src/data/services
 
 ### Case Study (/work/[slug])
 As built (src/components/casestudy/CaseStudyTemplate.tsx; data from Sanity):
-- Hero, padding only: the back link "All projects" to /work, the project type label, the h1 with view transition name project-<slug>.
+- Hero, one grid (section.cs-hero, which the consent notice also watches; site audit Step 9): the back link "All projects" to /work, the project type label and the h1 with view transition name project-<slug> on 7 parts, the summary on 5 at the foot of the name, from the header bar plus 56px; the image full width under both, so it starts by half the screen (339 to 416px at 1440 by 900). At 1080px and below the image comes straight after the name and the summary follows it (image top about 205 to 223px at 390 by 844).
 - The hero image: full width, 16:9 (3:2 on phones), view transition name project-image-<slug>, wiping in from the left over 0.8s (the shared .reveal-clip; a fade up below 768px). Its source is the featured image, a clean source up to 2400px (Layer 6).
 - (01) Overview: the meta (client, year, sector and the like) and the service tags (links), then the overview text.
 - With page blocks (BlockRenderer, in Sanity order), the blocks follow, then "(02) What we delivered". Without them: (02) The challenge and (03) Our approach, the first gallery, "(04) What we delivered", the second gallery and (05) The result.
@@ -333,7 +333,7 @@ As built (src/components/about/AboutClient.tsx):
 - (02) Process: five steps (.row-bleed rows). Process step numbers (01 to 05): 28px to 40px (24px below 900px), weight 500, so large text; Accessible Ash at full strength (4.64:1), Gunmetal on the hover ground; read with their step, not hidden from assistive technology (since 22 Nov 2026).
 - (03) How we are different: the two column comparison ("duel").
 - (04) Network: the network cards from Sanity (NetworkGrid), then a full width image.
-- (05) Founder: two columns, photo and bio (the grid is 1fr 1fr today; a 55/45 proposal is Step 9 of the site audit).
+- (05) Founder: two columns, the photo on 45 and the bio, the primary content, on 55 (site audit Step 9); one column below 900px.
 - (06) Collaborators, with "View careers" and "See our initiatives".
 - The Next link, then the dark call to action "Plan your project.".
 

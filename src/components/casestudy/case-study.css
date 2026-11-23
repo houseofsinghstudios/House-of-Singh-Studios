@@ -1,6 +1,24 @@
 /* Case study pages (/work/[slug]). Moved from globals.css so only the pages that use these styles load them.
    Imported by the components that render these classes; the shared base stays in globals.css. */
 
+/* ── Hero (site audit Step 9, a design proposal): one grid, so the image starts high. Above 1080px
+   the head (back link, type, name) takes 7 parts and the summary 5, at the foot of the name; the image
+   runs full width under both, starting by half the screen at 1440 by 900. At 1080px and below the
+   image follows the name and the summary comes after it, so the image sits in the first screen. ── */
+.cs-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-areas:
+    "head summary"
+    "image image";
+  column-gap: clamp(40px, 5vw, 80px);
+  padding: calc(var(--header-bar) + 56px) var(--page-px) 0;
+}
+
+.cs-hero-head {
+  grid-area: head;
+}
+
 .cs-hero-meta {
   font-size: 12px;
   color: var(--text-label);
@@ -24,8 +42,10 @@
   font-weight: 400;
   line-height: 1.5;
   color: var(--text-secondary);
-  max-width: 600px;
-  margin: 16px 0 0;
+  max-width: 520px;
+  margin: 0;
+  grid-area: summary;
+  align-self: end;
 }
 
 /* ── "Planning something similar?" link at the end of a case study ── */
@@ -45,10 +65,30 @@
 
 /* ── Hero Image (full-bleed) ── */
 .cs-hero-image {
+  grid-area: image;
   position: relative;
-  width: 100%;
+  /* Full bleed: out of the hero's side padding. */
+  margin: clamp(40px, 5vh, 56px) calc(-1 * var(--page-px)) 0;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+}
+
+@media (max-width: 1080px) {
+  .cs-hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "image"
+      "summary";
+    padding-top: calc(var(--header-bar) + 40px);
+  }
+  .cs-hero-image {
+    margin-top: 32px;
+  }
+  .cs-hero-summary {
+    margin-top: 32px;
+    max-width: 600px;
+  }
 }
 
 /* ── Shared typography ── */
@@ -294,9 +334,17 @@
 }
 
 @media (max-width: 767px) {
-  /* 24px below the header bar, as the hero started 24px below the old crest (which ended at 128px). */
   .cs-hero {
-    padding-top: calc(var(--header-bar) + 24px) !important;
+    padding-top: calc(var(--header-bar) + 24px);
+  }
+  .cs-hero-meta {
+    margin: 20px 0 12px;
+  }
+  .cs-hero-image {
+    margin-top: 24px;
+  }
+  .cs-hero-summary {
+    margin-top: 24px;
   }
   .cs-hero-heading {
     font-size: clamp(28px, 7vw, 40px);
