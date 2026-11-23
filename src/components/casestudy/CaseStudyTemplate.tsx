@@ -1,4 +1,3 @@
-import { Link } from "next-view-transitions";
 import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import type { ProjectDetail } from "@/data/projectDetails";
@@ -78,9 +77,9 @@ export default function CaseStudyTemplate({
             "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 64px)",
         }}
       >
-        <Link href="/work" className="cs-back back-link css-reveal">
+        <IntentLink href="/work" className="cs-back back-link css-reveal">
           <span className="back-arrow">←</span> All Projects
-        </Link>
+        </IntentLink>
         <p
           className="cs-hero-meta css-reveal"
           style={{ transitionDelay: "80ms" }}

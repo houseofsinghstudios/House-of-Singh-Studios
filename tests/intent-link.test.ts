@@ -36,7 +36,8 @@ test("the homepage, header, drawer and footer link through IntentLink, except th
     assert.doesNotMatch(src, /<Link\b/, f);
   }
   const header = read("src/components/layout/Header.tsx");
-  assert.match(header, /const NavLink = link\.href === "\/work" \? Link : IntentLink;/, "Work on sight, the rest on intent");
+  assert.match(header, /const onHome = usePathname\(\) === "\/";/);
+  assert.match(header, /const NavLink = link\.href === "\/work" && onHome \? Link : IntentLink;/, "Work on sight on the homepage only, the rest on intent");
   assert.match(header, /<IntentLink href="\/start" className="btn-primary header-cta"/);
   assert.match(header, /<IntentLink href="\/" className="header-wordmark">/);
   assert.match(read("src/components/work/index/HomeWorkIndex.tsx"), /<Link href=\{all\.href\} className="hw-all"/, "All work keeps prefetching on sight");
