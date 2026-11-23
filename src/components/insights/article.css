@@ -461,9 +461,11 @@ form:not([data-pointer-focus]) .art-newsletter-input:focus-visible {
   .share-btn {
     position: relative;
   }
+  /* An invisible 44px band, centred: 44px tall, and 44px wide on a button narrower than that (the X
+     button is 43px), the sides staying the button's own on the wider ones. */
   .share-btn::after {
     content: "";
     position: absolute;
-    inset: calc(50% - 22px) 0;
+    inset: calc(50% - 22px) min(0px, calc(50% - 22px));
   }
 }
