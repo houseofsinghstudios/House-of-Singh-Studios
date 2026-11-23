@@ -2235,10 +2235,8 @@ html:not([data-js]) .needs-js {
       opacity: 1;
     }
 
-  /* The case study hero image wipes a little slower (1s). */
-  html[data-reveal] .cs-hero-image-reveal {
-    transition-duration: 1s;
-  }
+  /* The case study hero image wipes at the shared 0.8s (.reveal-clip): the image clip timing in
+     CLAUDE.md's easing table (it ran 1s until the site audit). */
 }
 
 
