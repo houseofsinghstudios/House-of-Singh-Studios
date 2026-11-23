@@ -3,6 +3,9 @@
 // Client component: it holds the draft in memory only (never stored in the browser), recomputes the
 // brief as answers change and sends the four events. The brief comes from the same rule based
 // engine the server uses. No AI is involved, and nothing is sent until the visitor starts.
+// The first screen paints at once, with no fade, so the page's largest text (the LCP) is drawn with
+// the first paint; data-moved on the root, set on the first screen change, lets every later screen
+// fade in as before (site audit S-11, planner.css).
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { buildBrief, validateAnswers, withNeeds, withPrimary, type Draft } from "@/lib/project-planner/engine";
@@ -46,6 +49,8 @@ export default function ProjectPlanner({ related, initialServices, begin = false
   const [draft, setDraft] = useState<Draft>(opening.draft);
   const [optional, setOptional] = useState<Optional>({});
   const [editing, setEditing] = useState(false);
+  // Set on the first screen change and kept: from then on each new screen fades in (planner.css).
+  const [moved, setMoved] = useState(false);
   const [showSend, setShowSend] = useState(false);
   const [announcement, setAnnouncement] = useState("");
   const [briefId, setBriefId] = useState("");
@@ -59,6 +64,7 @@ export default function ProjectPlanner({ related, initialServices, begin = false
   const brief = useMemo(() => (answers ? buildBrief(answers) : null), [answers]);
 
   function go(next: Screen, index = stepIndex) {
+    setMoved(true);
     setScreen(next);
     setStepIndex(index);
     requestAnimationFrame(() => scrollToTop(rootRef.current));
@@ -143,7 +149,7 @@ export default function ProjectPlanner({ related, initialServices, begin = false
   }
 
   return (
-    <div ref={rootRef} className="pp-root">
+    <div ref={rootRef} className="pp-root" data-moved={moved ? "" : undefined}>
       {/* The page's main heading lives in the intro. Whenever the intro is not on screen (?begin=1,
           or a flow already under way), the same words stay as a visually hidden h1. */}
       {screen !== "intro" && <h1 className="sr-only">{INTRO.heading}</h1>}

@@ -6,6 +6,9 @@
 // the whole result, follow up included, goes in place, hidden and inert, in the same grid cell as the
 // question and then the reading screen, which sit over it. When the reading ends, the parts show in
 // stages by opacity and transform only (data-shown, brand-pulse.css), so nothing below them moves.
+// The first screen paints at once, with no fade, so the page's largest text (the LCP) is drawn with
+// the first paint; data-moved on the root, set on the first screen change, lets every later screen
+// fade in as before (site audit S-11).
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { assess } from "@/lib/brand-pulse/engine";
@@ -48,6 +51,8 @@ const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)"
 export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, headingLevel = "h2", prefill = null }: Props) {
   const [screen, setScreen] = useState<Screen>(() => (!prefill ? "intro" : gate === "before-questions" ? "gate" : "question"));
   const [leaving, setLeaving] = useState(false);
+  // Set on the first screen change and kept: from then on each new screen fades in (brand-pulse.css).
+  const [moved, setMoved] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<Answers>>(() => prefill ?? {});
   const [pending, setPending] = useState<string | null>(null);
@@ -87,6 +92,7 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
       // Only the reading screen keeps the result underneath. Anywhere else (a restart) it leaves with
       // the flow, in the same render as the next screen, after a click, so the change is expected.
       if (next !== "evaluating") setFinal(null);
+      setMoved(true);
       setScreen(next);
       setStep(nextStep);
       setPending(null);
@@ -179,7 +185,7 @@ export default function BrandPulse({ gate = GATE, startLabel = INTRO.button, hea
   }
 
   return (
-    <div ref={rootRef} className={`bp-root${leaving ? " is-leaving" : ""}`}>
+    <div ref={rootRef} className={`bp-root${leaving ? " is-leaving" : ""}`} data-moved={moved ? "" : undefined}>
       {/* Where the check is the page (h1), its main heading lives in the intro. Whenever the intro is
           not on screen (a link that starts at a question, or a flow already under way), the same
           words stay as a visually hidden h1, so the page always has exactly one. */}

@@ -8,6 +8,10 @@
 }
 .bp-screen {
   transition: opacity 0.2s ease;
+}
+/* The first screen paints at once (it holds the page's LCP text); every screen after the first
+   change fades in (data-moved on the root, BrandPulse.tsx; site audit S-11). */
+.bp-root[data-moved] .bp-screen {
   animation: bp-fade 0.2s ease backwards;
 }
 .bp-root.is-leaving .bp-screen {
@@ -570,7 +574,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bp-screen,
+  .bp-root[data-moved] .bp-screen,
   .bp-eval-row {
     animation: none;
   }
