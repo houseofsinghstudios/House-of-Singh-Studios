@@ -154,7 +154,7 @@ test("findings 3 and 4: report-to and Reporting-Endpoints added, COOP set, every
 });
 
 test("finding 5: Speed Insights follows the consent rule, never loading before consent in strict regions", () => {
-  const layout = readFileSync("src/app/(site)/layout.tsx", "utf8");
+  const layout = readFileSync("src/components/layout/SiteShell.tsx", "utf8");
   assert.doesNotMatch(layout, /<SpeedInsights \/>/, "the layout never renders Speed Insights directly");
   assert.match(layout, /<ConsentedSpeedInsights \/>/);
   const wrapper = readFileSync("src/components/ConsentedSpeedInsights.tsx", "utf8");

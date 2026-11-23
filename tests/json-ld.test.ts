@@ -39,7 +39,7 @@ test("every JSON-LD script tag in the site uses jsonLd", () => {
     "src/app/(site)/services/[slug]/page.tsx",
     "src/app/(site)/work/[slug]/page.tsx",
     "src/app/(site)/insights/[slug]/page.tsx",
-    "src/app/(site)/layout.tsx",
+    "src/components/layout/SiteShell.tsx",
     "src/app/(site)/about/page.tsx",
   ];
   for (const f of files) {
