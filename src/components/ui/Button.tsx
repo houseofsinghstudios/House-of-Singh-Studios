@@ -1,7 +1,9 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from "react";
-import { Link } from "next-view-transitions";
+// Links prefetch on intent, through IntentLink (site audit S-06): every internal button used to
+// prefetch its page as soon as it scrolled into view. External links (target="_blank") are unchanged.
+import IntentLink from "@/components/IntentLink";
 
 type Variant = "primary" | "secondary" | "primary-inverted" | "secondary-inverted" | "text";
 
@@ -81,7 +83,7 @@ export default function Button({
     if (href) {
       return (
         <div ref={ref} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={magneticStyle}>
-          <Link href={href} className={combinedClass} {...rest}>{inner}</Link>
+          <IntentLink href={href} className={combinedClass} {...rest}>{inner}</IntentLink>
         </div>
       );
     }
@@ -96,7 +98,7 @@ export default function Button({
   if (href) {
     return (
       <div ref={ref} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave} style={magneticStyle}>
-        <Link href={href} className={combinedClass} {...rest}>{children}</Link>
+        <IntentLink href={href} className={combinedClass} {...rest}>{children}</IntentLink>
       </div>
     );
   }

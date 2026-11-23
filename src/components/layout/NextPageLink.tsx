@@ -1,7 +1,8 @@
 // The "Next" link at the foot of a page. Each page passes its own route, so the server and the
 // browser always pick the same next page (no hydration mismatch).
 
-import { Link } from "next-view-transitions";
+// Prefetched on intent, not on sight (IntentLink, site audit S-06).
+import IntentLink from "@/components/IntentLink";
 
 const NEXT_MAP: Record<string, { name: string; href: string }> = {
   "/services": { name: "Work", href: "/work" },
@@ -33,13 +34,13 @@ export default function NextPageLink({ current }: { current: string }) {
   return (
     <div className="next-page-link">
       <span className="next-page-label">Next</span>
-      <Link href={next.href} className="next-page-anchor" data-cursor="link">
+      <IntentLink href={next.href} className="next-page-anchor" data-cursor="link">
         <span className="next-page-name">{next.name}</span>
         <svg className="next-page-arrow" width="40" height="40" viewBox="0 0 48 48" fill="none">
           <path d="M8 40 L40 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M24 8 L40 8 L40 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-      </Link>
+      </IntentLink>
     </div>
   );
 }
