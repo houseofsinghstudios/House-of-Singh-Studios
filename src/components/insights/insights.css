@@ -62,6 +62,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--page-px) 32px;
+  /* Sticky under the header (site audit, CLAUDE.md drift): at --header-edge, moving with the header
+     as it slides away and back (--header-slide), on Silver Mist so the cards pass under it; below the
+     header and the drawer (z-index 130 and 120 to 121). */
+  position: sticky;
+  top: var(--header-edge);
+  transition: top var(--header-slide);
+  z-index: 20;
+  background: var(--bg);
 }
 
 @media (max-width: 767px) {
