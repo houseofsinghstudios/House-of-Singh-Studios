@@ -7,7 +7,9 @@
   font-family: var(--sans);
   max-width: 880px;
 }
-.pp-screen {
+/* The first screen paints at once (it holds the page's LCP text); every screen after the first
+   change fades in (data-moved on the root, ProjectPlanner.tsx; site audit S-11). */
+.pp-root[data-moved] .pp-screen {
   animation: pp-fade 0.2s ease backwards;
 }
 @keyframes pp-fade {
@@ -364,7 +366,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pp-screen {
+  .pp-root[data-moved] .pp-screen {
     animation: none;
   }
 }
