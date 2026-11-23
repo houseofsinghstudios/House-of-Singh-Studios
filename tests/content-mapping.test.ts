@@ -65,10 +65,11 @@ test("mapBlocks: every block type maps in order, with keys, sides, captions and 
   assert.equal(split.image.alt, "Nivora: the logo");
   assert.equal(full.image.alt, "Nivora: packaging");
   assert.equal(offset.image.alt, "Nivora");
-  // Natural dimensions, never cropped or enlarged: width 2000 at most, fit max, modern format.
+  // Natural dimensions, never cropped or enlarged: width 2400 at most, fit max, modern format, a clean
+  // quality 90 source for next/image (site audit S-03).
   assert.deepEqual([full.image.width, full.image.height], [2400, 1000]);
   assert.match(full.image.src, new RegExp(`^${IMAGES}3{40}-2400x1000\\.jpg\\?`));
-  for (const param of ["w=2000", "fit=max", "auto=format"]) assert.ok(full.image.src.includes(param), param);
+  for (const param of ["w=2400", "fit=max", "auto=format", "q=90"]) assert.ok(full.image.src.includes(param), param);
   assert.equal(full.caption, undefined, "an empty caption is left out");
   assert.equal(pair.images.length, 2);
   assert.equal(statement.quote, "A brand that holds.");
@@ -143,7 +144,8 @@ test("mapSanityToProject: a complete case study becomes its /work entry", async 
   assert.equal(p.seoTitle, "Nivora", "an empty SEO title falls back to the title");
   assert.equal(p.seoDescription, fullCaseStudy.overview, "an empty SEO description falls back to the overview");
   assert.match(p.image, new RegExp(`^${IMAGES}8{40}-2400x1800\\.jpg\\?`));
-  for (const param of ["w=1600", "q=80", "auto=format"]) assert.ok(p.image.includes(param), param);
+  // The case study hero (and its cards): a clean source up to 2400px wide, never enlarged (S-03).
+  for (const param of ["w=2400", "fit=max", "q=90", "auto=format"]) assert.ok(p.image.includes(param), param);
   assert.ok(p.shareImage?.includes("w=1200") && p.shareImage.includes("h=630"), "share image is 1200x630");
   assert.deepEqual(p.sections.business.paragraphs, [fullCaseStudy.overview]);
   assert.deepEqual(p.sections.challenge.paragraphs, ["The brand looked different everywhere."], "empty lines are dropped");
