@@ -159,12 +159,12 @@
   letter-spacing: -0.02em;
   color: var(--text-primary);
   margin: 6px 0 0;
-  transition: opacity 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 @media (hover: hover) {
   .ins-featured:hover .ins-featured-title {
-    opacity: 0.65;
+    color: var(--text-secondary);
   }
   .ins-featured:hover .ins-featured-img-inner {
     transform: scale(1.03);

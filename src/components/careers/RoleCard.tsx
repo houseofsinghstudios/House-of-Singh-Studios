@@ -98,7 +98,7 @@ function RoleHeader({ role, isOpen, bodyId, inBrowser, onToggle }: { role: Role;
   return (
     <div className="role-card-header">
       <div style={{ flex: 1, minWidth: 0 }}>
-        <h2 className="role-card-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, letterSpacing: "-0.02em", color: "var(--text-primary)", margin: 0 }}>
+        <h2 className="role-card-title" style={{ fontFamily: "var(--sans)", fontWeight: 500, fontSize: "clamp(24px, 3vw, 36px)", lineHeight: 1.15, letterSpacing: "-0.02em", margin: 0 }}>
           {inBrowser ? (
             <button type="button" className="role-card-btn" aria-expanded={isOpen} aria-controls={bodyId} onClick={onToggle}>
               {role.title}

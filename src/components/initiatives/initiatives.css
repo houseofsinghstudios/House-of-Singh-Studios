@@ -186,9 +186,10 @@
   width: fit-content;
   margin-top: 32px;
 }
+/* Pointing anywhere at the row sweeps its Explore button, as hovering the button does (S-18). */
 @media (hover: hover) {
   .init-row:hover .init-row-explore {
-    opacity: 0.8;
+    background-size: 100% 100%;
   }
 }
 /* A row with its own page: Explore is the link, and its ::after covers the whole row (above the
