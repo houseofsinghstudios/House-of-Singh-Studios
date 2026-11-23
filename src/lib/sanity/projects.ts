@@ -1,5 +1,5 @@
 import { client } from "./client";
-import { shareImageUrl, urlFor, wwdPreviewUrl } from "./image";
+import { CASE_IMAGE_WIDTH, imageSource, shareImageUrl, wwdPreviewUrl } from "./image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { readSanity } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
@@ -201,10 +201,12 @@ function portableTextToPlain(blocks: PortableTextBlock[] | undefined): string[] 
 
 // ── Sanity image → URL string ──
 
+// The case study hero, the project cards and the related rows: a clean source up to 2400px wide
+// (imageSource), never enlarged; next/image sizes it per screen.
 function sanityImageUrl(img: CaseImage | null | undefined): string {
   if (!img?.asset) return "";
   try {
-    return urlFor(img as SanityImageSource).width(1600).auto("format").quality(80).url();
+    return imageSource(img as SanityImageSource, CASE_IMAGE_WIDTH);
   } catch {
     return "";
   }
@@ -243,15 +245,15 @@ interface RawBlock {
   images?: (RawBlockImage | null)[] | null;
 }
 
-// Block images keep their natural aspect ratio: no crop, never enlarged past the original.
-// Only block images request a modern format here; sanityImageUrl is unchanged.
+// Block images keep their natural aspect ratio: no crop, never enlarged past the original, a clean
+// source up to 2400px wide (imageSource), as the hero.
 function toBlockImage(raw: RawBlockImage | null | undefined, fallbackAlt: string): BlockImage | null {
   const id = raw?.asset?._id;
   const width = raw?.asset?.metadata?.dimensions?.width;
   const height = raw?.asset?.metadata?.dimensions?.height;
   if (!id || !width || !height) return null;
   try {
-    const src = urlFor({ _id: id }).width(2000).fit("max").auto("format").url();
+    const src = imageSource({ _id: id }, CASE_IMAGE_WIDTH);
     // fallbackAlt is the project name: "<project>: <what is shown>".
     return { src, alt: projectAlt(fallbackAlt, raw?.alt), width, height };
   } catch {

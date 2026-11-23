@@ -83,7 +83,9 @@ test("images: next/image with the agreed sizes and quality, the first preloaded,
   assert.match(src, /href=\{`\/work\/\$\{entry\.slug\}`\}/);
   assert.doesNotMatch(src, /aria-label=/, "named by its text, not an aria-label");
   assert.match(src, /data-cursor="view"/);
-  assert.match(read("src/lib/sanity/image.ts"), /width\(2400\)\.fit\("max"\)\.auto\("format"\)\.quality\(90\)/);
+  const imageTs = read("src/lib/sanity/image.ts");
+  assert.match(imageTs, /width\(maxWidth\)\.fit\("max"\)\.auto\("format"\)\.quality\(90\)/);
+  assert.match(imageTs, /export function heroImageUrl[\s\S]*?return imageSource\(source, 2400\);/);
 });
 
 test("image settings: AVIF and WebP; qualities 60 for the hero and 75, every other image\x27s", () => {

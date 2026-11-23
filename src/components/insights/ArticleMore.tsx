@@ -81,7 +81,7 @@ export function ArticleRelated({ posts }: { posts: RelatedPost[] }) {
                     alt={rp.featuredImage.alt || rp.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    style={{ objectFit: "cover" }}
+                    style={{ objectFit: "cover", objectPosition: rp.featuredImage.position }}
                   />
                 </div>
               </div>

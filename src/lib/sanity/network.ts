@@ -11,7 +11,8 @@ const networkMembersQuery = `*[_type == "networkMember" && showOnWebsite == true
   photo { alt, crop, hotspot, asset->{ _id, metadata { lqip } } }
 }`;
 
-// 800 square covers the widest card (about 410px) at 2x; next/image resizes from there.
+// 800 square covers the widest card (about 410px) at 2x; next/image resizes from there. Quality 90,
+// so next/image's compression is the only real one (site audit S-03).
 const PHOTO_EDGE = 800;
 
 export async function getNetworkMembers(): Promise<NetworkCard[]> {
@@ -20,7 +21,7 @@ export async function getNetworkMembers(): Promise<NetworkCard[]> {
     async () => {
       const docs = await client.fetch(networkMembersQuery, {}, { next: { revalidate: 60 } });
       return toNetworkCards(docs, (photo) =>
-        urlFor(photo as Parameters<typeof urlFor>[0]).width(PHOTO_EDGE).height(PHOTO_EDGE).fit("crop").auto("format").url()
+        urlFor(photo as Parameters<typeof urlFor>[0]).width(PHOTO_EDGE).height(PHOTO_EDGE).fit("crop").auto("format").quality(90).url()
       );
     },
     () => []
