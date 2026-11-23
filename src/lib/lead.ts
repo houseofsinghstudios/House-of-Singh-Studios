@@ -1,11 +1,14 @@
 // Contact form lead: field cleaning and length rules for /api/lead. Pure, so it can be tested.
 import { messageOptional } from "@/lib/partners/forms";
 import { capRaw, stripTags } from "@/lib/form-input";
+import { BAND_IDS, BAND_LABELS } from "@/lib/budget-bands";
 
 export const LEAD_LIMITS = { name: 120, email: 254, message: 5000, service: 80, budget: 80 } as const;
 
-// The contact form's budget ranges, in display order. The budget is optional: an empty value is valid.
-export const BUDGET_OPTIONS = ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"] as const;
+// The contact form's budget ranges, in display order: the Project Planner's own investment ranges, from
+// the one shared list (src/lib/budget-bands.ts), so both forms offer the same choices in the same words.
+// The label is what the form sends. The budget is optional: an empty value is valid.
+export const BUDGET_OPTIONS: readonly string[] = BAND_IDS.map((id) => BAND_LABELS[id]);
 
 export interface LeadFields {
   name: string;

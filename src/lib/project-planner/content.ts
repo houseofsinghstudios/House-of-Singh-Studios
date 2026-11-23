@@ -1,7 +1,8 @@
 // Every visitor facing word in the Project Planner lives here, so copy can change without touching logic.
 // Plain everyday words, no design jargon, no dashes of any kind. Buttons and links in sentence case.
 
-import type { BandId, GoalId, NamedService, ServiceId, TimingId } from "./types";
+import { BAND_LABELS } from "@/lib/budget-bands";
+import type { GoalId, NamedService, ServiceId, TimingId } from "./types";
 
 // No studio prices anywhere in the planner (decided 20 Nov 2026): every path ends in the call, and
 // price comes after it, in the written proposal.
@@ -194,14 +195,8 @@ export const OPTIONAL = {
   toggle: "Make my brief more useful",
   investmentQuestion: "Is there an investment range you're working within?",
   optional: "(optional)",
-  bands: {
-    under_1k: "Under $1,000",
-    "1k_4k": "$1,000 to $4,000",
-    "4k_10k": "$4,000 to $10,000",
-    "10k_20k": "$10,000 to $20,000",
-    "20k_plus": "$20,000 or more",
-    not_sure: "Not sure yet",
-  } as Record<BandId, string>,
+  // The same ranges and words as the contact form's budget menu (src/lib/budget-bands.ts).
+  bands: BAND_LABELS,
   currency: "All amounts in CAD.",
   website: "Your website, if you have one",
   importantDate: "Is there an important date?",
