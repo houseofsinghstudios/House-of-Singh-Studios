@@ -101,7 +101,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. The footer's legal links read "Privacy policy", "Privacy choices" and "Terms" (sentence case; the legal pages' own wording is unchanged). Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
-- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts).
+- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts). Since 23 Nov 2026 (site audit S-15) the guard holds a rule over all of src: every parenthesised editorial label ("(02) The challenge", "(Next step)") and every EditorialLabel text is in sentence case, a capital after the first word allowed only for a name (Brand Pulse, AI Lab, Studio Guide, House of Singh, Toronto, RGD and the like); missing page titles read "Project not found", "Service not found", "Post not found". The service and deliverable names in src/data/services.ts are names and keep their capitals; "(Studio Guide)" is a feature name (owner decision). The service page's second button reads "Plan your project" (owner decision, 23 Nov 2026), its link keeping the ?service= value.
 
 NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped, and the full screen panel it replaced is gone. Do not rebuild either without the owner's approval.
 
@@ -159,7 +159,7 @@ ACCORDION ROWS (services, brands):
 IMAGE CARDS (work grid, case studies, homepage featured):
 - Image: scale(1.03) over 0.7s cubic-bezier(0.23, 1, 0.32, 1)
 - Custom cursor: switches to VIEW state (80px frosted glass circle with "View" label)
-- Title: opacity shifts to 0.7 over 0.3s
+- Title: colour shifts from Obsidian to Gunmetal over 0.3s (never opacity on text; since 23 Nov 2026, site audit S-18, guard tests/hover-colour.test.ts). Dark filled buttons outside the shared Button (Learn more on /services, Explore on /initiatives, the careers submit) take the primary button's light sweep, as a one colour background growing from the left over 0.4s. Opacity on hover only for decorative hover grounds (::before, ::after) and the work card's name to description swap.
 
 TEXT LINKS:
 - Underline wipe: scaleX(0) → scaleX(1) via ::after pseudo, transform-origin switches from right (rest) to left (hover)
@@ -298,6 +298,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 
 ### Services Overview
 - Compact hero (~60vh) with full-width image below
+- Each service block's project card rotates every 5s; every project's image, tags and name are always in the card, stacked in one cell as tall as the tallest, so a change never moves the page (site audit S-12: tags that wrapped to another line shifted the footer by 21px on phones).
 - Service blocks: alternating image/text layout
 - Services Unpacked: multi-column capability grid (not accordion)
 - Dark CTA at bottom
@@ -321,6 +322,7 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - Compact hero
 - Numbered sections: (01) Capabilities, (02) Process, (03) Network, (04) Founder, (05) Stats
 - Founder section: two-column with photo and bio
+- The Toronto clock reads the zone from Intl (torontoTime in src/lib/toronto-time.ts): EST in winter, EDT under daylight time, written in the browser only with the time (site audit S-16; tests/toronto-clock.test.ts).
 - Process step numbers (01 to 05): 28px to 40px (24px below 900px), weight 500, so large text; Accessible Ash at full strength (4.64:1), Gunmetal on the hover ground; read with their step, not hidden from assistive technology (since 22 Nov 2026)
 - Dark CTA
 
@@ -389,7 +391,7 @@ Mobile gets a simplified experience prioritizing speed and readability.
 - All hover interactions disabled (CSS @media(hover: hover) wrapper)
 - Accordion sections: all content visible by default, no hover-reveal
 - Custom cursor: hidden on touch devices; on a mouse, hidden until the pointer first moves, then starting at the pointer
-- Tap areas (since 22 Nov 2026): every link and button on the homepage, its header, drawer and footer is at least 44px to the finger at 1080px and below. Block links take padding with an equal negative margin, so nothing moves (a full page screenshot at 390 was pixel identical before and after), and their underlines and bands are moved back under the words; inline links (Selected work names, the Start door links) take vertical padding only, which never touches a line; Pause keeps its 32px square with an invisible 46px layer. The skip link, shown only to the keyboard, is the exception. Since the site audit (S-10, 22 Nov 2026) the rest of the site follows: every link and button is at least 24px at every width and 44px at 1080px and below, by the same techniques; boxes that show their edges (the share buttons, Learn more, RGD) take an invisible 44px band centred on them instead of padding. Three exceptions: discipline tag links are 24.5px at every width (they wrap into rows, 8px apart where they are links, so none covers another), RGD inside the /about founder heading keeps the heading's 34px line (the heading clips its overflow for the text reveal), and the Insights filters are 44px tall but as wide as their word plus 20px, so neighbours never overlap ("AI" is 33px). The header and footer links above 1080px are 17 to 20px tall and pass WCAG 2.5.8 by its spacing rule. Guard: tests/tap-targets.test.ts.
+- Tap areas (since 22 Nov 2026): every link and button on the homepage, its header, drawer and footer is at least 44px to the finger at 1080px and below. Block links take padding with an equal negative margin, so nothing moves (a full page screenshot at 390 was pixel identical before and after), and their underlines and bands are moved back under the words; inline links (Selected work names, the Start door links) take vertical padding only, which never touches a line; Pause keeps its 32px square with an invisible 46px layer. The skip link, shown only to the keyboard, is the exception. Since the site audit (S-10, 22 Nov 2026) the rest of the site follows: every link and button is at least 24px at every width and 44px at 1080px and below, by the same techniques; boxes that show their edges (the share buttons, Learn more, RGD) take an invisible 44px band centred on them instead of padding (the share buttons' band is also 44px wide on one narrower than that, the X button, since 23 Nov 2026). Three exceptions: discipline tag links are 24.5px at every width (they wrap into rows, 8px apart where they are links, so none covers another), RGD inside the /about founder heading keeps the heading's 34px line (the heading clips its overflow for the text reveal), and the Insights filters are 44px tall but as wide as their word plus 20px, so neighbours never overlap ("AI" is 33px). The header and footer links above 1080px are 17 to 20px tall and pass WCAG 2.5.8 by its spacing rule. Guard: tests/tap-targets.test.ts.
 - Navigation: wordmark + menu button at 1080px and below, in the 56px bar. The menu opens as a drawer from the right (Layer 1).
 - Image sizes reduced for performance
 - Stagger delays reduced or removed
