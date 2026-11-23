@@ -1,0 +1,65 @@
+/* ── Numbered sections ──
+   The parts the Initiatives pages and the /brand-pulse guide (PulseGuide) share: the editorial split
+   of InitiativeSection, the numbered rows of NumberedRows and the questions h3 of InitiativeQuestions.
+   Each of those components imports this file, so a page using them loads only these rules, not the
+   whole Initiatives stylesheet (site audit S-11 follow up: /brand-pulse loaded all 7.6 KB of
+   initiatives.css, render blocking). Moved from initiatives.css unchanged. */
+
+/* ── Editorial split: label, heading and intro in a third; rows or lists on the right ── */
+.init-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(48px, 6vw, 96px);
+  align-items: start;
+}
+.init-split .svcd-process-heading {
+  margin-bottom: 16px;
+}
+.init-split-intro {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 360px;
+}
+@media (max-width: 767px) {
+  .init-split {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+/* Questions sections: a note under the heading in the left column, with the accordion beside both.
+   The note comes after the accordion in the page, so on phones it simply stacks last; here it is
+   placed back under the heading, as close to it as an intro is. */
+@media (min-width: 768px) {
+  .init-split--note {
+    grid-template-rows: auto 1fr;
+    row-gap: 0;
+  }
+  .init-split--note > .init-split-head { grid-column: 1; grid-row: 1; }
+  .init-split--note > .init-split-body { grid-column: 2; grid-row: 1 / span 2; }
+  .init-split--note > .init-split-note { grid-column: 1; grid-row: 2; }
+}
+
+/* ── Numbered rows: Parallel's edition parts, Commons' criteria ── */
+.init-steps .svc-del-row {
+  border-top: 0;
+}
+.init-steps > div:first-child .svc-del-row {
+  border-top: 1px solid var(--text-muted);
+}
+.init-steps .svc-del-name {
+  font-size: clamp(18px, 2vw, 22px);
+}
+@media (max-width: 767px) {
+  .init-steps .svc-del-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* Questions: the accordion trigger sits inside an h3 that adds nothing of its own. */
+.svc-acc-heading {
+  margin: 0;
+  font: inherit;
+}

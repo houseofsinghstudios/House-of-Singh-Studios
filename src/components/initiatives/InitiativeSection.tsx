@@ -6,6 +6,7 @@
 // content in the page, so on phones it stacks last and is reached last by keyboard.
 import type { ReactNode } from "react";
 import EditorialLabel from "@/components/ui/EditorialLabel";
+import "./numbered-section.css";
 
 interface Props {
   id: string;

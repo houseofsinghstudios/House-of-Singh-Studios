@@ -3,6 +3,7 @@
 // from the same list, so search engines, answer engines and visitors read the same words.
 import ServiceDetailAccordion from "@/components/services/ServiceDetailAccordion";
 import FaqSchema from "@/components/FaqSchema";
+import "./numbered-section.css";
 import type { Question } from "@/lib/initiatives/content";
 
 export default function InitiativeQuestions({ questions }: { questions: Question[] }) {
