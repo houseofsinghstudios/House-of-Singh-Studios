@@ -45,8 +45,9 @@ test("budget is optional: missing, null or empty all pass", () => {
   for (const missing of [undefined, null, ""]) assert.equal(checkLeadLengths({ ...valid, budget: cleanField(missing, LEAD_LIMITS.budget) }), null, String(missing));
 });
 
-test("budget options: Not sure yet first, then the ranges, each within the 80 character cap", () => {
-  assert.deepEqual([...BUDGET_OPTIONS], ["Not sure yet", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more"]);
+test("budget options: the planner's ranges in its order, Not sure yet last, each within the 80 character cap", () => {
+  // The planner's ranges, in its order: "Under $1,000" first, "Not sure yet" last (site audit S-09).
+  assert.deepEqual([...BUDGET_OPTIONS], ["Under $1,000", "$1,000 to $4,000", "$4,000 to $10,000", "$10,000 to $20,000", "$20,000 or more", "Not sure yet"]);
   for (const option of BUDGET_OPTIONS) assert.equal(checkLeadLengths({ ...valid, budget: option }), null, option);
 });
 

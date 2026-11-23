@@ -1,4 +1,5 @@
 // Project Planner types. Answer ids are stable: they travel in n8n payloads and in ?service= links.
+import { BAND_IDS, type BandId } from "@/lib/budget-bands";
 
 export const SERVICE_IDS = ["identity", "website", "photo", "video", "packaging", "strategy", "unsure"] as const;
 export type ServiceId = (typeof SERVICE_IDS)[number];
@@ -36,8 +37,8 @@ type PriorityId = (typeof PRIORITY_IDS)[NamedService][number] | typeof HELP;
 export const TIMING_IDS = ["now", "one_three", "three_six", "flexible"] as const;
 export type TimingId = (typeof TIMING_IDS)[number];
 
-export const BAND_IDS = ["under_1k", "1k_4k", "4k_10k", "10k_20k", "20k_plus", "not_sure"] as const;
-export type BandId = (typeof BAND_IDS)[number];
+// The investment ranges: one list shared with the contact form (src/lib/budget-bands.ts).
+export { BAND_IDS, type BandId };
 
 export const MAX_NEEDS = 3;
 export const MAX_PRIORITIES = 3;
