@@ -14,9 +14,11 @@ import ArticleNewsletter from "./ArticleNewsletter";
 import { ArticleAdjacent, ArticleRelated } from "./ArticleMore";
 import "./article.css";
 
-// src: the image URL at the size this page shows it, built by the article page.
+// src: the image URL at the size this page shows it, built by the article page; position: the Studio
+// hotspot as object-position (insightImagePosition).
 interface PostImage {
   src?: string;
+  position?: string;
   asset?: {
     _id: string;
     url: string;
@@ -125,7 +127,7 @@ export default function InsightArticle({ post, endCta, relatedWork }: { post: Po
               src={post.featuredImage.src!}
               alt={post.featuredImage.alt || post.title}
               fill
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "cover", objectPosition: post.featuredImage.position }}
               // The article's LCP: the first large image under the title, fetched first.
               fetchPriority="high"
               loading="eager"

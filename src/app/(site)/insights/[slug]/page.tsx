@@ -5,7 +5,7 @@ import InsightArticle from "@/components/insights/InsightArticle";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import BrandPulseArticleCta from "@/components/brand-pulse/BrandPulseArticleCta";
 import { articleTitles, DEFAULT_SHARE_IMAGE, SITE_OG } from "@/lib/seo";
-import { insightImageUrl, shareImageUrl } from "@/lib/sanity/image";
+import { insightImagePosition, insightImageUrl, shareImageUrl } from "@/lib/sanity/image";
 import type { SanityImageSource } from "@sanity/image-url";
 import { getProjectCards } from "@/lib/sanity/projects";
 import { relatedWork, servicesForArticle } from "@/lib/linking";
@@ -23,10 +23,10 @@ type WithImage = { asset?: unknown } & SanityImageSource;
 // The related posts are the editor's choice, or the latest others (src/lib/related-posts.ts).
 const withImageUrls = ({ chosenPosts, latestPosts, ...post }: ArticleDoc) => ({
   ...post,
-  featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage as WithImage) } : post.featuredImage,
-  body: post.body?.map((block) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage) } : block)),
+  featuredImage: post.featuredImage?.asset ? { ...post.featuredImage, src: insightImageUrl.hero(post.featuredImage as WithImage), position: insightImagePosition(post.featuredImage) } : post.featuredImage,
+  body: post.body?.map((block) => (block._type === "image" && block.asset ? { ...block, src: insightImageUrl.body(block as WithImage), position: insightImagePosition(block) } : block)),
   relatedPosts: relatedPostsFor<ArticleCardDoc>(chosenPosts, latestPosts, post).map((rp) =>
-    rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage as WithImage) } } : rp),
+    rp.featuredImage?.asset ? { ...rp, featuredImage: { ...rp.featuredImage, src: insightImageUrl.card(rp.featuredImage as WithImage), position: insightImagePosition(rp.featuredImage) } } : rp),
 });
 const slugsOf = (refs: unknown): string[] =>
   Array.isArray(refs) ? refs.map((r: SlugRef) => r?.slug?.current).filter((s): s is string => typeof s === "string") : [];

@@ -9,7 +9,7 @@ export type ArticleBlock = { _type: string; children?: Array<{ text?: string }> 
 
 // A link mark and an inline image as the article page passes them (the image URL already built).
 type LinkMark = { _type: "link"; href?: string };
-type InlineImage = { _type: "image"; asset?: unknown; src?: string; alt?: string; caption?: string };
+type InlineImage = { _type: "image"; asset?: unknown; src?: string; position?: string; alt?: string; caption?: string };
 
 const components: PortableTextComponents = {
   block: {
@@ -77,7 +77,7 @@ const components: PortableTextComponents = {
               fill
               // The real column: the page less its 24px margins on phones, at most 740px wide.
               sizes="(max-width: 787px) calc(100vw - 48px), 740px"
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "cover", objectPosition: value.position }}
             />
           </div>
           {value.alt && (

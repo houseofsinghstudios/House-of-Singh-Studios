@@ -3,6 +3,7 @@
 import "server-only";
 import { createImageUrlBuilder, type SanityImageSource } from "@sanity/image-url";
 import { client } from "./client";
+import { heroObjectPosition } from "@/lib/homepage-hero";
 
 const builder = createImageUrlBuilder(client);
 
@@ -28,13 +29,22 @@ export function shareImageUrl(source: SanityImageSource) {
   return urlFor(source).width(1200).height(630).fit("crop").auto("format").quality(80).url();
 }
 
-// The Insights image sizes: the featured post on /insights, a post card (the /insights grid and an
-// article's related posts), an article's hero, and an image inside an article's text.
+// The Insights image sizes, each at least twice the width it is shown at (site audit S-08): the
+// featured post on /insights (1210 css px at 1440) and an article's hero (full width) 2400, a post
+// card (the /insights grid and an article's related posts, half the page) 1200, an image inside an
+// article's text (740 css px) 1600. Width only: the frames crop with object-fit, at the image's Studio
+// hotspot (insightImagePosition), so a fixed height would only cap the width of a taller image.
+// An Insights frame's object-position: the image's Studio hotspot inside its crop, as the homepage
+// hero places its images, so a hotspot set in Studio is respected; the centre without one.
+export function insightImagePosition(image: { hotspot?: { x: number; y: number }; crop?: { top: number; bottom: number; left: number; right: number } }) {
+  return heroObjectPosition(image);
+}
+
 export const insightImageUrl = {
-  featured: (source: SanityImageSource) => urlFor(source).width(1200).height(675).url(),
-  card: (source: SanityImageSource) => urlFor(source).width(600).height(338).url(),
-  hero: (source: SanityImageSource) => urlFor(source).width(1600).height(900).url(),
-  body: (source: SanityImageSource) => urlFor(source).width(1200).height(675).url(),
+  featured: (source: SanityImageSource) => imageSource(source, 2400),
+  card: (source: SanityImageSource) => imageSource(source, 1200),
+  hero: (source: SanityImageSource) => imageSource(source, 2400),
+  body: (source: SanityImageSource) => imageSource(source, 1600),
 };
 
 // A homepage hero image: the Studio crop applied (as rect), at most 2400px wide, automatic format,

@@ -11,7 +11,8 @@ export interface InsightCard {
   _id: string;
   title: string;
   slug: { current: string };
-  featuredImage?: { alt?: string; featuredUrl: string; cardUrl: string };
+  // position: the Studio hotspot as object-position (insightImagePosition).
+  featuredImage?: { alt?: string; featuredUrl: string; cardUrl: string; position?: string };
   category?: string;
   publishedAt?: string;
   featured?: boolean;
@@ -57,7 +58,7 @@ export function InsightGridCard({ post, index }: { post: InsightCard; index: num
               src={post.featuredImage.cardUrl}
               alt={post.featuredImage?.alt || post.title}
               fill
-              style={{ objectFit: "cover" }}
+              style={{ objectFit: "cover", objectPosition: post.featuredImage.position }}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
