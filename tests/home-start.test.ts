@@ -130,8 +130,10 @@ test("the homepage ends with (04) Start; Two ways to start and the dark call to 
   assert.match(page, /<ProofSection chapters=\{proofChapters\} \/>\s*<StartSection \/>\s*<\/>/);
   assert.doesNotMatch(page, /ToolBand|CtaSection/);
   for (const gone of ["ToolBand.tsx", "ToolBandSwitch.tsx", "CtaSection.tsx"]) assert.equal(existsSync(`src/components/homepage/${gone}`), false, gone);
-  // Shared, so kept: the band styles the Initiatives and Partners take part bands use, and only those.
-  const band = read("src/components/homepage/tool-band.css");
+  // The band styles the Initiatives and Partners take part bands use, and only those, now beside them.
+  assert.equal(existsSync("src/components/homepage/tool-band.css"), false, "moved out of the homepage folder");
+  const band = read("src/components/initiatives/take-part-band.css");
+  assert.match(band, /--tb-muted: color-mix\(in srgb, var\(--bg\) 65%, transparent\);/, "the label at 65 percent");
   assert.doesNotMatch(band, /\.tb-(columns|col(?![-\w])|tag|visual|pulse|signs?|brief|question|chips?|tabs?|switch)|data-arrival|tb-chip-border/);
   for (const kept of [".tb {", ".tb .tb-label", ".tb-heading", ".tb-col-heading", ".tb-body", ".tb-action", ".tb-button", ".tb-arrow"]) assert.ok(band.includes(kept), kept);
 });
