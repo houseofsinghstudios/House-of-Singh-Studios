@@ -11,12 +11,12 @@ import PlannerInvite from "@/components/project-planner/PlannerInvite";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: { absolute: 'Branding and Design Services Toronto | House of Singh Studios' },
+  title: { absolute: 'Branding & Design Services Toronto | House of Singh Studios' },
   description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
   alternates: { canonical: 'https://studios.houseofsingh.com/services' },
   openGraph: {
     ...WEBSITE_OG,
-    title: 'Branding and Design Services Toronto | House of Singh Studios',
+    title: 'Branding & Design Services Toronto | House of Singh Studios',
     description: 'Brand identity, websites, photography, video and brand strategy from a Toronto design studio, built to solve business problems, not decorate them.',
     url: 'https://studios.houseofsingh.com/services',
     images: [DEFAULT_SHARE_IMAGE],
