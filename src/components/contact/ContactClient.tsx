@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import IntentLink from "@/components/IntentLink";
 import Button from "@/components/ui/Button";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import { startHref } from "@/lib/project-planner/start-links";
@@ -145,7 +145,7 @@ export default function ContactClient({ initialService = "" }: { initialService?
 
         <p className="font-[var(--sans)] font-normal text-[14px] leading-[1.65] text-[color:var(--text-secondary)] mt-4">
           {PLACEMENTS.contactLead}{" "}
-          <Link href={startHref("contact")} className="underline underline-offset-4">{PLACEMENTS.contactLink}</Link>
+          <IntentLink href={startHref("contact")} className="underline underline-offset-4">{PLACEMENTS.contactLink}</IntentLink>
         </p>
       </section>
 

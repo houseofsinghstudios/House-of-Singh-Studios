@@ -39,10 +39,10 @@ export default function GlobalError({ retry }: { error: unknown; retry: () => vo
               Try again
             </button>
             {/* Plain next/link: the site's own Button lives inside the layout that failed. */}
-            <Link href="/" style={{ ...button, background: "transparent", color: OBSIDIAN }}>
+            <Link href="/" prefetch={false} style={{ ...button, background: "transparent", color: OBSIDIAN }}>
               Go to the Homepage
             </Link>
-            <Link href="/contact" style={{ ...button, background: "transparent", color: OBSIDIAN }}>
+            <Link href="/contact" prefetch={false} style={{ ...button, background: "transparent", color: OBSIDIAN }}>
               Contact the Studio
             </Link>
           </div>

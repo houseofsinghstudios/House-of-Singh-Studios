@@ -4,7 +4,7 @@
 // Every part is always in the page; stage only decides which parts show (data-shown, brand-pulse.css),
 // so the result never changes height as it appears (site audit S-02). A part not yet shown is hidden
 // and inert: nothing in it can be reached by Tab or read by a screen reader until it shows.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { SERVICE_LINES } from "@/lib/brand-pulse/content";
 import type { Level, Result } from "@/lib/brand-pulse/types";
 import { serviceLinkLabel } from "@/lib/linking";
@@ -70,12 +70,12 @@ export default function PulseResultView({ result, stage = 3, locked = false }: P
         <div className="bp-services bp-stage" {...staged(stage >= 3)}>
           <p>
             {SERVICE_LINES.recommended}{" "}
-            <Link href={`/services/${result.service.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.service.slug, result.service.name)}>{result.service.name}</Link>
+            <IntentLink href={`/services/${result.service.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.service.slug, result.service.name)}>{result.service.name}</IntentLink>
           </p>
           {result.alsoService && (
             <p>
               {SERVICE_LINES.also}{" "}
-              <Link href={`/services/${result.alsoService.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.alsoService.slug, result.alsoService.name)}>{result.alsoService.name}</Link>
+              <IntentLink href={`/services/${result.alsoService.slug}`} className="bp-link" aria-label={serviceLinkLabel(result.alsoService.slug, result.alsoService.name)}>{result.alsoService.name}</IntentLink>
             </p>
           )}
         </div>

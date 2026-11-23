@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import { getInsightCards } from "@/lib/insights-cards";
 import { archivePageNumber, pageCount, pageHref, parsePageNumber, postsForPage } from "@/lib/insights-listing";
@@ -73,13 +73,13 @@ export default async function InsightsArchivePage({ params }: Props) {
           </div>
 
           <nav className="ins-pager" aria-label="Insights pages">
-            <Link href={pageHref(page - 1)} className="ins-load-more-btn no-underline">
+            <IntentLink href={pageHref(page - 1)} className="ins-load-more-btn no-underline">
               Newer articles
-            </Link>
+            </IntentLink>
             {page < total && (
-              <Link href={pageHref(page + 1)} className="ins-load-more-btn no-underline">
+              <IntentLink href={pageHref(page + 1)} className="ins-load-more-btn no-underline">
                 Older articles
-              </Link>
+              </IntentLink>
             )}
           </nav>
         </div>

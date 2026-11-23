@@ -1,7 +1,7 @@
 // "Related work" at the end of an article, before the newsletter: up to two case studies in the
 // service page's project card style, then the article's services as links in the meta label style,
 // inside the article column. Hidden when there is neither.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import ProjectCardRow from "@/components/work/ProjectCardRow";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import type { ServiceLink } from "@/components/casestudy/CaseStudyTemplate";
@@ -21,9 +21,9 @@ export default function RelatedWork({ projects, services }: { projects: ServiceP
             <span className="cs-meta-label">Related services</span>
             <span className="dtags">
               {services.map((s) => (
-                <Link key={s.href} href={s.href} className="dtag cs-service-link" data-cursor="link">
+                <IntentLink key={s.href} href={s.href} className="dtag cs-service-link" data-cursor="link">
                   {s.label}
-                </Link>
+                </IntentLink>
               ))}
             </span>
           </div>

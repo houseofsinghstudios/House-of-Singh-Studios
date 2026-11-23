@@ -110,7 +110,7 @@ test("/services: each Learn more link carries its topic as hidden text, and no a
   assert.equal(serviceLinkTopic("unknown"), "");
   const { readFileSync } = await import("node:fs");
   const src = readFileSync("src/components/services/ServiceBlocks.tsx", "utf8");
-  const link = src.slice(src.indexOf("<Link"), src.indexOf("</Link>"));
+  const link = src.slice(src.indexOf("<IntentLink"), src.indexOf("</IntentLink>"));
   assert.doesNotMatch(link, /aria-label/, "the link text is the accessible name");
   assert.match(link, /Learn more<span className="sr-only">\{serviceLinkTopic\(block\.slug\)\}<\/span>/, "visible words first");
 });

@@ -1,7 +1,7 @@
 // The /partners hero: the Services hero structure, spacing and entrance (svc-hero-stagger label,
 // h1, intro), with the two calls to action as the fourth staggered row. On phones "Introduce a
 // Client" is full width and first.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Button from "@/components/ui/Button";
 import { INTRODUCE_HREF, PARTNER_HREF, PARTNERS } from "@/lib/partners/content";
 
@@ -43,11 +43,11 @@ export default function PartnersHero() {
         <Button href={INTRODUCE_HREF} variant="primary" data-cursor="link" data-partner-action="introduce" data-partner-location="hero">
           {PARTNERS.introduce}
         </Button>
-        <Link href={PARTNER_HREF} className="arrow-link no-underline pt-hero-link" data-cursor="link" data-partner-action="partner" data-partner-location="hero">
+        <IntentLink href={PARTNER_HREF} className="arrow-link no-underline pt-hero-link" data-cursor="link" data-partner-action="partner" data-partner-location="hero">
           <span className="font-[var(--sans)] font-medium text-[13px] text-[color:var(--text-primary)]">
             {PARTNERS.partner} <span className="arrow-icon">&rarr;</span>
           </span>
-        </Link>
+        </IntentLink>
       </div>
     </section>
   );

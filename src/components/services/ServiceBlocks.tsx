@@ -1,7 +1,7 @@
 // The /services hero and the four service blocks, rendered on the server. Only each block's rotating
 // project card (ServiceProjectCard) runs in the browser.
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
 import { serviceLinkTopic } from "@/lib/linking";
@@ -168,14 +168,14 @@ export default function ServiceBlocks({ projectsByCategory }: Props) {
                 ))}
               </ul>
               {/* "Learn more" on screen; the hidden rest makes the link text itself descriptive. */}
-              <Link
+              <IntentLink
                 href={`/services/${block.slug}`}
                 className="svc-block-btn"
                 style={{ marginTop: 32 }}
                 data-cursor="link"
               >
                 Learn more<span className="sr-only">{serviceLinkTopic(block.slug)}</span>
-              </Link>
+              </IntentLink>
             </div>
 
             {/* Right column */}

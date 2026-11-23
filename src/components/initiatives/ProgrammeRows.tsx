@@ -10,7 +10,7 @@
 // Sanity shows the logo in place of the visible name; with no published project yet, the panel
 // shows that logo large instead (see logoInPanel).
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import type { Project } from "@/data/projects";
 import { projectImage } from "@/components/work/WorkCards";
 import { LANDING } from "@/lib/initiatives/content";
@@ -96,10 +96,10 @@ function RowBody({ row, number }: { row: ProgrammeRow; number: string }) {
         )}
         {/* The /services button look, and the row's one link (stretched over the row, initiatives.css). */}
         {linked && (
-          <Link href={`/initiatives/${initiative.slug}`} className="svc-block-btn init-row-explore" data-cursor="link">
+          <IntentLink href={`/initiatives/${initiative.slug}`} className="svc-block-btn init-row-explore" data-cursor="link">
             {LANDING.explore(initiative.name)}
             <span className="sr-only">: {initiative.tagline}</span>
-          </Link>
+          </IntentLink>
         )}
       </div>
       <div className={row.newest ? "init-row-visual" : "init-row-visual init-row-visual--panel"}>

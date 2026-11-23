@@ -9,7 +9,7 @@ const read = (f: string) => readFileSync(f, "utf8");
 
 test("IntentLink: no viewport prefetch, a router prefetch on hover, focus and touch, same Link underneath", () => {
   const src = read("src/components/IntentLink.tsx");
-  assert.match(src, /import \{ Link \} from "next-view-transitions";/, "page transitions unchanged");
+  assert.match(src, /import \{ Link, useTransitionRouter \} from "next-view-transitions";/, "page transitions unchanged");
   assert.match(src, /prefetch=\{false\}/);
   assert.match(src, /router\.prefetch\(href\)/);
   for (const handler of ["onMouseEnter", "onFocus", "onTouchStart"]) assert.match(src, new RegExp(`${handler}=\\{\\(e\\) => \\{\\s*warm\\(\\);\\s*${handler}\\?\\.\\(e\\);`), handler);

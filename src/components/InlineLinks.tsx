@@ -2,7 +2,7 @@
 // with the page transition); web addresses open in a new tab and say so. In the body link style.
 // Segments are siblings, so a link never wraps another link.
 import { Fragment } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { isExternal, parseInlineLinks } from "@/lib/inline-links";
 
 export default function InlineLinks({ text }: { text: string }) {
@@ -18,9 +18,9 @@ export default function InlineLinks({ text }: { text: string }) {
           );
         }
         return (
-          <Link key={i} href={part.href} className="art-link">
+          <IntentLink key={i} href={part.href} className="art-link">
             {part.text}
-          </Link>
+          </IntentLink>
         );
       })}
     </>

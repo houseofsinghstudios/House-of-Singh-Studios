@@ -2,7 +2,7 @@
 // paginated pages /insights/page/N. No hooks or state, so the paginated pages render it on the
 // server.
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 
 // A post card. The image URLs are built on the server (src/lib/insights-cards.ts): the featured
@@ -45,7 +45,7 @@ export function PostMeta({ category, date, readingTime }: { category?: string; d
 // One card in the post grid. "index" staggers the reveal.
 export function InsightGridCard({ post, index }: { post: InsightCard; index: number }) {
   return (
-    <Link
+    <IntentLink
       href={`/insights/${post.slug?.current}`}
       className="ins-card css-reveal no-underline"
       data-cursor="view"
@@ -66,6 +66,6 @@ export function InsightGridCard({ post, index }: { post: InsightCard; index: num
       )}
       <PostMeta category={post.category} date={post.publishedAt} readingTime={post.readingTime} />
       <h3 className="ins-card-title">{post.title}</h3>
-    </Link>
+    </IntentLink>
   );
 }

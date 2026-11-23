@@ -1,4 +1,5 @@
 import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import type { ProjectDetail } from "@/data/projectDetails";
 import Button from "@/components/ui/Button";
@@ -139,9 +140,9 @@ export default function CaseStudyTemplate({
                 <span className="cs-meta-label">Services delivered</span>
                 <span className="dtags">
                   {services.map((s) => (
-                    <Link key={s.href} href={s.href} className="dtag cs-service-link" data-cursor="link">
+                    <IntentLink key={s.href} href={s.href} className="dtag cs-service-link" data-cursor="link">
                       {s.label}
-                    </Link>
+                    </IntentLink>
                   ))}
                 </span>
               </div>
@@ -268,9 +269,9 @@ export default function CaseStudyTemplate({
       {/* ═══ PLAN SOMETHING SIMILAR ═══ */}
       <section style={{ padding: "clamp(40px, 5vw, 64px) var(--page-px) 0" }}>
         <p className="cs-plan-similar">
-          <Link href={startHref("case_study", serviceForCaseStudy(project.workDelivered))} className="cs-plan-similar-link" data-cursor="link">
+          <IntentLink href={startHref("case_study", serviceForCaseStudy(project.workDelivered))} className="cs-plan-similar-link" data-cursor="link">
             {PLACEMENTS.caseStudy}
-          </Link>
+          </IntentLink>
         </p>
       </section>
 

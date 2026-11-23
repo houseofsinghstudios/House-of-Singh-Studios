@@ -4,7 +4,7 @@
 // has an "At a glance" column on the right: one row per fact between 1px rules, stacked under the
 // intro on phones. A program with a logo in Sanity shows it between the label and the H1 (heights in
 // src/lib/initiatives/logo-scale.ts), as decoration (empty alt); the H1 is unchanged.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { GLANCE_LABEL } from "@/lib/initiatives/content";
 import type { GlanceItem, InitiativeLogo as Logo } from "@/lib/initiatives/types";
 import { logoSizes } from "@/lib/initiatives/logo-scale";
@@ -45,7 +45,7 @@ export default function InitiativeHero({ heading, intro, programme, glance, logo
           <p className="editorial-label svc-hero-stagger" style={{ margin: "0 0 16px" }}>
             {programme ? (
               <>
-                (<Link href="/initiatives" className="init-crumb">Initiatives</Link> / {programme})
+                (<IntentLink href="/initiatives" className="init-crumb">Initiatives</IntentLink> / {programme})
               </>
             ) : (
               "(Initiatives)"

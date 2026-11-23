@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import Button from "@/components/ui/Button";
 import EditorialLabel from "@/components/ui/EditorialLabel";
@@ -115,8 +115,8 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
           style={{ opacity: 0.7 }}
         >
           House of Singh Studios is a multidisciplinary design studio that builds brand identities, visual systems, and digital experiences for businesses that have outgrown their brand. The studio was founded on a direct premise: design is a business tool, not a creative exercise. Every project runs through a defined system. Every deliverable serves a business purpose. AI powers the production layer. Creative direction stays human. Beyond client work:{" "}
-          <Link href="/initiatives/parallel" className="art-link">Parallel</Link>, where we reimagine real brands with their permission, and{" "}
-          <Link href="/initiatives/commons" className="art-link">Commons</Link>, our pro bono program for Toronto organizations.
+          <IntentLink href="/initiatives/parallel" className="art-link">Parallel</IntentLink>, where we reimagine real brands with their permission, and{" "}
+          <IntentLink href="/initiatives/commons" className="art-link">Commons</IntentLink>, our pro bono program for Toronto organizations.
         </p>
 
         {/* Location + Live Clock */}
@@ -430,17 +430,17 @@ export default function AboutClient({ aboutData, networkMembers = [] }: { aboutD
           {/* Careers CTA */}
           <div className="about-careers-cta scroll-reveal-up">
             <span className="about-careers-text">Think you belong here? Send your portfolio.</span>
-            <Link href="/careers" className="about-careers-link" data-cursor="link">
+            <IntentLink href="/careers" className="about-careers-link" data-cursor="link">
               View Careers <span className="about-careers-arrow">&rarr;</span>
-            </Link>
+            </IntentLink>
           </div>
 
           {/* Initiatives */}
           <div className="about-careers-cta scroll-reveal-up">
             <span className="about-careers-text">Beyond client work, the studio runs Parallel and Commons.</span>
-            <Link href="/initiatives" className="about-careers-link about-initiatives-link" data-cursor="link">
+            <IntentLink href="/initiatives" className="about-careers-link about-initiatives-link" data-cursor="link">
               See our initiatives <span className="about-careers-arrow">&rarr;</span>
-            </Link>
+            </IntentLink>
           </div>
         </div>
       </section>
