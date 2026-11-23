@@ -22,7 +22,7 @@ export interface InsightCard {
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return date.toLocaleDateString("en-CA", { month: "long", year: "numeric" });
 }
 
 export function PostMeta({ category, date, readingTime }: { category?: string; date?: string; readingTime?: number }) {

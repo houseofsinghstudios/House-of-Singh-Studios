@@ -7,6 +7,6 @@ export function updatedLabel(publishedAt?: string | null, updatedAt?: string | n
   const published = Date.parse(publishedAt);
   const updated = Date.parse(updatedAt);
   if (!Number.isFinite(published) || !Number.isFinite(updated) || updated - published <= THIRTY_DAYS) return null;
-  const month = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric", timeZone: "America/Toronto" }).format(new Date(updated));
+  const month = new Intl.DateTimeFormat("en-CA", { month: "long", year: "numeric", timeZone: "America/Toronto" }).format(new Date(updated));
   return `Updated ${month}`;
 }
