@@ -3,7 +3,7 @@
 // Contact details leave the browser only from here, and only when the visitor presses send.
 
 import { useState } from "react";
-import Link from "next/link";
+import IntentLink from "@/components/IntentLink";
 import { SEND } from "@/lib/project-planner/content";
 import { NOTE_LIMIT } from "@/lib/project-planner/config";
 import HearAboutFields from "@/components/contact/HearAboutFields";
@@ -89,7 +89,7 @@ export default function PlannerSendForm({ onSend }: Props) {
         <input type="checkbox" checked={insights} onChange={(e) => setInsights(e.target.checked)} disabled={sending} />
         <span>{SEND.insights}</span>
       </label>
-      <p className="pp-small">{SEND.smallPrint} <Link href="/privacy" className="pp-link">{SEND.privacyLink}</Link>.</p>
+      <p className="pp-small">{SEND.smallPrint} <IntentLink href="/privacy" className="pp-link">{SEND.privacyLink}</IntentLink>.</p>
       <button type="submit" className="btn-primary pp-btn" disabled={sending} aria-busy={sending}>{sending ? SEND.sending : SEND.button}</button>
       {status === "error" && <p className="form-error" role="alert">{SEND.failure}</p>}
     </form>

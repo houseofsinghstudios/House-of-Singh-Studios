@@ -3,7 +3,7 @@
 // moves focus to the step heading when it appears.
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import IntentLink from "@/components/IntentLink";
 import { FLOW, GOAL, NEEDS, PRIORITIES, SERVICE_LABELS, START, TIMING } from "@/lib/project-planner/content";
 import { priorityOptions, toggleMulti, type Draft } from "@/lib/project-planner/engine";
 import { GOAL_IDS, HELP, MAX_NEEDS, MAX_PRIORITIES, SERVICE_IDS, START_IDS, TIMING_IDS, type ServiceId } from "@/lib/project-planner/types";
@@ -116,7 +116,7 @@ export default function PlannerStep({ step, index, total, draft, onNeeds, onPrim
         <>
           <MainFocus draft={draft} onPrimary={onPrimary} />
           <p className="pp-small">
-            {NEEDS.printLead} <Link href="/contact" className="pp-link">{NEEDS.printLink}</Link>
+            {NEEDS.printLead} <IntentLink href="/contact" className="pp-link">{NEEDS.printLink}</IntentLink>
           </p>
         </>
       )}

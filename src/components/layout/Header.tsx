@@ -10,6 +10,7 @@
 
 import { Link } from "next-view-transitions";
 import IntentLink from "@/components/IntentLink";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { track } from "@/lib/analytics";
 import { REDUCED_MOTION, useMediaQuery } from "@/lib/use-media-query";
@@ -22,13 +23,15 @@ const DRAWER_ID = "site-menu-drawer";
 const DRAWER_WIDTHS = "(max-width: 1080px)";
 
 // Above 1080px: the five links, then "Plan your project" (hidden at 1080px and below, where the
-// drawer's Contact covers it). Work prefetches on sight (a main path whose stylesheet the homepage
-// already has); every other page on intent (IntentLink).
+// drawer's Contact covers it). Every link prefetches on intent (IntentLink), except Work on the
+// homepage, which prefetches on sight: /work adds no stylesheet the homepage lacks there, while on any
+// other page it preloaded work-index.css unused, one console warning per page (site audit S-06).
 function DesktopNav() {
+  const onHome = usePathname() === "/";
   return (
     <nav className="header-desktop-nav" aria-label="Primary navigation">
       {SITE_LINKS.map((link) => {
-        const NavLink = link.href === "/work" ? Link : IntentLink;
+        const NavLink = link.href === "/work" && onHome ? Link : IntentLink;
         return (
           <NavLink key={link.href} href={link.href} className="header-nav-link">
             {link.label}

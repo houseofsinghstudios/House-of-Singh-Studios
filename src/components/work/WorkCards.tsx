@@ -1,6 +1,6 @@
 // The project cards on the Initiatives programme pages (once the /work grid). No hooks, so they render
 // in server and client components alike.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import type { Project } from "@/data/projects";
 import DisciplineTags, { type DisciplineTag } from "@/components/work/DisciplineTags";
@@ -35,7 +35,7 @@ interface CardProps {
 // Desktop grid card (1024px and wider), in .wp-grid.
 export function WorkGridCard({ project, index }: CardProps & { index: number }) {
   return (
-    <Link
+    <IntentLink
       href={`/work/${project.slug}`}
       className="wp-grid-card no-underline"
       style={{ transitionDelay: `${index * 100}ms` }}
@@ -65,14 +65,14 @@ export function WorkGridCard({ project, index }: CardProps & { index: number }) 
         </h3>
         <p className="wp-grid-desc">{project.shortDescription}</p>
       </div>
-    </Link>
+    </IntentLink>
   );
 }
 
 // Phone and tablet card (below 1024px), in .wp-mobile-grid.
 export function WorkMobileCard({ project }: CardProps) {
   return (
-    <Link
+    <IntentLink
       href={`/work/${project.slug}`}
       className="wp-grid-card no-underline"
     >
@@ -90,6 +90,6 @@ export function WorkMobileCard({ project }: CardProps) {
       <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" />
       <h3 className="wp-grid-name">{project.name}</h3>
       <p className="wp-grid-desc-mobile">{project.shortDescription}</p>
-    </Link>
+    </IntentLink>
   );
 }

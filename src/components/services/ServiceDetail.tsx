@@ -1,6 +1,6 @@
 // A service page, rendered on the server. The browser runs only its interactive parts: the process
 // and questions accordions (ServiceDetailAccordion) and the buttons.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { getServiceBySlug } from "@/data/services";
 import Button from "@/components/ui/Button";
 import ServiceDeliverableRow from "./ServiceDeliverableRow";
@@ -54,9 +54,9 @@ export default function ServiceDetail({
         className="svcd-hero"
         style={{ padding: "var(--hero-pt) var(--page-px) clamp(48px, 6vh, 80px)" }}
       >
-        <Link href="/services" className="svcd-back back-link css-reveal">
+        <IntentLink href="/services" className="svcd-back back-link css-reveal">
           <span className="back-arrow">←</span> Services
-        </Link>
+        </IntentLink>
         <p className="editorial-label css-reveal" style={{ transitionDelay: "0ms", margin: "24px 0 12px" }}>
           (Services)
         </p>

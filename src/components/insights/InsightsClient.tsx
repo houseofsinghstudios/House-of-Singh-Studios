@@ -5,7 +5,7 @@
 // src/lib/insights-listing.ts), shared with the paginated pages /insights/page/N.
 
 import { useState, useMemo } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import NextPageLink from "@/components/layout/NextPageLink";
 import InsightsCta from "@/components/insights/InsightsCta";
@@ -144,7 +144,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
         >
           {/* Featured post (first) */}
           {featuredPost && (
-            <Link
+            <IntentLink
               href={`/insights/${featuredPost.slug?.current}`}
               className="ins-featured css-reveal no-underline"
               data-cursor="view"
@@ -175,7 +175,7 @@ export default function InsightsClient({ posts }: InsightsClientProps) {
                 />
                 <h2 className="ins-featured-title">{featuredPost.title}</h2>
               </div>
-            </Link>
+            </IntentLink>
           )}
 
           {/* Post grid */}

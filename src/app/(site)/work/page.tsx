@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { DEFAULT_SHARE_IMAGE, WEBSITE_OG } from "@/lib/seo";
 import BreadcrumbSchema from "@/components/BreadcrumbSchema";
 import Button from "@/components/ui/Button";
@@ -49,7 +49,7 @@ export default async function WorkPage() {
 
       <p className="wp-initiatives-note">
         Some projects are Explorations or Parallel concepts.{" "}
-        <Link href="/initiatives" className="underline underline-offset-4" data-cursor="link">About our initiatives.</Link>
+        <IntentLink href="/initiatives" className="underline underline-offset-4" data-cursor="link">About our initiatives.</IntentLink>
       </p>
 
       <NextPageLink current="/work" />

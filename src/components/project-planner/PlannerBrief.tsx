@@ -1,5 +1,5 @@
 // The brief: every section in order. No hooks: the ProjectPlanner flow owns the state and passes callbacks.
-import Link from "next/link";
+import IntentLink from "@/components/IntentLink";
 import { ACTIONS, BRIEF, CALL, OPTIONAL } from "@/lib/project-planner/content";
 import { BAND_IDS, type ActionId, type BandId, type Brief, type Optional } from "@/lib/project-planner/types";
 import { IMPORTANT_DATE_LIMIT, WEBSITE_LIMIT } from "@/lib/project-planner/config";
@@ -111,7 +111,7 @@ export default function PlannerBrief(p: Props) {
 
       {related.length > 0 && (
         <Section title={brief.relatedWork!.title}>
-          <ul className="pp-list">{related.map((c) => <li key={c.slug}><Link href={`/work/${c.slug}`} className="pp-link">{c.title}</Link></li>)}</ul>
+          <ul className="pp-list">{related.map((c) => <li key={c.slug}><IntentLink href={`/work/${c.slug}`} className="pp-link">{c.title}</IntentLink></li>)}</ul>
         </Section>
       )}
 

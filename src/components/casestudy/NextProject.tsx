@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 
 interface NextProjectProps {
   slug: string;
@@ -9,7 +9,7 @@ interface NextProjectProps {
 
 export default function NextProject({ slug, name }: NextProjectProps) {
   return (
-    <Link
+    <IntentLink
       href={`/work/${slug}`}
       className="cs-next-row row-bleed"
       data-cursor="expand"
@@ -18,6 +18,6 @@ export default function NextProject({ slug, name }: NextProjectProps) {
       <span className="cs-next-name">
         {name} <span className="cs-next-arrow">→</span>
       </span>
-    </Link>
+    </IntentLink>
   );
 }

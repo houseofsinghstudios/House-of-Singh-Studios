@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import type { ServiceProject } from "@/lib/sanity/projects";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import { disciplineLabel } from "@/lib/disciplines";
@@ -42,7 +42,7 @@ export default function ServiceProjectCard({ projects }: Props) {
 
   // One link for the whole card: image, tags and name all open the project.
   return (
-    <Link href={`/work/${current.slug}`} className="svc-block-card no-underline" data-cursor="view">
+    <IntentLink href={`/work/${current.slug}`} className="svc-block-card no-underline" data-cursor="view">
       <div className="svc-block-img" style={{ position: "relative" }}>
         {projects.map((p, i) => (
           <Image
@@ -63,6 +63,6 @@ export default function ServiceProjectCard({ projects }: Props) {
         <DisciplineTags tags={tags} className="svc-block-proj-tags" projectType={current.projectType} />
         <p className="svc-block-proj-name">{current.name}</p>
       </div>
-    </Link>
+    </IntentLink>
   );
 }

@@ -3,7 +3,7 @@
 // Client component: feedback taps, form submissions and copying the share link.
 
 import { useState } from "react";
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import { FEEDBACK, KEEP_IT, NEXT_STEP, QUIET_LINKS } from "@/lib/brand-pulse/content";
 import { PLACEMENTS } from "@/lib/project-planner/content";
 import type { Feedback } from "@/lib/brand-pulse/types";
@@ -100,8 +100,8 @@ export default function PulseFollowUp(props: Props) {
         <KeepIt {...props} />
       </div>
       <nav className="bp-quiet" aria-label="Brand Pulse">
-        <Link href="/contact" className="bp-quiet-link">{QUIET_LINKS.conversation}</Link>
-        <Link href={props.planHref} className="bp-quiet-link">{PLACEMENTS.brandPulse}</Link>
+        <IntentLink href="/contact" className="bp-quiet-link">{QUIET_LINKS.conversation}</IntentLink>
+        <IntentLink href={props.planHref} className="bp-quiet-link">{PLACEMENTS.brandPulse}</IntentLink>
         <CopyLink href={props.shareHref} />
         <button type="button" className="bp-quiet-link" onClick={props.onRestart}>{QUIET_LINKS.startAgain}</button>
       </nav>

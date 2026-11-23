@@ -5,14 +5,15 @@
 // interaction, and Chrome warns about each preloaded stylesheet a page does not use (homepage audit
 // H-07, 22 Nov 2026). Same props as next-view-transitions' Link, which it wraps, so page transitions
 // are unchanged. Links that should prefetch on sight keep that Link directly (the /work links).
-import { Link } from "next-view-transitions";
-import { useRouter } from "next/navigation";
+// The router comes from next-view-transitions (the app router with its transition push and replace,
+// prefetch unchanged), so this file has one import for both, as the Link itself does.
+import { Link, useTransitionRouter } from "next-view-transitions";
 import type { ComponentProps } from "react";
 
 type Props = ComponentProps<typeof Link>;
 
 export default function IntentLink({ href, onMouseEnter, onFocus, onTouchStart, ...rest }: Props) {
-  const router = useRouter();
+  const router = useTransitionRouter();
   // Only paths on this site; the router ignores a repeat for a route it already has.
   const warm = () => {
     if (typeof href === "string" && href.startsWith("/")) router.prefetch(href);

@@ -1,6 +1,6 @@
 // A row of project cards: the service page's Related work cards (image, name, type and subtitle).
 // Used on service pages and, two at most, at the end of each article.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import ProjectTypeLabel from "@/components/work/ProjectTypeLabel";
 import { projectTypeLabel } from "@/lib/initiatives/types";
@@ -10,7 +10,7 @@ export default function ProjectCardRow({ projects }: { projects: ServiceProject[
   return (
     <div className="svcd-work-grid">
       {projects.map((work, i) => (
-        <Link
+        <IntentLink
           key={work.slug}
           href={`/work/${work.slug}`}
           className="svcd-work-card css-reveal"
@@ -36,7 +36,7 @@ export default function ProjectCardRow({ projects }: { projects: ServiceProject[
               {work.subtitle}
             </p>
           )}
-        </Link>
+        </IntentLink>
       ))}
     </div>
   );

@@ -1,6 +1,6 @@
 // The end of an article: the previous and next articles, then the related posts the page chose
 // (src/lib/related-posts.ts). Server rendered.
-import { Link } from "next-view-transitions";
+import IntentLink from "@/components/IntentLink";
 import Image from "next/image";
 import type { AdjacentPost, RelatedPost } from "./InsightArticle";
 
@@ -19,7 +19,7 @@ export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: Adj
       <div className="art-nav">
         <div>
           {previousPost && (
-            <Link
+            <IntentLink
               href={`/insights/${previousPost.slug.current}`}
               className="art-nav-link no-underline"
             >
@@ -32,12 +32,12 @@ export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: Adj
               <p className="art-nav-title">
                 {previousPost.title}
               </p>
-            </Link>
+            </IntentLink>
           )}
         </div>
         <div style={{ textAlign: "right" }}>
           {nextPost && (
-            <Link
+            <IntentLink
               href={`/insights/${nextPost.slug.current}`}
               className="art-nav-link art-nav-link--next no-underline"
             >
@@ -48,7 +48,7 @@ export function ArticleAdjacent({ previousPost, nextPost }: { previousPost?: Adj
                 </span>
               </p>
               <p className="art-nav-title">{nextPost.title}</p>
-            </Link>
+            </IntentLink>
           )}
         </div>
       </div>
@@ -67,7 +67,7 @@ export function ArticleRelated({ posts }: { posts: RelatedPost[] }) {
       <h2 className="art-related-heading">More from the studio.</h2>
       <div className="art-related-grid">
         {posts.map((rp) => (
-          <Link
+          <IntentLink
             key={rp._id}
             href={`/insights/${rp.slug.current}`}
             className="ins-card no-underline"
@@ -96,7 +96,7 @@ export function ArticleRelated({ posts }: { posts: RelatedPost[] }) {
               )}
             </div>
             <h3 className="ins-card-title">{rp.title}</h3>
-          </Link>
+          </IntentLink>
         ))}
       </div>
     </section>
