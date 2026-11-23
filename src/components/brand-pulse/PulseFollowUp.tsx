@@ -86,7 +86,7 @@ function KeepIt({ lead, leadEmail, shareHref, onLead, onProfile }: Pick<Props, "
 
 export default function PulseFollowUp(props: Props) {
   return (
-    <div className="bp-followup bp-reveal">
+    <div className="bp-followup">
       <FeedbackRow onFeedback={props.onFeedback} />
       <div className="bp-blocks">
         <div className="bp-block">

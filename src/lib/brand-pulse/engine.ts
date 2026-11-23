@@ -3,20 +3,17 @@
 // The three actions are not here: they are server only, added by the API route from actions.ts.
 
 import { SERVICE_NAMES, type ServiceNameSlug } from "@/lib/service-names";
+import { LEVEL_LABELS, PROFILES, PULSE_LABELS, VITALS } from "./content";
 import {
   AHEAD_SENTENCES,
   CLARITY_SENTENCES,
   CONSISTENT_SENTENCES,
   HANDOVER_SENTENCES,
   INDUSTRY_SENTENCES,
-  LEVEL_LABELS,
   NEXT_STEP_SENTENCES,
-  PROFILES,
-  PULSE_LABELS,
   UPDATED_SENTENCES,
-  VITALS,
   WEAKEST_SENTENCES,
-} from "./content";
+} from "./sentences";
 import { SITE_URL } from "./settings";
 import type { Answers, Level, ProfileId, Pulse, Result, ServiceKey, ServiceLink, VitalId, Weakest } from "./types";
 
