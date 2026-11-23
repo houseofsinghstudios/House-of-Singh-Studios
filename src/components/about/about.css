@@ -261,7 +261,7 @@
   font-weight: 500;
   color: var(--text-primary);
   text-decoration: none;
-  transition: opacity 0.3s;
+  transition: color 0.3s cubic-bezier(0.23, 1, 0.32, 1);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -274,8 +274,9 @@
 }
 
 @media (hover: hover) {
+  /* Colour, never opacity (site audit S-18): Obsidian to Gunmetal, 6.3:1, the arrow with it. */
   .about-careers-link:hover {
-    opacity: 0.6;
+    color: var(--text-secondary);
   }
   .about-careers-link:hover .about-careers-arrow {
     transform: translateX(4px);
@@ -299,5 +300,18 @@
 @media (prefers-reduced-motion: reduce) {
   .about-clock-colon {
     animation: none;
+  }
+}
+
+/* Tap area (site audit S-10): padding with an equal negative margin, so nothing moves. The
+   initiatives link has its own 44px area above. */
+.about-careers-link:not(.about-initiatives-link) {
+  padding: 4px 0;
+  margin: -4px 0;
+}
+@media (max-width: 1080px) {
+  .about-careers-link:not(.about-initiatives-link) {
+    padding: 14px 0;
+    margin: -14px 0;
   }
 }

@@ -1,4 +1,7 @@
 'use client'
+// A client component: Copy link writes to the clipboard and says so. The button is named by its own
+// words (no aria-label, so "Copied" never contradicts its name; site audit S-14), and a polite live
+// region announces "Link copied." for screen readers.
 
 import { useState } from 'react'
 
@@ -34,12 +37,15 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     <div className="share-buttons">
       <span className="share-label">Share</span>
       <button
+        type="button"
         className="share-btn needs-js"
         onClick={handleCopy}
-        aria-label="Copy link"
       >
         {copied ? 'Copied' : 'Copy link'}
       </button>
+      <span className="sr-only" aria-live="polite">
+        {copied ? 'Link copied.' : ''}
+      </span>
       <a
         className="share-btn"
         href={twitterUrl}

@@ -36,14 +36,22 @@ test("every class the shared block hides is one ScrollObserver reveals", () => {
   for (const cls of hidden) assert.ok(cls === "cs-hero-image-reveal" || REVEAL_SELECTOR.includes(`.${cls}`), cls);
 });
 
-test("the arming script: sets data-reveal, disarms after the safety time, rendered in the site layout, allowed by the CSP", async () => {
+test("the arming script: sets data-reveal, disarms after the safety time, rendered in the root layout head, allowed by the CSP", async () => {
   assert.match(REVEAL_ARM_SCRIPT, /setAttribute\('data-reveal',''\)/);
   assert.match(REVEAL_ARM_SCRIPT, new RegExp(`window\\.__hosReveal\\)d\\.removeAttribute\\('data-reveal'\\)\\},${REVEAL_SAFETY_MS}\\)`));
   assert.match(REVEAL_ARM_SCRIPT, /IntersectionObserver' in window/);
   // data-js is set first and never removed: the What we do accordion collapses under it.
-  assert.match(REVEAL_ARM_SCRIPT, /^\(function\(\)\{try\{var d=document\.documentElement;d\.setAttribute\('data-js',''\);/);
+  // The Studio shares the root layout and is skipped; everything else sets data-js first.
+  assert.match(REVEAL_ARM_SCRIPT, /^\(function\(\)\{try\{if\(\/\^\\\/studio\(\\\/\|\$\)\/\.test\(location\.pathname\)\)return;var d=document\.documentElement;d\.setAttribute\('data-js',''\);/);
   assert.doesNotMatch(REVEAL_ARM_SCRIPT, /removeAttribute\('data-js'\)/);
-  assert.match(readFileSync("src/app/(site)/layout.tsx", "utf8"), /<script dangerouslySetInnerHTML=\{\{ __html: REVEAL_ARM_SCRIPT \}\} \/>/);
+  // From the root layout's head, so every document has it as real HTML, the 404 included (site audit S-05).
+  const root = readFileSync("src/app/layout.tsx", "utf8");
+  assert.match(root, /<head>[\s\S]*<script dangerouslySetInnerHTML=\{\{ __html: REVEAL_ARM_SCRIPT \}\} \/>[\s\S]*<\/head>/);
+  assert.doesNotMatch(readFileSync("src/app/(site)/layout.tsx", "utf8"), /REVEAL_ARM_SCRIPT/, "rendered once");
+  // The safety net: ClientShell sets data-js on mount when it is missing, never data-reveal.
+  const shell = readFileSync("src/components/ClientShell.tsx", "utf8");
+  assert.match(shell, /if \(!root\.hasAttribute\("data-js"\)\) root\.setAttribute\("data-js", ""\);/);
+  assert.doesNotMatch(shell, /data-reveal"\s*,/);
   const headers = (await nextConfig.headers!()).find((r) => r.source === "/(.*)")!.headers;
   assert.match(headers.find((h) => h.key === "Content-Security-Policy")!.value, /script-src 'self' 'unsafe-inline'/);
   const observer = readFileSync("src/components/ScrollObserver.tsx", "utf8");

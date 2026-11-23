@@ -83,6 +83,16 @@ html[data-header-hidden] {
 html {
   scroll-behavior: smooth;
 }
+/* Keyboard focus and anchor jumps land below the fixed header when the browser does the scrolling
+   itself, that is with reduced motion, when Lenis is off (site audit S-13). With Lenis on, SmoothScroll
+   already keeps keyboard focus clear of the header, and Lenis subtracts this padding from its own
+   element scrolls, which would move where Brand Pulse, the planner and focus land. --header-edge reads
+   0px while the header is slid away, so the padding follows it. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-padding-top: calc(var(--header-edge) + 16px);
+  }
+}
 
 body {
   margin: 0;
@@ -2072,7 +2082,7 @@ td a {
 }
 
 /* Controls that only work with JavaScript (the menu button, Pause, the choice lists, the Proof index,
-   the Start chips, Top, filters, tool start buttons): hidden until the inline script in the site layout
+   the Start chips, Top, filters, tool start buttons): hidden until the inline script in the root layout
    sets html[data-js], before the page paints, so without JavaScript nothing visible does nothing and with
    it nothing flashes (homepage audit H-14). */
 html:not([data-js]) .needs-js {
@@ -2081,7 +2091,7 @@ html:not([data-js]) .needs-js {
 
 /* ═══════════════════════════════════════════════════════
    The shared reveal: one time, every browser (since 22 Nov 2026)
-   An inline script in the site layout sets html[data-reveal] before the page paints, and only when
+   An inline script in the root layout sets html[data-reveal] before the page paints, and only when
    JavaScript runs, so a page without JavaScript shows everything at full strength. ScrollObserver then
    adds .in-view once to each element: at once for anything already on screen, as it enters for the
    rest. Nothing reverses on the way back up. With reduced motion nothing is hidden.
@@ -2567,5 +2577,58 @@ html:not([data-js]) .needs-js {
   ::view-transition-old(*),
   ::view-transition-new(*) {
     animation: none;
+  }
+}
+
+/* ═══ Tap areas outside the homepage (site audit S-10, 22 Nov 2026) ═══
+   At least 24px at every width (WCAG 2.5.8) and 44px at 1080px and below, as on the homepage: block
+   links take padding with an equal negative margin, so nothing moves; inline links take vertical
+   padding only, which never touches a line; boxes that show their edges (the Learn more button, RGD)
+   take an invisible layer instead, so they look exactly as before. Guard: tests/tap-targets.test.ts. */
+.cs-back,
+.svcd-back {
+  padding: 3px 0;
+  margin-top: -3px;
+  margin-bottom: -3px;
+}
+/* Discipline tag links: 4px above and below, so a tag is 24.5px. Where tags are links their rows sit
+   8px apart (6px for plain tags), so wrapped tags never overlap; 44px would need much wider rows. */
+a.dtag {
+  padding: 4px 0;
+  margin: -4px 0;
+}
+.dtags:has(> a.dtag) {
+  row-gap: 8px;
+}
+.ai-proof-source a,
+.contact-email-link {
+  padding: 6px 0;
+}
+@media (max-width: 1080px) {
+  .cs-back,
+  .svcd-back {
+    padding: 12px 0;
+    margin-top: -12px;
+    margin-bottom: -12px;
+  }
+  .ai-proof-source a,
+  .contact-email-link {
+    padding: 16px 0;
+  }
+  .next-page-anchor {
+    padding: 2px 0;
+    margin: -2px 0;
+  }
+  .svc-block-btn:not(.init-row-explore),
+  .rgd-link {
+    position: relative;
+  }
+  /* A 44px band centred on the element, whatever its own height (an RGD in small type is 14px tall).
+     Inside a heading that clips its overflow for the text reveal, RGD keeps the heading's line. */
+  .svc-block-btn:not(.init-row-explore)::after,
+  .rgd-link::after {
+    content: "";
+    position: absolute;
+    inset: calc(50% - 22px) 0;
   }
 }

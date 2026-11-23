@@ -24,3 +24,10 @@ test("About process numbers: Accessible Ash at full strength, read with their st
   const about = readFileSync("src/components/about/AboutClient.tsx", "utf8");
   assert.match(about, /<span className="about-process-ghost">\{String\(i \+ 1\)\.padStart\(2, "0"\)\}<\/span>/);
 });
+
+test("/about careers link: the hover changes colour, never opacity (site audit S-18)", () => {
+  const css = readFileSync("src/components/about/about.css", "utf8");
+  assert.match(css, /\.about-careers-link:hover \{\s*color: var\(--text-secondary\);\s*\}/);
+  assert.doesNotMatch(css, /\.about-careers-link:hover \{[^}]*opacity/);
+  assert.match(css, /\.about-careers-link \{[^}]*transition: color 0\.3s cubic-bezier\(0\.23, 1, 0\.32, 1\);/);
+});

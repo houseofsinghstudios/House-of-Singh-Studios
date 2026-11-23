@@ -304,6 +304,13 @@
   transition: border-color 0.3s ease;
 }
 
+/* Keyboard focus: the shared form focus, a 2px Obsidian rule (the border plus a 1px inset shadow,
+   so the field keeps its size), as on the contact, careers and planner fields (site audit S-04). */
+form:not([data-pointer-focus]) .art-newsletter-input:focus-visible {
+  border-bottom-color: var(--text-primary);
+  box-shadow: inset 0 -1px 0 var(--text-primary);
+}
+
 .art-newsletter-input::placeholder {
   color: var(--text-label);
   opacity: 1;
@@ -431,5 +438,32 @@
   }
   .art-related-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Tap areas (site audit S-10): 24px at every width, 44px at 1080px and below, nothing moves. The share
+   buttons show their border, so they take an invisible layer instead of padding. */
+.art-back,
+.art-newsletter-submit {
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin-top: -3px;
+  margin-bottom: -3px;
+}
+@media (max-width: 1080px) {
+  .art-back,
+  .art-newsletter-submit {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    margin-top: -12px;
+    margin-bottom: -12px;
+  }
+  .share-btn {
+    position: relative;
+  }
+  .share-btn::after {
+    content: "";
+    position: absolute;
+    inset: calc(50% - 22px) 0;
   }
 }

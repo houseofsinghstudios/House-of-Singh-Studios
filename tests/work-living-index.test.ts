@@ -150,3 +150,10 @@ test("phones: the window follows the header, from the one hidden state the heade
   // Reduced motion: the window does not slide (the header never hides then anyway).
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*\.wi-window,[\s\S]*transition: none;/);
 });
+
+test("the sentence is the page's h2, so the outline runs H1, H2, then the project H3s (site audit S-07)", () => {
+  const sentence = readFileSync("src/components/work/index/WorkSentence.tsx", "utf8");
+  assert.match(sentence, /<h2 className="wi-sentence">\s*Work for\{" "\}/);
+  assert.doesNotMatch(sentence, /<p className="wi-sentence">/);
+  assert.match(readFileSync("src/app/(site)/work/page.tsx", "utf8"), /<h1 className="sr-only">Work: /, "the hidden H1 stays");
+});

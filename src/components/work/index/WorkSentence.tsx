@@ -62,11 +62,12 @@ interface Props {
 
 export default function WorkSentence({ words, open, onToggle, refs, ids }: Props) {
   return (
-    <p className="wi-sentence">
+    // The page's one visible heading under its hidden H1 (site audit S-07), as on the homepage.
+    <h2 className="wi-sentence">
       Work for{" "}
       <Choice words={words.business} open={open === "business"} controls={ids.business} onToggle={() => onToggle("business")} choiceRef={refs.business} />
       ,<br className="wi-br" /> in{" "}
       <Choice words={words.discipline} open={open === "discipline"} controls={ids.discipline} onToggle={() => onToggle("discipline")} choiceRef={refs.discipline} />.
-    </p>
+    </h2>
   );
 }
