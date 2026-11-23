@@ -6,7 +6,7 @@
 // TakePartBand: two columns, Parallel then Commons on /initiatives, and the two ways to act on
 // /partners, where the band has no label or heading of its own and the columns carry the headings.
 import Button from "@/components/ui/Button";
-import "@/components/homepage/tool-band.css";
+import "./take-part-band.css";
 import "./initiatives.css";
 
 export interface NominateItem {

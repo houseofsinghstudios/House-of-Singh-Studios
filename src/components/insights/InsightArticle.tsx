@@ -61,7 +61,7 @@ interface Post {
 }
 
 function formatDateLong(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-CA", {
     month: "long",
     day: "numeric",
     year: "numeric",

@@ -66,10 +66,7 @@ export default function ServiceDetail({
         </h1>
         <h2
           className="svcd-headline css-reveal"
-          style={{
-            transitionDelay: "120ms",
-            viewTransitionName: `service-${service.slug}`,
-          }}
+          style={{ transitionDelay: "120ms" }}
         >
           {service.headline}
         </h2>

@@ -1,6 +1,7 @@
 // Numbered rows on a program page: the service page deliverable rows (01, name, one line), 1px Marble
 // rules, each revealing 80ms after the one before. Parallel's edition parts and Commons' criteria.
 import ServiceDeliverableRow from "@/components/services/ServiceDeliverableRow";
+import "./numbered-section.css";
 
 export default function NumberedRows({ rows }: { rows: { name: string; description: string }[] }) {
   return (

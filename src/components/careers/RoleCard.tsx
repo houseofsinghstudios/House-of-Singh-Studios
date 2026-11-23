@@ -40,7 +40,7 @@ export interface Role {
   publishedAt?: string;
 }
 
-const bodyText = { fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, opacity: 0.7 } as const;
+const bodyText = { fontFamily: "var(--sans)", fontSize: 16, lineHeight: 1.6, color: "var(--text-secondary)" } as const;
 const listLabel = { fontFamily: "var(--sans)", fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: "var(--text-label)", marginBottom: 12 } as const;
 
 type LinkMark = { _type: "link"; href?: string };
@@ -131,7 +131,7 @@ export default function RoleCard({ role, isOpen, onToggle, onApply }: { role: Ro
       <RoleHeader role={role} isOpen={isOpen} bodyId={bodyId} inBrowser={inBrowser} onToggle={onToggle} />
       <div id={bodyId} className="role-card-body" data-open={isOpen} inert={inBrowser && !isOpen}>
         <div className="role-card-body-inner">
-          <p style={{ fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.6, opacity: 0.7 }}>{role.summary}</p>
+          <p style={{ fontFamily: "var(--sans)", fontSize: 17, lineHeight: 1.6, color: "var(--text-secondary)" }}>{role.summary}</p>
           {role.description && (
             <div style={{ marginTop: 24 }}>
               <PortableText value={role.description} components={roleTextComponents} />

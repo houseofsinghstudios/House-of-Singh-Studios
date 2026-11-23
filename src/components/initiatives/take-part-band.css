@@ -1,12 +1,13 @@
-/* ── The dark band ──
-   First made for the homepage "Two ways to start" band (retired), and now used only by the Initiatives
-   and Partners take part bands (src/components/initiatives/NominateBand.tsx). A full bleed inverted
-   section: Obsidian ground, Mist type. Tones are Mist (--bg) at the opacities the footer and dark
-   sections already use: 50% for muted labels (AA on Obsidian), 65% for body text, 8% for rules. */
+/* ── The take part band ──
+   The Initiatives and Partners take part bands (NominateBand.tsx, beside this file). First made for the
+   homepage "Two ways to start" band (retired), it moved here from the homepage folder (site audit,
+   CLAUDE.md drift). A full bleed inverted section: Obsidian ground, Mist type. Tones are Mist (--bg) at
+   the opacities the dark sections use: 65% for the label and body text (CLAUDE.md: dark section labels
+   stay at 65 percent or more; the label was 50%), 8% for rules. */
 
 .tb {
   --tb-fg: var(--bg);
-  --tb-muted: color-mix(in srgb, var(--bg) 50%, transparent);
+  --tb-muted: color-mix(in srgb, var(--bg) 65%, transparent);
   --tb-body: color-mix(in srgb, var(--bg) 65%, transparent);
   --tb-rule: color-mix(in srgb, var(--bg) 8%, transparent);
   --tb-ease: cubic-bezier(0.23, 1, 0.32, 1);

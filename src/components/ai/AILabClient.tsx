@@ -7,6 +7,7 @@ import BrandPulse from "@/components/brand-pulse/BrandPulse";
 import ProofStats, { type ProofStat } from "@/components/ai/ProofStats";
 import { INTRO } from "@/lib/brand-pulse/content";
 import { DISCOVERY_CALL_URL } from "@/lib/constants/booking";
+import { STUDIO_GUIDE_LIVE } from "@/lib/constants/features";
 import "./ai-lab.css";
 
 /* ── Comparison table rows ── */
@@ -223,7 +224,7 @@ export default function AILabClient() {
             <p
               style={{
                 fontSize: 14,
-                color: "rgba(247, 246, 245, 0.65)",
+                color: "var(--text-muted)",
                 lineHeight: 1.7,
                 margin: 0,
               }}
@@ -302,45 +303,47 @@ export default function AILabClient() {
         />
       </section>
 
-      {/* ═══ SECTION 7: STUDIO GUIDE TEASER ═══ */}
-      <section
-        className="css-reveal"
-        style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}
-      >
-        <p
-          style={{
-            fontSize: 11,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: "var(--text-label)",
-            margin: "0 0 12px",
-          }}
+      {/* ═══ SECTION 7: STUDIO GUIDE TEASER ═══ (hidden until the guide launches: STUDIO_GUIDE_LIVE) */}
+      {STUDIO_GUIDE_LIVE && (
+        <section
+          className="css-reveal"
+          style={{ padding: "clamp(48px, 6vw, 80px) var(--page-px)" }}
         >
-          (Studio Guide)
-        </p>
-        <p
-          className="font-[var(--sans)]"
-          style={{
-            fontSize: 18,
-            fontWeight: 500,
-            color: "var(--text-primary)",
-            margin: "0 0 8px",
-          }}
-        >
-          Have a question about working with us?
-        </p>
-        <p
-          style={{
-            fontSize: 14,
-            color: "var(--text-label)",
-            margin: 0,
-            maxWidth: 480,
-          }}
-        >
-          Our AI powered Studio Guide can answer questions about services
-          and process. Coming soon.
-        </p>
-      </section>
+          <p
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: "var(--text-label)",
+              margin: "0 0 12px",
+            }}
+          >
+            (Studio Guide)
+          </p>
+          <p
+            className="font-[var(--sans)]"
+            style={{
+              fontSize: 18,
+              fontWeight: 500,
+              color: "var(--text-primary)",
+              margin: "0 0 8px",
+            }}
+          >
+            Have a question about working with us?
+          </p>
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--text-label)",
+              margin: 0,
+              maxWidth: 480,
+            }}
+          >
+            Our AI powered Studio Guide can answer questions about services
+            and process. Coming soon.
+          </p>
+        </section>
+      )}
 
       <NextPageLink current="/ai" />
 

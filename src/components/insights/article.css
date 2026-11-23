@@ -165,9 +165,8 @@
   font-size: 16px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   margin: 32px 0 12px;
-  opacity: 0.7;
 }
 
 .art-bq {

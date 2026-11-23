@@ -5,7 +5,7 @@ import Image from "next/image";
 import type { AdjacentPost, RelatedPost } from "./InsightArticle";
 
 function formatDateShort(dateString: string): string {
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("en-CA", {
     month: "long",
     year: "numeric",
   }).format(new Date(dateString));

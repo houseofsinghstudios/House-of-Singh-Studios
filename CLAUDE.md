@@ -101,7 +101,7 @@ AS BUILT (src/components/layout/Header.tsx, MenuDrawer.tsx, TorontoTime.tsx; scr
 - Partners, Initiatives, Careers, Privacy and Terms are reached from the footer, not the header. The footer's legal links read "Privacy policy", "Privacy choices" and "Terms" (sentence case; the legal pages' own wording is unchanged). Commons is linked from the About page and the Initiatives page instead.
 - Footer: three columns of four links (Studio, Company, Start). Below 768px the headings show, Studio and Company sit side by side, and Start follows with its links in two columns, row by row.
 
-- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts). Since 23 Nov 2026 (site audit S-15) the guard holds a rule over all of src: every parenthesised editorial label ("(02) The challenge", "(Next step)") and every EditorialLabel text is in sentence case, a capital after the first word allowed only for a name (Brand Pulse, AI Lab, Studio Guide, House of Singh, Toronto, RGD and the like); missing page titles read "Project not found", "Service not found", "Post not found". The service and deliverable names in src/data/services.ts are names and keep their capitals; "(Studio Guide)" is a feature name (owner decision). The service page's second button reads "Plan your project" (owner decision, 23 Nov 2026), its link keeping the ?service= value.
+- Action names (owner decision, Nov 2026): the main action is "Plan your project" everywhere, in sentence case, to /start (a heading reads "Plan your project."); the second action is "Book a discovery call", in sentence case, to DISCOVERY_CALL_URL. Guard: tests/one-action-name.test.ts. Every other button and link label is in sentence case too ("Send my brief", "Try again", "Learn more"), never Title Case (22 Nov 2026; guard in tests/audit-pr1.test.ts). Since 23 Nov 2026 (site audit S-15) the guard holds a rule over all of src: every parenthesised editorial label ("(02) The challenge", "(Next step)") and every EditorialLabel text is in sentence case, a capital after the first word allowed only for a name (Brand Pulse, AI Lab, Studio Guide, House of Singh, Toronto, RGD and the like); missing page titles read "Project not found", "Service not found", "Post not found". Insights article titles are the exception by design: they use Title Case as the editorial headline style ("What a Brand Identity System Actually Includes (And Why a Logo Is Not Enough)"), written in Sanity, while every label, button and link stays in sentence case; the guard reads a parenthesis as a label only when it opens its string or text node, so a title is never flagged (a test pins it with title samples). The service and deliverable names in src/data/services.ts are names and keep their capitals; "(Studio Guide)" is a feature name (owner decision). The service page's second button reads "Plan your project" (owner decision, 23 Nov 2026), its link keeping the ?service= value.
 
 NOT BUILT: the earlier "Menu +" overlay with a 48px bar, link counts ("Work 04") and a "Close" label was never shipped, and the full screen panel it replaced is gone. Do not rebuild either without the owner's approval.
 
@@ -220,7 +220,7 @@ EVOLVED APPROACH:
 - No spinning loaders anywhere
 - Page loads: content enters via the staggered reveal system. The page appears to "build" itself.
 - Form submissions: button text changes to "Sending..." with reduced opacity
-- Empty content states: a quiet centered message in --text-muted, no decorative elements
+- Empty content states: a quiet message in Accessible Ash (--text-label, the small text colour on light grounds; settled 23 Nov 2026, it was written as --text-muted, which fails as text there), no decorative elements: /insights ("No posts in this category yet."), /careers with no roles, the Initiatives work slot.
 - Skeleton loading: not built (pages are static or ISR, so content arrives with the HTML). If ever needed: thin horizontal bars (8px height, --bg-shift fill, subtle pulse animation) in place of text blocks
 - Without JavaScript (since 22 Nov 2026, homepage audit H-14; guard tests/needs-js.test.ts): nothing visible does nothing. Controls that only work with JavaScript carry .needs-js and stay hidden until the inline script in the root layout sets html[data-js] before the page paints (the menu button, Pause, the Living Index choice lists, the Proof index, the Start chips and their help line, Top, the Insights filters, the Brand Pulse and planner start buttons, Copy text on /partners, Copy link on articles, the careers Apply buttons), so nothing flashes with it. Controls that carry content are plain text until the page runs in the browser: the What we do row headings and phone words, and the Living Index choices (no underline or chevron without JavaScript). The contact, careers and article newsletter forms post to their route, which answers a plain post from the site with a written page (src/lib/no-script-page.ts), so nothing goes into a page address. The services and questions accordion (ServiceDetailAccordion, protected; owner approved, 22 Nov 2026) shows every answer without JavaScript, its triggers plain headings and no plus; its closed panels collapse only under html[data-js] (data-open, globals.css), and the buttons, inert and inline heights arrive once the page runs, so nothing flashes and layout shift stays 0. The questions, their order, their wording and the FAQPage JSON-LD are unchanged.
 - The 404 (since 23 Nov 2026, site audit Step 1b; guard tests/not-found.test.ts): an address no route matches reaches the root src/app/not-found.tsx, which Next.js builds as /_not-found and answers with a 404 status as real HTML: the site shell (src/components/layout/SiteShell.tsx, shared with (site)/layout.tsx), so the header, the arming script in the head, the copy and the footer read in full without JavaScript. Title "Page not found", noindex, follow, no canonical. There is no catch-all route: it would turn every unknown address into a notFound() call. notFound() from a site page (a missing case study, article, initiative, service or archive page, and /initiatives/foundry on purpose) uses (site)/not-found.tsx, with the same copy (NotFoundContent) and metadata: a correct 404 status and noindex, but Next.js 16 draws it in the browser only (vercel/next.js #99287, open in 16.4.6 and 16.5.0-canary.60). Owner decision, 23 Nov 2026: no proxy in front of the slug pages to change that; revisit when a Next.js release draws notFound() on the server.
@@ -295,50 +295,63 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 - An aria-live polite status says what a choice did: "2 projects for food and drink brands. 6 more below."
 - The case study cards (WorkCards.tsx, DisciplineTags) stay for the Initiatives pages and /services; their tags are plain text.
 - Shared with the homepage's (01) Selected work, which uses these parts in a home mode (see Homepage).
+- After the index: a note, "About our initiatives." (a link to /initiatives), the Next link, then the dark call to action "Have a project in mind?".
 
-### Services Overview
-- Compact hero (~60vh) with full-width image below
-- Each service block's project card rotates every 5s; every project's image, tags and name are always in the card, stacked in one cell as tall as the tallest, so a change never moves the page (site audit S-12: tags that wrapped to another line shifted the footer by 21px on phones).
-- Service blocks: alternating image/text layout
-- Services Unpacked: multi-column capability grid (not accordion)
-- Dark CTA at bottom
+Page endings (as built): most pages end with a "Next" link (NextPageLink, src/components/layout/NextPageLink.tsx; each page passes its own route and one map picks the target: /services to Work, /work, /about, /initiatives and /partners to Contact, /contact to Work, /ai and /insights to Services, /careers to About, service pages to Work, case studies to Contact, articles to Services, programme pages to Initiatives, anything else to Contact), then a dark call to action with the label "(Next step)", a heading and two buttons, "Book a discovery call" (DISCOVERY_CALL_URL, new tab) and a second one (usually "Plan your project"). The homepage has neither; /contact, /start, /brand-pulse and /partners have no dark call to action.
 
-### Service Detail
-- Compact hero (~50vh) with viewTransitionName
-- Deliverables: two-column grid
-- Business Impact: asymmetric 40/60 layout on --bg-shift
-- Process: two-column grid
-- Dark CTA at bottom
+### Services Overview (/services)
+As built (src/app/(site)/services/page.tsx, ServiceBlocks.tsx):
+- Hero: text only, no image: the label, the h1 and a line.
+- Four service blocks, each text left and its project card right (not alternating): "(01) Brand identity" and so on (the block labels in sentence case; the service names are names), the name as h2, the description, the deliverables list, "Learn more" (the dark button with the primary sweep; sr-only service name, protected).
+- Each service block's project card rotates every 5s; every project's image, tags and name are always in the card, stacked in one cell as tall as the tallest, so a change never moves the page (site audit S-12: tags that wrapped to another line shifted the footer by 21px on phones). Without projects the card shows "Project image coming soon" on Cloudy White.
+- The planner invite (PlannerInvite: Plan your project, and Book a discovery call as a plain link), the Next link, then the dark call to action "Ready to start a conversation?".
+- No "Services Unpacked" grid: never built.
 
-### Case Study
-- Compact hero (~50vh) with viewTransitionName
-- Full-width hero image with clip-path reveal
-- Content sections: Business, Challenge (two-column), Approach, Deliverables (numbered grid), Result
-- Image gallery
-- Next Project link with letter-spacing hover
-- Dark CTA
+### Service Detail (/services/[slug])
+As built (src/components/services/ServiceDetail.tsx; copy from src/data/services.ts):
+- Hero, padding only (no fixed height): the back link to /services, "(Services)", the h1 (the page topic in the small label style, protected H1 swap), the h2 hero line, the description. No view transition name (the unpaired service-<slug> name was removed on 23 Nov 2026).
+- (01) What you get: the deliverables as one column of rows (ServiceDeliverableRow), beside a spacer.
+- (02) Why it matters: the impact heading and text, on Silver Mist.
+- "Is this for you?" (the qualifier), unnumbered.
+- (04) Across the GTA (ServiceLocalSection), then Related thinking (articles; protected module).
+- (05) How we do it: the process as the services accordion (ServiceDetailAccordion, protected).
+- (06) Related work (ProjectCardRow), when there is any; then Questions, (07) or (06), with the FAQPage JSON-LD (protected).
+- The Next link, then the dark call to action: the service's own heading, Book a discovery call, and "Plan your project" to /start?service=<id> (owner decision, 23 Nov 2026).
 
-### About
-- Compact hero
-- Numbered sections: (01) Capabilities, (02) Process, (03) Network, (04) Founder, (05) Stats
-- Founder section: two-column with photo and bio
+### Case Study (/work/[slug])
+As built (src/components/casestudy/CaseStudyTemplate.tsx; data from Sanity):
+- Hero, padding only: the back link "All projects" to /work, the project type label, the h1 with view transition name project-<slug>.
+- The hero image: full width, 16:9 (3:2 on phones), view transition name project-image-<slug>, wiping in from the left over 0.8s (the shared .reveal-clip; a fade up below 768px). Its source is the featured image, a clean source up to 2400px (Layer 6).
+- (01) Overview: the meta (client, year, sector and the like) and the service tags (links), then the overview text.
+- With page blocks (BlockRenderer, in Sanity order), the blocks follow, then "(02) What we delivered". Without them: (02) The challenge and (03) Our approach, the first gallery, "(04) What we delivered", the second gallery and (05) The result.
+- "Planning something similar? Build your brief." (to /start with the case study's service), the Next project row (its name loosens its letter spacing on hover, eased over 0.5s), the Next link, then the dark call to action "Plan your project.".
+
+### About (/about)
+As built (src/components/about/AboutClient.tsx):
+- Hero: the label, the h1, the intro (with links to Parallel and Commons) and the Toronto clock ("Toronto, Canada" and the time).
 - The Toronto clock reads the zone from Intl (torontoTime in src/lib/toronto-time.ts): EST in winter, EDT under daylight time, written in the browser only with the time (site audit S-16; tests/toronto-clock.test.ts).
-- Process step numbers (01 to 05): 28px to 40px (24px below 900px), weight 500, so large text; Accessible Ash at full strength (4.64:1), Gunmetal on the hover ground; read with their step, not hidden from assistive technology (since 22 Nov 2026)
-- Dark CTA
+- (02) Process: five steps (.row-bleed rows). Process step numbers (01 to 05): 28px to 40px (24px below 900px), weight 500, so large text; Accessible Ash at full strength (4.64:1), Gunmetal on the hover ground; read with their step, not hidden from assistive technology (since 22 Nov 2026).
+- (03) How we are different: the two column comparison ("duel").
+- (04) Network: the network cards from Sanity (NetworkGrid), then a full width image.
+- (05) Founder: two columns, photo and bio (the grid is 1fr 1fr today; a 55/45 proposal is Step 9 of the site audit).
+- (06) Collaborators, with "View careers" and "See our initiatives".
+- The Next link, then the dark call to action "Plan your project.".
 
-### Contact
-- Compact hero
-- Two-column: form left, booking CTA right
-- Contact details grid below form
-- No bottom CTA (the form IS the CTA)
+### Contact (/contact)
+As built (src/components/contact/ContactClient.tsx):
+- Compact hero, then two columns: the form left, the booking column right ("Book a discovery call" and the studio's email).
+- The form: name, email, the service menu (the services, plus nominations, introductions and partnerships, which hide the budget and ask their own questions; ?service= preselects them), the budget menu and the message. It posts to /api/lead; without JavaScript the route answers with a written page.
 - Budget range (CAD), optional (since 23 Nov 2026, site audit S-09; guard tests/budget-bands.test.ts): the Project Planner's own investment ranges, from one shared list for both forms (src/lib/budget-bands.ts): Under $1,000, $1,000 to $4,000, $4,000 to $10,000, $10,000 to $20,000, $20,000 or more, then Not sure yet last. They are the visitor's own range, never the studio's price, so no band reads as a floor. The form sends the label text (the /api/lead budget field, at most 80 characters).
+- No contact details grid and no dark call to action (the form is the call to action); the Next link goes to Work.
 
-### AI Lab
-- Compact hero
-- Three content sections: The Argument (why creative direction matters), How AI Powers the Process (stage list), Brand Pulse Check (interactive tool)
-- Each section uses the standard label-heading-content pattern
-- Brand Pulse Check: interactive multi-step flow, self-contained
-- Dark CTA
+### AI Lab (/ai)
+As built (src/components/ai/AILabClient.tsx), labels unnumbered:
+- Hero "(AI Lab)", then "(What changes for you)": the comparison table (rows with the Cloudy White hover ground).
+- "(The creative direction argument)": a dark section (one of the page's two).
+- The proof bar, then "(The outcome)".
+- The Brand Pulse Check (the same component as /brand-pulse, its first screen without a fade; the start button reads "Take the 60 Second Brand Pulse").
+- The Studio Guide teaser is hidden until the guide launches (owner decision, 23 Nov 2026): the section stays in the code behind one flag, STUDIO_GUIDE_LIVE in src/lib/constants/features.ts, false today; turning it on is that one change (and dropping "Coming soon." from its text). Guard: tests/studio-guide-flag.test.ts.
+- The Next link, then the dark call to action (the second dark section): Book a discovery call and "View our work".
 
 ### Packages (retired)
 - The Packages page no longer exists. /packages redirects (301) to /start, the Project Planner.
@@ -360,27 +373,37 @@ As built (src/app/(site)/work/page.tsx, server; the client island in src/compone
 
 ### Initiatives (/initiatives, /initiatives/parallel, /initiatives/commons)
 - The initiatives overview and two programme pages. Other initiatives are listed but have no page; /initiatives/foundry returns 404 on purpose.
+- Their numbered sections (InitiativeSection, NumberedRows, InitiativeQuestions) bring their own small stylesheet, numbered-section.css, which /brand-pulse's guide shares without loading the rest of initiatives.css. The take part band (NominateBand, TakePartBand) has its stylesheet beside it, take-part-band.css (moved from the homepage folder on 23 Nov 2026); its label is Silver Mist at 65 percent.
 - Programme rows with a page: "Explore <name>" is the link, stretched over the whole row (its ::after, above the cover), so a click anywhere opens the page and keyboard focus outlines the row; its name is its visible words, then the tagline as sr-only text, no aria-label (WCAG 2.5.3, since 22 Nov 2026).
 - Logos (optional, Sanity "logo" and "logoOnDark", SVG or PNG): only when set, the logo replaces the visible name in the programme rows (the h3 stays as visually hidden text; while a programme has no published project, the logo shows large in the row's panel instead and the small one is hidden beside it, on phones the small one always shows), sits above the unchanged H1 in the program hero (decorative in both, empty alt; the alt field stays required in Studio), and the page shares /initiatives/[slug]/share-image (logo on Silver Mist). Without a logo every page and its share image are as before.
 
-### Partners, Careers, Privacy, Terms
-- /partners: the partner programme, introduction form with permission checkbox, FAQs.
-- /careers: open roles from Sanity, apply form.
+### Partners (/partners)
+As built (src/components/partners/PartnersPage.tsx, server rendered; only the count up, Copy text and the analytics listener run in the browser):
+- The hero and the partner stats, then numbered Initiatives sections: (01) the safe hands section, (02) how it works (the steps as numbered rows, and the introduction, ready to send, with a "Copy text" button), (03) what it is worth, (04) who it is for, (05) Questions (with FAQPage JSON-LD, and a note to email the partners address).
+- The take part band (two columns: introduce a client, become a partner), then the Next link. No dark call to action.
+- The introduction form itself, with its permission checkbox, lives on /contact (?service=introduction and ?service=partnership); /partners links to it.
+
+### Careers, Privacy, Terms
+- /careers: open roles from Sanity (each role opens from its title, a button in the h2; closed roles are inert), the apply form, and an empty state ("We are always looking for sharp thinkers.") in Accessible Ash when there are no roles.
 - /privacy and /terms: legal wording, approved by the owner. Change only with approval.
 
-### Insights
-- Compact hero
-- Filter bar (sticky below header)
-- Two-column post grid with images
-- Dark CTA
+### Insights (/insights)
+As built (src/components/insights/InsightsClient.tsx):
+- Compact hero: the label, the h1 "Thinking, frameworks, and perspective.", a line.
+- The filter bar: sticky under the header at --header-edge, moving with --header-slide, on Silver Mist (since 23 Nov 2026); the filters are .needs-js (hidden without JavaScript), 44px tall on phones.
+- The featured post (the hero card, its title turning Gunmetal on hover), then the two column grid of cards, and "Load more", a real link to /insights/page/2 (the archive pages).
+- Empty states in Accessible Ash ("No posts in this category yet.").
+- The Next link, then the dark call to action (InsightsCta).
+- Insights article titles are written in Title Case, the editorial headline style, in Sanity; every label, button and link on the site stays in sentence case (see Layer 1).
 
-### Insight Article
-- Compact hero with back link, metadata, reading time
-- Full-width featured image
-- Body content at max-width 740px
-- Previous/Next navigation
-- Related posts grid
-- Dark CTA
+### Insight Article (/insights/[slug])
+As built (src/components/insights/InsightArticle.tsx, rendered on the server):
+- Compact hero: the back link to /insights, the category, date (en-CA) and reading time, the h1.
+- The full width featured image (the LCP, high priority, at the Studio hotspot).
+- "(Key takeaways)", then the body at max 740px (images in the text at the hotspot; RGD auto links, protected).
+- The end of article call to action (the Brand Pulse CTA), related work (protected).
+- The foot: a second back link, the share buttons (Copy link with a polite "Link copied."), and the newsletter field.
+- Previous and next, related posts (protected), the Next link, then the dark call to action.
 
 ---
 

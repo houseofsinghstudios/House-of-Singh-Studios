@@ -136,7 +136,7 @@ export default function CareersClient({ roles }: CareersClientProps) {
             fontFamily: "var(--sans)",
             fontSize: 17,
             lineHeight: 1.6,
-            opacity: 0.7,
+            color: "var(--text-secondary)",
             maxWidth: 600,
             marginTop: 24,
           }}
@@ -208,7 +208,8 @@ export default function CareersClient({ roles }: CareersClientProps) {
                 fontSize: "clamp(28px, 4vw, 48px)",
                 lineHeight: 1.2,
                 letterSpacing: "-0.02em",
-                opacity: 0.6,
+                // The empty state's colour, Accessible Ash (CLAUDE.md Layer 7), not dimmed Obsidian.
+                color: "var(--text-label)",
               }}
             >
               We are always looking for sharp thinkers.
