@@ -4,7 +4,7 @@
 // Hidden initiatives are kept here and filtered by visibleInitiatives(), so nothing hidden ever reaches a page.
 import { client } from "./client";
 import { urlFor } from "./image";
-import { readSanity } from "./resilience";
+import { readSanity, sanityFallbackAllowed } from "./resilience";
 import { FALLBACK_INITIATIVES } from "@/lib/initiatives/content";
 import { toInitiative, withFallbackCopy, type Initiative } from "@/lib/initiatives/types";
 
@@ -51,7 +51,9 @@ async function fetchInitiatives(): Promise<Initiative[]> {
   const list = Array.isArray(docs)
     ? docs.map((d) => toInitiative(withLogoUrls(d as Doc))).filter((i): i is Initiative => i !== null)
     : [];
-  return list.length > 0 ? withFallbackCopy(list, FALLBACK_INITIATIVES) : FALLBACK_INITIATIVES;
+  if (list.length > 0) return withFallbackCopy(list, FALLBACK_INITIATIVES);
+  // Sanity answered with none: the coded list only while building or without Sanity, as for a failed read.
+  return sanityFallbackAllowed() ? FALLBACK_INITIATIVES : [];
 }
 
 // For the initiatives pages. A failed read follows readSanity (./resilience): the fallback list only
