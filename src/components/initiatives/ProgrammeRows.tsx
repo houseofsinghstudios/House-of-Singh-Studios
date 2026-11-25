@@ -36,9 +36,11 @@ function Visual({ row, number }: { row: ProgrammeRow; number: string }) {
   const { initiative, newest } = row;
   const logo = logoInPanel(row) ? initiativeLogo(initiative, "light") : undefined;
   if (newest) {
+    const src = projectImage(newest);
+    // Without an image, the frame's own Cloudy White ground (.svc-block-img) at the same size.
     return (
       <div className="svc-block-img init-visual">
-        <Image src={projectImage(newest)} alt={newest.name} fill sizes="(max-width: 768px) 100vw, 45vw" style={{ objectFit: "cover" }} />
+        {src && <Image src={src} alt={newest.name} fill sizes="(max-width: 768px) 100vw, 45vw" style={{ objectFit: "cover" }} />}
       </div>
     );
   }

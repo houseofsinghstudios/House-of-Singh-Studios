@@ -39,6 +39,8 @@
   overflow: hidden;
   aspect-ratio: 3 / 2;
   position: relative;
+  /* The placeholder for a project without an image: Cloudy White, no text, same size. */
+  background: var(--bg-shift);
 }
 
 .wp-grid-img-inner {

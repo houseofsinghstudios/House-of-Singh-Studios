@@ -10,12 +10,10 @@ import "./work-cards.css";
 // What a card shows.
 type WorkCard = Pick<Project, "slug" | "name" | "image" | "workType" | "shortDescription" | "disciplines" | "projectType">;
 
-const FALLBACK_IMAGES: Record<string, string> = {
-  tedxtoronto: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-};
-
-export function projectImage(project: WorkCard): string {
-  return project.image || FALLBACK_IMAGES[project.slug] || "/images/projects/tedxtoronto/tedxtoronto.jpg";
+// The project's own image, or none: a card without one shows the Cloudy White placeholder at the same
+// size (the frame's ground in work-cards.css and .svc-block-img), never another project's photo.
+export function projectImage(project: Pick<WorkCard, "image">): string | null {
+  return project.image || null;
 }
 
 function projectTags(project: WorkCard): DisciplineTag[] {
@@ -34,6 +32,7 @@ interface CardProps {
 
 // Desktop grid card (1024px and wider), in .wp-grid.
 export function WorkGridCard({ project, index }: CardProps & { index: number }) {
+  const src = projectImage(project);
   return (
     <IntentLink
       href={`/work/${project.slug}`}
@@ -46,13 +45,15 @@ export function WorkGridCard({ project, index }: CardProps & { index: number }) 
         style={{ viewTransitionName: `project-image-${project.slug}` }}
       >
         <div className="wp-grid-img-inner relative">
-          <Image
-            src={projectImage(project)}
-            alt={project.name}
-            fill
-            sizes="(max-width: 767px) 100vw, 50vw"
-            style={{ objectFit: "cover", pointerEvents: "none" }}
-          />
+          {src && (
+            <Image
+              src={src}
+              alt={project.name}
+              fill
+              sizes="(max-width: 767px) 100vw, 50vw"
+              style={{ objectFit: "cover", pointerEvents: "none" }}
+            />
+          )}
         </div>
       </div>
       <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" />
@@ -71,6 +72,7 @@ export function WorkGridCard({ project, index }: CardProps & { index: number }) 
 
 // Phone and tablet card (below 1024px), in .wp-mobile-grid.
 export function WorkMobileCard({ project }: CardProps) {
+  const src = projectImage(project);
   return (
     <IntentLink
       href={`/work/${project.slug}`}
@@ -78,13 +80,15 @@ export function WorkMobileCard({ project }: CardProps) {
     >
       <div className="wp-grid-img-wrap reveal-clip" data-cursor="view">
         <div className="wp-grid-img-inner relative">
-          <Image
-            src={projectImage(project)}
-            alt={project.name}
-            fill
-            sizes="100vw"
-            style={{ objectFit: "cover", pointerEvents: "none" }}
-          />
+          {src && (
+            <Image
+              src={src}
+              alt={project.name}
+              fill
+              sizes="100vw"
+              style={{ objectFit: "cover", pointerEvents: "none" }}
+            />
+          )}
         </div>
       </div>
       <DisciplineTags tags={projectTags(project)} projectType={project.projectType} className="wp-grid-meta" />

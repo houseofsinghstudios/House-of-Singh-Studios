@@ -1,6 +1,5 @@
 // The /services hero and the four service blocks, rendered on the server. Only each block's rotating
 // project card (ServiceProjectCard) runs in the browser.
-import Image from "next/image";
 import IntentLink from "@/components/IntentLink";
 import DisciplineTags from "@/components/work/DisciplineTags";
 import ServiceProjectCard from "@/components/services/ServiceProjectCard";
@@ -27,12 +26,8 @@ const BLOCKS = [
       "Packaging Design",
       "Art Direction",
     ],
-    fallbackImage: {
-      src: "/images/projects/tedxtoronto/tedxtoronto.jpg",
-      alt: "TEDxToronto visual identity system",
-    },
     fallbackTags: "Brand Identity",
-    fallbackName: "TEDxToronto Visual Identity",
+    fallbackName: "Coming soon",
   },
   {
     number: "02",
@@ -50,7 +45,6 @@ const BLOCKS = [
       "Creative Direction",
       "Script and Narrative",
     ],
-    fallbackImage: null,
     fallbackTags: "Visual Media",
     fallbackName: "Coming soon",
   },
@@ -72,7 +66,6 @@ const BLOCKS = [
       "Development Direction",
       "Post Launch Support",
     ],
-    fallbackImage: null,
     fallbackTags: "Digital Design",
     fallbackName: "Coming soon",
   },
@@ -93,7 +86,6 @@ const BLOCKS = [
       "Content Strategy",
       "Brand Governance",
     ],
-    fallbackImage: null,
     fallbackTags: "Creative Strategy",
     fallbackName: "Coming soon",
   },
@@ -184,25 +176,6 @@ export default function ServiceBlocks({ projectsByCategory }: Props) {
                 const sanityProjects = projectsByCategory?.[block.serviceCategory] || [];
                 if (sanityProjects.length > 0) {
                   return <ServiceProjectCard projects={sanityProjects} />;
-                }
-                if (block.fallbackImage) {
-                  return (
-                    <>
-                      <div className="svc-block-img">
-                        <Image
-                          src={block.fallbackImage.src}
-                          alt={block.fallbackImage.alt}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          style={{ objectFit: "cover" }}
-                        />
-                      </div>
-                      <div className="svc-block-proj-meta">
-                        <DisciplineTags tags={[{ value: block.fallbackTags, label: block.fallbackTags }]} className="svc-block-proj-tags" />
-                        <p className="svc-block-proj-name">{block.fallbackName}</p>
-                      </div>
-                    </>
-                  );
                 }
                 return (
                   <>
