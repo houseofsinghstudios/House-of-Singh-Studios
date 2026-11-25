@@ -85,7 +85,7 @@ export default async function CaseStudyPage({
           }),
         }}
       />
-      <CaseStudyClient project={project} detail={detail} services={services} />
+      <CaseStudyClient detail={detail} services={services} />
     </>
   );
 }

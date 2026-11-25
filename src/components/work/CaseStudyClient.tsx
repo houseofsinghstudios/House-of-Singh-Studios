@@ -1,20 +1,17 @@
-// Server component: resolves the project detail (Sanity first, then the src/data fallback)
-// and renders the template. Interactive children carry their own "use client".
-import type { Project } from "@/data/projects";
+// Server component: renders the case study template from the detail the page read from Sanity
+// (getProjectDetailBySlug, whose local data fallback applies only while building). Never reads the
+// local data itself, so a case study Sanity does not have can never be drawn from the old copy.
+// Interactive children carry their own "use client".
 import type { ProjectDetail } from "@/data/projectDetails";
-import { getProjectDetail } from "@/data/projectDetails";
 import CaseStudyTemplate, { type ServiceLink } from "@/components/casestudy/CaseStudyTemplate";
 
 interface CaseStudyClientProps {
-  project: Project;
   detail: ProjectDetail | null;
   services?: ServiceLink[];
 }
 
-export default function CaseStudyClient({ project, detail, services = [] }: CaseStudyClientProps) {
-  const resolved = detail || getProjectDetail(project.slug);
+export default function CaseStudyClient({ detail, services = [] }: CaseStudyClientProps) {
+  if (!detail) return null;
 
-  if (!resolved) return null;
-
-  return <CaseStudyTemplate project={resolved} services={services} />;
+  return <CaseStudyTemplate project={detail} services={services} />;
 }

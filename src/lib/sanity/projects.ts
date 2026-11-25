@@ -1,7 +1,7 @@
 import { client } from "./client";
 import { CASE_IMAGE_WIDTH, imageSource, shareImageUrl, wwdPreviewUrl } from "./image";
 import type { SanityImageSource } from "@sanity/image-url";
-import { readSanity } from "./resilience";
+import { readSanity, sanityFallbackAllowed } from "./resilience";
 import { disciplineLabel } from "@/lib/disciplines";
 import { coverAlt, projectAlt } from "@/lib/alt-text";
 import type { Project } from "@/data/projects";
@@ -452,8 +452,15 @@ export function mapSanityToProjectDetail(doc: CaseStudyDoc, order: Array<Pick<Ca
 
 // ── Public API ──
 // A failed read follows readSanity (./resilience): the local data below only while building or
-// without Sanity; at runtime the error is rethrown so the last good page stays. When Sanity answers
-// with nothing, the local data is used as before.
+// without Sanity; at runtime the error is rethrown so the last good page stays. An answer with
+// nothing in it follows the same rule (localWhenAllowed): the local data only while building or
+// without Sanity, otherwise nothing, so a case study Sanity does not have goes through
+// redirectOrNotFound and never serves the old coded copy.
+
+// When Sanity has answered with nothing: the local data while building or without Sanity, else none.
+async function localWhenAllowed<T>(local: () => Promise<T>, none: T): Promise<T> {
+  return sanityFallbackAllowed() ? local() : none;
+}
 
 async function localProjects(): Promise<Project[]> {
   const { projects } = await import("@/data/projects");
@@ -482,7 +489,7 @@ export async function getAllProjects(): Promise<Project[]> {
     "all case studies",
     async () => {
       const docs = await client.fetch<CaseStudyDoc[]>(allProjectsQuery);
-      return docs && docs.length > 0 ? docs.map(mapSanityToProject) : localProjects();
+      return docs && docs.length > 0 ? docs.map(mapSanityToProject) : localWhenAllowed(localProjects, []);
     },
     localProjects
   );
@@ -493,7 +500,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     `case study "${slug}"`,
     async () => {
       const doc = await client.fetch<CaseStudyDoc | null>(projectBySlugQuery, { slug });
-      return doc ? mapSanityToProject(doc, 0) : localProjectBySlug(slug);
+      return doc ? mapSanityToProject(doc, 0) : localWhenAllowed(() => localProjectBySlug(slug), null);
     },
     (error) => localProjectOrRethrow(slug, error)
   );
@@ -504,7 +511,7 @@ export async function getProjectDetailBySlug(slug: string): Promise<ProjectDetai
     `case study detail "${slug}"`,
     async () => {
       const { doc, order } = await client.fetch<{ doc: CaseStudyDoc | null; order: Array<Pick<CaseStudyDoc, "slug" | "title">> | null }>(projectDetailQuery, { slug });
-      return doc && Array.isArray(order) && order.length > 0 ? mapSanityToProjectDetail(doc, order) : localProjectDetail(slug);
+      return doc && Array.isArray(order) && order.length > 0 ? mapSanityToProjectDetail(doc, order) : localWhenAllowed(() => localProjectDetail(slug), null);
     },
     async (error) => {
       const detail = await localProjectDetail(slug);
