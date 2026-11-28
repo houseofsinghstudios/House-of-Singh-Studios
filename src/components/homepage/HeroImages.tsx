@@ -88,7 +88,8 @@ function Slide({ entry, visible, first, onReady }: { entry: HeroEntry; visible: 
           alt={image.alt}
           fill
           sizes={SIZES}
-          // Quality 60 from a clean quality 90 source (heroImageUrl), served as AVIF where possible.
+          // Quality 60, compressed once by Sanity's CDN from the original (the loader, heroImageUrl);
+          // AVIF where the browser takes it.
           quality={60}
           // The first image is the page's largest paint: preloaded and fetched first. The rest load lazily.
           preload={first}

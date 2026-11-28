@@ -1,7 +1,8 @@
 // Sanity image sources, site audit Step 3 (S-03, S-08, 23 Nov 2026): every on-page Sanity image asks
 // for at least twice its shown width (capped at 2400), never enlarged past the original (fit max), at
-// quality 90, so next/image's compression is the only real one. Insights frames crop at the Studio
-// hotspot. Run with: npm run test
+// quality 90 (since 28 Nov 2026 the next/image loader replaces the width and quality, so Sanity's CDN
+// compresses once; tests/image-loader.test.ts). Insights frames crop at the Studio hotspot.
+// Run with: npm run test
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

@@ -88,9 +88,9 @@ test("images: next/image with the agreed sizes and quality, the first preloaded,
   assert.match(imageTs, /export function heroImageUrl[\s\S]*?return imageSource\(source, 2400\);/);
 });
 
-test("image settings: AVIF and WebP; qualities 60 for the hero and 75, every other image\x27s", () => {
+test("image settings: Sanity's CDN through the loader; qualities 60 for the hero and 75, every other image\x27s", () => {
   const config = read("next.config.ts");
-  assert.match(config, /formats: \["image\/avif", "image\/webp"\],/);
+  assert.match(config, /loader: "custom",\s*loaderFile: "\.\/src\/lib\/sanity\/image-loader\.ts",/);
   assert.match(config, /qualities: \[60, 75\],/);
   // No other next/image sets a quality, so every other image stays at the default 75.
   const uses = execSync("grep -rln 'quality={' src || true", { encoding: "utf8" }).trim().split("\n").filter(Boolean);

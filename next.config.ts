@@ -60,17 +60,15 @@ const nextConfig: NextConfig = {
   // No "X-Powered-By: Next.js" header: it only tells visitors and scanners which framework runs here.
   poweredByHeader: false,
   images: {
-    // AVIF first where the browser takes it, WebP otherwise. Formats only: no image changes size.
-    formats: ["image/avif", "image/webp"],
+    // Sanity images come from Sanity's own image CDN at the width and quality next/image asks for
+    // (src/lib/sanity/image-loader.ts), never from Vercel's /_next/image: the Hobby allowance for it ran
+    // out on 28 Nov 2026 and every image it had not cached answered 402. Files in /public are served as
+    // they are. Sanity picks AVIF, WebP or JPEG from the browser's Accept header (auto=format).
+    loader: "custom",
+    loaderFile: "./src/lib/sanity/image-loader.ts",
     // 75 is next/image's default and the quality of every image on the site; 60 is for the homepage
-    // hero images only (HeroImages.tsx), which start from a clean quality 90 source.
+    // hero images only (HeroImages.tsx). Sanity compresses each once, from the original upload.
     qualities: [60, 75],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io",
-      },
-    ],
   },
   // Permanent 301s (permanent: true would send 308). Old /journal addresses moved to /insights.
   // The specific article comes first: its slug changed too.

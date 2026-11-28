@@ -11,10 +11,13 @@ export function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
-// A clean source for next/image: at most maxWidth wide, never enlarged past the original (fit max),
-// automatic format, quality 90. next/image then does the one real compression and serves the width
-// each screen needs from its sizes, so a phone never downloads the large file (site audit S-03, S-08).
-// Every on-page Sanity image goes through this; only crops (share images, network photos) do not.
+// The address of an on-page Sanity image for next/image: at most maxWidth wide, never enlarged past the
+// original (fit max), automatic format, the Studio crop kept. next/image's loader
+// (src/lib/sanity/image-loader.ts) then sets the width each screen needs, never past maxWidth, and the
+// quality (75, the hero 60), so Sanity's CDN compresses once from the original and a phone never
+// downloads the large file (site audit S-03, S-08; Sanity serves since 28 Nov 2026, not /_next/image).
+// The quality 90 here is replaced by the loader's. Every on-page Sanity image goes through this; only
+// crops (share images, network photos) do not.
 export function imageSource(source: SanityImageSource, maxWidth: number) {
   return urlFor(source).width(maxWidth).fit("max").auto("format").quality(90).url();
 }
@@ -47,9 +50,9 @@ export const insightImageUrl = {
   body: (source: SanityImageSource) => imageSource(source, 1600),
 };
 
-// A homepage hero image: the Studio crop applied (as rect), at most 2400px wide, automatic format,
-// quality 90, so the source next/image compresses (at quality 60, HeroImages.tsx) is clean. next/image
-// then serves the width each screen needs. The query gives the asset's URL
+// A homepage hero image: the Studio crop applied (as rect), at most 2400px wide, automatic format.
+// The loader sets each width and quality 60 (HeroImages.tsx), compressed once by Sanity from the
+// original upload. The query gives the asset's URL
 // rather than its reference; the builder reads the asset from it.
 export function heroImageUrl(image: { url: string; crop?: { top: number; bottom: number; left: number; right: number } }) {
   const source: SanityImageSource = { asset: { url: image.url }, ...(image.crop ? { crop: image.crop } : {}) };
@@ -57,7 +60,7 @@ export function heroImageUrl(image: { url: string; crop?: { top: number; bottom:
 }
 
 // The homepage What we do preview (a 300 by 220 frame, so 900px covers three times density): the
-// Studio crop applied, at most 900px wide, automatic format, quality 90. next/image serves the rest.
+// Studio crop applied, at most 900px wide, automatic format; the loader sets the width and quality.
 export function wwdPreviewUrl(image: { url: string; crop?: { top: number; bottom: number; left: number; right: number } }) {
   const source: SanityImageSource = { asset: { url: image.url }, ...(image.crop ? { crop: image.crop } : {}) };
   return imageSource(source, 900);
